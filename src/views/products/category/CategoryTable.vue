@@ -171,7 +171,7 @@ export default {
   },
   data() {
     return {
-      pageLength: 3,
+      pageLength: 10,
       dir: false,
       codeColumnSearch,
       columns: [
