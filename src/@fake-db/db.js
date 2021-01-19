@@ -6,6 +6,7 @@ import mock from './mock'
 import './jwt'
 
 // Table
+import './data/extensions/app-data'
 import './data/extensions/good-table'
 import './data/extensions/auto-suggest'
 import './data/card/card-statistics'

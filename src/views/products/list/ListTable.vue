@@ -6,7 +6,13 @@
         v-ripple.400="'rgba(255, 255, 255, 0.15)'"
         variant="primary"
       >
-        Add Category
+        Add Product
+      </b-button>
+      <b-button
+        v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+        variant="primary"
+      >
+        Import Product
       </b-button>
       <b-button
         v-ripple.400="'rgba(255, 255, 255, 0.15)'"
@@ -55,15 +61,8 @@
         slot-scope="props"
       >
 
-        <!-- Column: Status -->
-        <span v-if="props.column.field === 'status'">
-          <b-badge :variant="statusVariant(props.row.status)">
-            {{ props.row.status }}
-          </b-badge>
-        </span>
-
         <!-- Column: Action -->
-        <span v-else-if="props.column.field === 'action'">
+        <span v-if="props.column.field === 'action'">
           <span>
             <b-dropdown
               variant="link"
@@ -159,18 +158,17 @@
 <script>
 import BCardCode from '@core/components/b-card-code/BCardCode.vue'
 import {
-  BButton, BBadge, BPagination, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
-import { codeBasic } from './searchCode'
+import { codeBasic } from './search'
 
 export default {
   components: {
     BButton,
     BCardCode,
     VueGoodTable,
-    BBadge,
     BPagination,
     BFormGroup,
     BFormInput,
@@ -186,7 +184,7 @@ export default {
       columns: [
         {
           label: 'Code',
-          field: 'codeCat',
+          field: 'codeProd',
           filterOptions: {
             enabled: true,
             placeholder: 'Search Code',
@@ -194,26 +192,34 @@ export default {
         },
         {
           label: 'Image',
-          field: 'categoryImage',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Image',
-          },
-        },
-        {
-          label: 'Category Name',
-          field: 'categoryName',
+          field: 'productName',
           filterOptions: {
             enabled: true,
             placeholder: 'Search Name',
           },
         },
         {
-          label: 'Parent Category',
-          field: 'categoryParent',
+          label: 'Image',
+          field: 'productImage',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Parent',
+            placeholder: 'Search Image',
+          },
+        },
+        {
+          label: 'Brand',
+          field: 'brand',
+          filterOptions: {
+            enabled: true,
+            placeholder: 'Search Brand',
+          },
+        },
+        {
+          label: 'Category',
+          field: 'category',
+          filterOptions: {
+            enabled: true,
+            placeholder: 'Search Category',
           },
         },
         {
@@ -225,11 +231,19 @@ export default {
           },
         },
         {
-          label: 'Status',
-          field: 'status',
+          label: 'Unit',
+          field: 'unit',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Status',
+            placeholder: 'Search Unit',
+          },
+        },
+        {
+          label: 'Sell Price',
+          field: 'sellPrice',
+          filterOptions: {
+            enabled: true,
+            placeholder: 'Search Sell Price',
           },
         },
         {
@@ -242,16 +256,6 @@ export default {
     }
   },
   computed: {
-    statusVariant() {
-      const statusColor = {
-        /* eslint-disable key-spacing */
-        Nonactive   : 'light-danger',
-        Active      : 'light-success',
-        /* eslint-enable key-spacing */
-      }
-
-      return status => statusColor[status]
-    },
     direction() {
       if (store.state.appConfig.isRTL) {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -264,7 +268,7 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/category')
+    this.$http.get('/app-data/products')
       .then(res => { this.rows = res.data })
   },
 }
