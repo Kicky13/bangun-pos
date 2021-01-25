@@ -8,6 +8,7 @@ import products from './routes/products'
 import sales from './routes/sales'
 import purchases from './routes/purchases'
 import dashboard from './routes/dashboard'
+import pages from './routes/pages'
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,7 @@ const router = new VueRouter({
     ...purchases,
     ...sales,
     ...dashboard,
+    ...pages,
     {
       path: '*',
       redirect: 'error-404',
