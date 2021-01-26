@@ -1,10 +1,10 @@
 <template>
   <b-row class="match-height">
     <b-col lg="6">
-      <item-section />
+      <cart-section />
     </b-col>
     <b-col lg="6">
-      <cart-section />
+      <item-section />
     </b-col>
   </b-row>
 </template>

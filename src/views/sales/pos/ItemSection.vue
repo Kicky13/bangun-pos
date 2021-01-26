@@ -1,193 +1,265 @@
 <template>
-  <b-form @submit.prevent>
-    <b-row>
-      <!-- username -->
-      <b-col cols="12">
-        <b-form-group
-          label="Username"
-          label-for="fh-usename"
-        >
+  <div style="height: inherit">
+
+    <!-- ECommerce Header -->
+    <section id="ecommerce-header">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="ecommerce-header-items">
+            <div class="result-toggler">
+              <feather-icon
+                icon="MenuIcon"
+                class="d-block d-lg-none"
+                size="21"
+                @click="mqShallShowLeftSidebar = true"
+              />
+              <div class="search-results">
+                {{ totalProducts }} results found
+              </div>
+            </div>
+            <div class="view-options d-flex">
+
+              <!-- Sort Button -->
+              <b-dropdown
+                v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                :text="sortBy.text"
+                right
+                variant="outline-primary"
+              >
+                <b-dropdown-item
+                  v-for="sortOption in sortByOptions"
+                  :key="sortOption.value"
+                  @click="sortBy=sortOption"
+                >
+                  {{ sortOption.text }}
+                </b-dropdown-item>
+              </b-dropdown>
+
+              <!-- Item View Radio Button Group  -->
+              <b-form-radio-group
+                v-model="itemView"
+                class="ml-1 list item-view-radio-group"
+                buttons
+                size="sm"
+                button-variant="outline-primary"
+              >
+                <b-form-radio
+                  v-for="option in itemViewOptions"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  <feather-icon
+                    :icon="option.icon"
+                    size="18"
+                  />
+                </b-form-radio>
+              </b-form-radio-group>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overlay -->
+    <div class="body-content-overlay" />
+
+    <!-- Searchbar -->
+    <div class="ecommerce-searchbar mt-1">
+      <b-row>
+        <b-col cols="12">
           <b-input-group class="input-group-merge">
-            <b-input-group-prepend is-text>
-              <feather-icon icon="UserIcon" />
-            </b-input-group-prepend>
             <b-form-input
-              id="fh-usename"
-              placeholder="Username"
+              v-model="filters.q"
+              placeholder="Search Product"
+              class="search-product"
             />
+            <b-input-group-append is-text>
+              <feather-icon
+                icon="SearchIcon"
+                class="text-muted"
+              />
+            </b-input-group-append>
           </b-input-group>
-        </b-form-group>
-      </b-col>
+        </b-col>
+      </b-row>
+    </div>
 
-      <!-- email -->
-      <b-col cols="12">
-        <b-form-group
-          label="Email"
-          label-for="fh-email"
+    <!-- Products -->
+    <section
+      style="margin-top: 10px;"
+      class="match-height"
+    >
+      <b-row>
+        <b-col
+          v-for="product in products"
+          :key="product.id"
+          xl="4"
+          md="8"
+          sm="12"
+          class="ecommerce-card"
+          no-body
         >
-          <b-input-group class="input-group-merge">
-            <b-input-group-prepend is-text>
-              <feather-icon icon="MailIcon" />
-            </b-input-group-prepend>
-            <b-form-input
-              id="fh-email"
-              type="email"
-              placeholder="Email"
-            />
-          </b-input-group>
-          <b-form-text class="text-danger">
-            Enter a Valid Email
-          </b-form-text>
-        </b-form-group>
-      </b-col>
-
-      <!-- password -->
-      <b-col cols="12">
-        <b-form-group
-          label="Password"
-          label-for="fh-password"
-        >
-          <b-input-group
-            class="input-group-merge"
-            :class="validation ? 'is-valid' : 'is-invalid'"
-          >
-            <b-input-group-prepend is-text>
-              <feather-icon icon="LockIcon" />
-            </b-input-group-prepend>
-            <b-form-input
-              id="fh-password"
-              v-model="userId"
-              type="password"
-              :state="validation"
-              placeholder="Password"
-            />
-          </b-input-group>
-          <b-form-invalid-feedback :state="validation">
-            Your password must be 8-20 characters long.
-          </b-form-invalid-feedback>
-          <b-form-valid-feedback :state="validation">
-            Looks Good.
-          </b-form-valid-feedback>
-        </b-form-group>
-      </b-col>
-
-      <!-- occupation -->
-      <b-col cols="12">
-        <b-form-group label="Occupation">
-          <b-input-group
-            class="input-group-merge"
-            :class="validationOccupation ? 'is-valid' : 'is-invalid'"
-          >
-            <b-input-group-prepend is-text>
-              <feather-icon icon="LockIcon" />
-            </b-input-group-prepend>
-            <b-form-input
-              v-model="occupationID"
-              list="input-list"
-              placeholder="Occupation"
-              :state="validationOccupation"
-            />
-          </b-input-group>
-          <b-form-datalist
-            id="input-list"
-            :options="options"
+          <!-- Product Details -->
+          <mini-product-card
+            :product="product"
+            :item-click="handleCartActionClick"
+            color="info"
           />
-        </b-form-group>
-      </b-col>
+        </b-col>
+      </b-row>
+    </section>
 
-      <!-- checkbox -->
-      <b-col cols="12">
-        <b-form-group>
-          <b-form-checkbox
-            id="checkbox-8"
-            name="checkbox-8"
-            value="Remember_me"
+    <!-- Pagination -->
+    <section>
+      <b-row>
+        <b-col cols="12">
+          <b-pagination
+            v-model="filters.page"
+            :total-rows="totalProducts"
+            :per-page="filters.perPage"
+            first-number
+            align="center"
+            last-number
+            prev-class="prev-item"
+            next-class="next-item"
           >
-            Remember me
-          </b-form-checkbox>
-        </b-form-group>
-      </b-col>
+            <template #prev-text>
+              <feather-icon
+                icon="ChevronLeftIcon"
+                size="18"
+              />
+            </template>
+            <template #next-text>
+              <feather-icon
+                icon="ChevronRightIcon"
+                size="18"
+              />
+            </template>
+          </b-pagination>
+        </b-col>
+      </b-row>
+    </section>
 
-      <!-- submit and reset -->
-      <b-col>
-        <b-button
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          type="submit"
-          variant="primary"
-          class="mr-1"
-        >
-          Submit
-        </b-button>
-        <b-button
-          v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-          type="reset"
-          variant="outline-secondary"
-          @click="reset"
-        >
-          Reset
-        </b-button>
-      </b-col>
-    </b-row>
-  </b-form>
+    <!-- Sidebar -->
+    <!-- <portal to="content-renderer-sidebar-detached-left">
+      <shop-left-filter-sidebar
+        :filters="filters"
+        :filter-options="filterOptions"
+        :mq-shall-show-left-sidebar.sync="mqShallShowLeftSidebar"
+      />
+    </portal> -->
+  </div>
 </template>
 
 <script>
 import {
-  BRow,
-  BCol,
-  BFormGroup,
-  BFormInput,
-  BFormCheckbox,
-  BForm,
-  BButton,
-  BFormText,
-  BFormDatalist,
-  BFormInvalidFeedback,
-  BInputGroup,
-  BInputGroupPrepend,
-  BFormValidFeedback,
+  BDropdown, BDropdownItem, BFormRadioGroup, BFormRadio, BRow, BCol, BInputGroup, BInputGroupAppend, BFormInput, BPagination,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
+import { watch } from '@vue/composition-api'
+import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
+// import ShopLeftFilterSidebar from './ECommerceShopLeftFilterSidebar.vue'
+import MiniProductCard from '@core/components/item-cards/MiniProductCard.vue'
+import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/dummyFilter'
+import { useEcommerceUi } from './ActionHandling'
 
 export default {
-  components: {
-    BRow,
-    BCol,
-    BFormGroup,
-    BInputGroup,
-    BInputGroupPrepend,
-    BFormInput,
-    BFormCheckbox,
-    BForm,
-    BFormText,
-    BButton,
-    BFormDatalist,
-    BFormInvalidFeedback,
-    BFormValidFeedback,
-  },
   directives: {
     Ripple,
   },
-  data() {
-    return {
-      options: ['Devloper', 'Manager', 'CEO', 'CTO', 'Full Stack Devloper'],
-      userId: '',
-      occupationID: '',
+  components: {
+    // BSV
+    BDropdown,
+    BDropdownItem,
+    BFormRadioGroup,
+    BFormRadio,
+    BRow,
+    BCol,
+    BInputGroup,
+    BInputGroupAppend,
+    BFormInput,
+    // BCard,
+    // BCardBody,
+    // BLink,
+    // BImg,
+    // BCardText,
+    // BButton,
+    BPagination,
+
+    // SFC
+    // ShopLeftFilterSidebar,
+    MiniProductCard,
+  },
+  setup() {
+    const {
+      filters, filterOptions, sortBy, sortByOptions,
+    } = useShopFiltersSortingAndPagination()
+
+    const { handleCartActionClick, toggleProductInWishlist } = useEcommerceUi()
+
+    const {
+      itemView, itemViewOptions, totalProducts,
+    } = useShopUi()
+
+    const { products, fetchProducts } = useShopRemoteData()
+
+    const { mqShallShowLeftSidebar } = useResponsiveAppLeftSidebarVisibility()
+
+    // Wrapper Function for `fetchProducts` which can be triggered initially and upon changes of filters
+    const fetchShopProducts = () => {
+      fetchProducts({
+        q: filters.value.q,
+        sortBy: sortBy.value.value,
+        page: filters.value.page,
+        perPage: filters.value.perPage,
+      })
+        .then(response => {
+          products.value = response.data.products
+          totalProducts.value = response.data.total
+        })
     }
-  },
-  computed: {
-    validation() {
-      return this.userId.length > 4 && this.userId.length < 13
-    },
-    validationOccupation() {
-      return this.occupationID.length > 1
-    },
-  },
-  methods: {
-    reset() {
-      this.userId = ''
-      this.occupationID = ''
-    },
+
+    fetchShopProducts()
+
+    watch([filters, sortBy], () => {
+      fetchShopProducts()
+    }, {
+      deep: true,
+    })
+
+    return {
+      // useShopFiltersSortingAndPagination
+      filters,
+      filterOptions,
+      sortBy,
+      sortByOptions,
+
+      // useShopUi
+      itemView,
+      itemViewOptions,
+      totalProducts,
+      toggleProductInWishlist,
+      handleCartActionClick,
+
+      // useShopRemoteData
+      products,
+
+      // mqShallShowLeftSidebar
+      mqShallShowLeftSidebar,
+    }
   },
 }
 </script>
+
+<style lang="scss">
+@import "~@core/scss/base/pages/app-ecommerce.scss";
+</style>
+
+<style lang="scss" scoped>
+.item-view-radio-group ::v-deep {
+  .btn {
+    display: flex;
+    align-items: center;
+  }
+}
+</style>
