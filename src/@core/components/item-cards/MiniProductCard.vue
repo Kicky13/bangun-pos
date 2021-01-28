@@ -28,7 +28,7 @@
       class="text-center"
     >
       <b-button
-        variant="primary"
+        :variant="color"
         tag="a"
         class="btn-cart"
         @click="itemClick(product)"

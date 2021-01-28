@@ -8,7 +8,7 @@
 
 <script>
 import { BRow, BCol } from 'bootstrap-vue'
-import ListTable from './ListTable.vue' 
+import ListTable from './ListTable.vue'
 
 export default {
   components: {

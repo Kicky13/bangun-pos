@@ -17,7 +17,10 @@
           </h2>
           <div class="breadcrumb-wrapper">
             <b-breadcrumb>
-              <b-breadcrumb-item to="/">
+              <b-breadcrumb-item
+                style="color: #ea5455;"
+                to="/"
+              >
                 <feather-icon
                   icon="HomeIcon"
                   size="16"
@@ -39,7 +42,7 @@
     </b-col>
 
     <!-- Content Right -->
-    <b-col
+    <!-- <b-col
       class="content-header-right text-md-right d-md-block d-none mb-1"
       md="3"
       cols="12"
@@ -93,13 +96,13 @@
           <span class="align-middle ml-50">Calendar</span>
         </b-dropdown-item>
       </b-dropdown>
-    </b-col>
+    </b-col> -->
   </b-row>
 </template>
 
 <script>
 import {
-  BBreadcrumb, BBreadcrumbItem, BRow, BCol, BDropdown, BDropdownItem, BButton,
+  BBreadcrumb, BBreadcrumbItem, BRow, BCol,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 
@@ -112,9 +115,18 @@ export default {
     BBreadcrumbItem,
     BRow,
     BCol,
-    BDropdown,
-    BDropdownItem,
-    BButton,
+    // BDropdown,
+    // BDropdownItem,
+    // BButton,
   },
 }
 </script>
+
+<style>
+  .breadcrumb-item a {
+    color: red
+  }
+</style>
+<style lang="scss" scoped>
+  /* scoped/module (s)css */
+</style>

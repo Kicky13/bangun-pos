@@ -1,4 +1,4 @@
- <template>
+<template>
   <b-row>
     <b-col cols="12">
       <list-table />
@@ -8,7 +8,7 @@
 
 <script>
 import { BRow, BCol } from 'bootstrap-vue'
-import ListTable from './ListTable.vue' 
+import ListTable from './ListTable.vue'
 
 export default {
   components: {

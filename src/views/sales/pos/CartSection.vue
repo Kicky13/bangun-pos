@@ -7,44 +7,19 @@
           <!-- Customer Form Section -->
           <div>
             <b-row>
-              <b-col cols="4">
+              <b-col cols="5">
                 <b-form-group
-                  label="Reference"
-                  label-for="reference"
+                  label="Kode Penjualan"
+                  label-for="sellingCode"
                 >
                   <b-form-input
-                    id="reference"
-                    placeholder="Type a number reference"
+                    id="sellingCode"
+                    value="TB-28373983/947290021"
+                    disabled
                   />
                 </b-form-group>
               </b-col>
-              <b-col cols="4">
-                <b-form-group
-                  label="Warehouse"
-                  label-for="warehouse"
-                >
-                  <b-form-select
-                    id="warehouse"
-                    v-model="selectedWarehouse"
-                    :options="warehouses"
-                  />
-                </b-form-group>
-              </b-col>
-              <b-col cols="4">
-                <b-form-group
-                  label="Biller"
-                  label-for="biller"
-                >
-                  <b-form-select
-                    id="biller"
-                    v-model="selectedBiller"
-                    :options="billers"
-                  />
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col cols="4">
+              <b-col cols="5">
                 <b-form-group
                   label="Customer"
                   label-for="customer"
@@ -58,22 +33,13 @@
               </b-col>
               <b-col cols="2">
                 <b-button
-                  v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+                  v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                  v-b-modal.customerAdd
                   variant="danger"
-                  class="mt-0 mt-md-2"
+                  class="btn-icon mt-0 mt-md-2"
                 >
-                  <span>Add</span>
+                  <feather-icon icon="UserPlusIcon" />
                 </b-button>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col cols="12">
-                <b-form-group>
-                  <b-form-input
-                    id="searchCustomer"
-                    placeholder="Scan/search product by name/code"
-                  />
-                </b-form-group>
               </b-col>
             </b-row>
             <b-row>
@@ -188,78 +154,95 @@
           <!-- Total Section -->
           <div>
             <b-row>
-              <b-col cols="4">
-                <b-row>
-                  <b-col cols="6">
-                    <span>Items</span>
-                  </b-col>
-                  <b-col cols="6">
-                    <span>4(4)</span>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col cols="6">
-                    <span>Coupon </span>
-                    <feather-icon
-                      icon="EditIcon"
-                      style="color: #FA4E54;"
+              <b-col cols="12">
+                <b-form-group
+                  label="Sub Total"
+                  label-for="subtotal"
+                  label-cols-md="4"
+                >
+                  <b-input-group
+                    prepend="$"
+                    append="00"
+                    class="input-group-merge"
+                    style="padding: 5px"
+                  >
+                    <b-form-input
+                      id="subtotal"
+                      disabled
+                      style="text-align: right;"
+                      value="8,190 "
                     />
-                  </b-col>
-                  <b-col cols="6">
-                    <span>0.00</span>
-                  </b-col>
-                </b-row>
-              </b-col>
-              <b-col cols="4">
-                <b-row>
-                  <b-col cols="6">
-                    <span>Total</span>
-                  </b-col>
-                  <b-col cols="6">
-                    <span>673.938</span>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col cols="6">
-                    <span>Tax </span>
-                    <feather-icon
-                      icon="EditIcon"
-                      style="color: #FA4E54;"
-                    />
-                  </b-col>
-                  <b-col cols="6">
-                    <span>0.00</span>
-                  </b-col>
-                </b-row>
-              </b-col>
-              <b-col cols="4">
-                <b-row>
-                  <b-col cols="6">
-                    <span>Discount </span>
-                    <feather-icon
-                      icon="EditIcon"
-                      style="color: #FA4E54;"
-                    />
-                  </b-col>
-                  <b-col cols="6">
-                    <span>0.00</span>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col cols="6">
-                    <span>Shipping </span>
-                    <feather-icon
-                      icon="EditIcon"
-                      style="color: #FA4E54;"
-                    />
-                  </b-col>
-                  <b-col cols="6">
-                    <span>0.00</span>
-                  </b-col>
-                </b-row>
+                  </b-input-group>
+                </b-form-group>
               </b-col>
             </b-row>
-            <b-row style="margin-top: 10px;">
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Diskon"
+                  label-for="diskon"
+                  label-cols-md="4"
+                >
+                  <b-input-group
+                    append="00"
+                    class="input-group-merge"
+                    style="padding: 5px"
+                  >
+                    <b-form-input
+                      id="diskon"
+                      disabled
+                      style="text-align: right;"
+                      value="0 "
+                    />
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Pajak"
+                  label-for="tax"
+                  label-cols-md="4"
+                >
+                  <b-input-group
+                    append="00"
+                    class="input-group-merge"
+                    style="padding: 5px"
+                  >
+                    <b-form-input
+                      id="tax"
+                      disabled
+                      style="text-align: right;"
+                      value="0 "
+                    />
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="12">
+                <b-form-group
+                  label="Pengiriman"
+                  label-for="pengiriman"
+                  label-cols-md="4"
+                >
+                  <b-input-group
+                    append="00"
+                    class="input-group-merge"
+                    style="padding: 5px"
+                  >
+                    <b-form-input
+                      id="pengiriman"
+                      disabled
+                      style="text-align: right;"
+                      value="0 "
+                    />
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <!-- <b-row style="margin-top: 10px;">
               <b-col cols="12">
                 <b-form-textarea
                   id="textarea-rows"
@@ -267,7 +250,7 @@
                   rows="3"
                 />
               </b-col>
-            </b-row>
+            </b-row> -->
             <b-row style="margin-top: 10px;">
               <b-col cols="12">
                 <b-alert
@@ -298,10 +281,10 @@
                 <div class="demo-inline-spacing">
                   <b-button
                     v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-                    variant="outline-warning"
+                    variant="outline-secondary"
                     pill
                   >
-                    Draft
+                    Batal
                   </b-button>
                 </div>
               </b-col>
@@ -310,24 +293,98 @@
                   <b-button
                     v-ripple.400="'rgba(186, 191, 199, 0.15)'"
                     style="margin-right: 5px;"
-                    variant="outline-danger"
+                    variant="outline-warning"
                     pill
                   >
-                    Pay
+                    Antrian
                   </b-button>
                   <b-button
                     v-ripple.400="'rgba(40, 199, 111, 0.15)'"
                     style="margin-left: 5px;"
-                    variant="outline-secondary"
+                    variant="outline-danger"
                     pill
                   >
-                    Cancel
+                    Bayar
                   </b-button>
                 </div>
               </b-col>
             </b-row>
           </div>
           <!-- End Action Button Section -->
+
+          <!-- Modal Section -->
+
+          <!-- Add Customer -->
+          <b-modal
+            id="customerAdd"
+            centered
+            size="lg"
+            title="Tambah Customer"
+            ok-title="Simpan"
+            cancel-title="Tutup"
+            ok-variant="danger"
+          >
+            <b-form>
+              <b-row>
+                <b-col cols="6">
+                  <b-form-group
+                    label="Nama Customer"
+                    label-for="customerName"
+                  >
+                    <b-form-input id="customerName" />
+                  </b-form-group>
+                </b-col>
+                <b-col cols="6">
+                  <b-form-group
+                    label-for="reference"
+                    label="No. Reference"
+                  >
+                    <b-form-input id="reference" />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col cols="6">
+                  <b-form-group
+                    label="Nomor HP"
+                    label-for="phone"
+                  >
+                    <b-form-input id="phone" />
+                  </b-form-group>
+                </b-col>
+                <b-col cols="6">
+                  <b-form-group
+                    label-for="ktp"
+                    label="Nomor KTP"
+                  >
+                    <b-form-input id="ktp" />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col cols="12">
+                  <b-form-group
+                    label="Alamat"
+                    label-for="address"
+                  >
+                    <b-form-textarea
+                      id="address"
+                      rows="4"
+                    />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-form>
+          </b-modal>
+          <!-- End of Customer Add -->
+
+          <!-- Payment Modal -->
+          <b-modal
+            id="paymentProcess"
+            centered
+          />
+
+          <!-- End of Modal Section -->
 
         </b-card-code>
       </b-col>
@@ -338,7 +395,7 @@
 <script>
 import BCardCode from '@core/components/b-card-code'
 import {
-  BRow, BCol, BForm, BFormGroup, BFormInput, BButton, BFormSpinbutton, BFormTextarea, BAlert, BFormSelect,
+  BRow, BCol, BForm, BFormGroup, BFormInput, BButton, BFormSpinbutton, BAlert, BFormSelect, BInputGroup, BModal, BFormTextarea, VBModal,
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
@@ -352,14 +409,17 @@ export default {
     BFormInput,
     BButton,
     BFormSpinbutton,
+    BModal,
     BFormTextarea,
     BAlert,
     BFormSelect,
+    BInputGroup,
 
     BCardCode,
   },
   directives: {
     Ripple,
+    'b-modal': VBModal,
   },
   mixins: [heightTransition],
   data() {

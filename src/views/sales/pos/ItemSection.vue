@@ -24,7 +24,7 @@
                 v-ripple.400="'rgba(113, 102, 240, 0.15)'"
                 :text="sortBy.text"
                 right
-                variant="outline-primary"
+                variant="outline-danger"
               >
                 <b-dropdown-item
                   v-for="sortOption in sortByOptions"
@@ -34,26 +34,6 @@
                   {{ sortOption.text }}
                 </b-dropdown-item>
               </b-dropdown>
-
-              <!-- Item View Radio Button Group  -->
-              <b-form-radio-group
-                v-model="itemView"
-                class="ml-1 list item-view-radio-group"
-                buttons
-                size="sm"
-                button-variant="outline-primary"
-              >
-                <b-form-radio
-                  v-for="option in itemViewOptions"
-                  :key="option.value"
-                  :value="option.value"
-                >
-                  <feather-icon
-                    :icon="option.icon"
-                    size="18"
-                  />
-                </b-form-radio>
-              </b-form-radio-group>
             </div>
           </div>
         </div>
@@ -103,7 +83,7 @@
           <mini-product-card
             :product="product"
             :item-click="handleCartActionClick"
-            color="info"
+            color="danger"
           />
         </b-col>
       </b-row>
@@ -120,8 +100,7 @@
             first-number
             align="center"
             last-number
-            prev-class="prev-item"
-            next-class="next-item"
+            class="pagination-danger"
           >
             <template #prev-text>
               <feather-icon
@@ -153,7 +132,7 @@
 
 <script>
 import {
-  BDropdown, BDropdownItem, BFormRadioGroup, BFormRadio, BRow, BCol, BInputGroup, BInputGroupAppend, BFormInput, BPagination,
+  BDropdown, BDropdownItem, BRow, BCol, BInputGroup, BInputGroupAppend, BFormInput, BPagination,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import { watch } from '@vue/composition-api'
@@ -171,8 +150,8 @@ export default {
     // BSV
     BDropdown,
     BDropdownItem,
-    BFormRadioGroup,
-    BFormRadio,
+    // BFormRadioGroup,
+    // BFormRadio,
     BRow,
     BCol,
     BInputGroup,
