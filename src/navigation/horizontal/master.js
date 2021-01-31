@@ -1,7 +1,7 @@
 export default [
   {
-    header: 'Product',
-    icon: 'ArchiveIcon',
+    header: 'Master Bangunan',
+    icon: 'DatabaseIcon',
     children: [
       {
         title: 'Category',
@@ -18,11 +18,6 @@ export default [
         route: 'add-product',
         icon: 'PlusCircleIcon',
       },
-      // {
-      //   title: 'Stock Count',
-      //   route: 'stock-product',
-      //   icon: 'CopyIcon',
-      // },
     ],
   },
 ]

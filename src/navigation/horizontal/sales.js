@@ -1,28 +1,28 @@
 export default [
   {
-    header: 'Sale',
+    header: 'Sales',
     icon: 'DollarSignIcon',
     children: [
       {
-        title: 'Sale List',
+        title: 'Sales List',
         route: 'list-sale',
         icon: 'ServerIcon',
       },
       {
-        title: 'POS',
-        route: 'pointof-sale',
-        icon: 'GridIcon',
+        title: 'Reporting',
+        route: 'report-sale',
+        icon: 'BookOpenIcon',
       },
-      {
-        title: 'Giftcard List',
-        route: 'giftcard-sale',
-        icon: 'CreditCardIcon',
-      },
-      {
-        title: 'Coupon',
-        route: 'coupon-sale',
-        icon: 'CreditCardIcon',
-      },
+      // {
+      //   title: 'Giftcard List',
+      //   route: 'giftcard-sale',
+      //   icon: 'CreditCardIcon',
+      // },
+      // {
+      //   title: 'Coupon',
+      //   route: 'coupon-sale',
+      //   icon: 'CreditCardIcon',
+      // },
     ],
   },
 ]

@@ -131,15 +131,20 @@
       </b-row>
       <b-row>
         <b-col cols="10" />
-        <b-col cols="2">
-          <b-button
-            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-            type="submit"
-            variant="danger"
-            class="mt-0 mt-md-2"
-          >
-            <span>Submit Product</span>
-          </b-button>
+        <b-col
+          cols="2"
+          xl="2"
+        >
+          <div>
+            <b-button
+              v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+              type="submit"
+              variant="primary"
+              style="float: right;"
+            >
+              <span>Submit Product</span>
+            </b-button>
+          </div>
         </b-col>
       </b-row>
     </b-form>

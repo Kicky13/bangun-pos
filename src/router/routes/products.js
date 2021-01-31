@@ -48,6 +48,23 @@ export default [
     },
   },
   {
+    path: '/product/import',
+    name: 'import-product',
+    component: () => import('@/views/products/forms/Import.vue'),
+    meta: {
+      pageTitle: 'Import Product',
+      breadcrumb: [
+        {
+          text: 'Product',
+        },
+        {
+          text: 'Import',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/product/stock',
     name: 'stock-product',
     component: () => import('@/views/products/stock/Stock.vue'),
