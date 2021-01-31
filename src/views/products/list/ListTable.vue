@@ -5,12 +5,14 @@
       <b-button
         v-ripple.400="'rgba(255, 255, 255, 0.15)'"
         variant="primary"
+        href="/product/add"
       >
         Add Product
       </b-button>
       <b-button
         v-ripple.400="'rgba(255, 255, 255, 0.15)'"
         variant="primary"
+        href="/product/import"
       >
         Import Product
       </b-button>

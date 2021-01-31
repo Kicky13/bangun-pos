@@ -4,18 +4,18 @@ export default [
     icon: 'DatabaseIcon',
     children: [
       {
-        title: 'Category',
-        route: 'category-product',
+        title: 'Toko Bangunan',
+        route: 'toko-master',
         icon: 'FileTextIcon',
       },
       {
-        title: 'Product List',
-        route: 'list-product',
+        title: 'Customer',
+        route: 'customer-master',
         icon: 'ServerIcon',
       },
       {
-        title: 'Add Product',
-        route: 'add-product',
+        title: 'Price List',
+        route: 'price-master',
         icon: 'PlusCircleIcon',
       },
     ],

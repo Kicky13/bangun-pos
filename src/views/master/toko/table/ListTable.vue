@@ -4,9 +4,15 @@
     <div class="demo-inline-spacing">
       <b-button
         v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+        variant="secondary"
+      >
+        Print
+      </b-button>
+      <b-button
+        v-ripple.400="'rgba(255, 255, 255, 0.15)'"
         variant="primary"
       >
-        Import Sale
+        Delete
       </b-button>
     </div>
 
@@ -45,15 +51,9 @@
 
         <!-- Column: Status -->
 
-        <span v-if="props.column.field === 'paymentStatus'">
-          <b-badge :variant="paymentVariant(props.row.paymentStatus)">
-            {{ props.row.paymentStatus }}
-          </b-badge>
-        </span>
-
-        <span v-else-if="props.column.field === 'saleStatus'">
-          <b-badge :variant="salesVariant(props.row.saleStatus)">
-            {{ props.row.saleStatus }}
+        <span v-if="props.column.field === 'status'">
+          <b-badge :variant="statusVariant(props.row.status)">
+            {{ props.row.status }}
           </b-badge>
         </span>
 
@@ -176,80 +176,72 @@ export default {
       dir: false,
       columns: [
         {
-          label: 'ID',
-          field: 'id',
+          label: 'TB Code',
+          field: 'code',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Sales ID',
+            placeholder: 'Search Code',
           },
         },
         {
-          label: 'Date',
-          field: 'date',
+          label: 'TB Name',
+          field: 'name',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Date',
+            placeholder: 'Search Name',
           },
         },
         {
-          label: 'Reference',
-          field: 'ref',
+          label: 'TB Address',
+          field: 'address',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Reference',
+            placeholder: 'Search Address',
           },
         },
         {
-          label: 'Biller',
-          field: 'biller',
+          label: 'TB Phone',
+          field: 'phone',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Biller',
+            placeholder: 'Search Phone Number',
           },
         },
         {
-          label: 'Customer',
-          field: 'customer',
+          label: 'Qty Trans',
+          field: 'qty',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Customer',
+            placeholder: 'Search Qty',
           },
         },
         {
-          label: 'Grand Total',
-          field: 'total',
+          label: 'Tot. Product',
+          field: 'products',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Total',
+            placeholder: 'Search Total Product',
           },
         },
         {
-          label: 'Sale Status',
-          field: 'saleStatus',
+          label: 'Tot. Cust',
+          field: 'customers',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Status',
+            placeholder: 'Search Tot. Customers',
           },
         },
         {
-          label: 'Paid',
-          field: 'paid',
+          label: 'Registered By',
+          field: 'createBy',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Paid',
+            placeholder: 'Search Creator',
           },
         },
         {
-          label: 'Due',
-          field: 'due',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Due',
-          },
-        },
-        {
-          label: 'Payment Status',
-          field: 'paymentStatus',
+          label: 'TB Status',
+          field: 'status',
           filterOptions: {
             enabled: true,
             placeholder: 'Search Status',
@@ -265,17 +257,10 @@ export default {
     }
   },
   computed: {
-    salesVariant() {
+    statusVariant() {
       const statusColor = {
-        Draft: 'light-primary',
-        Completed: 'light-secondary',
-      }
-      return status => statusColor[status]
-    },
-    paymentVariant() {
-      const statusColor = {
-        Paid: 'light-secondary',
-        Due: 'light-primary',
+        Active: 'light-secondary',
+        Terminated: 'light-primary',
       }
       return status => statusColor[status]
     },
@@ -291,7 +276,7 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/sales')
+    this.$http.get('/app-data/tokoBangunan')
       .then(res => { this.rows = res.data })
   },
 }

@@ -7,6 +7,9 @@ import './jwt'
 
 // Table
 import './data/extensions/app-data'
+import './data/master/customer'
+import './data/master/price'
+import './data/master/tokoBangunan'
 import './data/extensions/sales-data'
 import './data/extensions/good-table'
 import './data/extensions/auto-suggest'

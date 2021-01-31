@@ -9,6 +9,7 @@ import sales from './routes/sales'
 import purchases from './routes/purchases'
 import dashboard from './routes/dashboard'
 import pages from './routes/pages'
+import master from './routes/master'
 
 Vue.use(VueRouter)
 
@@ -24,6 +25,7 @@ const router = new VueRouter({
     ...purchases,
     ...sales,
     ...dashboard,
+    ...master,
     ...pages,
     {
       path: '*',

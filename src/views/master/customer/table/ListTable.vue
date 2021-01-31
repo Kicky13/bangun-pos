@@ -4,9 +4,15 @@
     <div class="demo-inline-spacing">
       <b-button
         v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+        variant="secondary"
+      >
+        Print
+      </b-button>
+      <b-button
+        v-ripple.400="'rgba(255, 255, 255, 0.15)'"
         variant="primary"
       >
-        Import Sale
+        Delete
       </b-button>
     </div>
 
@@ -45,15 +51,9 @@
 
         <!-- Column: Status -->
 
-        <span v-if="props.column.field === 'paymentStatus'">
-          <b-badge :variant="paymentVariant(props.row.paymentStatus)">
-            {{ props.row.paymentStatus }}
-          </b-badge>
-        </span>
-
-        <span v-else-if="props.column.field === 'saleStatus'">
-          <b-badge :variant="salesVariant(props.row.saleStatus)">
-            {{ props.row.saleStatus }}
+        <span v-if="props.column.field === 'status'">
+          <b-badge :variant="statusVariant(props.row.status)">
+            {{ props.row.status }}
           </b-badge>
         </span>
 
@@ -176,59 +176,43 @@ export default {
       dir: false,
       columns: [
         {
-          label: 'ID',
-          field: 'id',
+          label: 'Code',
+          field: 'code',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Sales ID',
-          },
-        },
-        {
-          label: 'Date',
-          field: 'date',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Date',
-          },
-        },
-        {
-          label: 'Reference',
-          field: 'ref',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Reference',
-          },
-        },
-        {
-          label: 'Biller',
-          field: 'biller',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Biller',
+            placeholder: 'Search Code',
           },
         },
         {
           label: 'Customer',
-          field: 'customer',
+          field: 'name',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Customer',
+            placeholder: 'Search Customer Name',
           },
         },
         {
-          label: 'Grand Total',
-          field: 'total',
+          label: 'Cust. Address',
+          field: 'address',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Total',
+            placeholder: 'Search Address',
           },
         },
         {
-          label: 'Sale Status',
-          field: 'saleStatus',
+          label: 'Cust. Phone',
+          field: 'phone',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Status',
+            placeholder: 'Search Phone Number',
+          },
+        },
+        {
+          label: 'Amount',
+          field: 'amount',
+          filterOptions: {
+            enabled: true,
+            placeholder: 'Search Amount',
           },
         },
         {
@@ -240,16 +224,16 @@ export default {
           },
         },
         {
-          label: 'Due',
-          field: 'due',
+          label: 'Balance',
+          field: 'balance',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Due',
+            placeholder: 'Search Balance',
           },
         },
         {
-          label: 'Payment Status',
-          field: 'paymentStatus',
+          label: 'Cust. Status',
+          field: 'status',
           filterOptions: {
             enabled: true,
             placeholder: 'Search Status',
@@ -265,17 +249,10 @@ export default {
     }
   },
   computed: {
-    salesVariant() {
+    statusVariant() {
       const statusColor = {
-        Draft: 'light-primary',
-        Completed: 'light-secondary',
-      }
-      return status => statusColor[status]
-    },
-    paymentVariant() {
-      const statusColor = {
-        Paid: 'light-secondary',
-        Due: 'light-primary',
+        Active: 'light-secondary',
+        Terminated: 'light-primary',
       }
       return status => statusColor[status]
     },
@@ -291,7 +268,7 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/sales')
+    this.$http.get('/app-data/customer')
       .then(res => { this.rows = res.data })
   },
 }

@@ -25,8 +25,8 @@ route: [route_obj/route_name] (I have to resolve name somehow from the route obj
 */
 import dashboard from './dashboard'
 import product from './products'
-import purchase from './purchases'
+import master from './master'
 import sale from './sales'
 
 // Array of sections
-export default [...dashboard, ...product, ...purchase, ...sale]
+export default [...dashboard, ...product, ...sale, ...master]

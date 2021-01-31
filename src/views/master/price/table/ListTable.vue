@@ -4,9 +4,15 @@
     <div class="demo-inline-spacing">
       <b-button
         v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+        variant="secondary"
+      >
+        Print
+      </b-button>
+      <b-button
+        v-ripple.400="'rgba(255, 255, 255, 0.15)'"
         variant="primary"
       >
-        Import Sale
+        Delete
       </b-button>
     </div>
 
@@ -45,15 +51,9 @@
 
         <!-- Column: Status -->
 
-        <span v-if="props.column.field === 'paymentStatus'">
-          <b-badge :variant="paymentVariant(props.row.paymentStatus)">
-            {{ props.row.paymentStatus }}
-          </b-badge>
-        </span>
-
-        <span v-else-if="props.column.field === 'saleStatus'">
-          <b-badge :variant="salesVariant(props.row.saleStatus)">
-            {{ props.row.saleStatus }}
+        <span v-if="props.column.field === 'status'">
+          <b-badge :variant="statusVariant(props.row.status)">
+            {{ props.row.status }}
           </b-badge>
         </span>
 
@@ -176,83 +176,59 @@ export default {
       dir: false,
       columns: [
         {
-          label: 'ID',
-          field: 'id',
+          label: 'Code',
+          field: 'code',
           filterOptions: {
             enabled: true,
-            placeholder: 'Search Sales ID',
+            placeholder: 'Search Code',
           },
         },
         {
-          label: 'Date',
+          label: 'Product Name',
+          field: 'name',
+          filterOptions: {
+            enabled: true,
+            placeholder: 'Search Product Name',
+          },
+        },
+        {
+          label: 'Toko Bang.',
+          field: 'toko',
+          filterOptions: {
+            enabled: true,
+            placeholder: 'Search Toko',
+          },
+        },
+        {
+          label: 'Unit',
+          field: 'unit',
+          filterOptions: {
+            enabled: true,
+            placeholder: 'Search Unit',
+          },
+        },
+        {
+          label: 'Price',
+          field: 'price',
+          filterOptions: {
+            enabled: true,
+            placeholder: 'Search Price',
+          },
+        },
+        {
+          label: 'Status',
+          field: 'status',
+          filterOptions: {
+            enabled: true,
+            placeholder: 'Search STatus',
+          },
+        },
+        {
+          label: 'Added Date',
           field: 'date',
           filterOptions: {
             enabled: true,
             placeholder: 'Search Date',
-          },
-        },
-        {
-          label: 'Reference',
-          field: 'ref',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Reference',
-          },
-        },
-        {
-          label: 'Biller',
-          field: 'biller',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Biller',
-          },
-        },
-        {
-          label: 'Customer',
-          field: 'customer',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Customer',
-          },
-        },
-        {
-          label: 'Grand Total',
-          field: 'total',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Total',
-          },
-        },
-        {
-          label: 'Sale Status',
-          field: 'saleStatus',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Status',
-          },
-        },
-        {
-          label: 'Paid',
-          field: 'paid',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Paid',
-          },
-        },
-        {
-          label: 'Due',
-          field: 'due',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Due',
-          },
-        },
-        {
-          label: 'Payment Status',
-          field: 'paymentStatus',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Status',
           },
         },
         {
@@ -265,17 +241,10 @@ export default {
     }
   },
   computed: {
-    salesVariant() {
+    statusVariant() {
       const statusColor = {
-        Draft: 'light-primary',
-        Completed: 'light-secondary',
-      }
-      return status => statusColor[status]
-    },
-    paymentVariant() {
-      const statusColor = {
-        Paid: 'light-secondary',
-        Due: 'light-primary',
+        Avaible: 'light-secondary',
+        NotAvaible: 'light-primary',
       }
       return status => statusColor[status]
     },
@@ -291,7 +260,7 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/sales')
+    this.$http.get('/app-data/pricelist')
       .then(res => { this.rows = res.data })
   },
 }
