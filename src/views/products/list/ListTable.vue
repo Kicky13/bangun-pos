@@ -187,66 +187,34 @@ export default {
         {
           label: 'Code',
           field: 'codeProd',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Code',
-          },
         },
         {
-          label: 'Image',
+          label: 'Name Product',
           field: 'productName',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Name',
-          },
         },
         {
           label: 'Image',
           field: 'productImage',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Image',
-          },
         },
         {
           label: 'Brand',
           field: 'brand',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Brand',
-          },
         },
         {
           label: 'Category',
           field: 'category',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Category',
-          },
         },
         {
-          label: 'Price',
-          field: 'price',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Price',
-          },
+          label: 'Sub-Category',
+          field: 'subCategory',
+        },
+        {
+          label: 'Type',
+          field: 'type',
         },
         {
           label: 'Unit',
           field: 'unit',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Unit',
-          },
-        },
-        {
-          label: 'Sell Price',
-          field: 'sellPrice',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Sell Price',
-          },
         },
         {
           label: 'Action',
@@ -270,7 +238,7 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/products')
+    this.$http.get('/product/products')
       .then(res => { this.rows = res.data })
   },
 }
