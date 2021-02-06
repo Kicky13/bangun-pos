@@ -5,6 +5,8 @@ export default [
     component: () => import('@/views/master/price/List.vue'),
     meta: {
       pageTitle: 'Price List',
+      resource: 'Master',
+      action: 'manage',
       breadcrumb: [
         {
           text: 'Master Data',
@@ -22,6 +24,8 @@ export default [
     component: () => import('@/views/master/toko/List.vue'),
     meta: {
       pageTitle: 'Toko Bangunan',
+      resource: 'Master',
+      action: 'manage',
       breadcrumb: [
         {
           text: 'Master Data',
@@ -39,6 +43,8 @@ export default [
     component: () => import('@/views/master/customer/List.vue'),
     meta: {
       pageTitle: 'Price List',
+      resource: 'Master',
+      action: 'manage',
       breadcrumb: [
         {
           text: 'Master Data',

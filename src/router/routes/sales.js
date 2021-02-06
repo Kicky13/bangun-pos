@@ -5,6 +5,8 @@ export default [
     component: () => import('@/views/sales/list/List.vue'),
     meta: {
       pageTitle: 'Sales',
+      resource: 'Sales',
+      action: 'manage',
       breadcrumb: [
         {
           text: 'Sale',
@@ -14,11 +16,13 @@ export default [
     },
   },
   {
-    path: '/sale/pos',
+    path: '/pos',
     name: 'pointof-sale',
     component: () => import('@/views/sales/pos/Pos.vue'),
     meta: {
       pageTitle: 'Point of Sale',
+      resource: 'PointSale',
+      action: 'manage',
       breadcrumb: [
         {
           text: 'Sale',
