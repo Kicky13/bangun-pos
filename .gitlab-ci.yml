@@ -23,10 +23,12 @@ deploy-dev:
     # should be set up at Gitlab CI env vars
     SSH_PRIVATE_KEY: $SSH_DEV_PRIVATE_KEY
   script:
+    - cat $SSH_PRIVATE_KEY > deployment_key.txt
+    - chmod 600 deployment_key.txt
     # login to gitlab registry       
-    - ssh deployer@128.199.252.219 docker login -u directoryx -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - ssh -i deployment_key.txt deployer@128.199.252.219 docker login -u directoryx -p $CI_BUILD_TOKEN $CI_REGISTRY
     # then we cd to folder with docker-compose, run docker-compose pull to update images, and run services with `docker-compose up -d`
-    - ssh deployer@128.199.252.219 "cd /Web/front-bangun && docker-compose -f docker-compose.yml pull front-bangun && HOME=/home/deployer docker-compose -f docker-compose.yml up -d"
+    - ssh -i deployment_key.txt deployer@128.199.252.219 "cd /Web/front-bangun && docker-compose -f docker-compose.yml pull front-bangun && HOME=/home/deployer docker-compose -f docker-compose.yml up -d"
   environment:
       name: dev
   only:
