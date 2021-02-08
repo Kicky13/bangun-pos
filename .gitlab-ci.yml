@@ -28,7 +28,7 @@ deploy-dev:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 700 ~/.ssh/id_rsa
     - eval "$(ssh-agent -s)"
-    - ssh-add ~/.ssh/id_rsa
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - ssh-keyscan -t rsa 128.199.252.219 > ~/.ssh/known_hosts
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - chmod 644 ~/.ssh/known_hosts
