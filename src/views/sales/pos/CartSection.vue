@@ -43,28 +43,17 @@
             </b-row>
             <b-row class="mb-0">
               <b-col cols="5">
-                <b-form-input
-                  id="sellingCode"
-                  value="TB-28373983/947290021"
-                  disabled
+                <b-form-select
+                  id="customer"
+                  v-model="selectedCashier"
+                  :options="cashierItems"
                 />
               </b-col>
               <b-col cols="5">
-                <b-form-select
-                  id="customer"
-                  v-model="selectedCustomer"
-                  :options="customers"
+                <b-form-input
+                  id="jagoId"
+                  placeholder="No. Referensi Jago Bangunan"
                 />
-              </b-col>
-              <b-col cols="2">
-                <b-button
-                  v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-                  v-b-modal.customerAdd
-                  variant="danger"
-                  class="btn-icon mt-0 mt-md-2"
-                >
-                  <feather-icon icon="UserPlusIcon" />
-                </b-button>
               </b-col>
             </b-row>
             <b-row>
@@ -512,6 +501,26 @@ export default {
       selectedBiller: null,
       selectedCustomer: null,
       selectedMetode: null,
+      selectedCashier: null,
+      cashierItems: [
+        {
+          value: null,
+          text: 'Pilih Kasir',
+          disabled: true,
+        },
+        {
+          value: 'Kasir 01',
+          text: 'Kasir 01',
+        },
+        {
+          value: 'Kasir 02',
+          text: 'Kasir 02',
+        },
+        {
+          value: 'Kasir 03',
+          text: 'Kasir 03',
+        },
+      ],
       methodBayar: [{
         value: null,
         text: 'Pilih salah satu metode pembayaran',
