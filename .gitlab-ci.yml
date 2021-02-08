@@ -23,7 +23,7 @@ deploy-dev:
     # should be set up at Gitlab CI env vars
     SSH_PRIVATE_KEY: $SSH_DEV_PRIVATE_KEY
   script:
-    - cat $SSH_PRIVATE_KEY > deployment_key.txt
+    - echo "${SSH_PRIVATE_KEY}" > deployment_key.txt
     - chmod 600 deployment_key.txt
     # login to gitlab registry       
     - ssh -i deployment_key.txt deployer@128.199.252.219 docker login -u directoryx -p $CI_BUILD_TOKEN $CI_REGISTRY
