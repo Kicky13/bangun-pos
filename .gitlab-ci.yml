@@ -19,14 +19,11 @@ build:
 deploy-dev:
   stage: deploy
   image: junte/ssh-agent
-  variables:
-    # should be set up at Gitlab CI env vars
-    SSH_PRIVATE_KEY: $SSH_DEV_PRIVATE_KEY
   script:
         # Add the private SSH key to the build environment
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - ssh-add <(echo "$SSH_DEV_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     # login to gitlab registry       
