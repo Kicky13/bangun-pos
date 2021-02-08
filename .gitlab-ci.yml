@@ -29,7 +29,7 @@ deploy-dev:
     # login to gitlab registry       
     - ssh deployer@128.199.252.219 docker login -u directoryx -p $CI_JOB_TOKEN $CI_REGISTRY
     # then we cd to folder with docker-compose, run docker-compose pull to update images, and run services with `docker-compose up -d`
-    - ssh deployer@128.199.252.219 "cd /Web/front-bangun && docker-compose -f docker-compose.yml pull front-bangun && HOME=/home/deployer docker-compose -f docker-compose.yml up -d"
+    - ssh deployer@128.199.252.219 "cd /Web/front-bangun && docker-compose -f docker-compose.yml pull && HOME=/home/deployer docker-compose -f docker-compose.yml up -d"
   environment:
       name: dev
   only:
