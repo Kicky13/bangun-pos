@@ -18,11 +18,18 @@
 
     <!-- Left Col -->
     <div class="bookmark-wrapper align-items-center flex-grow-1 d-none d-lg-flex">
-      <bookmarks />
+      <bookmarks v-if="userdata.role === 'admin'" />
     </div>
 
     <!-- Right Col -->
     <b-navbar-nav class="nav align-items-center ml-auto">
+      <b-button
+        variant="primary"
+        :to="{ name: 'pointof-sale' }"
+      >
+        <span>POS</span>
+      </b-button>
+      <user-menu />
       <dark-Toggler class="d-none d-lg-block" />
       <search-bar />
       <user-dropdown />
@@ -32,9 +39,10 @@
 
 <script>
 import {
-  BLink, BNavbarNav,
+  BLink, BNavbarNav, BButton,
 } from 'bootstrap-vue'
 import Bookmarks from './components/Bookmarks.vue'
+import UserMenu from './components/UserMenu.vue'
 import DarkToggler from './components/DarkToggler.vue'
 import SearchBar from './components/SearchBar.vue'
 import UserDropdown from './components/UserDropdown.vue'
@@ -42,6 +50,7 @@ import UserDropdown from './components/UserDropdown.vue'
 export default {
   components: {
     BLink,
+    BButton,
 
     // Navbar Components
     BNavbarNav,
@@ -49,12 +58,18 @@ export default {
     DarkToggler,
     SearchBar,
     UserDropdown,
+    UserMenu,
   },
   props: {
     toggleVerticalMenuActive: {
       type: Function,
       default: () => {},
     },
+  },
+  data() {
+    return {
+      userdata: JSON.parse(localStorage.getItem('userData')),
+    }
   },
 
 }
