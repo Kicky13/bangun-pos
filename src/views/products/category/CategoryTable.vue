@@ -187,50 +187,22 @@ export default {
         {
           label: 'Code',
           field: 'codeCat',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Code',
-          },
         },
         {
           label: 'Image',
           field: 'categoryImage',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Image',
-          },
         },
         {
           label: 'Category Name',
           field: 'categoryName',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Name',
-          },
         },
         {
           label: 'Parent Category',
           field: 'categoryParent',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Parent',
-          },
-        },
-        {
-          label: 'Price',
-          field: 'price',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Price',
-          },
         },
         {
           label: 'Status',
           field: 'status',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Status',
-          },
         },
         {
           label: 'Action',

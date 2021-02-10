@@ -16,7 +16,24 @@ export default [
     },
   },
   {
-    path: '/pos',
+    path: '/sale/report',
+    name: 'report-sale',
+    component: () => import('@/views/sales/reporting/KatalogProduk.vue'),
+    meta: {
+      pageTitle: 'Katalog Produk',
+      breadcrumb: [
+        {
+          text: 'Reporting',
+        },
+        {
+          text: 'Katalog Produk',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/sale/pos',
     name: 'pointof-sale',
     component: () => import('@/views/sales/pos/Pos.vue'),
     meta: {
