@@ -2,57 +2,43 @@
   <b-card
     class="text-center"
   >
-    <b-avatar
-      class="mb-1"
-      :variant="`light-${color}`"
-      size="45"
-    >
-      <b-link :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
-        <b-img
-          :alt="`${product.name}-${product.id}`"
-          fluid
-          class="card-img-top"
-          :src="product.image"
-        />
-      </b-link>
-    </b-avatar>
-    <div class="truncate">
-      <h2 class="mb-25 font-weight-bolder">
+    <b-link :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
+      <b-img
+        :alt="`${product.name}-${product.id}`"
+        thumbnail
+        sizes="35"
+        style="background-color: white; border: none"
+        fluid
+        class="card-img-top"
+        :src="product.image"
+      />
+    </b-link>
+    <div class="truncate text-center">
+      <h5 class="mb-25 font-weight-bolder">
         {{ product.price }}
-      </h2>
-      <span v-if="product.name.length<=15">{{ product.id }}-{{ product.name }}</span>
-      <span v-else>{{ product.id }}-{{ product.name.substring(0,15)+"..." }}</span>
-    </div>
-    <div
-      style="margin-top: 5px;"
-      class="text-center"
-    >
-      <b-button
-        :variant="color"
-        tag="a"
-        class="btn-cart"
-        @click="itemClick(product)"
-      >
-        <feather-icon
-          icon="ShoppingCartIcon"
-          class="mr-50"
-        />
-        <span>{{ product.isInCart ? 'View In Cart' : 'Add to Cart' }}</span>
-      </b-button>
+      </h5>
+      <span
+        v-if="product.name.length<=15"
+        style="color: black;"
+      >{{ product.id }}-{{ product.name }}</span>
+      <span
+        v-else
+        style="color: black;"
+      >{{ product.id }}-{{ product.name.substring(0,15)+"..." }}</span>
     </div>
   </b-card>
 </template>
 
 <script>
 import {
-  BCard, BAvatar, BButton, BLink, BImg,
+  BCard, BLink, BImg,
 } from 'bootstrap-vue'
 
 export default {
   components: {
     BCard,
-    BAvatar,
-    BButton,
+    // BAvatar,
+    // BButton,
     BLink,
     BImg,
   },

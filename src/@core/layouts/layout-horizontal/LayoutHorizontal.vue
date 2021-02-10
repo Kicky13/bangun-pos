@@ -9,7 +9,7 @@
     <!-- NAVBAR -->
     <b-navbar
       :style="{
-        backgroundColor: navbarType === 'static' && scrolledTo && skin === 'light' ? 'white' : null,
+        backgroundColor: navbarType === 'static' && scrolledTo && skin === 'light' ? 'black' : null,
         boxShadow: navbarType === 'static' && scrolledTo ? 'rgba(0, 0, 0, 0.05) 0px 4px 20px 0px' : null,
       }"
       :toggleable="false"

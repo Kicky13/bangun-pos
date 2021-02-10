@@ -23,6 +23,7 @@ export default [
       // pageTitle: 'Point of Sale',
       resource: 'PointSale',
       action: 'manage',
+      // layout: 'full',
       // breadcrumb: [
       //   {
       //     text: 'Sale',
