@@ -24,13 +24,14 @@
     <!-- Right Col -->
     <b-navbar-nav class="nav align-items-center ml-auto">
       <b-button
+        v-if="userdata.role === 'user'"
         variant="primary"
         :to="{ name: 'pointof-sale' }"
       >
         <span>POS</span>
       </b-button>
-      <user-menu />
-      <dark-Toggler class="d-none d-lg-block" />
+      <user-menu v-if="userdata.role === 'user'" />
+      <!-- <dark-Toggler class="d-none d-lg-block" /> -->
       <search-bar />
       <user-dropdown />
     </b-navbar-nav>
@@ -43,7 +44,7 @@ import {
 } from 'bootstrap-vue'
 import Bookmarks from './components/Bookmarks.vue'
 import UserMenu from './components/UserMenu.vue'
-import DarkToggler from './components/DarkToggler.vue'
+// import DarkToggler from './components/DarkToggler.vue'
 import SearchBar from './components/SearchBar.vue'
 import UserDropdown from './components/UserDropdown.vue'
 
@@ -55,7 +56,7 @@ export default {
     // Navbar Components
     BNavbarNav,
     Bookmarks,
-    DarkToggler,
+    // DarkToggler,
     SearchBar,
     UserDropdown,
     UserMenu,

@@ -10,6 +10,7 @@
             <b-img
               :src="appLogoImage"
               alt="logo"
+              fluid-grow
             />
           </span>
           <h2 class="brand-text mb-0">

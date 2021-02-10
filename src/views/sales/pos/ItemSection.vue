@@ -111,11 +111,13 @@
           no-body
         >
           <!-- Product Details -->
-          <mini-product-card
-            :product="product"
-            :item-click="handleCartActionClick"
-            color="danger"
-          />
+          <b-link :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
+            <mini-product-card
+              :product="product"
+              :item-click="handleCartActionClick"
+              color="danger"
+            />
+          </b-link>
         </b-col>
       </b-row>
     </section>
@@ -163,7 +165,7 @@
 
 <script>
 import {
-  BDropdown, BDropdownItem, BRow, BCol, BInputGroup, BInputGroupAppend, BFormInput, BPagination, BButton,
+  BDropdown, BDropdownItem, BRow, BCol, BInputGroup, BInputGroupAppend, BFormInput, BPagination, BButton, BLink,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import { watch } from '@vue/composition-api'
@@ -192,7 +194,7 @@ export default {
     BButton,
     // BCard,
     // BCardBody,
-    // BLink,
+    BLink,
     // BImg,
     // BCardText,
     // BButton,
