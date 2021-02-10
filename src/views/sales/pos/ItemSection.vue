@@ -34,6 +34,37 @@
                   {{ sortOption.text }}
                 </b-dropdown-item>
               </b-dropdown>
+              <!-- Filter Button -->
+              <b-button
+                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                variant="danger"
+                style="margin-left: 5px;"
+              >
+                <span>KATEGORI</span>
+              </b-button>
+              <b-button
+                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                variant="danger"
+                style="margin-left: 5px;"
+              >
+                <span>SUB KATEGORI</span>
+              </b-button>
+              <b-button
+                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                variant="danger"
+                style="margin-left: 5px;"
+              >
+                <span>BRAND</span>
+              </b-button>
+              <b-button
+                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                variant="secondary-outline"
+              >
+                <feather-icon
+                  icon="ClockIcon"
+                  size="20"
+                />
+              </b-button>
             </div>
           </div>
         </div>
@@ -132,7 +163,7 @@
 
 <script>
 import {
-  BDropdown, BDropdownItem, BRow, BCol, BInputGroup, BInputGroupAppend, BFormInput, BPagination,
+  BDropdown, BDropdownItem, BRow, BCol, BInputGroup, BInputGroupAppend, BFormInput, BPagination, BButton,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import { watch } from '@vue/composition-api'
@@ -140,6 +171,7 @@ import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/a
 // import ShopLeftFilterSidebar from './ECommerceShopLeftFilterSidebar.vue'
 import MiniProductCard from '@core/components/item-cards/MiniProductCard.vue'
 import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/dummyFilter'
+import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 import { useEcommerceUi } from './ActionHandling'
 
 export default {
@@ -157,6 +189,7 @@ export default {
     BInputGroup,
     BInputGroupAppend,
     BFormInput,
+    BButton,
     // BCard,
     // BCardBody,
     // BLink,
@@ -168,6 +201,7 @@ export default {
     // SFC
     // ShopLeftFilterSidebar,
     MiniProductCard,
+    FeatherIcon,
   },
   setup() {
     const {

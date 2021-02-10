@@ -13,7 +13,7 @@ export default {
       { title: 'Stock Count', route: { name: 'stock-product' }, icon: 'AirplayIcon', isBookmarked: false },
       { title: 'Add Purchase', route: { name: 'add-purchase' }, icon: 'PlusIcon', isBookmarked: false },
       { title: 'Import Purchase', route: { name: 'import-purchase' }, icon: 'DownloadCloudIcon', isBookmarked: false },
-      { title: 'POS', route: { name: 'pointof-sale' }, icon: 'MousePointerIcon', isBookmarked: true },
+      { title: 'POS', route: { name: 'pointof-sale' }, icon: 'MousePointerIcon', isBookmarked: false },
       { title: 'Giftcard', route: { name: 'card-basic' }, icon: 'CreditCardIcon', isBookmarked: false },
       { title: 'Coupon', route: { name: 'pages-blog-detail' }, icon: 'FileTextIcon', isBookmarked: false },
     ],

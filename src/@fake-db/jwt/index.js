@@ -14,8 +14,24 @@ const data = {
       role: 'admin',
       ability: [
         {
+          action: 'read',
+          subject: 'Dashboard',
+        },
+        {
           action: 'manage',
-          subject: 'all',
+          subject: 'Product',
+        },
+        {
+          action: 'manage',
+          subject: 'Sales',
+        },
+        {
+          action: 'manage',
+          subject: 'Master',
+        },
+        {
+          action: 'read',
+          subject: 'Auth',
         },
       ],
       extras: {
@@ -26,15 +42,31 @@ const data = {
       id: 2,
       fullName: 'Jane Doe',
       username: 'janedoe',
-      password: 'client',
+      password: 'user',
       // eslint-disable-next-line global-require
       avatar: require('@/assets/images/avatars/1-small.png'),
-      email: 'client@demo.com',
-      role: 'client',
+      email: 'user@demo.com',
+      role: 'user',
       ability: [
         {
           action: 'read',
-          subject: 'ACL',
+          subject: 'User',
+        },
+        {
+          action: 'manage',
+          subject: 'SalesUser',
+        },
+        {
+          action: 'manage',
+          subject: 'ProductUser',
+        },
+        {
+          action: 'manage',
+          subject: 'PointSale',
+        },
+        {
+          action: 'manage',
+          subject: 'CustomerUser',
         },
         {
           action: 'read',

@@ -10,6 +10,7 @@ import purchases from './routes/purchases'
 import dashboard from './routes/dashboard'
 import pages from './routes/pages'
 import master from './routes/master'
+import usermenu from './routes/usermenu'
 
 Vue.use(VueRouter)
 
@@ -20,13 +21,14 @@ const router = new VueRouter({
     return { x: 0, y: 0 }
   },
   routes: [
-    { path: '/', redirect: { name: 'dashboard-ecommerce' } },
+    { path: '/', redirect: { name: 'dashboard-ecommerce', meta: { action: 'read', resource: 'Dashboard' } } },
     ...products,
     ...purchases,
     ...sales,
     ...dashboard,
     ...master,
     ...pages,
+    ...usermenu,
     {
       path: '*',
       redirect: 'error-404',
