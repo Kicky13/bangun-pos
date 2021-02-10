@@ -27,17 +27,22 @@
         :src="product.image"
       />
     </b-link>
-    <div class="truncate">
-      <h2 class="mb-25 font-weight-bolder">
+    <div>
+      <p class="font-italic">
+        20200101000{{ product.id }}
+      </p>
+      <h5>
+        {{ product.id }}-{{ product.name }}
+      </h5>
+      <!-- <h5 v-if="product.name.length<=15">
+        {{ product.id }}-{{ product.name }}
+      </h5>
+      <h5 v-else>
+        {{ product.id }}-{{ product.name.substring(0,15)+"..." }}
+      </h5> -->
+      <p class="font-italic">
         {{ product.price }}
-      </h2>
-      <span v-if="product.name.length<=15">{{ product.id }}-{{ product.name }}</span>
-      <span v-else>{{ product.id }}-{{ product.name.substring(0,15)+"..." }}</span>
-    </div>
-    <div
-      style="margin-top: 5px;"
-      class="text-center"
-    >
+      </p>
     </div>
   </b-card>
 </template>

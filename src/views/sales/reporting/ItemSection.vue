@@ -1,16 +1,6 @@
 <template>
   <div style="height: inherit">
 
-    <!-- ECommerce Header -->
-    <section id="ecommerce-header">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="ecommerce-header-items">
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Overlay -->
     <div class="body-content-overlay" />
 
@@ -33,92 +23,76 @@
           </b-input-group>
         </b-col>
         <b-col cols="6">
-            <div class="view-options d-flex">
-              <!-- Sort Button -->
-              <!-- <b-dropdown
-                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                :text="sortBy.text"
-                right
-                variant="outline-primary"
-                style="margin-left: 5px;"
+          <div class="view-options d-flex">
+            <!-- Filter Button -->
+            <b-dropdown
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              text="Kategori"
+              right
+              variant="outline-primary"
+              style="margin-left: 5px;"
+            >
+              <b-dropdown-item
+                v-for="sortOption in sortByOptions"
+                :key="sortOption.value"
+                @click="sortBy=sortOption"
               >
-                <b-dropdown-item
-                  v-for="sortOption in sortByOptions"
-                  :key="sortOption.value"
-                  @click="sortBy=sortOption"
-                >
-                  {{ sortOption.text }}
-                </b-dropdown-item>
-              </b-dropdown> -->
-              <!-- Filter Button -->
-              <b-dropdown
-                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                text="Kategori"
-                right
-                variant="outline-primary"
-                style="margin-left: 5px;"
+                {{ sortOption.text }}
+              </b-dropdown-item>
+            </b-dropdown>
+            <b-dropdown
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              text="Sub Kategori"
+              right
+              variant="outline-primary"
+              style="margin-left: 5px;"
+            >
+              <b-dropdown-item
+                v-for="sortOption in sortByOptions"
+                :key="sortOption.value"
+                @click="sortBy=sortOption"
               >
-                <b-dropdown-item
-                  v-for="sortOption in sortByOptions"
-                  :key="sortOption.value"
-                  @click="sortBy=sortOption"
-                >
-                  {{ sortOption.text }}
-                </b-dropdown-item>
-              </b-dropdown>
-              <b-dropdown
-                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                text="Sub Kategori"
-                right
-                variant="outline-primary"
-                style="margin-left: 5px;"
+                {{ sortOption.text }}
+              </b-dropdown-item>
+            </b-dropdown>
+            <b-dropdown
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              text="Brand"
+              right
+              variant="outline-primary"
+              style="margin-left: 5px;"
+            >
+              <b-dropdown-item
+                v-for="sortOption in sortByOptions"
+                :key="sortOption.value"
+                @click="sortBy=sortOption"
               >
-                <b-dropdown-item
-                  v-for="sortOption in sortByOptions"
-                  :key="sortOption.value"
-                  @click="sortBy=sortOption"
-                >
-                  {{ sortOption.text }}
-                </b-dropdown-item>
-              </b-dropdown>
-              <b-dropdown
-                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                text="Brand"
-                right
-                variant="outline-primary"
-                style="margin-left: 5px;"
-              >
-                <b-dropdown-item
-                  v-for="sortOption in sortByOptions"
-                  :key="sortOption.value"
-                  @click="sortBy=sortOption"
-                >
-                  {{ sortOption.text }}
-                </b-dropdown-item>
-              </b-dropdown>
-              <b-button
-                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                variant="primary"
-                style="margin-left: 5px;"
-                class="btn-sm"
-              >
-                <!-- <span>Brand</span> -->
-                <feather-icon
-                  icon="GridIcon"
-                />
-              </b-button>
-              <b-button
-                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                variant="primary"
-                style="margin-left: 5px;"
-                class="btn-sm"
-              >
-                <!-- <span>Brand</span> -->
-                <feather-icon
-                  icon="ListIcon"
-                />
-              </b-button>
-            </div>
+                {{ sortOption.text }}
+              </b-dropdown-item>
+            </b-dropdown>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              variant="primary"
+              style="margin-left: 5px;"
+              class="btn-sm"
+            >
+              <!-- <span>Brand</span> -->
+              <feather-icon
+                icon="GridIcon"
+              />
+            </b-button>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              variant="primary"
+              style="margin-left: 5px;"
+              class="btn-sm"
+            >
+              <!-- <span>Brand</span> -->
+              <feather-icon
+                icon="ListIcon"
+              />
+            </b-button>
+          </div>
         </b-col>
       </b-row>
     </div>
