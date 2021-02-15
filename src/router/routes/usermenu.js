@@ -20,7 +20,7 @@ export default [
   {
     path: '/myproduct',
     name: 'user-product',
-    component: () => import('@/views/user/products/List.vue'),
+    component: () => import('@/views/user/products/KatalogProduk.vue'),
     meta: {
       // pageTitle: 'Produk',
       resource: 'ProductUser',
