@@ -222,7 +222,7 @@ export default {
         q: filters.value.q,
         sortBy: sortBy.value.value,
         page: filters.value.page,
-        perPage: filters.value.perPage,
+        perPage: 12,
       })
         .then(response => {
           products.value = response.data.products
