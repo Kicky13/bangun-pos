@@ -7,6 +7,8 @@ export default [
       // pageTitle: 'Penjualan',
       resource: 'SalesUser',
       action: 'manage',
+      redTitle: 'Penjualan',
+      redSubs: 'List penjualanmu hingga hari ini',
       // breadcrumb: [
       //   {
       //     text: 'Sales',
@@ -23,6 +25,8 @@ export default [
       // pageTitle: 'Produk',
       resource: 'ProductUser',
       action: 'manage',
+      redTitle: 'Product',
+      redSubs: 'Berikut list produk yang kamu jual',
       // breadcrumb: [
       //   {
       //     text: 'Produk',
@@ -39,6 +43,8 @@ export default [
       // pageTitle: 'Tambah Produk',
       resource: 'ProductUser',
       action: 'manage',
+      redTitle: 'Tambah Produk',
+      redSubs: 'Tambahkan Produk baru yang akan kamu jual',
       // breadcrumb: [
       //   {
       //     text: 'Produk',
@@ -58,6 +64,8 @@ export default [
       // pageTitle: 'Customer',
       resource: 'CustomerUser',
       action: 'manage',
+      redTitle: 'Customer',
+      redSubs: 'List Customer yang berlangganan di tokomu',
       // breadcrumb: [
       //   {
       //     text: 'Customer',

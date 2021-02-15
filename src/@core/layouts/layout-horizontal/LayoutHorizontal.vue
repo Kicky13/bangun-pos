@@ -34,7 +34,6 @@
       >
         <horizontal-nav-menu />
       </div>
-
       <!-- Vertical Nav Menu -->
       <vertical-nav-menu
         :is-vertical-menu-active="isVerticalMenuActive"
@@ -114,6 +113,7 @@ import LayoutContentRendererLeft from '@core/layouts/components/layout-content-r
 import LayoutContentRendererLeftDetached from '@core/layouts/components/layout-content-renderer/LayoutContentRendererLeftDetached.vue'
 import useLayoutHorizontal from './useLayoutHorizontal'
 import HorizontalNavMenu from './components/horizontal-nav-menu/HorizontalNavMenu.vue'
+import HorizontalNavMenuUser from './components/horizontal-nav-menu/components/horizontal-nav-menu-user/HorizontalNavMenuUser.vue'
 
 // Vertical Menu
 /* eslint-disable import/order */
@@ -129,6 +129,7 @@ export default {
     AppNavbarHorizontalLayoutBrand,
     AppFooter,
     HorizontalNavMenu,
+    HorizontalNavMenuUser,
 
     BNavbar,
 
