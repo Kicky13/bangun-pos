@@ -12,6 +12,7 @@
       <slot name="breadcrumb">
         <app-breadcrumb />
       </slot>
+      <horizontal-nav-menu-user />
       <div class="content-body">
         <transition
           :name="routerTransition"
@@ -27,10 +28,12 @@
 <script>
 import AppBreadcrumb from '@core/layouts/components/AppBreadcrumb.vue'
 import useAppConfig from '@core/app-config/useAppConfig'
+import HorizontalNavMenuUser from '@core/layouts/layout-horizontal/components/horizontal-nav-menu/components/horizontal-nav-menu-user/HorizontalNavMenuUser.vue'
 
 export default {
   components: {
     AppBreadcrumb,
+    HorizontalNavMenuUser,
   },
   setup() {
     const { routerTransition, contentWidth } = useAppConfig()
