@@ -18,18 +18,20 @@ export default [
   {
     path: '/sale/report',
     name: 'report-sale',
-    component: () => import('@/views/sales/reporting/KatalogProduk.vue'),
+    component: () => import('@/views/sales/reporting/Report.vue'),
     meta: {
-      pageTitle: 'Katalog Produk',
-      breadcrumb: [
-        {
-          text: 'Reporting',
-        },
-        {
-          text: 'Katalog Produk',
-          active: true,
-        },
-      ],
+      pageTitle: 'Report Sales',
+      resource: 'Sales',
+      action: 'manage',
+      // breadcrumb: [
+      //   {
+      //     text: 'Reporting',
+      //   },
+      //   {
+      //     text: 'Katalog Produk',
+      //     active: true,
+      //   },
+      // ],
     },
   },
   {
