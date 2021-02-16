@@ -1,5 +1,8 @@
 <template>
-  <p class="clearfix mb-0">
+  <p
+    v-if="$route.meta.resource !== 'PointSale'"
+    class="clearfix mb-0"
+  >
     <span class="float-md-left d-block d-md-inline-block mt-25">
       COPYRIGHT  © {{ new Date().getFullYear() }}
       <b-link
