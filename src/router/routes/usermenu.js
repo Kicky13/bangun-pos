@@ -57,6 +57,27 @@ export default [
     },
   },
   {
+    path: '/myproduct/edit',
+    name: 'user-product-edit',
+    component: () => import('@/views/user/products/forms/Edit.vue'),
+    meta: {
+      // pageTitle: 'Tambah Produk',
+      resource: 'ProductUser',
+      action: 'manage',
+      redTitle: 'Edit Produk',
+      redSubs: 'Ubah data Produk yang sudah ada',
+      // breadcrumb: [
+      //   {
+      //     text: 'Produk',
+      //   },
+      //   {
+      //     text: 'Tambah Produk',
+      //     active: true,
+      //   },
+      // ],
+    },
+  },
+  {
     path: '/mycustomer',
     name: 'user-customer',
     component: () => import('@/views/user/customer/List.vue'),

@@ -2,13 +2,14 @@
   <b-card
     class="text-center"
     no-body
+    style="height:21rem"
   >
     <b-card-header class="text-right">
       <b-button
         :variant="color"
         tag="a"
         class="btn-icon"
-        @click="itemClick(product)"
+        :to="{ name: 'user-product-edit'}"
       >
         <feather-icon
           icon="EditIcon"

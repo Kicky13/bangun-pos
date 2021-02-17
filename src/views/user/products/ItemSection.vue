@@ -74,23 +74,9 @@
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               variant="primary"
               style="margin-left: 5px;"
-              class="btn-sm"
+              :to="{ name: 'user-product-add'}"
             >
-              <!-- <span>Brand</span> -->
-              <feather-icon
-                icon="GridIcon"
-              />
-            </b-button>
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              variant="primary"
-              style="margin-left: 5px;"
-              class="btn-sm"
-            >
-              <!-- <span>Brand</span> -->
-              <feather-icon
-                icon="ListIcon"
-              />
+              Tambah Produk
             </b-button>
           </div>
         </b-col>
