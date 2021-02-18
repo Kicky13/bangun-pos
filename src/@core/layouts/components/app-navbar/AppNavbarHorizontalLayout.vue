@@ -1,5 +1,8 @@
 <template>
-  <div class="navbar-container d-flex content align-items-center">
+  <div
+    style="background-color: #000000;"
+    class="navbar-container d-flex content align-items-center"
+  >
 
     <!-- Nav Menu Toggler -->
     <ul class="nav navbar-nav d-xl-none">

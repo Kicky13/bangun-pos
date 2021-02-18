@@ -9,6 +9,7 @@
       <feather-icon
         size="21"
         icon="MenuIcon"
+        stroke="white"
       />
     </template>
     <b-dropdown-item
