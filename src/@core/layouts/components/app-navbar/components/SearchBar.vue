@@ -10,6 +10,7 @@
       <feather-icon
         icon="SearchIcon"
         size="21"
+        stroke="white"
       />
     </a>
 
