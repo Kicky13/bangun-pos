@@ -7,8 +7,8 @@ export default [
       // pageTitle: 'Penjualan',
       resource: 'SalesUser',
       action: 'manage',
-      redTitle: 'Penjualan',
-      redSubs: 'List penjualanmu hingga hari ini',
+      redTitle: 'Data Penjualan',
+      redSubs: 'Catatan Penjualan Barang-Barang di Toko Kamu.',
       // breadcrumb: [
       //   {
       //     text: 'Sales',
@@ -44,7 +44,7 @@ export default [
       resource: 'ProductUser',
       action: 'manage',
       redTitle: 'Tambah Produk',
-      redSubs: 'Tambahkan Produk baru yang akan kamu jual',
+      redSubs: 'Tambahkan Produk Baru Yang Akan Kamu Jual.',
       // breadcrumb: [
       //   {
       //     text: 'Produk',

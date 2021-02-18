@@ -49,8 +49,8 @@
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
-                    size="10"
-                  /><span style="font-size: 10px;">Kategori</span></b-button>
+                    size="16"
+                  /><span style="font-size: 14px;"> Kategori</span></b-button>
                 </b-col>
                 <b-col cols="4">
                   <b-form-group
@@ -72,8 +72,8 @@
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
-                    size="10"
-                  /><span style="font-size: 10px;">Sub Kategori</span></b-button>
+                    size="16"
+                  /><span style="font-size: 14px;"> Sub Kategori</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
@@ -97,8 +97,8 @@
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
-                    size="10"
-                  /><span style="font-size: 10px;">Type</span></b-button>
+                    size="16"
+                  /><span style="font-size: 14px;"> Type</span></b-button>
                 </b-col>
                 <b-col cols="4">
                   <b-form-group
@@ -120,8 +120,8 @@
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
-                    size="10"
-                  /><span style="font-size: 10px;">Brand</span></b-button>
+                    size="16"
+                  /><span style="font-size: 14px;"> Brand</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
@@ -153,8 +153,8 @@
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
-                    size="10"
-                  /><span style="font-size: 10px;">Unit</span></b-button>
+                    size="16"
+                  /><span style="font-size: 14px;"> Unit</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
