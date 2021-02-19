@@ -20,9 +20,6 @@
     </ul>
 
     <!-- Left Col -->
-    <div class="bookmark-wrapper align-items-center flex-grow-1 d-none d-lg-flex">
-      <bookmarks v-if="userdata.role === 'admin'" />
-    </div>
 
     <!-- Right Col -->
     <b-navbar-nav class="nav align-items-center ml-auto">
@@ -45,7 +42,7 @@
 import {
   BLink, BNavbarNav, BButton,
 } from 'bootstrap-vue'
-import Bookmarks from './components/Bookmarks.vue'
+// import Bookmarks from './components/Bookmarks.vue'
 import UserMenu from './components/UserMenu.vue'
 // import DarkToggler from './components/DarkToggler.vue'
 import SearchBar from './components/SearchBar.vue'
@@ -58,7 +55,7 @@ export default {
 
     // Navbar Components
     BNavbarNav,
-    Bookmarks,
+    // Bookmarks,
     // DarkToggler,
     SearchBar,
     UserDropdown,
