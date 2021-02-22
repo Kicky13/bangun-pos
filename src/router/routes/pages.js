@@ -40,7 +40,7 @@ export default [
     name: 'auth-register',
     component: () => import('@/views/pages/authentication/Register.vue'),
     meta: {
-      layout: 'horizontal',
+      layout: 'full',
       resource: 'Auth',
       redTitle: 'Selamat Datang di POS',
       redSubs: 'Lengkapi data untuk aktivasi akun',
