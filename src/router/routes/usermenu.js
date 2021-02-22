@@ -95,4 +95,22 @@ export default [
       // ],
     },
   },
+  {
+    path: '/mydashboard',
+    name: 'user-dashboard',
+    component: () => import('@/views/user/dashboard/List.vue'),
+    meta: {
+      // pageTitle: 'Customer',
+      resource: 'DasboardUser',
+      action: 'manage',
+      redTitle: 'Selamat Datang, di POS Dashboard',
+      redSubs: 'Monitoring Transaksi Penjualan di Toko Kamu.',
+      // breadcrumb: [
+      //   {
+      //     text: 'Customer',
+      //     active: true,
+      //   },
+      // ],
+    },
+  },
 ]
