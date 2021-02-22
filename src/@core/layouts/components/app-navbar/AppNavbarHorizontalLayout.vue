@@ -30,6 +30,7 @@
       >
         <span>POS</span>
       </b-button>
+      <home-bar />
       <user-menu v-if="userdata.role === 'user'" />
       <!-- <dark-Toggler class="d-none d-lg-block" /> -->
       <search-bar />
@@ -46,6 +47,7 @@ import {
 import UserMenu from './components/UserMenu.vue'
 // import DarkToggler from './components/DarkToggler.vue'
 import SearchBar from './components/SearchBar.vue'
+import HomeBar from './components/Home.vue'
 import UserDropdown from './components/UserDropdown.vue'
 
 export default {
@@ -58,6 +60,7 @@ export default {
     // Bookmarks,
     // DarkToggler,
     SearchBar,
+    HomeBar,
     UserDropdown,
     UserMenu,
   },

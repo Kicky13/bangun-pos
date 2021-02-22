@@ -66,6 +66,10 @@ const data = {
         },
         {
           action: 'manage',
+          subject: 'DasboardUser',
+        },
+        {
+          action: 'manage',
           subject: 'CustomerUser',
         },
         {
