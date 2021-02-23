@@ -1,15 +1,20 @@
 <template>
-  <div />
+  <b-row>
+    <b-col cols="12">
+      <list-table />
+    </b-col>
+  </b-row>
 </template>
 
 <script>
-import {} from 'bootstrap-vue'
+import { BRow, BCol } from 'bootstrap-vue'
+import ListTable from './ListTable.vue'
 
 export default {
-  data() {
-    return {
-      menuHidden: this.$store.state.appConfig.layout.menu.hidden,
-    }
+  components: {
+    BRow,
+    BCol,
+    ListTable,
   },
   created() {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
@@ -19,3 +24,7 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" >
+@import '@core/scss/vue/libs/vue-good-table.scss';
+</style>

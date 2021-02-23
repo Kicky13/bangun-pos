@@ -85,8 +85,8 @@ export default [
       // pageTitle: 'Customer',
       resource: 'CustomerUser',
       action: 'manage',
-      redTitle: 'Customer',
-      redSubs: 'List Customer yang berlangganan di tokomu',
+      redTitle: 'Data Customer',
+      redSubs: 'Daftarkan Semua Pelanggan Tokomu untuk Pencatatan Buku KAS Lebih Mudah.',
       // breadcrumb: [
       //   {
       //     text: 'Customer',
