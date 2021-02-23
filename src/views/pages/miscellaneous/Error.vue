@@ -10,11 +10,13 @@
 
     <div class="misc-inner p-2 p-sm-3">
       <div class="w-100 text-center">
+
         <h2 class="mb-1">
-          Page Not Found 🕵🏻‍♀️
+          Halaman Tidak Ditemukan 🕵🏻‍♀️
         </h2>
         <p class="mb-2">
-          Oops! 😖 The requested URL was not found on this server.
+          <!-- Oops! 😖 The requested URL was not found on this server. -->
+          Oops! 😖 Request halaman yang anda inginkan tidak ada diserver
         </p>
 
         <b-button

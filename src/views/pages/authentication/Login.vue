@@ -4,9 +4,8 @@
 
       <!-- Brand logo-->
       <b-link class="brand-logo">
-        <vuexy-logo />
-        <h2 class="brand-text text-primary ml-1">
-          Vuexy
+        <h2 class="ml-1" style="color: #b20838; font-weight: 800">
+          POS RETAIL
         </h2>
       </b-link>
       <!-- /Brand logo-->
@@ -41,10 +40,10 @@
             class="mb-1 font-weight-bold"
             title-tag="h2"
           >
-            Welcome to Vuexy! 👋
+            Selamat Datang 👋
           </b-card-title>
           <b-card-text class="mb-2">
-            Please sign-in to your account and start the adventure
+            <!--Please sign-in to your account and start the adventure-->
           </b-card-text>
 
           <b-alert
@@ -56,7 +55,7 @@
                 <small class="mr-50"><span class="font-weight-bold">Admin:</span> admin@demo.com | admin</small>
               </p>
               <p>
-                <small class="mr-50"><span class="font-weight-bold">Client:</span> client@demo.com | client</small>
+                <small class="mr-50"><span class="font-weight-bold">User:</span> User@demo.com | User</small>
               </p>
             </div>
             <feather-icon
@@ -154,54 +153,55 @@
                 type="submit"
                 variant="primary"
                 block
-                :disabled="invalid"
+                :disabled="invalid" style="color: #b20838;"
               >
                 Sign in
               </b-button>
             </b-form>
           </validation-observer>
 
-          <b-card-text class="text-center mt-2">
-            <span>New on our platform? </span>
-            <b-link :to="{name:'auth-register'}">
-              <span>&nbsp;Create an account</span>
-            </b-link>
-          </b-card-text>
+          <!--<b-card-text class="text-center mt-2">-->
+            <!--<span>New on our platform? </span>-->
+            <!--<b-link :to="{name:'auth-register'}">-->
+              <!--<span>&nbsp;Create an account</span>-->
+            <!--</b-link>-->
+          <!--</b-card-text>-->
 
           <!-- divider -->
           <div class="divider my-2">
             <div class="divider-text">
-              or
             </div>
           </div>
 
-          <!-- social buttons -->
-          <div class="auth-footer-btn d-flex justify-content-center">
-            <b-button
-              variant="facebook"
-              href="javascript:void(0)"
-            >
-              <feather-icon icon="FacebookIcon" />
-            </b-button>
-            <b-button
-              variant="twitter"
-              href="javascript:void(0)"
-            >
-              <feather-icon icon="TwitterIcon" />
-            </b-button>
-            <b-button
-              variant="google"
-              href="javascript:void(0)"
-            >
-              <feather-icon icon="MailIcon" />
-            </b-button>
-            <b-button
-              variant="github"
-              href="javascript:void(0)"
-            >
-              <feather-icon icon="GithubIcon" />
-            </b-button>
-          </div>
+          <!--=========================-->
+          <!--=========================-->
+          <!-- SOSIAL MEDIA MENU VUE -->
+          <!--<div class="auth-footer-btn d-flex justify-content-center">-->
+            <!--<b-button-->
+              <!--variant="facebook"-->
+              <!--href="javascript:void(0)"-->
+            <!--&gt;-->
+              <!--<feather-icon icon="FacebookIcon" />-->
+            <!--</b-button>-->
+            <!--<b-button-->
+              <!--variant="twitter"-->
+              <!--href="javascript:void(0)"-->
+            <!--&gt;-->
+              <!--<feather-icon icon="TwitterIcon" />-->
+            <!--</b-button>-->
+            <!--<b-button-->
+              <!--variant="google"-->
+              <!--href="javascript:void(0)"-->
+            <!--&gt;-->
+              <!--<feather-icon icon="MailIcon" />-->
+            <!--</b-button>-->
+            <!--<b-button-->
+              <!--variant="github"-->
+              <!--href="javascript:void(0)"-->
+            <!--&gt;-->
+              <!--<feather-icon icon="GithubIcon" />-->
+            <!--</b-button>-->
+          <!--</div>-->
         </b-col>
       </b-col>
     <!-- /Login-->
@@ -212,7 +212,7 @@
 <script>
 /* eslint-disable global-require */
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
-import VuexyLogo from '@core/layouts/components/Logo.vue'
+// import VuexyLogo from '@core/layouts/components/Logo.vue'
 import {
   BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup, BFormCheckbox, BCardText, BCardTitle, BImg, BForm, BButton, BAlert, VBTooltip,
 } from 'bootstrap-vue'
@@ -243,7 +243,6 @@ export default {
     BForm,
     BButton,
     BAlert,
-    VuexyLogo,
     ValidationProvider,
     ValidationObserver,
   },
@@ -267,7 +266,8 @@ export default {
     imgUrl() {
       if (store.state.appConfig.layout.skin === 'dark') {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.sideImg = require('@/assets/images/pages/login-v2-dark.svg')
+        // this.sideImg = require('@/assets/images/pages/login-v2-dark.svg')
+        // this.sideImg = require('@/assets/images/pages/login-v2-dark.svg')
         return this.sideImg
       }
       return this.sideImg
