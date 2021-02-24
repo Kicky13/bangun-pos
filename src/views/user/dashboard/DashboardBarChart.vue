@@ -65,7 +65,7 @@ export default {
         },
       ],
       chartjsData,
-      rangePicker: ['2021-01-01', '2019-01-03'],
+      rangePicker: ['2021-01-01', '2021-01-10'],
     }
   },
 }
