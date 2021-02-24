@@ -163,7 +163,7 @@
 
           <b-card-text class="text-center mt-2">
             <span>New on our platform? </span>
-            <b-link :to="{name:'auth-register'}">
+            <b-link :to="{name:'auth-register', params: { token: '389sisu92' } }">
               <span>&nbsp;Create an account</span>
             </b-link>
           </b-card-text>

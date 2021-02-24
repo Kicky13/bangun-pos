@@ -63,6 +63,7 @@ import {
   BRow, BCol, BImg, BLink,
 } from 'bootstrap-vue'
 import { $themeConfig } from '@themeConfig'
+import { useRouter } from '@core/utils/utils'
 import RegisterWizard from './RegisterWizard.vue'
 
 export default {
@@ -76,8 +77,11 @@ export default {
   },
   setup() {
     // App Name
+    const { route } = useRouter()
     const { appName, appLogoImage } = $themeConfig.app
+    const aksesTokoToken = route.value.params.token
     return {
+      aksesTokoToken,
       appName,
       appLogoImage,
     }
