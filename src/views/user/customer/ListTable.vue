@@ -52,13 +52,13 @@
           Delete
         </b-button>
       </div>
-      <div style="float:left;margin-left:10px;" >
+      <div style="float:left;margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="primary"
           style="margin-top: -15px;"
         >
-          Tambahkan Produk
+          Tambahkan Customer
         </b-button>
       </div>
     </div>
@@ -81,7 +81,12 @@
         slot="table-row"
         slot-scope="props"
       >
-        <span>
+        <span
+          v-if="props.column.field === 'custCode'"
+        >
+          <span>{{ props.row.custCode }}</span>
+        </span>
+        <span v-else>
           {{ props.formattedRow[props.column.field] }}
         </span>
       </template>
@@ -144,7 +149,6 @@ import {
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
-// import { codeBasic } from './search'
 
 export default {
   components: {

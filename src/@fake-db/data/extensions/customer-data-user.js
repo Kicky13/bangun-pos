@@ -1,7 +1,7 @@
 import mock from '@/@fake-db/mock'
 /* eslint-disable global-require */
 const data = {
-  sales: [
+  customer: [
     {
       id: 1,
       custCode: '0452297501931931',
