@@ -26,7 +26,7 @@
           </div>
         </b-form-group>
       </div>
-      <div style="float:left;width: 300px !important; margin-left:10px;">
+      <!-- <div style="float:left;width: 300px !important; margin-left:10px;">
         <b-form-group
           label="Pembayaran"
           label-for="pembayaran"
@@ -38,8 +38,8 @@
             :options="pembayaranItems"
           />
         </b-form-group>
-      </div>
-      <div style="float:left;width: 300px !important; margin-left:10px;">
+      </div> -->
+      <!-- <div style="float:left;width: 300px !important; margin-left:10px;">
         <b-form-group
           label="Status"
           label-for="status"
@@ -51,7 +51,7 @@
             :options="statusItems"
           />
         </b-form-group>
-      </div>
+      </div> -->
 
       <div style="float:left;margin-left:10px;">
         <b-button
@@ -330,12 +330,17 @@ export default {
           // },
         },
         {
-          label: 'Tipe Pembayaran',
+          label: 'Pembayaran',
           field: 'typePayment',
           // filterOptions: {
           //   enabled: true,
-          //   placeholder: 'Search Due',
+          //   placeholder: 'Search Pembayaran',
           // },
+          sortable: false,
+          filterOptions: {
+            enabled: true,
+            filterDropdownItems: ['CASH', 'KREDIT'],
+          },
         },
         {
           label: 'Status',
@@ -344,10 +349,16 @@ export default {
           //   enabled: true,
           //   placeholder: 'Search Status',
           // },
+          sortable: false,
+          filterOptions: {
+            enabled: true,
+            filterDropdownItems: ['LUNAS', 'UTANG'],
+          },
         },
         {
           label: 'Action',
           field: 'action',
+          sortable: false,
         },
       ],
       rows: [],
@@ -364,8 +375,8 @@ export default {
     },
     paymentVariant() {
       const statusColor = {
-        Paid: 'light-secondary',
-        Due: 'light-primary',
+        LUNAS: 'light-secondary',
+        UTANG: 'light-primary',
       }
       return status => statusColor[status]
     },
@@ -386,3 +397,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.vgt-table {
+  font-size: 12px !important;
+}
+</style>

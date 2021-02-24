@@ -49,7 +49,7 @@
         class="border-top d-flex align-items-between flex-column py-1"
       >
         <b-card-text class="text-muted mb-0">
-          Belum Dibayar / Hutang (Hari Ini)
+          Belum Dibayar (Hari Ini)
         </b-card-text>
         <h3 class="font-weight-bolder mb-0">
           Rp. {{ data.inProgress }}

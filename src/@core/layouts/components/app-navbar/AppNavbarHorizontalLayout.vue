@@ -30,7 +30,7 @@
       >
         <span>POS</span>
       </b-button>
-      <home-bar />
+      <home-bar v-if="userdata.role === 'user'" />
       <user-menu v-if="userdata.role === 'user'" />
       <!-- <dark-Toggler class="d-none d-lg-block" /> -->
       <search-bar />
