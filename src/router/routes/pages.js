@@ -36,7 +36,7 @@ export default [
     },
   },
   {
-    path: '/register',
+    path: '/register/:token',
     name: 'auth-register',
     component: () => import('@/views/pages/authentication/Register.vue'),
     meta: {
