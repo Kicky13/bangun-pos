@@ -1,5 +1,6 @@
 <template>
   <b-card>
+
     <div class="demo-inline-spacing">
 
       <!-- input search -->
@@ -34,7 +35,7 @@
           />
         </b-form-group>
       </div>
-      <div style="float:left;margin-left:10px;">
+      <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="secondary"
@@ -43,7 +44,7 @@
           Print
         </b-button>
       </div>
-      <div style="float:left;margin-left:10px;">
+      <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="primary"
@@ -52,7 +53,7 @@
           Delete
         </b-button>
       </div>
-      <div style="float:left;margin-left:10px;">
+      <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="primary"
@@ -77,15 +78,36 @@
         perPage:pageLength
       }"
     >
+
       <template
         slot="table-row"
         slot-scope="props"
       >
-        <span
-          v-if="props.column.field === 'custCode'"
-        >
-          <span>{{ props.row.custCode }}</span>
+        <!-- Column: Action -->
+        <span v-if="props.column.field === 'action'">
+          <span>
+            <b-button
+              v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+              variant="outline-secondary"
+            >
+              List Trans
+            </b-button>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              variant="outline-danger"
+            >
+              Bayar
+            </b-button>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              variant="outline-danger"
+            >
+              Edit
+            </b-button>
+          </span>
         </span>
+
+        <!-- Column: Common -->
         <span v-else>
           {{ props.formattedRow[props.column.field] }}
         </span>
@@ -139,16 +161,18 @@
         </div>
       </template>
     </vue-good-table>
+
   </b-card>
 </template>
 
 <script>
 import {
-  BPagination, BFormInput, BFormSelect, BButton, BFormGroup,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
+// import { codeBasic } from './search'
 
 export default {
   components: {
@@ -161,17 +185,20 @@ export default {
     // BDropdown,
     // BDropdownItem,
     // BBadge,
-    // BCard,
+    BCard,
   },
   directives: {
     Ripple,
   },
   data() {
     return {
+      selectedPembayaran: null,
+      selectedStatus: null,
       statusItems: [
         {
           value: null,
           text: 'Semua',
+          // disabled: true,
         },
         {
           value: 'Lunas',
@@ -190,7 +217,7 @@ export default {
           field: 'custCode',
         },
         {
-          label: 'Nama',
+          label: 'Customer',
           field: 'customer',
         },
         {

@@ -105,4 +105,4 @@ const data = {
   /* eslint-disable global-require */
 }
 
-mock.onGet('/app-data/customerUser').reply(() => [200, data.sales])
+mock.onGet('/app-data/customerUser').reply(() => [200, data.customer])
