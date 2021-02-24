@@ -1,19 +1,19 @@
 <template>
   <div class="misc-wrapper">
     <b-link class="brand-logo">
-      <vuexy-logo />
+
       <h2 class="brand-text text-primary ml-1">
-        Vuexy
+        POS RETAIL
       </h2>
     </b-link>
 
     <div class="misc-inner p-2 p-sm-3">
       <div class="w-100 text-center">
         <h2 class="mb-1">
-          You are not authorized! 🔐
+          Anda Tidak Memiliki Akses! 🔐
         </h2>
         <p class="mb-2">
-          You don’t have permission to access this page. Go Home!!
+          Anda tidak memiliki izin untuk mengakses halaman ini. Pulang ke rumah!!
         </p>
         <b-button
           variant="primary"
@@ -33,13 +33,12 @@
 <script>
 /* eslint-disable global-require */
 import { BLink, BImg, BButton } from 'bootstrap-vue'
-import VuexyLogo from '@core/layouts/components/Logo.vue'
 import store from '@/store/index'
 import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 
 export default {
   components: {
-    BLink, BImg, BButton, VuexyLogo,
+    BLink, BImg, BButton,
   },
   data() {
     return {

@@ -2,19 +2,20 @@
   <!-- Error page-->
   <div class="misc-wrapper">
     <b-link class="brand-logo">
-      <vuexy-logo />
+      <!-- <vuexy-logo /> -->
       <h2 class="brand-text text-primary ml-1">
-        Vuexy
+        POS RETAIL
       </h2>
     </b-link>
 
     <div class="misc-inner p-2 p-sm-3">
       <div class="w-100 text-center">
         <h2 class="mb-1">
-          Page Not Found 🕵🏻‍♀️
+          Halaman Tidak Ditemukan 🕵🏻‍♀️
         </h2>
         <p class="mb-2">
-          Oops! 😖 The requested URL was not found on this server.
+          <!-- Oops! 😖 The requested URL was not found on this server. -->
+          Oops! 😖 Request halaman yang anda inginkan tidak ada diserver
         </p>
 
         <b-button
@@ -22,7 +23,7 @@
           class="mb-2 btn-sm-block"
           :to="{path:'/'}"
         >
-          Back to home
+          Kembali Ke Beranda
         </b-button>
 
         <!-- image -->
@@ -40,12 +41,12 @@
 <script>
 /* eslint-disable global-require */
 import { BLink, BButton, BImg } from 'bootstrap-vue'
-import VuexyLogo from '@core/layouts/components/Logo.vue'
+// import VuexyLogo from '@core/layouts/components/Logo.vue'
 import store from '@/store/index'
 
 export default {
   components: {
-    VuexyLogo,
+    // VuexyLogo,
     BLink,
     BButton,
     BImg,
