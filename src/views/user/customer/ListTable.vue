@@ -92,7 +92,7 @@
               size="sm"
               variant="outline-secondary"
             >
-              List Trans
+              List Trans.
             </b-button>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
@@ -226,25 +226,32 @@
           </b-col>
         </b-row>
         <b-row class="mt-2">
-          <b-col>
-              <b-form-group
-                label="No. Pembayaran"
-                label-for="no-pembayaran"
-                label-cols-md="3"
-              >
-                <b-form-input
-                  id="no-pembayaran"
-                  placeholder="nominal"
-                />
-              </b-form-group>
+          <b-col cols="2">
+          </b-col>
+          <b-col cols="10">
+            <b-form-group
+              label="No. Pembayaran"
+              label-for="no-pembayaran"
+              label-cols-md="5"
+              label-align="right"
+              class="font-weight-bold"
+            >
+              <b-form-input
+                id="no-pembayaran"
+                placeholder="nominal"
+              />
+            </b-form-group>
           </b-col>
         </b-row>
         <b-row>
-          <b-col>
+          <b-col cols="2">
+          </b-col>
+          <b-col cols="10">
             <b-form-group
               label="Bayar"
               label-for="bayar"
-              label-cols-md="3"
+              label-cols-md="5"
+              class="font-weight-bold text-right"
             >
               <b-form-input
                 id="bayar"
