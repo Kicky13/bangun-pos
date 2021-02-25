@@ -56,6 +56,7 @@
       <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+          v-b-modal.modal-select2
           variant="primary"
           style="margin-top: -15px;"
         >
@@ -88,18 +89,21 @@
           <span>
             <b-button
               v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+              size="sm"
               variant="outline-secondary"
             >
               List Trans
             </b-button>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
               variant="outline-danger"
             >
               Bayar
             </b-button>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
               variant="outline-danger"
             >
               Edit
@@ -162,13 +166,104 @@
       </template>
     </vue-good-table>
 
+    <!-- select 2 demo -->
+    <b-modal
+      id="modal-select2"
+      size="lg"
+      title="Add Customer"
+      ok-title="Simpan"
+      cancel-variant="outline-secondary"
+    >
+      <b-container>
+        <b-row>
+          <b-col cols="6">
+            <b-form-group
+              label="Kode Customer"
+              label-for="code-customer"
+            >
+              <b-form-input
+                id="code-customer"
+                placeholder="Masukkan Code Customer"
+              />
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group
+              label="Nama Customer"
+              label-for="nama-customer"
+            >
+              <b-form-input
+                id="nama-customer"
+                placeholder="Masukkan Nama Customer"
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="6">
+            <b-form-group
+              label="Sisa Hutang"
+              label-for="sisa-hutnag"
+            >
+              <b-form-input
+                id="sisa-hutang"
+                placeholder="nominal"
+              />
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group
+              label="Tipe Pembayaran"
+              label-for="tipe-pembayaran"
+            >
+              <v-select
+                id="tipe-pembayaran"
+                v-model="selected"
+                :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
+                :options="option"
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row class="mt-2">
+          <b-col>
+              <b-form-group
+                label="No. Pembayaran"
+                label-for="no-pembayaran"
+                label-cols-md="3"
+              >
+                <b-form-input
+                  id="no-pembayaran"
+                  placeholder="nominal"
+                />
+              </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <b-form-group
+              label="Bayar"
+              label-for="bayar"
+              label-cols-md="3"
+            >
+              <b-form-input
+                id="bayar"
+                placeholder="nominal"
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </b-container>
+    </b-modal>
+
   </b-card>
 </template>
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BModal, VBModal, BContainer, BRow, BCol,
 } from 'bootstrap-vue'
+import vSelect from 'vue-select'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
@@ -186,8 +281,14 @@ export default {
     // BDropdownItem,
     // BBadge,
     BCard,
+    BModal,
+    vSelect,
+    BContainer,
+    BRow,
+    BCol,
   },
   directives: {
+    'b-modal': VBModal,
     Ripple,
   },
   data() {
@@ -247,6 +348,8 @@ export default {
       ],
       rows: [],
       searchTerm: '',
+      selected: 'Cash',
+      option: ['Cash', 'Kredit'],
     }
   },
   computed: {
