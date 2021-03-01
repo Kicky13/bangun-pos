@@ -56,7 +56,7 @@
       <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          v-b-modal.modal-select2
+          v-b-modal.customerAdd
           variant="primary"
           style="margin-top: -15px;"
         >
@@ -166,111 +166,80 @@
       </template>
     </vue-good-table>
 
-    <!-- select 2 demo -->
+    <!-- Modal Section -->
+
+    <!-- Add Customer -->
     <b-modal
-      id="modal-select2"
+      id="customerAdd"
+      centered
       size="lg"
-      title="Add Customer"
+      title="Tambah Customer"
       ok-title="Simpan"
-      cancel-variant="outline-secondary"
+      cancel-title="Tutup"
+      ok-variant="danger"
     >
-      <b-container>
+      <b-form>
         <b-row>
           <b-col cols="6">
             <b-form-group
-              label="Kode Customer"
-              label-for="code-customer"
+              label="Nama Customer :"
+              label-for="customerName"
             >
-              <b-form-input
-                id="code-customer"
-                placeholder="Masukkan Code Customer"
-              />
+              <b-form-input id="customerName" />
             </b-form-group>
           </b-col>
-          <b-col>
+          <b-col cols="6">
             <b-form-group
-              label="Nama Customer"
-              label-for="nama-customer"
+              label-for="reference"
+              label="No. Referensi (Tukang JagoBagun) :"
             >
-              <b-form-input
-                id="nama-customer"
-                placeholder="Masukkan Nama Customer"
-              />
+              <b-form-input id="reference" />
             </b-form-group>
           </b-col>
         </b-row>
         <b-row>
           <b-col cols="6">
             <b-form-group
-              label="Sisa Hutang"
-              label-for="sisa-hutnag"
+              label="Nomor Handphone : "
+              label-for="phone"
             >
-              <b-form-input
-                id="sisa-hutang"
-                placeholder="nominal"
-              />
+              <b-form-input id="phone" />
             </b-form-group>
           </b-col>
-          <b-col>
+          <b-col cols="6">
             <b-form-group
-              label="Tipe Pembayaran"
-              label-for="tipe-pembayaran"
+              label-for="ktp"
+              label="Nomor Identitas/KTP"
             >
-              <v-select
-                id="tipe-pembayaran"
-                v-model="selected"
-                :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
-                :options="option"
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row class="mt-2">
-          <b-col cols="2">
-          </b-col>
-          <b-col cols="10">
-            <b-form-group
-              label="No. Pembayaran"
-              label-for="no-pembayaran"
-              label-cols-md="5"
-              label-align="right"
-              class="font-weight-bold"
-            >
-              <b-form-input
-                id="no-pembayaran"
-                placeholder="nominal"
-              />
+              <b-form-input id="ktp" />
             </b-form-group>
           </b-col>
         </b-row>
         <b-row>
-          <b-col cols="2">
-          </b-col>
-          <b-col cols="10">
+          <b-col cols="12">
             <b-form-group
-              label="Bayar"
-              label-for="bayar"
-              label-cols-md="5"
-              class="font-weight-bold text-right"
+              label="Alamat :"
+              label-for="address"
             >
-              <b-form-input
-                id="bayar"
-                placeholder="nominal"
+              <b-form-textarea
+                id="address"
+                rows="4"
               />
             </b-form-group>
           </b-col>
         </b-row>
-      </b-container>
+      </b-form>
     </b-modal>
+    <!-- End of Customer Add -->
 
   </b-card>
 </template>
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BModal, VBModal, BContainer, BRow, BCol,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BModal, VBModal, BRow, BCol, BFormTextarea, BForm,
 } from 'bootstrap-vue'
-import vSelect from 'vue-select'
+// import vSelect from 'vue-select'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
@@ -289,10 +258,10 @@ export default {
     // BBadge,
     BCard,
     BModal,
-    vSelect,
-    BContainer,
     BRow,
     BCol,
+    BFormTextarea,
+    BForm,
   },
   directives: {
     'b-modal': VBModal,
