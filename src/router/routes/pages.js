@@ -36,6 +36,16 @@ export default [
     },
   },
   {
+    path: '/verify',
+    name: 'auto-login-verify',
+    component: () => import('@/views/pages/authentication/VerifyLogin.vue'),
+    meta: {
+      layout: 'full',
+      resource: 'Auth',
+      redirectIfLoggedIn: true,
+    },
+  },
+  {
     path: '/register/:token',
     name: 'auth-register',
     component: () => import('@/views/pages/authentication/Register.vue'),

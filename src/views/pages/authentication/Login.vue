@@ -4,7 +4,10 @@
 
       <!-- Brand logo-->
       <b-link class="brand-logo">
-        <h2 class="ml-1" style="color: #b20838; font-weight: 800">
+        <h2
+          class="ml-1"
+          style="color: #b20838; font-weight: 800"
+        >
           POS RETAIL
         </h2>
       </b-link>
@@ -153,7 +156,8 @@
                 type="submit"
                 variant="primary"
                 block
-                :disabled="invalid" style="color: #b20838;"
+                :disabled="invalid"
+                style="color: #b20838;"
               >
                 Sign in
               </b-button>
@@ -161,46 +165,45 @@
           </validation-observer>
 
           <!--<b-card-text class="text-center mt-2">-->
-            <!--<span>New on our platform? </span>-->
-            <!--<b-link :to="{name:'auth-register'}">-->
-              <!--<span>&nbsp;Create an account</span>-->
-            <!--</b-link>-->
+          <!--<span>New on our platform? </span>-->
+          <!--<b-link :to="{name:'auth-register'}">-->
+          <!--<span>&nbsp;Create an account</span>-->
+          <!--</b-link>-->
           <!--</b-card-text>-->
 
           <!-- divider -->
           <div class="divider my-2">
-            <div class="divider-text">
-            </div>
+            <div class="divider-text" />
           </div>
 
           <!--=========================-->
           <!--=========================-->
           <!-- SOSIAL MEDIA MENU VUE -->
           <!--<div class="auth-footer-btn d-flex justify-content-center">-->
-            <!--<b-button-->
-              <!--variant="facebook"-->
-              <!--href="javascript:void(0)"-->
-            <!--&gt;-->
-              <!--<feather-icon icon="FacebookIcon" />-->
-            <!--</b-button>-->
-            <!--<b-button-->
-              <!--variant="twitter"-->
-              <!--href="javascript:void(0)"-->
-            <!--&gt;-->
-              <!--<feather-icon icon="TwitterIcon" />-->
-            <!--</b-button>-->
-            <!--<b-button-->
-              <!--variant="google"-->
-              <!--href="javascript:void(0)"-->
-            <!--&gt;-->
-              <!--<feather-icon icon="MailIcon" />-->
-            <!--</b-button>-->
-            <!--<b-button-->
-              <!--variant="github"-->
-              <!--href="javascript:void(0)"-->
-            <!--&gt;-->
-              <!--<feather-icon icon="GithubIcon" />-->
-            <!--</b-button>-->
+          <!--<b-button-->
+          <!--variant="facebook"-->
+          <!--href="javascript:void(0)"-->
+          <!--&gt;-->
+          <!--<feather-icon icon="FacebookIcon" />-->
+          <!--</b-button>-->
+          <!--<b-button-->
+          <!--variant="twitter"-->
+          <!--href="javascript:void(0)"-->
+          <!--&gt;-->
+          <!--<feather-icon icon="TwitterIcon" />-->
+          <!--</b-button>-->
+          <!--<b-button-->
+          <!--variant="google"-->
+          <!--href="javascript:void(0)"-->
+          <!--&gt;-->
+          <!--<feather-icon icon="MailIcon" />-->
+          <!--</b-button>-->
+          <!--<b-button-->
+          <!--variant="github"-->
+          <!--href="javascript:void(0)"-->
+          <!--&gt;-->
+          <!--<feather-icon icon="GithubIcon" />-->
+          <!--</b-button>-->
           <!--</div>-->
         </b-col>
       </b-col>
