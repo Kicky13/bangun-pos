@@ -1,13 +1,15 @@
 <template>
-  <div class="auth-wrapper auth-v2">
+  <div class="auth-wrapper auth-v2 logincontainer">
     <b-row class="auth-inner m-0">
-
       <!-- Brand logo-->
-      <b-link class="brand-logo">
-        <h2 class="ml-1" style="color: #b20838; font-weight: 800">
+      <!-- <b-link class="brand-logo">
+        <h2
+          class="ml-1"
+          style="color: #b20838; font-weight: 800"
+        >
           POS RETAIL
         </h2>
-      </b-link>
+      </b-link> -->
       <!-- /Brand logo-->
 
       <!-- Left Text-->
@@ -20,6 +22,7 @@
             fluid
             :src="imgUrl"
             alt="Login V2"
+            style="display:none;"
           />
         </div>
       </b-col>
@@ -29,6 +32,7 @@
       <b-col
         lg="4"
         class="d-flex align-items-center auth-bg px-2 p-lg-5"
+        style="background-color: transparent;"
       >
         <b-col
           sm="8"
@@ -40,6 +44,12 @@
             class="mb-1 font-weight-bold"
             title-tag="h2"
           >
+            <b-img
+              fluid
+              :src="logoUrl"
+              alt="Logo POS Retail"
+              style="margin-bottom : 20px;"
+            />
             Selamat Datang 👋
           </b-card-title>
           <b-card-text class="mb-2">
@@ -153,7 +163,8 @@
                 type="submit"
                 variant="primary"
                 block
-                :disabled="invalid" style="color: #b20838;"
+                :disabled="invalid"
+                style="color: #b20838;"
               >
                 Sign in
               </b-button>
@@ -161,46 +172,45 @@
           </validation-observer>
 
           <!--<b-card-text class="text-center mt-2">-->
-            <!--<span>New on our platform? </span>-->
-            <!--<b-link :to="{name:'auth-register'}">-->
-              <!--<span>&nbsp;Create an account</span>-->
-            <!--</b-link>-->
+          <!--<span>New on our platform? </span>-->
+          <!--<b-link :to="{name:'auth-register'}">-->
+          <!--<span>&nbsp;Create an account</span>-->
+          <!--</b-link>-->
           <!--</b-card-text>-->
 
           <!-- divider -->
           <div class="divider my-2">
-            <div class="divider-text">
-            </div>
+            <div class="divider-text" />
           </div>
 
           <!--=========================-->
           <!--=========================-->
           <!-- SOSIAL MEDIA MENU VUE -->
           <!--<div class="auth-footer-btn d-flex justify-content-center">-->
-            <!--<b-button-->
-              <!--variant="facebook"-->
-              <!--href="javascript:void(0)"-->
-            <!--&gt;-->
-              <!--<feather-icon icon="FacebookIcon" />-->
-            <!--</b-button>-->
-            <!--<b-button-->
-              <!--variant="twitter"-->
-              <!--href="javascript:void(0)"-->
-            <!--&gt;-->
-              <!--<feather-icon icon="TwitterIcon" />-->
-            <!--</b-button>-->
-            <!--<b-button-->
-              <!--variant="google"-->
-              <!--href="javascript:void(0)"-->
-            <!--&gt;-->
-              <!--<feather-icon icon="MailIcon" />-->
-            <!--</b-button>-->
-            <!--<b-button-->
-              <!--variant="github"-->
-              <!--href="javascript:void(0)"-->
-            <!--&gt;-->
-              <!--<feather-icon icon="GithubIcon" />-->
-            <!--</b-button>-->
+          <!--<b-button-->
+          <!--variant="facebook"-->
+          <!--href="javascript:void(0)"-->
+          <!--&gt;-->
+          <!--<feather-icon icon="FacebookIcon" />-->
+          <!--</b-button>-->
+          <!--<b-button-->
+          <!--variant="twitter"-->
+          <!--href="javascript:void(0)"-->
+          <!--&gt;-->
+          <!--<feather-icon icon="TwitterIcon" />-->
+          <!--</b-button>-->
+          <!--<b-button-->
+          <!--variant="google"-->
+          <!--href="javascript:void(0)"-->
+          <!--&gt;-->
+          <!--<feather-icon icon="MailIcon" />-->
+          <!--</b-button>-->
+          <!--<b-button-->
+          <!--variant="github"-->
+          <!--href="javascript:void(0)"-->
+          <!--&gt;-->
+          <!--<feather-icon icon="GithubIcon" />-->
+          <!--</b-button>-->
           <!--</div>-->
         </b-col>
       </b-col>
@@ -252,7 +262,9 @@ export default {
       status: '',
       password: 'admin',
       userEmail: 'admin@demo.com',
-      sideImg: require('@/assets/images/pages/login-v2.svg'),
+      sideImg: require('@/assets/images/pages/Login_POS1.png'),
+      logoImg: require('@/assets/images/logo/POSRetailBlack.png'),
+      // sideImg: require('@/assets/images/pages/login-v2.svg'),
 
       // validation rules
       required,
@@ -262,6 +274,9 @@ export default {
   computed: {
     passwordToggleIcon() {
       return this.passwordFieldType === 'password' ? 'EyeIcon' : 'EyeOffIcon'
+    },
+    logoUrl() {
+      return this.logoImg
     },
     imgUrl() {
       if (store.state.appConfig.layout.skin === 'dark') {
@@ -319,4 +334,12 @@ export default {
 
 <style lang="scss">
 @import '@core/scss/vue/pages/page-auth.scss';
+</style>
+
+<style scoped lang="scss">
+.logincontainer {
+  background-image: url('~@/assets/images/pages/Login_POS1.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 </style>
