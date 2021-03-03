@@ -475,6 +475,7 @@
                   <b-form-group
                     label="Kode Produk :"
                     label-for="kodeProduk"
+                    style="font-weight: bold"
                   >
                     <b-form-input
                       id="kodeProduk"
@@ -486,6 +487,7 @@
                   <b-form-group
                     label="Nama Produk :"
                     label-for="namaProduk"
+                    style="font-weight: bold"
                   >
                     <b-form-input
                       id="namaProduk"
@@ -499,6 +501,7 @@
                   <b-form-group
                     label="Kategori :"
                     label-for="kategori"
+                    style="font-weight: bold"
                   >
                     <b-form-select
                       id="kategori"
@@ -512,6 +515,7 @@
                   <b-form-group
                     label="Sub Kategori :"
                     label-for="subKategori"
+                    style="font-weight: bold"
                   >
                     <b-form-select
                       id="subKategori"
@@ -527,6 +531,7 @@
                   <b-form-group
                     label="Type :"
                     label-for="type"
+                    style="font-weight: bold"
                   >
                     <b-form-select
                       id="type"
@@ -540,6 +545,7 @@
                   <b-form-group
                     label="Brand :"
                     label-for="brand"
+                    style="font-weight: bold"
                   >
                     <b-form-select
                       id="brand"
@@ -555,20 +561,21 @@
                   <b-form-group
                     label="Harga Jual :"
                     label-for="hargaJual"
+                    style="font-weight: bold"
                   >
                     <b-form-input id="hargaJual" />
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
                   <b-form-group
-                    label="Units :"
                     label-for="units"
+                    label="Units :"
+                    style="font-weight: bold"
                   >
                     <b-form-select
                       id="units"
                       v-model="selectedUnits"
                       :options="units"
-                      disabled
                     />
                   </b-form-group>
                 </b-col>
