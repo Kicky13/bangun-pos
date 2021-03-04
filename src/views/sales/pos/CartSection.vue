@@ -87,10 +87,15 @@
 
                   <!-- Item Name -->
                   <b-col md="4">
-                    <b-form-group
-                      :label="item.id"
-                      label-for="item-name"
-                    />
+                    <span>
+                      {{ item.id }}
+                      <feather-icon
+                        v-b-modal.cartProductEdit
+                        icon="EditIcon"
+                        style="color: red"
+                      />
+                    </span>
+                    <br>
                     <span style="font-weight: bold; font-size: 14px;">
                       {{ item.name }}
                     </span>
@@ -455,6 +460,130 @@
           </b-modal>
           <!-- End of Customer Add -->
 
+          <!-- Edit Cart Product -->
+          <b-modal
+            id="cartProductEdit"
+            centered
+            size="lg"
+            ok-title="Simpan"
+            cancel-title="Tutup"
+            ok-variant="danger"
+          >
+            <b-form>
+              <b-row>
+                <b-col cols="6">
+                  <b-form-group
+                    label="Kode Produk :"
+                    label-for="kodeProduk"
+                    style="font-weight: bold"
+                  >
+                    <b-form-input
+                      id="kodeProduk"
+                      disabled
+                    />
+                  </b-form-group>
+                </b-col>
+                <b-col cols="6">
+                  <b-form-group
+                    label="Nama Produk :"
+                    label-for="namaProduk"
+                    style="font-weight: bold"
+                  >
+                    <b-form-input
+                      id="namaProduk"
+                      disabled
+                    />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col cols="6">
+                  <b-form-group
+                    label="Kategori :"
+                    label-for="kategori"
+                    style="font-weight: bold"
+                  >
+                    <b-form-select
+                      id="kategori"
+                      v-model="selectedKategori"
+                      :options="kategori"
+                      disabled
+                    />
+                  </b-form-group>
+                </b-col>
+                <b-col cols="6">
+                  <b-form-group
+                    label="Sub Kategori :"
+                    label-for="subKategori"
+                    style="font-weight: bold"
+                  >
+                    <b-form-select
+                      id="subKategori"
+                      v-model="selectedSubKategori"
+                      :options="subKategori"
+                      disabled
+                    />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col cols="6">
+                  <b-form-group
+                    label="Type :"
+                    label-for="type"
+                    style="font-weight: bold"
+                  >
+                    <b-form-select
+                      id="type"
+                      v-model="selectedType"
+                      :options="type"
+                      disabled
+                    />
+                  </b-form-group>
+                </b-col>
+                <b-col cols="6">
+                  <b-form-group
+                    label="Brand :"
+                    label-for="brand"
+                    style="font-weight: bold"
+                  >
+                    <b-form-select
+                      id="brand"
+                      v-model="selectedBrand"
+                      :options="brand"
+                      disabled
+                    />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col cols="6">
+                  <b-form-group
+                    label="Harga Jual :"
+                    label-for="hargaJual"
+                    style="font-weight: bold"
+                  >
+                    <b-form-input id="hargaJual" />
+                  </b-form-group>
+                </b-col>
+                <b-col cols="6">
+                  <b-form-group
+                    label-for="units"
+                    label="Units :"
+                    style="font-weight: bold"
+                  >
+                    <b-form-select
+                      id="units"
+                      v-model="selectedUnits"
+                      :options="units"
+                    />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-form>
+          </b-modal>
+          <!-- End of Edit Cart Product -->
+
           <!-- Payment Modal -->
           <b-modal
             id="paymentProcess"
@@ -502,6 +631,11 @@ export default {
       selectedCustomer: null,
       selectedMetode: null,
       selectedCashier: null,
+      selectedKategori: null,
+      selectedSubKategori: null,
+      selectedType: null,
+      selectedBrand: null,
+      selectedUnits: null,
       cashierItems: [
         {
           value: null,
@@ -627,6 +761,91 @@ export default {
         text: 'Kikik',
       }],
       nextTodoId: 2,
+      kategori: [{
+        value: null,
+        text: 'Select Kategori',
+        disabled: true,
+      },
+      {
+        value: 'kategori1',
+        text: 'Kategori 1',
+      },
+      {
+        value: 'kategori2',
+        text: 'Kategori 2',
+      },
+      {
+        value: 'kategori3',
+        text: 'Kategori 3',
+      }],
+      subKategori: [{
+        value: null,
+        text: 'Select a Sub Kategori',
+        disabled: true,
+      },
+      {
+        value: 'subKategori1',
+        text: 'Sub Kategori 1',
+      },
+      {
+        value: 'subKategori2',
+        text: 'Sub Kategori 2',
+      },
+      {
+        value: 'subKategori3',
+        text: 'Sub Kategori 3',
+      }],
+      type: [{
+        value: null,
+        text: 'Select Type',
+        disabled: true,
+      },
+      {
+        value: 'type1',
+        text: 'Type 1',
+      },
+      {
+        value: 'type2',
+        text: 'Type 2',
+      },
+      {
+        value: 'type3',
+        text: 'Type 3',
+      }],
+      brand: [{
+        value: null,
+        text: 'Select a Brand',
+        disabled: true,
+      },
+      {
+        value: 'brand1',
+        text: 'Brand 1',
+      },
+      {
+        value: 'brand2',
+        text: 'Brand 2',
+      },
+      {
+        value: 'brand3',
+        text: 'Brand 3',
+      }],
+      units: [{
+        value: null,
+        text: 'Select a Unit',
+        disabled: true,
+      },
+      {
+        value: 'unit1',
+        text: 'Unit 1',
+      },
+      {
+        value: 'unit2',
+        text: 'Unit 2',
+      },
+      {
+        value: 'unit3',
+        text: 'Unit 3',
+      }],
     }
   },
   mounted() {
