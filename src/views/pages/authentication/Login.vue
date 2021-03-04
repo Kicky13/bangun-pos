@@ -31,8 +31,7 @@
       <!-- Login-->
       <b-col
         lg="4"
-        class="d-flex align-items-center auth-bg px-2 p-lg-5"
-        style="background-color: transparent;"
+        class="d-flex align-items-center auth-bg px-2 p-lg-5 panellogin"
       >
         <b-col
           sm="8"
@@ -337,9 +336,24 @@ export default {
 </style>
 
 <style scoped lang="scss">
-.logincontainer {
-  background-image: url('~@/assets/images/pages/Login_POS1.png');
-  background-repeat: no-repeat;
-  background-size: cover;
+@media (min-width: 992px) {
+  .logincontainer {
+    background-image: url('~@/assets/images/pages/Login_POS1Medium.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .panellogin {
+    background-color: transparent;
+  }
+}
+@media (max-width: 992px) {
+  .logincontainer {
+    background-image: url('~@/assets/images/pages/Login_POS1Small.png');
+    // background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .panellogin {
+    background-color: transparent;
+  }
 }
 </style>
