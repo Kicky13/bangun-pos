@@ -20,6 +20,9 @@
           v-if="tabpanel.code === 'userdata'"
           :title="tabpanel.title"
           :subtitle="tabpanel.subtitle"
+          :owner="ownerName"
+          :owner-number="ownerNumber"
+          :address="address"
         />
         <support-data
           v-else-if="tabpanel.code === 'support'"
@@ -30,6 +33,9 @@
           v-else-if="tabpanel.code === 'shop'"
           :title="tabpanel.title"
           :subtitle="tabpanel.subtitle"
+          :shop-name="shopName"
+          :shop-number="shopNumber"
+          :address="address"
         />
       </tab-content>
 
@@ -40,7 +46,7 @@
 
 <script>
 import { FormWizard, TabContent } from 'vue-form-wizard'
-// import vSelect from 'vue-select'
+import axios from '@axios'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import {} from 'bootstrap-vue'
@@ -58,8 +64,20 @@ export default {
     SupportData,
     ShopData,
   },
+  props: {
+    formData: {
+      type: Object,
+      required: false,
+      default: null,
+    },
+  },
   data() {
     return {
+      ownerName: this.formData.nama_pemilik,
+      ownerNumber: this.formData.telp_pemilik,
+      shopName: this.formData.nama_toko,
+      shopNumber: this.formData.telp_toko,
+      address: this.formData.alamat,
       selectedContry: 'select_value',
       selectedLanguage: 'nothing_selected',
       wizardTabs: [
@@ -107,15 +125,33 @@ export default {
       ],
     }
   },
+  mounted() {
+    console.log(this.formData)
+  },
   methods: {
-    formSubmitted() {
-      this.$toast({
-        component: ToastificationContent,
-        props: {
-          title: 'Form Submitted',
-          icon: 'EditIcon',
-          variant: 'success',
+    async formSubmitted() {
+      axios({
+        method: 'post',
+        url: 'http://api-posretail.metrojasa.com/api/toko/store',
+        data: {
+          nama_customer: this.ownerName,
+          telp_customer: this.ownerNumber,
+          no_identitas: '82319823991',
+          alamat: this.address,
+          no_references: 'NO-111',
         },
+      }).then(response => {
+        console.log(response)
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: 'Form Submitted',
+            icon: 'EditIcon',
+            variant: 'success',
+          },
+        })
+      }).error(err => {
+        console.log(err)
       })
     },
   },

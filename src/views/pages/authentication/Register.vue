@@ -51,7 +51,7 @@
       </div>
       <b-row>
         <b-col cols="12">
-          <register-wizard />
+          <register-wizard :form-data="formData" />
         </b-col>
       </b-row>
     </div>
@@ -62,6 +62,7 @@
 import {
   BRow, BCol, BImg, BLink,
 } from 'bootstrap-vue'
+import jwt from 'jsonwebtoken'
 import { $themeConfig } from '@themeConfig'
 import { useRouter } from '@core/utils/utils'
 import RegisterWizard from './RegisterWizard.vue'
@@ -79,11 +80,19 @@ export default {
     // App Name
     const { route } = useRouter()
     const { appName, appLogoImage } = $themeConfig.app
-    const aksesTokoToken = route.value.params.token
+    const aksesTokoToken = jwt.verify(route.value.params.token, 'FVtf3mAUG6Qmh4DfFVtf3mAUG6Qmh4DfFVtf3mAUG6Qmh4Df')
+    const { data } = aksesTokoToken
+    const formData = data
     return {
       aksesTokoToken,
       appName,
       appLogoImage,
+      formData,
+    }
+  },
+  data() {
+    return {
+      formData: this.formData,
     }
   },
   created() {

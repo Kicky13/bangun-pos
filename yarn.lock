@@ -3042,6 +3042,11 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
+crypto-js@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.0.0.tgz#2904ab2677a9d042856a2ea2ef80de92e4a36dcc"
+  integrity sha512-bzHZN8Pn+gS7DQA6n+iUmBfl0hO5DJq++QP3U6uTucDtk/0iGpXd/Gg7CGR0p8tJhofJyaKoWBuJI4eAO00BBg==
+
 css-color-names@0.0.4, css-color-names@^0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
@@ -5430,7 +5435,7 @@ jsonfile@^4.0.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-jsonwebtoken@8.5.1:
+jsonwebtoken@8.5.1, jsonwebtoken@^8.1.0:
   version "8.5.1"
   resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.5.1.tgz#00e71e0b8df54c2121a1f26137df2280673bcc0d"
   integrity sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==
@@ -5477,6 +5482,11 @@ jws@^3.2.2:
   dependencies:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
+
+jwt-decode@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 killable@^1.0.1:
   version "1.0.1"
@@ -8573,6 +8583,11 @@ timsort@^0.3.0:
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
 
+tiny-cookie@^2.0.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/tiny-cookie/-/tiny-cookie-2.3.2.tgz#3b5fb4e0888cfa0b4728d5f6b7be3d3a88e6a5f0"
+  integrity sha512-qbymkVh+6+Gc/c9sqnvbG+dOHH6bschjphK3SHgIfT6h/t+63GBL37JXNoXEc6u/+BcwU6XmaWUuf19ouLVtPg==
+
 tiny-emitter@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.1.0.tgz#1d1a56edfc51c43e863cbb5382a72330e3555423"
@@ -9019,6 +9034,13 @@ vue-context@6.0.0:
   dependencies:
     vue-clickaway "^2.2.2"
 
+vue-cryptojs@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/vue-cryptojs/-/vue-cryptojs-2.1.5.tgz#0f31d59820abe58ef09ec881c999bad6fb75d05d"
+  integrity sha512-bllwNCd+jgQ6MOnhXuv+zMwisS7A+h7juFOJQjfrLlSo/Ld7/DTYlGS7OgYAW8bI3DZG3F6otE0iqKseVR2dlQ==
+  dependencies:
+    crypto-js "^4.0.0"
+
 vue-demi@latest:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.6.0.tgz#e314282f704cb449119b9fd002cbbc0e39f591fe"
@@ -9091,6 +9113,13 @@ vue-i18n@8.22.2:
   version "8.22.2"
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.22.2.tgz#58299a5a050e67b4f799d96fee7dd8bd269e0907"
   integrity sha512-rb569fVJInPUgS/bbCxEQ9DrAoFTntuJvYoK4Fpk2VfNbA09WzdTKk57ppjz3S+ps9hW+p9H+2ASgMvojedkow==
+
+vue-jwt-decode@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/vue-jwt-decode/-/vue-jwt-decode-0.1.0.tgz#f9caf7b9030d5459cc567b1c3117d9d1f291458f"
+  integrity sha512-4iP0NzYHkAF7G13tYPc/nudk4oNpB8GCVZupc7lekxXok1XKEgefNaGTpDT14g7RKe5H9GaMphPduDj4UVfZwQ==
+  dependencies:
+    vue "^2.3.3"
 
 "vue-loader-v16@npm:vue-loader@^16.1.0":
   version "16.1.2"
@@ -9217,7 +9246,7 @@ vue2-leaflet@2.5.2:
   resolved "https://registry.yarnpkg.com/vue2-leaflet/-/vue2-leaflet-2.5.2.tgz#b89c056fe741c7ce7cb9df5aca90809092e5eb8d"
   integrity sha512-9eN0TxqCkyXbaI7waO3u+n0OAezkxjb811tstG6gRLAZy/ocXlNLC3JqTWE0FwBUlqBbMpyzsIk6LrEhs8oVBQ==
 
-vue@2.6.12, vue@^2.2.1, vue@^2.4.4, vue@^2.6.10:
+vue@2.6.12, vue@^2.2.1, vue@^2.3.3, vue@^2.4.4, vue@^2.6.10:
   version "2.6.12"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz#f5ebd4fa6bd2869403e29a896aed4904456c9123"
   integrity sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg==
@@ -9228,6 +9257,14 @@ vuedraggable@2.24.3:
   integrity sha512-6/HDXi92GzB+Hcs9fC6PAAozK1RLt1ewPTLjK0anTYguXLAeySDmcnqE8IC0xa7shvSzRjQXq3/+dsZ7ETGF3g==
   dependencies:
     sortablejs "1.10.2"
+
+vuejs-jwt@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/vuejs-jwt/-/vuejs-jwt-1.1.0.tgz#6dd39b2e81453d6849820e5fa73097dfab74f15d"
+  integrity sha512-4V1nXAzHB1qqtIThnJ1mxlS8kWxUZO1DxO/z5UTY3u9HJmGxY9irLdXvtmmILlGaCclElpvRTe2/9VVNT6De+A==
+  dependencies:
+    jsonwebtoken "^8.1.0"
+    tiny-cookie "^2.0.2"
 
 vuex@3.6.0:
   version "3.6.0"
