@@ -126,7 +126,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.formData)
+    // console.log(this.formData)
   },
   methods: {
     async formSubmitted() {
@@ -141,7 +141,7 @@ export default {
           no_references: 'NO-111',
         },
       }).then(response => {
-        console.log(response)
+        // console.log(response)
         this.$toast({
           component: ToastificationContent,
           props: {
@@ -151,7 +151,7 @@ export default {
           },
         })
       }).error(err => {
-        console.log(err)
+        // console.log(err)
       })
     },
   },
