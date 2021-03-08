@@ -87,42 +87,40 @@
 
                   <!-- Item Name -->
                   <b-col md="4">
-                    <span>
-                      {{ item.id }}
-                      <feather-icon
-                        v-b-modal.cartProductEdit
-                        icon="EditIcon"
-                        style="color: red"
-                      />
-                    </span>
-                    <br>
-                    <span style="font-weight: bold; font-size: 14px;">
-                      {{ item.name }}
-                    </span>
                     <b-row>
-                      <span>
-                        In Stock: {{ item.stock - item.quantity }}
+                      <b-col>
+                        <span>
+                          {{ item.id }}
+                          <feather-icon
+                            v-b-modal.cartProductEdit
+                            icon="EditIcon"
+                            style="color: red"
+                          />
+                        </span>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <span style="font-weight: bold; font-size: 14px;">
+                          {{ item.name }}
+                        </span>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <span>
+                        $ {{ item.price }} / PCS
                       </span>
+                      </b-col>
                     </b-row>
                   </b-col>
 
-                  <!-- Cost -->
-                  <b-col md="2">
-                    <b-form-group
-                      label="Price"
-                      label-for="cost"
-                    >
-                      <span>
-                        $ {{ item.price }}
-                      </span>
-                    </b-form-group>
-                  </b-col>
-
                   <!-- Quantity -->
-                  <b-col md="2">
+                  <b-col md="3">
                     <b-form-group
                       label="Quantity"
                       label-for="quantity"
+                      class="text-center"
                     >
                       <b-form-spinbutton
                         id="demo-sb"
@@ -135,8 +133,9 @@
 
                   <!-- Profession -->
                   <b-col
-                    lg="2"
-                    md="1"
+                    cols="6"
+                    md="3"
+                    class="text-md-right"
                   >
                     <b-form-group
                       label="Price"
@@ -146,23 +145,26 @@
                         id="pzrice"
                         :value="item.price * item.quantity"
                         plaintext
+                        class="text-md-right"
                       />
                     </b-form-group>
                   </b-col>
 
                   <!-- Remove Button -->
                   <b-col
-                    lg="2"
-                    md="3"
-                    class="mb-50"
+                    cols="6"
+                    md="2"
+                    class="mb-50 text-right text-md-center"
                   >
                     <b-button
                       v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                       variant="outline-danger"
-                      class="mt-0 mt-md-2"
+                      class="btn-icon mt-0 mt-md-2"
                       @click="removeItem(index)"
+                      v-b-tooltip.hover
+                      title="Hapus"
                     >
-                      <span>Delete</span>
+                      <feather-icon icon="Trash2Icon" />
                     </b-button>
                   </b-col>
                   <b-col cols="12">
@@ -359,36 +361,36 @@
           <!-- Action Button Section -->
           <div>
             <b-row>
-              <b-col cols="8">
-                <div class="demo-inline-spacing">
+              <b-col cols="12" md="3">
                   <b-button
                     v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-                    variant="outline-secondary"
-                    pill
+                    variant="secondary"
+                    class="mb-1"
+                    block
                   >
                     Batal
                   </b-button>
-                </div>
               </b-col>
-              <b-col cols="4">
-                <div class="demo-inline-spacing">
+              <b-col cols="12" md="3"></b-col>
+              <b-col cols="12" md="3">
                   <b-button
                     v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                    style="margin-right: 5px;"
-                    variant="outline-warning"
-                    pill
+                    variant="warning"
+                    class="mb-1"
+                    block
                   >
                     Antrian
                   </b-button>
-                  <b-button
-                    v-ripple.400="'rgba(40, 199, 111, 0.15)'"
-                    style="margin-left: 5px;"
-                    variant="outline-danger"
-                    pill
-                  >
-                    Bayar
-                  </b-button>
-                </div>
+              </b-col>
+              <b-col cols="12" md="3">
+                <b-button
+                  v-ripple.400="'rgba(40, 199, 111, 0.15)'"
+                  variant="danger"
+                  class="mb-1"
+                  block
+                >
+                  Bayar
+                </b-button>
               </b-col>
             </b-row>
           </div>
