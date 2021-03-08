@@ -18,6 +18,7 @@
       >
         <b-form-input
           id="nama"
+          v-model="owner"
         />
       </b-form-group>
     </b-col>
@@ -29,6 +30,7 @@
       >
         <b-form-input
           id="phone"
+          v-model="ownerNumber"
           type="number"
         />
       </b-form-group>
@@ -51,6 +53,7 @@
       >
         <b-form-textarea
           id="address"
+          v-model="address"
           rows="3"
         />
       </b-form-group>
@@ -83,6 +86,21 @@ export default {
     subtitle: {
       type: String,
       required: true,
+    },
+    owner: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    ownerNumber: {
+      type: String,
+      required: false,
+      default: '+62',
+    },
+    address: {
+      type: String,
+      required: false,
+      default: '',
     },
   },
 }
