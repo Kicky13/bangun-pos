@@ -172,13 +172,17 @@
                   </b-col>
                 </b-row>
               </div>
-
             </b-form>
           </div>
           <!-- End Cart Section -->
 
           <!-- Total Section -->
           <div>
+            <b-row>
+              <b-col cols="12">
+                <hr>
+              </b-col>
+            </b-row>
             <b-row>
               <b-col sm="6">
                 <b-row>
