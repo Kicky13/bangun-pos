@@ -73,11 +73,12 @@ export default {
   },
   data() {
     return {
-      ownerName: this.formData.nama_pemilik,
-      ownerNumber: this.formData.telp_pemilik,
-      shopName: this.formData.nama_toko,
-      shopNumber: this.formData.telp_toko,
-      address: this.formData.alamat,
+      ownerName: this.formData.nama_pemilik ?? '',
+      ownerNumber: this.formData.telp_pemilik ?? '',
+      shopName: this.formData.nama_toko ?? '',
+      shopNumber: this.formData.telp_toko ?? '',
+      address: this.formData.alamat ?? '',
+      token: this.formData.token ?? '',
       selectedContry: 'select_value',
       selectedLanguage: 'nothing_selected',
       wizardTabs: [
@@ -132,7 +133,10 @@ export default {
     async formSubmitted() {
       axios({
         method: 'post',
-        url: 'http://api-posretail.metrojasa.com/api/toko/store',
+        url: 'https://api-posretail.metrojasa.com/api/toko/store',
+        headers: {
+          token: this.token,
+        },
         data: {
           nama_customer: this.ownerName,
           telp_customer: this.ownerNumber,
@@ -142,16 +146,6 @@ export default {
         },
       }).then(response => {
         console.log(response)
-        this.$toast({
-          component: ToastificationContent,
-          props: {
-            title: 'Form Submitted',
-            icon: 'EditIcon',
-            variant: 'success',
-          },
-        })
-      }).error(err => {
-        console.log(err)
       })
     },
   },
