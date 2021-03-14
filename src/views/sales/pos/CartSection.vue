@@ -377,6 +377,7 @@
                     style="margin-right: 5px;"
                     variant="outline-warning"
                     pill
+                    @click="handleCartActionClick(product)"
                   >
                     Antrian
                   </b-button>
@@ -602,6 +603,7 @@ import {
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
+// import { useEcommerceUi } from '../useEcommerce'
 
 export default {
   components: {

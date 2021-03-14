@@ -78,7 +78,7 @@ const data = {
         },
       ],
       extras: {
-        eCommerceCartItemsCount: 5,
+        eCommerceCartItemsCount: 10,
       },
     },
   ],

@@ -62,8 +62,9 @@
               >
                 <feather-icon
                   v-b-modal.listAntrian
+                  :badge="$store.state['app-ecommerce'].cartItemsCount"
                   icon="ClockIcon"
-                  size="20"
+                  size="30"
                 />
               </b-button>
             </div>
@@ -307,6 +308,7 @@ import MiniProductCard from '@core/components/item-cards/MiniProductCard.vue'
 import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/dummyFilter'
 import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 import store from '@/store/index'
+// import antrianModule from '@/views/sales/pos/antrianModule'
 import { useEcommerceUi } from './ActionHandling'
 
 export default {

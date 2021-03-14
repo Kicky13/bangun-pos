@@ -20,8 +20,7 @@
     <b-link :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
       <b-img
         :alt="`${product.name}-${product.id}`"
-        thumbnail
-        style="background-color:white; border:none"
+        style="background-color:white; border:none; max-width:90%;"
         fluid
         center
         class="card-img-top"
