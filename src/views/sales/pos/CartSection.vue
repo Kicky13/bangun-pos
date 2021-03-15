@@ -109,8 +109,8 @@
                     <b-row>
                       <b-col>
                         <span>
-                        $ {{ item.price }} / PCS
-                      </span>
+                          $ {{ item.price }} / PCS
+                        </span>
                       </b-col>
                     </b-row>
                   </b-col>
@@ -160,9 +160,9 @@
                       v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                       variant="outline-danger"
                       class="btn-icon mt-0 mt-md-2"
-                      @click="removeItem(index)"
                       v-b-tooltip.hover
                       title="Hapus"
+                      @click="removeItem(index)"
                     >
                       <feather-icon icon="Trash2Icon" />
                     </b-button>
@@ -365,29 +365,41 @@
           <!-- Action Button Section -->
           <div>
             <b-row>
-              <b-col cols="12" md="3">
-                  <b-button
-                    v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-                    variant="secondary"
-                    class="mb-1"
-                    block
-                  >
-                    Batal
-                  </b-button>
+              <b-col
+                cols="12"
+                md="3"
+              >
+                <b-button
+                  v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                  variant="secondary"
+                  class="mb-1"
+                  block
+                >
+                  Batal
+                </b-button>
               </b-col>
-              <b-col cols="12" md="3"></b-col>
-              <b-col cols="12" md="3">
-                  <b-button
-                    v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                    style="margin-right: 5px;"
-                    variant="outline-warning"
-                    pill
-                    @click="handleCartActionClick(product)"
-                  >
-                    Antrian
-                  </b-button>
+              <b-col
+                cols="12"
+                md="3"
+              />
+              <b-col
+                cols="12"
+                md="3"
+              >
+                <b-button
+                  v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+                  style="margin-right: 5px;"
+                  variant="outline-warning"
+                  pill
+                  @click="handleCartActionClick(product)"
+                >
+                  Antrian
+                </b-button>
               </b-col>
-              <b-col cols="12" md="3">
+              <b-col
+                cols="12"
+                md="3"
+              >
                 <b-button
                   v-ripple.400="'rgba(40, 199, 111, 0.15)'"
                   variant="danger"
