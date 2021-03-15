@@ -56,7 +56,7 @@
       <div style="float:left;margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="primary"
+          variant="danger"
           style="margin-top: -15px;"
         >
           Print
@@ -112,7 +112,7 @@
                   class="text-body align-middle mr-25"
                 />
               </template>
-              <b-dropdown-item>
+              <b-dropdown-item :to="{name: 'detail-user-sale', params: {id: props.row.id}}">
                 <feather-icon
                   icon="FileTextIcon"
                   class="mr-50"

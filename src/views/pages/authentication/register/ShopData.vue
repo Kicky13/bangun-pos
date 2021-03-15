@@ -18,6 +18,7 @@
       >
         <b-form-input
           id="shopname"
+          v-model="shopName"
         />
       </b-form-group>
     </b-col>
@@ -38,6 +39,7 @@
       >
         <b-form-input
           id="shopphone"
+          v-model="shopNumber"
           type="number"
         />
       </b-form-group>
@@ -47,6 +49,7 @@
       >
         <b-form-textarea
           id="shopaddress"
+          v-model="address"
           rows="3"
         />
       </b-form-group>
@@ -92,6 +95,21 @@ export default {
     subtitle: {
       type: String,
       required: true,
+    },
+    shopName: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    shopNumber: {
+      type: String,
+      required: false,
+      default: '+62',
+    },
+    address: {
+      type: String,
+      required: false,
+      default: '',
     },
   },
   data() {

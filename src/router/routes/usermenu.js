@@ -18,6 +18,24 @@ export default [
     },
   },
   {
+    path: '/mysale/:id',
+    name: 'detail-user-sale',
+    component: () => import('@/views/user/sales/detail/DetailSale.vue'),
+    meta: {
+      // pageTitle: 'Penjualan',
+      resource: 'SalesUser',
+      action: 'manage',
+      redTitle: 'Detail Data Penjualan',
+      redSubs: 'Detail Data Penjualan di Toko Kamu.',
+      // breadcrumb: [
+      //   {
+      //     text: 'Sales',
+      //     active: true,
+      //   },
+      // ],
+    },
+  },
+  {
     path: '/myproduct',
     name: 'user-product',
     component: () => import('@/views/user/products/KatalogProduk.vue'),

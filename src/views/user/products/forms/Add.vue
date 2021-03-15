@@ -44,13 +44,14 @@
                 <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                    v-b-modal.categoryAdd
                     type="submit"
                     variant="primary"
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 14px;"> Kategori</span></b-button>
+                  /><span style="font-size: 13px;"> Kategori</span></b-button>
                 </b-col>
                 <b-col cols="4">
                   <b-form-group
@@ -67,13 +68,14 @@
                 <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                    v-b-modal.subcategoryAdd
                     type="submit"
                     variant="primary"
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 14px;"> Sub Kategori</span></b-button>
+                  /><span style="font-size: 13px;"> Sub Kategori</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
@@ -92,13 +94,14 @@
                 <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                    v-b-modal.typeAdd
                     type="submit"
                     variant="primary"
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 14px;"> Type</span></b-button>
+                  /><span style="font-size: 13px;"> Type</span></b-button>
                 </b-col>
                 <b-col cols="4">
                   <b-form-group
@@ -115,13 +118,14 @@
                 <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                    v-b-modal.brandAdd
                     type="submit"
                     variant="primary"
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 14px;"> Brand</span></b-button>
+                  /><span style="font-size: 13px;"> Brand</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
@@ -148,13 +152,14 @@
                 <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                    v-b-modal.unitsAdd
                     type="submit"
                     variant="primary"
                     class="mt-0 mt-md-2"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 14px;"> Unit</span></b-button>
+                  /><span style="font-size: 13px;"> Unit</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
@@ -163,7 +168,11 @@
                     label="Attach Picture"
                     label-for="attachment"
                   >
-                    <b-form-file id="attachment" />
+                    <b-form-file
+                      id="attachment"
+                      accept="image/jpeg, image/png"
+                      @change="onFileChange"
+                    />
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
@@ -171,7 +180,11 @@
                     label="Status"
                     label-for="status"
                   >
-                    <b-form-select id="status" />
+                    <b-form-select
+                      id="status"
+                      v-model="selectedStatus"
+                      :options="statusItems"
+                    />
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -180,10 +193,18 @@
           <b-col cols="4">
             <span>Image Preview</span>
             <b-img
+              v-if="productimgurl"
+              :src="productimgurl"
               thumbnail
               fluid
+              alt="Image Produk"
+            />
+            <b-img
+              v-else
               :src="require('@/assets/images/slider/06.jpg')"
-              alt="Image 1"
+              thumbnail
+              fluid
+              alt="Image Produk"
             />
           </b-col>
         </b-row>
@@ -220,14 +241,24 @@
         </b-row>
       </b-form>
     </b-card>
+    <category-modal />
+    <sub-category-modal />
+    <type-modal />
+    <brand-modal />
+    <units-modal />
   </div>
 </template>
 
 <script>
 import {
-  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg,
+  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
+import CategoryModal from './modals/CategoryModal.vue'
+import SubCategoryModal from './modals/SubCategoryModal.vue'
+import TypeModal from './modals/TypeModal.vue'
+import BrandModal from './modals/BrandModal.vue'
+import UnitsModal from './modals/UnitsModal.vue'
 // import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 
 export default {
@@ -243,21 +274,44 @@ export default {
     BFormFile,
     BFormTextarea,
     BImg,
+    CategoryModal,
+    SubCategoryModal,
+    TypeModal,
+    BrandModal,
+    UnitsModal,
     // BInputGroup,
     // BInputGroupPrepend,
     // FeatherIcon,
   },
   directives: {
+    'b-modal': VBModal,
     Ripple,
   },
   data() {
     return {
+      productimgurl: null,
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
       selectedCategory: null,
+      selectedStatus: null,
       selectedSubCategory: null,
       selectedBrand: null,
       selectedUnit: null,
       selectedType: null,
+      statusItems: [
+        {
+          value: null,
+          text: 'Pilih salah satu status',
+          disabled: true,
+        },
+        {
+          value: '0',
+          text: 'Kosong / Not Available',
+        },
+        {
+          value: '1',
+          text: 'Ada / Ready',
+        },
+      ],
       categoryItems: [
         {
           value: null,
@@ -340,6 +394,12 @@ export default {
   },
   destroyed() {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
+  },
+  methods: {
+    onFileChange(e) {
+      const file = e.target.files[0]
+      this.productimgurl = URL.createObjectURL(file)
+    },
   },
 }
 </script>

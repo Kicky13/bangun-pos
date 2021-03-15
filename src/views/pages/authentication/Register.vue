@@ -51,7 +51,7 @@
       </div>
       <b-row>
         <b-col cols="12">
-          <register-wizard />
+          <register-wizard :form-data="formData" />
         </b-col>
       </b-row>
     </div>
@@ -64,6 +64,7 @@ import {
 } from 'bootstrap-vue'
 import { $themeConfig } from '@themeConfig'
 import { useRouter } from '@core/utils/utils'
+import authService from '@/connection/connection'
 import RegisterWizard from './RegisterWizard.vue'
 
 export default {
@@ -79,11 +80,18 @@ export default {
     // App Name
     const { route } = useRouter()
     const { appName, appLogoImage } = $themeConfig.app
-    const aksesTokoToken = route.value.params.token
+    const aksesTokoToken = authService.getVerifyToken(route.value.params.token)
+    const formData = authService.getDataToken(route.value.params.token)
     return {
       aksesTokoToken,
       appName,
       appLogoImage,
+      formData,
+    }
+  },
+  data() {
+    return {
+      formData: this.formData,
     }
   },
   created() {

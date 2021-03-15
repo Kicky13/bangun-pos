@@ -107,13 +107,13 @@
           v-for="product in products"
           :key="product.id"
           xl="4"
-          md="8"
+          md="12"
           sm="12"
           class="ecommerce-card"
           no-body
         >
           <!-- Product Details -->
-          <b-link :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
+          <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
             <mini-product-card
               :product="product"
               :item-click="handleCartActionClick"
