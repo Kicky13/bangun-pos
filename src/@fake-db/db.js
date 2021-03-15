@@ -6,6 +6,7 @@ import mock from './mock'
 import './jwt'
 
 // Table
+import './data/extensions/sales-data-pending'
 import './data/extensions/customer-data-user'
 import './data/extensions/app-data'
 import './data/master/customer'

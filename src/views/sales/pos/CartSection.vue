@@ -379,9 +379,10 @@
               <b-col cols="12" md="3">
                   <b-button
                     v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                    variant="warning"
-                    class="mb-1"
-                    block
+                    style="margin-right: 5px;"
+                    variant="outline-warning"
+                    pill
+                    @click="handleCartActionClick(product)"
                   >
                     Antrian
                   </b-button>
@@ -608,6 +609,7 @@ import {
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
+// import { useEcommerceUi } from '../useEcommerce'
 
 export default {
   components: {
