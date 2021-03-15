@@ -2,7 +2,7 @@
   <b-card
     class="text-center"
   >
-    <b-link :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
+    <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
       <b-img
         :alt="`${product.name}-${product.id}`"
         thumbnail
@@ -15,7 +15,7 @@
     </b-link>
     <div class="truncate text-center">
       <h5 class="mb-25 font-weight-bolder">
-        {{ product.price }}
+        {{ product.price }} / PCS
       </h5>
       <span
         v-if="product.name.length<=15"

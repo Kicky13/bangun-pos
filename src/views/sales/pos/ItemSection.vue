@@ -111,7 +111,7 @@
           no-body
         >
           <!-- Product Details -->
-          <b-link :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
+          <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
             <mini-product-card
               :product="product"
               :item-click="handleCartActionClick"

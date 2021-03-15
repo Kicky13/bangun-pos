@@ -1,58 +1,51 @@
 <template>
   <div>
-    <b-row>
-      <b-col cols="12">
+    <b-row align-h="center">
+      <b-col cols="12" lg="7">
         <b-card>
           <!-- Customer Form Section -->
           <div>
             <b-row class="mb-0">
-              <b-col cols="5">
+              <b-col cols="6">
                 <b-form-group
                   label="Kode Penjualan"
                   label-for="sellingCode"
                 >
                   <b-form-input
                     id="sellingCode"
-                    value="TB-28373983/947290021"
+                    :value="dataPenjualan.saleCode"
                     disabled
                   />
                 </b-form-group>
               </b-col>
-              <b-col cols="5">
+              <b-col cols="6">
                 <b-form-group
                   label="Customer"
                   label-for="customer"
                 >
                   <b-form-select
                     id="customer"
-                    v-model="selectedCustomer"
+                    v-model="dataPenjualan.customer"
                     :options="customers"
+                    disabled
                   />
                 </b-form-group>
               </b-col>
-              <b-col cols="2">
-                <b-button
-                  v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-                  v-b-modal.customerAdd
-                  variant="danger"
-                  class="btn-icon mt-0 mt-md-2"
-                >
-                  <feather-icon icon="UserPlusIcon" />
-                </b-button>
-              </b-col>
             </b-row>
             <b-row class="mb-0">
-              <b-col cols="5">
+              <b-col cols="6">
                 <b-form-select
                   id="customer"
-                  v-model="selectedCashier"
+                  v-model="dataPenjualan.biller"
                   :options="cashierItems"
+                  disabled
                 />
               </b-col>
-              <b-col cols="5">
+              <b-col cols="6">
                 <b-form-input
                   id="jagoId"
-                  placeholder="No. Referensi Jago Bangunan"
+                  v-model="dataPenjualan.ref"
+                  disabled
                 />
               </b-col>
             </b-row>
@@ -73,69 +66,72 @@
               @submit.prevent="repeateAgain"
             >
               <div
-                style="flex-wrap: nowrap;
-                max-height: 220px;
-                overflow: auto;"
+                style="flex-wrap: nowrap;"
               >
                 <!-- Row Loop -->
                 <b-row
-                  v-for="(item, index) in items"
+                  v-for="(item) in items"
                   :id="item.id"
                   :key="item.id"
                   ref="row"
                 >
 
                   <!-- Item Name -->
-                  <b-col md="4">
+                  <b-col cols="12" md="4" class="mb-2 mb-md-0">
                     <b-row>
                       <b-col>
                         <span>
                           {{ item.id }}
-                          <feather-icon
-                            v-b-modal.cartProductEdit
-                            icon="EditIcon"
-                            style="color: #b20838"
-                          />
                         </span>
                       </b-col>
                     </b-row>
                     <b-row>
                       <b-col>
-                        <span style="font-weight: bold; font-size: 14px;">
+                        <span style="font-weight: bold; font-size: 14px;" class="text-danger">
                           {{ item.name }}
                         </span>
                       </b-col>
                     </b-row>
-                    <b-row>
-                      <b-col>
-                        <span>
-                        $ {{ item.price }} / PCS
-                      </span>
-                      </b-col>
-                    </b-row>
+                  </b-col>
+
+                  <!-- Price -->
+                  <b-col cols="4" md="3">
+                    <b-form-group
+                      label="Price"
+                      label-for="price"
+                    >
+                      <b-form-input
+                        id="pzrice"
+                        :value="item.price + ' / PCS'"
+                        plaintext
+                      />
+                    </b-form-group>
                   </b-col>
 
                   <!-- Quantity -->
-                  <b-col md="3">
+                  <b-col cols="4" md="2">
                     <b-form-group
-                      label="Quantity"
+                      label="Qty"
                       label-for="quantity"
                       class="text-center"
                     >
-                      <b-form-spinbutton
+                      <b-form-input
                         id="demo-sb"
                         v-model="item.quantity"
                         min="1"
                         max="100"
+                        class="text-center"
+                        disabled
+                        size="sm"
                       />
                     </b-form-group>
                   </b-col>
 
                   <!-- Profession -->
                   <b-col
-                    cols="6"
+                    cols="4"
                     md="3"
-                    class="text-md-right"
+                    class="text-right"
                   >
                     <b-form-group
                       label="Price"
@@ -145,30 +141,12 @@
                         id="pzrice"
                         :value="item.price * item.quantity"
                         plaintext
-                        class="text-md-right"
+                        class="text-right"
                       />
                     </b-form-group>
                   </b-col>
-
-                  <!-- Remove Button -->
-                  <b-col
-                    cols="6"
-                    md="2"
-                    class="mb-50 text-right text-md-center"
-                  >
-                    <b-button
-                      v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                      variant="outline-danger"
-                      class="btn-icon mt-0 mt-md-2"
-                      @click="removeItem(index)"
-                      v-b-tooltip.hover
-                      title="Hapus"
-                    >
-                      <feather-icon icon="Trash2Icon" />
-                    </b-button>
-                  </b-col>
                   <b-col cols="12">
-                    <hr>
+                    <hr style="margin-top: 5px;">
                   </b-col>
                 </b-row>
               </div>
@@ -178,11 +156,6 @@
 
           <!-- Total Section -->
           <div>
-            <b-row>
-              <b-col cols="12">
-                <hr>
-              </b-col>
-            </b-row>
             <b-row>
               <b-col sm="6">
                 <b-row>
@@ -217,7 +190,7 @@
                       id="subtotal"
                       disabled
                       style="text-align: right;"
-                      value="8190 "
+                      :value="dataPenjualan.subtotal + ' '"
                     />
                   </b-input-group>
                 </b-form-group>
@@ -225,8 +198,9 @@
               <b-col sm="6">
                 <b-form-select
                   id="tipebayar"
-                  v-model="selectedMetode"
+                  v-model="dataPenjualan.typePayment"
                   :options="methodBayar"
+                  disabled
                 />
               </b-col>
             </b-row>
@@ -244,7 +218,8 @@
                     <b-form-input
                       id="discount"
                       style="text-align: right;"
-                      value="0"
+                      :value="dataPenjualan.disc + ' '"
+                      disabled
                     />
                   </b-input-group>
                 </b-form-group>
@@ -257,7 +232,7 @@
                 >
                   <b-form-input
                     id="idBayar"
-                    value="38942808192"
+                    value="1000000"
                     style="text-align: right"
                   />
                 </b-form-group>
@@ -275,7 +250,8 @@
                     <b-form-input
                       id="tax"
                       style="text-align: right;"
-                      value="0"
+                      :value="dataPenjualan.tax + ' '"
+                      disabled
                     />
                   </b-input-group>
                 </b-form-group>
@@ -288,7 +264,7 @@
                 >
                   <b-form-input
                     id="paid"
-                    value="8942808192"
+                    value="1000000"
                     style="text-align: right"
                   />
                 </b-form-group>
@@ -306,7 +282,8 @@
                     <b-form-input
                       id="ongkir"
                       style="text-align: right;"
-                      value="0"
+                      :value="dataPenjualan.ship + ' '"
+                      disabled
                     />
                   </b-input-group>
                 </b-form-group>
@@ -324,21 +301,12 @@
                     <b-form-input
                       id="paidReturn"
                       style="text-align: right;"
-                      value="0"
+                      value="1000000 "
                     />
                   </b-input-group>
                 </b-form-group>
               </b-col>
             </b-row>
-            <!-- <b-row style="margin-top: 10px;">
-              <b-col cols="12">
-                <b-form-textarea
-                  id="textarea-rows"
-                  placeholder="Note"
-                  rows="3"
-                />
-              </b-col>
-            </b-row> -->
             <b-row style="margin-top: 10px;">
               <b-col cols="12">
                 <b-alert
@@ -348,7 +316,7 @@
                 >
                   <div class="alert-body text-center">
                     <h3>
-                      <strong>Grand Total : 43.839.21</strong>
+                      <strong>Grand Total : 1,000,000.00</strong>
                     </h3>
                   </div>
                 </b-alert>
@@ -365,238 +333,30 @@
           <!-- Action Button Section -->
           <div>
             <b-row>
-              <b-col cols="12" md="3">
-                  <b-button
-                    v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-                    variant="secondary"
-                    class="mb-1"
-                    block
-                  >
-                    Batal
-                  </b-button>
-              </b-col>
+              <b-col cols="12" md="3"></b-col>
               <b-col cols="12" md="3"></b-col>
               <b-col cols="12" md="3">
                   <b-button
                     v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                    variant="warning"
                     class="mb-1"
                     block
                   >
-                    Antrian
+                    Print
                   </b-button>
               </b-col>
               <b-col cols="12" md="3">
                 <b-button
                   v-ripple.400="'rgba(40, 199, 111, 0.15)'"
-                  variant="danger"
                   class="mb-1"
                   block
+                  :to="{name: 'user-sale'}"
                 >
-                  Bayar
+                  Kembali
                 </b-button>
               </b-col>
             </b-row>
           </div>
           <!-- End Action Button Section -->
-
-          <!-- Modal Section -->
-
-          <!-- Add Customer -->
-          <b-modal
-            id="customerAdd"
-            centered
-            size="lg"
-            title="Tambah Customer"
-            ok-title="Simpan"
-            cancel-title="Tutup"
-            ok-variant="danger"
-          >
-            <b-form>
-              <b-row>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Nama Customer"
-                    label-for="customerName"
-                  >
-                    <b-form-input id="customerName" />
-                  </b-form-group>
-                </b-col>
-                <b-col cols="6">
-                  <b-form-group
-                    label-for="reference"
-                    label="No. Reference"
-                  >
-                    <b-form-input id="reference" />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Nomor HP"
-                    label-for="phone"
-                  >
-                    <b-form-input id="phone" />
-                  </b-form-group>
-                </b-col>
-                <b-col cols="6">
-                  <b-form-group
-                    label-for="ktp"
-                    label="Nomor KTP"
-                  >
-                    <b-form-input id="ktp" />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col cols="12">
-                  <b-form-group
-                    label="Alamat"
-                    label-for="address"
-                  >
-                    <b-form-textarea
-                      id="address"
-                      rows="4"
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-            </b-form>
-          </b-modal>
-          <!-- End of Customer Add -->
-
-          <!-- Edit Cart Product -->
-          <b-modal
-            id="cartProductEdit"
-            centered
-            size="lg"
-            ok-title="Simpan"
-            cancel-title="Tutup"
-            ok-variant="danger"
-          >
-            <b-form>
-              <b-row>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Kode Produk :"
-                    label-for="kodeProduk"
-                    style="font-weight: bold"
-                  >
-                    <b-form-input
-                      id="kodeProduk"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Nama Produk :"
-                    label-for="namaProduk"
-                    style="font-weight: bold"
-                  >
-                    <b-form-input
-                      id="namaProduk"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Kategori :"
-                    label-for="kategori"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="kategori"
-                      v-model="selectedKategori"
-                      :options="kategori"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Sub Kategori :"
-                    label-for="subKategori"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="subKategori"
-                      v-model="selectedSubKategori"
-                      :options="subKategori"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Type :"
-                    label-for="type"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="type"
-                      v-model="selectedType"
-                      :options="type"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Brand :"
-                    label-for="brand"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="brand"
-                      v-model="selectedBrand"
-                      :options="brand"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Harga Jual :"
-                    label-for="hargaJual"
-                    style="font-weight: bold"
-                  >
-                    <b-form-input id="hargaJual" />
-                  </b-form-group>
-                </b-col>
-                <b-col cols="6">
-                  <b-form-group
-                    label-for="units"
-                    label="Units :"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="units"
-                      v-model="selectedUnits"
-                      :options="units"
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-            </b-form>
-          </b-modal>
-          <!-- End of Edit Cart Product -->
-
-          <!-- Payment Modal -->
-          <b-modal
-            id="paymentProcess"
-            centered
-          />
-
-          <!-- End of Modal Section -->
         </b-card></b-col>
     </b-row>
   </div>
@@ -604,7 +364,7 @@
 
 <script>
 import {
-  BRow, BCol, BCard, BForm, BFormGroup, BFormInput, BButton, BFormSpinbutton, BAlert, BFormSelect, BInputGroup, BModal, BFormTextarea, VBModal,
+  BRow, BCol, BCard, BForm, BFormGroup, BFormInput, BButton, BAlert, BFormSelect, BInputGroup, VBModal,
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
@@ -617,9 +377,6 @@ export default {
     BFormGroup,
     BFormInput,
     BButton,
-    BFormSpinbutton,
-    BModal,
-    BFormTextarea,
     BAlert,
     BFormSelect,
     BInputGroup,
@@ -632,16 +389,7 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
-      selectedWarehouse: null,
-      selectedBiller: null,
-      selectedCustomer: null,
-      selectedMetode: null,
-      selectedCashier: null,
-      selectedKategori: null,
-      selectedSubKategori: null,
-      selectedType: null,
-      selectedBrand: null,
-      selectedUnits: null,
+      dataPenjualan: null,
       cashierItems: [
         {
           value: null,
@@ -667,16 +415,20 @@ export default {
         disabled: true,
       },
       {
-        value: 'Cash',
+        value: 'CASH',
         text: 'Cash',
       },
       {
-        value: 'Transfer',
+        value: 'TRANSFER',
         text: 'Transfer Bank',
       },
       {
-        value: 'Gopay',
+        value: 'GOPAY',
         text: 'Gopay',
+      },
+      {
+        value: 'KREDIT',
+        text: 'Kredit',
       }],
       items: [{
         id: 20200001909,
@@ -859,9 +611,15 @@ export default {
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
+    this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
+    this.$http.get('/app-data/salesUser')
+      .then(res => {
+        this.dataPenjualan = res.data.find(data => data.id === parseInt(this.$route.params.id, 10))
+      })
   },
   destroyed() {
     window.removeEventListener('resize', this.initTrHeight)
+    this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
   methods: {
     repeateAgain() {
@@ -872,10 +630,6 @@ export default {
       this.$nextTick(() => {
         this.trAddHeight(this.$refs.row[0].offsetHeight)
       })
-    },
-    removeItem(index) {
-      this.items.splice(index, 1)
-      this.trTrimHeight(this.$refs.row[0].offsetHeight)
     },
     initTrHeight() {
       this.trSetHeight(null)
