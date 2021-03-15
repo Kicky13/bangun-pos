@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="$route.meta.redTitle || $route.meta.redSubs"
-    style="color: #ea5455; background-color: #ea5455;"
+    style="color: #ea5455; background-color: #b20838;"
     class="content-header navbar-container align-items-center"
   >
     <div

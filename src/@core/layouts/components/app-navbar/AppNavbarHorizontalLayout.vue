@@ -25,7 +25,7 @@
     <b-navbar-nav class="nav align-items-center ml-auto">
       <b-button
         v-if="userdata.role === 'user'"
-        variant="primary"
+        variant="danger"
         :to="{ name: 'pointof-sale' }"
       >
         <span>POS</span>
