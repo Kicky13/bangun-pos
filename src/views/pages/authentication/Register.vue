@@ -62,9 +62,9 @@
 import {
   BRow, BCol, BImg, BLink,
 } from 'bootstrap-vue'
-import jwt from 'jsonwebtoken'
 import { $themeConfig } from '@themeConfig'
 import { useRouter } from '@core/utils/utils'
+import authService from '@/connection/connection'
 import RegisterWizard from './RegisterWizard.vue'
 
 export default {
@@ -80,9 +80,8 @@ export default {
     // App Name
     const { route } = useRouter()
     const { appName, appLogoImage } = $themeConfig.app
-    const aksesTokoToken = jwt.verify(route.value.params.token, 'FVtf3mAUG6Qmh4DfFVtf3mAUG6Qmh4DfFVtf3mAUG6Qmh4Df')
-    const { data } = aksesTokoToken
-    const formData = data
+    const aksesTokoToken = authService.getVerifyToken(route.value.params.token)
+    const formData = authService.getDataToken(route.value.params.token)
     return {
       aksesTokoToken,
       appName,
