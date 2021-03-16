@@ -388,7 +388,6 @@ export default {
           if (data.result) {
             const userData = authService.getDataToken(data.token)
             const toko = this.setDataUser(userData)
-            console.log(toko)
             localStorage.setItem('userData', JSON.stringify(toko))
             authService.setToken(data.token)
             const userAbility = authService.getAbility(userData.role)
