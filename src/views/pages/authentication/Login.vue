@@ -261,7 +261,7 @@ export default {
       status: '',
       password: 'admin',
       userEmail: 'admin@demo.com',
-      sideImg: require('@/assets/images/pages/Login_POS1.png'),
+      sideImg: require('@/assets/images/pages/Login_POS1Medium.png'),
       logoImg: require('@/assets/images/logo/POSRetailBlack.png'),
       // sideImg: require('@/assets/images/pages/login-v2.svg'),
 

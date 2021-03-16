@@ -36,7 +36,8 @@
 import {
   VBTooltip, BOverlay, BSpinner,
 } from 'bootstrap-vue'
-import useJwt from '@/auth/jwt/useJwt'
+import authService from '@/connection/connection'
+import { useRouter } from '@core/utils/utils'
 import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
@@ -53,8 +54,22 @@ export default {
     BSpinner,
   },
   mixins: [togglePasswordVisibility],
+  setup() {
+    const { route } = useRouter()
+    const { token } = route.value.params
+    const { role, toko } = authService.getDataToken(token)
+    console.log(toko)
+    return {
+      token,
+      role,
+      toko,
+    }
+  },
   data() {
     return {
+      token: this.token ?? '',
+      role: this.role ?? '',
+      toko: this.toko ?? null,
       status: '',
       isLoading: true,
       password: 'user',
@@ -82,45 +97,85 @@ export default {
   },
   methods: {
     login() {
-      useJwt.login({
-        email: this.userEmail,
-        password: this.password,
-      })
-        .then(response => {
-          const { userData } = response.data
-          useJwt.setToken(response.data.accessToken)
-          useJwt.setRefreshToken(response.data.refreshToken)
-          localStorage.setItem('userData', JSON.stringify(userData))
-          this.$ability.update(userData.ability)
+      if (this.role !== '') {
+        const toko = this.setDataUser()
+        localStorage.setItem('userData', JSON.stringify(toko))
+        authService.setToken(this.token)
+        const userAbility = authService.getAbility(this.role)
+        this.$ability.update(userAbility)
 
-          // ? This is just for demo purpose. Don't think CASL is role based in this case, we used role in if condition just for ease
-          this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
-            .then(() => {
-              this.$toast({
-                component: ToastificationContent,
-                position: 'top-right',
-                props: {
-                  title: `Welcome ${userData.fullName || userData.username}`,
-                  icon: 'CoffeeIcon',
-                  variant: 'success',
-                  text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
-                },
-              })
+        this.$router.replace(getHomeRouteForLoggedInUser(this.role))
+          .then(() => {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: `Welcome ${toko.fullName || toko.username}`,
+                icon: 'CoffeeIcon',
+                variant: 'success',
+                text: `You have successfully logged in as ${this.role}. Now you can start to explore!`,
+              },
             })
-            .catch(error => {
-            //   this.$refs.loginForm.setErrors(error.response.data.error)
-              this.$toast({
-                component: ToastificationContent,
-                position: 'top-right',
-                props: {
-                  title: `Error ${error.response.data.error}`,
-                  icon: 'CoffeeIcon',
-                  variant: 'error',
-                  text: 'Token unverified, please try again',
-                },
-              })
-            })
-        })
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      }
+      // useJwt.login({
+      //   email: this.userEmail,
+      //   password: this.password,
+      // })
+      //   .then(response => {
+      //     const { userData } = response.data
+      //     useJwt.setToken(response.data.accessToken)
+      //     useJwt.setRefreshToken(response.data.refreshToken)
+      //     localStorage.setItem('userData', JSON.stringify(userData))
+      //     this.$ability.update(userData.ability)
+
+      //     // ? This is just for demo purpose. Don't think CASL is role based in this case, we used role in if condition just for ease
+      //     this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
+      //       .then(() => {
+      //         this.$toast({
+      //           component: ToastificationContent,
+      //           position: 'top-right',
+      //           props: {
+      //             title: `Welcome ${userData.fullName || userData.username}`,
+      //             icon: 'CoffeeIcon',
+      //             variant: 'success',
+      //             text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
+      //           },
+      //         })
+      //       })
+      //       .catch(error => {
+      //       //   this.$refs.loginForm.setErrors(error.response.data.error)
+      //         this.$toast({
+      //           component: ToastificationContent,
+      //           position: 'top-right',
+      //           props: {
+      //             title: `Error ${error.response.data.error}`,
+      //             icon: 'CoffeeIcon',
+      //             variant: 'error',
+      //             text: 'Token unverified, please try again',
+      //           },
+      //         })
+      //       })
+      //   })
+    },
+    setDataUser() {
+      const { toko, role } = this
+      const userAbility = authService.getAbility(role)
+      const userData = {
+        id: toko.id_toko,
+        fullName: toko.nama_pemilik,
+        username: toko.kode_toko,
+        password: role,
+        // eslint-disable-next-line global-require
+        avatar: require('@/assets/images/avatars/13-small.png'),
+        email: 'user@demo.com',
+        role,
+        ability: userAbility,
+      }
+      return userData
     },
   },
 }

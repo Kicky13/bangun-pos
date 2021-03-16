@@ -74,9 +74,9 @@
       width: calc(100vw - (100vw - 100%) - calc(#{$content-padding} * 2));
       background: $white;
     }
-    .navbar-container {
-      border-radius: $border-radius;
-    }
+    // .navbar-container {
+    //   border-radius: $border-radius;
+    // }
     &.navbar-fixed {
       position: fixed;
       width: 100%;

@@ -36,7 +36,7 @@ export default [
     },
   },
   {
-    path: '/verify',
+    path: '/verify/:token',
     name: 'auto-login-verify',
     component: () => import('@/views/pages/authentication/VerifyLogin.vue'),
     meta: {
