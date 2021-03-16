@@ -23,7 +23,7 @@ export default class AuthService {
       })
     }
 
-    login(...args) {
+    login(param) {
       return axios({
         method: 'post',
         url: this.config.loginEndpoint,
@@ -31,7 +31,7 @@ export default class AuthService {
           'content-type': 'application/json',
           accept: 'application/json',
         },
-        data: args,
+        data: param,
       })
     }
 
@@ -51,7 +51,7 @@ export default class AuthService {
 
     refreshToken() {
       this.token = localStorage.getItem(this.config.storageTokenName)
-      axios.defaults.headers.common.Authorization = localStorage.getItem(this.token)
+      axios.defaults.headers.common.Authorization = this.token
     }
 
     getAppKey() {
