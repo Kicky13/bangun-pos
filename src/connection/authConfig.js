@@ -1,6 +1,6 @@
 export default {
   // Auth Endpoints
-  loginEndpoint: '',
+  loginEndpoint: 'login',
   registerEndpoint: 'toko/store',
 
   // Token

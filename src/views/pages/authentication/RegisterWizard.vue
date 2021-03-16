@@ -390,6 +390,7 @@ export default {
             const toko = this.setDataUser(userData)
             localStorage.setItem('userData', JSON.stringify(toko))
             authService.setToken(data.token)
+            console.log(data.token)
             const userAbility = authService.getAbility(userData.role)
             this.$ability.update(userAbility)
 
