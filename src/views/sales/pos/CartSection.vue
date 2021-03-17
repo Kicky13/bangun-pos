@@ -68,109 +68,120 @@
           <div>
             <b-form
               ref="form"
-              :style="{height: trHeight}"
               class="repeater-form"
               @submit.prevent="repeateAgain"
             >
               <div
                 style="flex-wrap: nowrap;
-                max-height: 220px;
-                overflow: auto;"
+                max-height: 400px;
+                overflow-x: hidden;
+                overflow-y: auto;"
               >
                 <!-- Row Loop -->
-                <b-row
-                  v-for="(item, index) in items"
-                  :id="item.id"
-                  :key="item.id"
-                  ref="row"
-                >
-
-                  <!-- Item Name -->
-                  <b-col md="4">
-                    <b-row>
-                      <b-col>
-                        <span>
-                          {{ item.id }}
-                          <feather-icon
-                            v-b-modal.cartProductEdit
-                            icon="EditIcon"
-                            style="color: #b20838"
-                          />
-                        </span>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
-                        <span style="font-weight: bold; font-size: 14px;">
-                          {{ item.name }}
-                        </span>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
-                        <span>
-                        $ {{ item.price }} / PCS
-                      </span>
-                      </b-col>
-                    </b-row>
-                  </b-col>
-
-                  <!-- Quantity -->
-                  <b-col md="3">
-                    <b-form-group
-                      label="Quantity"
-                      label-for="quantity"
-                      class="text-center"
-                    >
-                      <b-form-spinbutton
-                        id="demo-sb"
-                        v-model="item.quantity"
-                        min="1"
-                        max="100"
-                      />
-                    </b-form-group>
-                  </b-col>
-
-                  <!-- Profession -->
-                  <b-col
-                    cols="6"
-                    md="3"
-                    class="text-md-right"
+                <template v-if="items.length">
+                  <b-row
+                    v-for="(item, index) in items"
+                    :id="item.id"
+                    :key="item.id"
+                    ref="row"
                   >
-                    <b-form-group
-                      label="Price"
-                      label-for="price"
-                    >
-                      <b-form-input
-                        id="pzrice"
-                        :value="item.price * item.quantity"
-                        plaintext
-                        class="text-md-right"
-                      />
-                    </b-form-group>
-                  </b-col>
 
-                  <!-- Remove Button -->
-                  <b-col
-                    cols="6"
-                    md="2"
-                    class="mb-50 text-right text-md-center"
-                  >
-                    <b-button
-                      v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                      variant="outline-danger"
-                      class="btn-icon mt-0 mt-md-2"
-                      @click="removeItem(index)"
-                      v-b-tooltip.hover
-                      title="Hapus"
+                    <!-- Item Name -->
+                    <b-col md="4">
+                      <b-row>
+                        <b-col>
+                          <span>
+                            {{ item.id }}
+                            <feather-icon
+                              v-b-modal.cartProductEdit
+                              icon="EditIcon"
+                              style="color: #b20838"
+                            />
+                          </span>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col>
+                          <span style="font-weight: bold; font-size: 14px;">
+                            {{ item.name }}
+                          </span>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col>
+                          <span>
+                            $ {{ item.price }} / PCS
+                          </span>
+                        </b-col>
+                      </b-row>
+                    </b-col>
+
+                    <!-- Quantity -->
+                    <b-col md="3">
+                      <b-form-group
+                        label="Quantity"
+                        label-for="quantity"
+                        class="text-center"
+                      >
+                        <b-form-spinbutton
+                          id="demo-sb"
+                          v-model="item.quantity"
+                          min="1"
+                          max="100"
+                        />
+                      </b-form-group>
+                    </b-col>
+
+                    <!-- Profession -->
+                    <b-col
+                      cols="6"
+                      md="3"
+                      class="text-md-right"
                     >
-                      <feather-icon icon="Trash2Icon" />
-                    </b-button>
-                  </b-col>
-                  <b-col cols="12">
-                    <hr>
-                  </b-col>
-                </b-row>
+                      <b-form-group
+                        label="Price"
+                        label-for="price"
+                      >
+                        <b-form-input
+                          id="pzrice"
+                          :value="item.price * item.quantity"
+                          plaintext
+                          class="text-md-right"
+                        />
+                      </b-form-group>
+                    </b-col>
+
+                    <!-- Remove Button -->
+                    <b-col
+                      cols="6"
+                      md="2"
+                      class="mb-50 text-right text-md-center"
+                    >
+                      <b-button
+                        v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+                        v-b-tooltip.hover
+                        variant="outline-danger"
+                        class="btn-icon mt-0 mt-md-2"
+                        title="Hapus"
+                        @click="removeItem(index)"
+                      >
+                        <feather-icon icon="Trash2Icon" />
+                      </b-button>
+                    </b-col>
+                    <b-col cols="12">
+                      <hr>
+                    </b-col>
+                  </b-row>
+                </template>
+                <template v-else>
+                  <div
+                    style="color: #b20838;
+                    font-style: italic;
+                    text-align: center;"
+                  >
+                    Keranjang kosong
+                  </div>
+                </template>
               </div>
             </b-form>
           </div>
@@ -185,23 +196,24 @@
             </b-row>
             <b-row>
               <b-col sm="6">
-                <b-row>
-                  <b-col sm="8">
-                    <span>Items</span>
-                  </b-col>
-                  <b-col
-                    sm="4"
-                    style="text-align: right;"
+                <b-form-group
+                  label="Items"
+                  label-for="items"
+                  label-cols="6"
+                  label-cols-md="4"
+                >
+                  <b-input-group
+                    class="input-group-merge"
                   >
-                    <span>4(4)</span>
-                  </b-col>
-                </b-row>
+                    <b-form-input
+                      id="items"
+                      style="text-align: right;"
+                      value="4(4)"
+                      plaintext
+                    />
+                  </b-input-group>
+                </b-form-group>
               </b-col>
-              <b-col sm="6">
-                <span>Tipe Pembayaran: </span>
-              </b-col>
-            </b-row>
-            <b-row class="mb-0">
               <b-col sm="6">
                 <b-form-group
                   label="Sub Total"
@@ -215,116 +227,9 @@
                   >
                     <b-form-input
                       id="subtotal"
-                      disabled
                       style="text-align: right;"
                       value="8190 "
-                    />
-                  </b-input-group>
-                </b-form-group>
-              </b-col>
-              <b-col sm="6">
-                <b-form-select
-                  id="tipebayar"
-                  v-model="selectedMetode"
-                  :options="methodBayar"
-                />
-              </b-col>
-            </b-row>
-            <b-row class="mb-1">
-              <b-col cols="6">
-                <b-form-group
-                  label="Discount"
-                  label-for="discount"
-                  label-cols-md="4"
-                >
-                  <b-input-group
-                    class="input-group-merge"
-                    append=".00"
-                  >
-                    <b-form-input
-                      id="discount"
-                      style="text-align: right;"
-                      value="0"
-                    />
-                  </b-input-group>
-                </b-form-group>
-              </b-col>
-              <b-col cols="6">
-                <b-form-group
-                  label="No. Pembayaran"
-                  label-for="idBayar"
-                  label-cols-md="6"
-                >
-                  <b-form-input
-                    id="idBayar"
-                    value="38942808192"
-                    style="text-align: right"
-                  />
-                </b-form-group>
-              </b-col>
-              <b-col cols="6">
-                <b-form-group
-                  label="Pajak"
-                  label-for="tax"
-                  label-cols-md="4"
-                >
-                  <b-input-group
-                    class="input-group-merge"
-                    append=".00"
-                  >
-                    <b-form-input
-                      id="tax"
-                      style="text-align: right;"
-                      value="0"
-                    />
-                  </b-input-group>
-                </b-form-group>
-              </b-col>
-              <b-col cols="6">
-                <b-form-group
-                  label="Bayar"
-                  label-for="paid"
-                  label-cols-md="6"
-                >
-                  <b-form-input
-                    id="paid"
-                    value="8942808192"
-                    style="text-align: right"
-                  />
-                </b-form-group>
-              </b-col>
-              <b-col cols="6">
-                <b-form-group
-                  label="Ong. Kirim"
-                  label-for="ongkir"
-                  label-cols-md="4"
-                >
-                  <b-input-group
-                    class="input-group-merge"
-                    append=".00"
-                  >
-                    <b-form-input
-                      id="ongkir"
-                      style="text-align: right;"
-                      value="0"
-                    />
-                  </b-input-group>
-                </b-form-group>
-              </b-col>
-              <b-col cols="6">
-                <b-form-group
-                  label="Kembalian"
-                  label-for="paidReturn"
-                  label-cols-md="4"
-                >
-                  <b-input-group
-                    class="input-group-merge"
-                    append=".00"
-                  >
-                    <b-form-input
-                      id="paidReturn"
-                      style="text-align: right;"
-                      value="0"
+                      disabled
                     />
                   </b-input-group>
                 </b-form-group>
@@ -339,21 +244,6 @@
                 />
               </b-col>
             </b-row> -->
-            <b-row style="margin-top: 10px;">
-              <b-col cols="12">
-                <b-alert
-                  show
-                  class="mb-0"
-                  variant="secondary"
-                >
-                  <div class="alert-body text-center">
-                    <h3>
-                      <strong>Grand Total : 43.839.21</strong>
-                    </h3>
-                  </div>
-                </b-alert>
-              </b-col>
-            </b-row>
             <b-row>
               <b-col cols="12">
                 <hr>
@@ -365,31 +255,44 @@
           <!-- Action Button Section -->
           <div>
             <b-row>
-              <b-col cols="12" md="3">
-                  <b-button
-                    v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-                    variant="secondary"
-                    class="mb-1"
-                    block
-                  >
-                    Batal
-                  </b-button>
+              <b-col
+                cols="12"
+                md="3"
+              >
+                <b-button
+                  v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                  variant="secondary"
+                  class="mb-1"
+                  block
+                >
+                  Batal
+                </b-button>
               </b-col>
-              <b-col cols="12" md="3"></b-col>
-              <b-col cols="12" md="3">
-                  <b-button
-                    v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                    style="margin-right: 5px;"
-                    variant="outline-warning"
-                    pill
-                    @click="handleCartActionClick(product)"
-                  >
-                    Antrian
-                  </b-button>
+              <b-col
+                cols="12"
+                md="3"
+              />
+              <b-col
+                cols="12"
+                md="3"
+              >
+                <b-button
+                  v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+                  variant="warning"
+                  class="mb-1"
+                  block
+                  @click="handleCartActionClick(product)"
+                >
+                  Antrian
+                </b-button>
               </b-col>
-              <b-col cols="12" md="3">
+              <b-col
+                cols="12"
+                md="3"
+              >
                 <b-button
                   v-ripple.400="'rgba(40, 199, 111, 0.15)'"
+                  v-b-modal.paymentModal
                   variant="danger"
                   class="mb-1"
                   block
@@ -593,9 +496,214 @@
 
           <!-- Payment Modal -->
           <b-modal
-            id="paymentProcess"
-            centered
-          />
+            id="paymentModal"
+            size="lg"
+            ok-title="Selesai"
+            cancel-title="Kembali"
+          >
+            <template v-slot:modal-title>
+              <h4>Data Pendukung</h4>
+              <small>Lengkapi form di bawah ini untuk mempermudah transaksi anda</small>
+            </template>
+            <b-form>
+              <b-row>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Items"
+                    label-for="items"
+                    label-cols-md="4"
+                  >
+                    <b-input-group
+                      class="input-group-merge"
+                    >
+                      <b-form-input
+                        id="items"
+                        style="text-align: right;"
+                        value="4(4)"
+                        plaintext
+                      />
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col sm="6" />
+              </b-row>
+              <b-row>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Sub Total"
+                    label-for="subtotal"
+                    label-cols-md="4"
+                  >
+                    <b-input-group
+                      prepend="$"
+                      append=".00"
+                      class="input-group-merge"
+                    >
+                      <b-form-input
+                        id="subtotal"
+                        style="text-align: right;"
+                        value="8190 "
+                        disabled
+                      />
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Customer"
+                    label-for="customer"
+                    label-cols="5"
+                  >
+                    <b-form-select
+                      id="customer"
+                      v-model="selectedCustomer"
+                      :options="customers"
+                    />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Discount"
+                    label-for="discount"
+                    label-cols-md="4"
+                  >
+                    <b-input-group
+                      append=".00"
+                      class="input-group-merge"
+                    >
+                      <b-form-input
+                        id="discount"
+                        style="text-align: right;"
+                        value="0"
+                      />
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col sm="6">
+                  <b-form-group
+                    label="No. Pembayaran"
+                    label-for="idBayar"
+                    label-cols-md="5"
+                  >
+                    <b-form-input
+                      id="idBayar"
+                      value="38942808192"
+                      style="text-align: right"
+                    />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Pajak"
+                    label-for="tax"
+                    label-cols-md="4"
+                  >
+                    <b-input-group
+                      append=".00"
+                      class="input-group-merge"
+                    >
+                      <b-form-input
+                        id="tax"
+                        value="0"
+                        style="text-align: right;"
+                      />
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Tipe Pembayaran"
+                    label-for="tipePembayaran"
+                    label-cols-md="5"
+                  >
+                    <b-form-select
+                      id="tipebayar"
+                      v-model="selectedMetode"
+                      :options="methodBayar"
+                    />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Ong. Kirim"
+                    label-for="ongkir"
+                    label-cols-md="4"
+                  >
+                    <b-input-group
+                      append=".00"
+                      class="input-group-merge"
+                    >
+                      <b-form-input
+                        id="ongkir"
+                        value="0"
+                        style="text-align: right;"
+                      />
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col sm="6" />
+              </b-row>
+              <b-row>
+                <b-col sm="12">
+                  <b-alert
+                    variant="secondary"
+                    show
+                  >
+                    <div class="alert-body text-center">
+                      <h3>
+                        <strong>Grand Total : 43.839.21</strong>
+                      </h3>
+                    </div>
+                  </b-alert>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Bayar"
+                    label-for="paid"
+                    label-cols-md="4"
+                  >
+                    <b-input-group
+                      append=".00"
+                      class="input-group-merge"
+                    >
+                      <b-form-input
+                        id="paid"
+                        value="8942808192"
+                        style="text-align: right"
+                      />
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Kembalian"
+                    label-for="paidReturn"
+                    label-cols-md="5"
+                  >
+                    <b-input-group
+                      append=".00"
+                      class="input-group-merge"
+                    >
+                      <b-form-input
+                        id="paidReturn"
+                        value="0"
+                        style="text-align: right;"
+                      />
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-form>
+          </b-modal>
+          <!-- End of Payment Modal -->
 
           <!-- End of Modal Section -->
         </b-card></b-col>
