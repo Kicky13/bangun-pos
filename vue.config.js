@@ -20,6 +20,13 @@ module.exports = {
         '@axios': path.resolve(__dirname, 'src/libs/axios'),
       },
     },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        minSize: 10000,
+        maxSize: 200000,
+      }
+    }
   },
   chainWebpack: config => {
     config.module
