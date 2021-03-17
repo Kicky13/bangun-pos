@@ -85,7 +85,6 @@
                     :key="item.id"
                     ref="row"
                   >
-
                     <!-- Item Name -->
                     <b-col md="4">
                       <b-row>
