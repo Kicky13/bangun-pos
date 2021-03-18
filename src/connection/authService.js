@@ -7,6 +7,8 @@ export default class AuthService {
 
     registerToken = ''
 
+    headerToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3FhLmFrc2VzdG9rby5pZC8iLCJhdWQiOiJodHRwczovL3Bvcy5ha3Nlc3Rva28uaWQiLCJzdWIiOiJ0b2tlbl9pbnRlZ3Jhc2lfYWtzZXN0b2tvX3Bvc19yZXRhaWwiLCJuYW1lIjoiQWtzZXNUb2tvLklEIiwiaWF0IjoxNjEyMzM4NDI5LCJkYXRhIjoie1widXNlcl9pZFwiOlwiMTQyMVwiLFwiY29tcGFueV9pZFwiOlwiMjI4MzhcIixcIm5hbWFfdG9rb1wiOlwiU2VtZW5cIixcInRlbHBfdG9rb1wiOlwiMjIyODMyMjMzOFwiLFwibG9rYXNpX3Rva29cIjpcIjIyMjgzMjIzMzhcIn0ifQ.eFPMdx-0xXmf4ElkPkiXr3qaiObgRcXuvk_doxKieVc'
+
     config = { ...authConfig }
 
     register(param) {
@@ -73,5 +75,9 @@ export default class AuthService {
         return this.config.userAbility
       }
       return this.config.adminAbility
+    }
+
+    getHeaderToken() {
+      return this.headerToken
     }
 }

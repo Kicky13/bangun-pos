@@ -1,12 +1,16 @@
 <template>
   <b-modal
     id="subcategoryAdd"
+    v-model="modalShow"
     centered
     size="lg"
     title="Tambah Sub Kategori"
     ok-title="Simpan"
     cancel-title="Tutup"
     ok-variant="danger"
+    @ok="saveData($event)"
+    @show="resetModal"
+    @hidden="resetModal"
   >
     <b-form>
       <b-row>
@@ -17,6 +21,8 @@
           >
             <b-form-input
               id="subcategoryCode"
+              v-model="subcategoryCode"
+              name="subcategoryCode"
               :disabled="true"
             />
           </b-form-group>
@@ -30,6 +36,7 @@
             <b-form-select
               id="category"
               v-model="selectedCategory"
+              name="category"
               :options="categoryItems"
             />
           </b-form-group>
@@ -39,7 +46,11 @@
             label="Nama Sub Kategori :"
             label-for="subcategoryName"
           >
-            <b-form-input id="subcategoryName" />
+            <b-form-input
+              id="subcategoryName"
+              v-model="subcategoryName"
+              name="subcategoryName"
+            />
           </b-form-group>
         </b-col>
       </b-row>
@@ -51,6 +62,8 @@
           >
             <b-form-textarea
               id="subcategoryNotes"
+              v-model="subcategoryNotes"
+              name="subcategoryNotes"
               rows="4"
             />
           </b-form-group>
@@ -67,6 +80,8 @@ import {
 // import vSelect from 'vue-select'
 // import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
+import axios from '@axios'
+import authService from '@/connection/connection'
 
 export default {
   components: {
@@ -77,7 +92,7 @@ export default {
     BFormGroup,
     BFormInput,
     BFormSelect,
-    // vSelect,
+    //  vSelect,
   },
   directives: {
     'b-modal': VBModal,
@@ -87,86 +102,87 @@ export default {
     return {
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
       selectedCategory: null,
-      selectedSubCategory: null,
-      selectedBrand: null,
-      selectedUnit: null,
-      selectedType: null,
+      subcategoryCode: '',
+      subcategoryName: '',
+      subcategoryNotes: '',
+      modalShow: false,
       categoryItems: [
         {
           value: null,
           text: 'Pilih salah satu kategori',
           disabled: true,
         },
-        {
-          value: 'Raw',
-          text: 'Raw',
-        },
-        {
-          value: 'Bahan Bangunan',
-          text: 'Bahan Bangunan',
-        },
-      ],
-      subCategoryItems: [
-        {
-          value: null,
-          text: 'Pilih salah satu sub kategori',
-          disabled: true,
-        },
-        {
-          value: 'Besi',
-          text: 'Besi',
-        },
-        {
-          value: 'Semen',
-          text: 'Semen',
-        },
-      ],
-      brandItems: [
-        {
-          value: null,
-          text: 'Pilih salah satu brand',
-          disabled: true,
-        },
-        {
-          value: 'Semen Gresik',
-          text: 'Semen Gresik',
-        },
-        {
-          value: 'Tiga Roda',
-          text: 'Tiga Roda',
-        },
-      ],
-      unitItems: [
-        {
-          value: null,
-          text: 'Pilih salah satu unit',
-          disabled: true,
-        },
-        {
-          value: 'EACH',
-          text: 'EACH',
-        },
-        {
-          value: 'ZAK',
-          text: 'ZAK',
-        },
-      ],
-      typeItems: [
-        {
-          value: null,
-          text: 'Pilih salah satu tipe',
-          disabled: true,
-        },
-        {
-          value: 'Alat',
-          text: 'Alat',
-        },
-        {
-          value: 'Bahan',
-          text: 'Bahan',
-        },
       ],
     }
+  },
+  mounted() {
+    this.setListCategory()
+  },
+  methods: {
+    async saveData(e) {
+      e.preventDefault()
+      const param = {
+        id_category: this.selectedCategory,
+        kode_category: this.subcategoryCode,
+        nama_category: this.subcategoryName,
+        note_category: this.subcategoryNotes,
+      }
+      axios({
+        method: 'post',
+        url: 'subcategory/store',
+        headers: {
+          token: authService.getHeaderToken(),
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+        data: param,
+      }).then(response => {
+        // console.log(response)
+        const { data } = response
+        if (data.result) {
+          // console.log('Permintaan Sukses')
+          this.modalShow = false
+        } else {
+          // console.log('Permintaan Gagal Diproses')
+          this.modalShow = true
+        }
+      })
+    },
+    resetModal() {
+      this.subcategoryCode = ''
+      this.subcategoryName = ''
+      this.subcategoryNotes = ''
+      this.selectedCategory = null
+    },
+    setListCategory() {
+      axios({
+        method: 'post',
+        url: 'category',
+        headers: {
+          token: authService.getHeaderToken(),
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+      }).then(response => {
+        const { data } = response
+        this.categoryItems = []
+        this.categoryItems.push({
+          value: null,
+          text: 'Pilih salah satu kategori',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const categorylist = data.data
+          categorylist.forEach(item => {
+            this.categoryItems.push({
+              value: item.id,
+              text: item.nama_category,
+            })
+          })
+        }
+      })
+    },
   },
 }
 </script>
