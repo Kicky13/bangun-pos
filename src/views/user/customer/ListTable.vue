@@ -91,11 +91,13 @@
               v-ripple.400="'rgba(186, 191, 199, 0.15)'"
               size="sm"
               variant="outline-secondary"
+              :to="{ name: 'user-customer-list-trans'}"
             >
               List Trans.
             </b-button>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              v-b-modal.listBayar
               size="sm"
               variant="outline-danger"
             >
@@ -167,83 +169,20 @@
     </vue-good-table>
 
     <!-- Modal Section -->
-
-    <!-- Add Customer -->
-    <b-modal
-      id="customerAdd"
-      centered
-      size="lg"
-      title="Tambah Customer"
-      ok-title="Simpan"
-      cancel-title="Tutup"
-      ok-variant="danger"
-    >
-      <b-form>
-        <b-row>
-          <b-col cols="6">
-            <b-form-group
-              label="Nama Customer :"
-              label-for="customerName"
-            >
-              <b-form-input id="customerName" />
-            </b-form-group>
-          </b-col>
-          <b-col cols="6">
-            <b-form-group
-              label-for="reference"
-              label="No. Referensi (Tukang JagoBagun) :"
-            >
-              <b-form-input id="reference" />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col cols="6">
-            <b-form-group
-              label="Nomor Handphone : "
-              label-for="phone"
-            >
-              <b-form-input id="phone" />
-            </b-form-group>
-          </b-col>
-          <b-col cols="6">
-            <b-form-group
-              label-for="ktp"
-              label="Nomor Identitas/KTP"
-            >
-              <b-form-input id="ktp" />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col cols="12">
-            <b-form-group
-              label="Alamat :"
-              label-for="address"
-            >
-              <b-form-textarea
-                id="address"
-                rows="4"
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-      </b-form>
-    </b-modal>
-    <!-- End of Customer Add -->
-
+    <bayar-modal />
+    <add-customer />
   </b-card>
 </template>
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BModal, VBModal, BRow, BCol, BFormTextarea, BForm,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, VBModal,
 } from 'bootstrap-vue'
-// import vSelect from 'vue-select'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
-// import { codeBasic } from './search'
+import BayarModal from './forms/modals/BayarModal.vue'
+import AddCustomer from './forms/modals/Add.vue'
 
 export default {
   components: {
@@ -253,15 +192,9 @@ export default {
     BFormGroup,
     BFormInput,
     BFormSelect,
-    // BDropdown,
-    // BDropdownItem,
-    // BBadge,
     BCard,
-    BModal,
-    BRow,
-    BCol,
-    BFormTextarea,
-    BForm,
+    BayarModal,
+    AddCustomer,
   },
   directives: {
     'b-modal': VBModal,
@@ -275,7 +208,6 @@ export default {
         {
           value: null,
           text: 'Semua',
-          // disabled: true,
         },
         {
           value: 'Lunas',
