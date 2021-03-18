@@ -28,6 +28,7 @@ export default {
   data() {
     return {
       data: {},
+      menuHidden: this.$store.state.appConfig.layout.menu.hidden,
     }
   },
   created() {

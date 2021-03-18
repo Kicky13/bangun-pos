@@ -53,7 +53,7 @@ export default class AuthService {
 
     refreshToken() {
       this.token = localStorage.getItem(this.config.storageTokenName)
-      axios.defaults.headers.common.Authorization = this.token
+      axios.defaults.headers.common.token = this.token
     }
 
     getAppKey() {

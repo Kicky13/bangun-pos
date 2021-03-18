@@ -322,6 +322,7 @@ export default {
       shopCode: this.formData.kode_toko ?? '',
       shopLogo: null,
       token: this.formData.token,
+      shopCode: this.formData.kode_toko,
       imageURL: null,
       selectedContry: 'select_value',
       selectedLanguage: 'nothing_selected',
