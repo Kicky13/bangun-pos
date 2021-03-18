@@ -13,8 +13,14 @@
                   >
                     <b-form-input
                       id="kode"
+                      v-model="productCode"
+                      name="kode"
                       placeholder="Cari kode atau scan barcode produk"
+                      :disabled="disableStdInput"
                     />
+                    <b-form-invalid-feedback>
+                      Kode Produk Wajib Diisi
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
@@ -24,6 +30,15 @@
                   >
                     <b-form-input
                       id="nama"
+                      v-model="productName"
+                      name="nama"
+                      list="produk-sig"
+                      placeholder="Masukkan nama produk"
+                      @change="setProdukDetail"
+                    />
+                    <b-form-datalist
+                      id="produk-sig"
+                      :options="listProdukSIG"
                     />
                   </b-form-group>
                 </b-col>
@@ -37,7 +52,10 @@
                     <b-form-select
                       id="category"
                       v-model="selectedCategory"
+                      name="category"
                       :options="categoryItems"
+                      :disabled="disableStdInput"
+                      @change="setListSubCategory"
                     />
                   </b-form-group>
                 </b-col>
@@ -61,6 +79,8 @@
                     <b-form-select
                       id="subcategory"
                       v-model="selectedSubCategory"
+                      name="subcategory"
+                      :disabled="disableStdInput"
                       :options="subCategoryItems"
                     />
                   </b-form-group>
@@ -87,6 +107,8 @@
                     <b-form-select
                       id="type"
                       v-model="selectedType"
+                      name="type"
+                      :disabled="disableStdInput"
                       :options="typeItems"
                     />
                   </b-form-group>
@@ -111,6 +133,8 @@
                     <b-form-select
                       id="brand"
                       v-model="selectedBrand"
+                      name="brand"
+                      :disabled="disableStdInput"
                       :options="brandItems"
                     />
                   </b-form-group>
@@ -134,7 +158,11 @@
                     label="Harga jual"
                     label-for="sellprice"
                   >
-                    <b-form-input id="sellprice" />
+                    <b-form-input
+                      id="sellprice"
+                      v-model="productPrice"
+                      name="sellprice"
+                    />
                   </b-form-group>
                 </b-col>
                 <b-col cols="4">
@@ -145,6 +173,7 @@
                     <b-form-select
                       id="unit"
                       v-model="selectedUnit"
+                      name="unit"
                       :options="unitItems"
                     />
                   </b-form-group>
@@ -170,6 +199,7 @@
                   >
                     <b-form-file
                       id="attachment"
+                      name="attachment"
                       accept="image/jpeg, image/png"
                       @change="onFileChange"
                     />
@@ -183,6 +213,7 @@
                     <b-form-select
                       id="status"
                       v-model="selectedStatus"
+                      name="status"
                       :options="statusItems"
                     />
                   </b-form-group>
@@ -216,6 +247,8 @@
             >
               <b-form-textarea
                 id="note"
+                v-model="productNote"
+                name="note"
                 rows="3"
               />
             </b-form-group>
@@ -233,6 +266,7 @@
                 type="submit"
                 variant="primary"
                 style="float: right;"
+                @click="formSubmitted"
               >
                 <span>Submit Product</span>
               </b-button>
@@ -251,9 +285,12 @@
 
 <script>
 import {
-  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal,
+  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal, BFormDatalist, BFormInvalidFeedback,
 } from 'bootstrap-vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import Ripple from 'vue-ripple-directive'
+import axios from '@axios'
+import authService from '@/connection/connection'
 import CategoryModal from './modals/CategoryModal.vue'
 import SubCategoryModal from './modals/SubCategoryModal.vue'
 import TypeModal from './modals/TypeModal.vue'
@@ -279,9 +316,13 @@ export default {
     TypeModal,
     BrandModal,
     UnitsModal,
+    BFormDatalist,
     // BInputGroup,
     // BInputGroupPrepend,
     // FeatherIcon,
+    BFormInvalidFeedback,
+    // eslint-disable-next-line vue/no-unused-components
+    ToastificationContent,
   },
   directives: {
     'b-modal': VBModal,
@@ -291,12 +332,70 @@ export default {
     return {
       productimgurl: null,
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
+      disableStdInput: false,
+      matchedItem: [],
+      productCode: '',
+      productName: '',
+      productPrice: '',
+      productNote: '',
       selectedCategory: null,
       selectedStatus: null,
       selectedSubCategory: null,
       selectedBrand: null,
       selectedUnit: null,
       selectedType: null,
+      selectedFile: '',
+      listProdukSIG: ['Semen Gresik', 'Semen Padang', 'Semen Tiga Roda'],
+      detailProdukSIG: [
+        {
+          id_produk: '1',
+          kode_produk: '1',
+          nama_produk: 'Semen Gresik',
+          img_produk: 'pos-retail.com/Semen Gresik.png',
+          id_category: '1',
+          nama_category: 'Semen',
+          id_subcategory: '1',
+          nama_subcategory: 'PCC',
+          id_brand: '1',
+          nama_brand: 'SIG',
+          id_type: '1',
+          nama_type: 'BAG',
+          id_uom: '1',
+          nama_uom: 'ZAK',
+        },
+        {
+          id_produk: '1',
+          kode_produk: '1',
+          nama_produk: 'Semen Padang',
+          img_produk: 'pos-retail.com/Semen Gresik.png',
+          id_category: '1',
+          nama_category: 'Semen',
+          id_subcategory: '1',
+          nama_subcategory: 'PCC',
+          id_brand: '1',
+          nama_brand: 'SIG',
+          id_type: '1',
+          nama_type: 'BAG',
+          id_uom: '1',
+          nama_uom: 'ZAK',
+        },
+        {
+          id_produk: '1',
+          kode_produk: '1',
+          nama_produk: 'Semen Tiga Roda',
+          img_produk: 'pos-retail.com/Semen Gresik.png',
+          id_category: '1',
+          nama_category: 'Semen',
+          id_subcategory: '1',
+          nama_subcategory: 'PCC',
+          id_brand: '1',
+          nama_brand: 'Tiga Roda',
+          id_type: '1',
+          nama_type: 'BAG',
+          id_uom: '1',
+          nama_uom: 'ZAK',
+        },
+      ],
       statusItems: [
         {
           value: null,
@@ -318,28 +417,12 @@ export default {
           text: 'Pilih salah satu kategori',
           disabled: true,
         },
-        {
-          value: 'Raw',
-          text: 'Raw',
-        },
-        {
-          value: 'Bahan Bangunan',
-          text: 'Bahan Bangunan',
-        },
       ],
       subCategoryItems: [
         {
           value: null,
           text: 'Pilih salah satu sub kategori',
           disabled: true,
-        },
-        {
-          value: 'Besi',
-          text: 'Besi',
-        },
-        {
-          value: 'Semen',
-          text: 'Semen',
         },
       ],
       brandItems: [
@@ -348,14 +431,6 @@ export default {
           text: 'Pilih salah satu brand',
           disabled: true,
         },
-        {
-          value: 'Semen Gresik',
-          text: 'Semen Gresik',
-        },
-        {
-          value: 'Tiga Roda',
-          text: 'Tiga Roda',
-        },
       ],
       unitItems: [
         {
@@ -363,28 +438,12 @@ export default {
           text: 'Pilih salah satu unit',
           disabled: true,
         },
-        {
-          value: 'EACH',
-          text: 'EACH',
-        },
-        {
-          value: 'ZAK',
-          text: 'ZAK',
-        },
       ],
       typeItems: [
         {
           value: null,
           text: 'Pilih salah satu tipe',
           disabled: true,
-        },
-        {
-          value: 'Alat',
-          text: 'Alat',
-        },
-        {
-          value: 'Bahan',
-          text: 'Bahan',
         },
       ],
     }
@@ -395,10 +454,305 @@ export default {
   destroyed() {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
+  mounted() {
+    this.setListCategory()
+    // this.setListSubCategory()
+    this.setListBrand()
+    this.setListType()
+    this.setListUOM()
+  },
   methods: {
     onFileChange(e) {
       const file = e.target.files[0]
+      this.selectedFile = file
       this.productimgurl = URL.createObjectURL(file)
+    },
+    async formSubmitted() {
+      // const param = {
+      //   id_category: this.selectedCategory,
+      // }
+      if (this.formValidate()) {
+        console.log('a')
+        const param = new FormData()
+        param.append('gambar_product', this.selectedFile)
+        param.append('id_subcategory', this.selectedSubCategory)
+        param.append('id_brand', this.selectedBrand)
+        param.append('id_type', this.selectedType)
+        param.append('kode_product', this.productCode)
+        param.append('nama_product', this.productName)
+        param.append('price', this.productPrice)
+        param.append('qty', 0)
+        param.append('uom', this.selectedUnit)
+        param.append('notes', this.productNote)
+        console.log(param)
+        axios({
+          method: 'post',
+          url: 'product/store',
+          headers: {
+            token: authService.getHeaderToken(),
+            'content-type': 'application/json',
+            accept: 'application/json',
+          },
+          data: param,
+        }).then(response => {
+          const { data } = response
+          console.log(data)
+          if (data.result) {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Sukses Menambahkan Produk',
+                icon: 'CoffeeIcon',
+                variant: 'success',
+              },
+            })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Gagal Menambahkan Produk',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+              },
+            })
+          }
+        })
+      }
+    },
+    setProdukDetail() {
+      // console.log(this.productName)
+      const itemlist = this.detailProdukSIG
+      this.matchedItem = []
+      itemlist.forEach(item => {
+        if ((item.nama_produk).toLowerCase() === (this.productName).toLowerCase()) {
+          // console.log(item)
+          this.matchedItem = item
+        }
+      })
+      // console.log(this.matchedItem)
+      // console.log(this.matchedItem.length)
+      // console.log((this.matchedItem).length)
+      if (this.matchedItem.length === 0) {
+        this.disableStdInput = false
+        // console.log(this.disableStdInput)
+        // this.productimgurl = null
+        // this.productCode = ''
+        // this.productName = ''
+        // this.productPrice = ''
+        // this.productNote = ''
+        this.selectedCategory = null
+        this.selectedStatus = null
+        this.selectedSubCategory = null
+        this.selectedBrand = null
+        this.selectedUnit = null
+        this.selectedType = null
+        this.selectedFile = null
+      } else {
+        // console.log(item)
+        this.productCode = this.matchedItem.kode_produk
+        this.productName = this.matchedItem.nama_produk
+        this.selectedCategory = this.matchedItem.id_category
+        this.selectedSubCategory = this.matchedItem.id_subcategory
+        this.selectedBrand = this.matchedItem.id_brand
+        this.selectedUnit = this.matchedItem.id_uom
+        this.selectedType = this.matchedItem.id_type
+        this.selectedFile = null
+        this.disableStdInput = true
+        // console.log(this.disableStdInput)
+      }
+    },
+    setListCategory() {
+      axios({
+        method: 'post',
+        url: 'category',
+        headers: {
+          token: authService.getHeaderToken(),
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+      }).then(response => {
+        const { data } = response
+        this.categoryItems = []
+        this.categoryItems.push({
+          value: null,
+          text: 'Pilih salah satu kategori',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.categoryItems.push({
+              value: item.id,
+              text: item.nama_category,
+            })
+          })
+        }
+      })
+    },
+    setListSubCategory() {
+      const param = {
+        id_category: this.selectedCategory,
+      }
+      axios({
+        method: 'post',
+        url: 'subcategory',
+        headers: {
+          token: authService.getHeaderToken(),
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+        data: param,
+      }).then(response => {
+        const { data } = response
+        console.log(data)
+        this.subCategoryItems = []
+        this.subCategoryItems.push({
+          value: null,
+          text: 'Pilih salah satu Sub-Kategori',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.subCategoryItems.push({
+              value: item.id,
+              text: item.nama_category,
+            })
+          })
+        }
+      })
+    },
+    setListBrand() {
+      axios({
+        method: 'post',
+        url: 'brand',
+        headers: {
+          token: authService.getHeaderToken(),
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+      }).then(response => {
+        const { data } = response
+        this.brandItems = []
+        this.brandItems.push({
+          value: null,
+          text: 'Pilih salah satu Brand / Merek',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.brandItems.push({
+              value: item.id,
+              text: item.nama_brand,
+            })
+          })
+        }
+      })
+    },
+    setListType() {
+      axios({
+        method: 'post',
+        url: 'type',
+        headers: {
+          token: authService.getHeaderToken(),
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+      }).then(response => {
+        const { data } = response
+        this.typeItems = []
+        this.typeItems.push({
+          value: null,
+          text: 'Pilih salah satu Tipe',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.typeItems.push({
+              value: item.id,
+              text: item.nama_type,
+            })
+          })
+        }
+      })
+    },
+    setListUOM() {
+      axios({
+        method: 'post',
+        url: 'uom',
+        headers: {
+          token: authService.getHeaderToken(),
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+      }).then(response => {
+        const { data } = response
+        this.unitItems = []
+        this.unitItems.push({
+          value: null,
+          text: 'Pilih salah satu Unit / UOM',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.unitItems.push({
+              value: item.id,
+              text: item.nama_uom,
+            })
+          })
+        }
+      })
+    },
+    formValidate() {
+      const errMsg = []
+
+      if (!this.productCode && this.productCode === '') {
+        errMsg.push('Kode Produk Wajib Diisi')
+      }
+      if (!this.productName && this.productName === '') {
+        errMsg.push('Nama Produk Wajib Diisi')
+      }
+      if (!this.selectedSubCategory && this.selectedSubCategory === null) {
+        errMsg.push('Sub Kategory Wajib Diisi')
+      }
+      if (!this.selectedBrand && this.selectedBrand === null) {
+        errMsg.push('Brand / Merek Wajib Diisi')
+      }
+      if (!this.selectedUnit && this.selectedUnit === null) {
+        errMsg.push('Unit / UOM Wajib Diisi')
+      }
+      if (!this.selectedType && this.selectedType === null) {
+        errMsg.push('Tipe Produk Wajib Diisi')
+      }
+      if (!this.productPrice && this.productPrice === '') {
+        errMsg.push('Harga Produk Wajib Diisi')
+      }
+      if (!this.selectedStatus && this.selectedStatus === null) {
+        errMsg.push('Status Wajib Diisi')
+      }
+
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      return false
     },
   },
 }

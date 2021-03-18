@@ -319,6 +319,7 @@ export default {
       shopNumber: this.formData.telp_toko ?? '',
       address: this.formData.alamat ?? '',
       identitas: this.formData.no_identitas ?? '',
+      shopCode: this.formData.kode_toko ?? '',
       shopLogo: null,
       token: this.formData.token,
       imageURL: null,
@@ -382,6 +383,7 @@ export default {
           telp_pemilik: this.ownerNumber,
           alamat_pemilik: this.address,
           kasir: cashier,
+          kode_toko: this.shopCode,
         }).then(response => {
           console.log(response)
           const { data } = response
