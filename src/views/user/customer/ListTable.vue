@@ -243,7 +243,11 @@ import {
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
+import ApiService from '@/connection/apiService'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 // import { codeBasic } from './search'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -341,8 +345,37 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/customerUser')
-      .then(res => { this.rows = res.data })
+    this.fetchCustomer()
+  },
+  methods: {
+    fetchCustomer() {
+      appService.getCustomer({
+        limit: 50,
+        q: '',
+        page: 1,
+      }).then(response => {
+        const res = response.data.data
+        if (res.length > 0) {
+          console.log(res)
+        // this.rows = res
+        } else {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Data Not Found',
+              icon: 'CoffeeIcon',
+              variant: 'danger',
+              text: 'Data empty on server, using dummy data now',
+            },
+          })
+          this.$http.get('/app-data/customerUser')
+            .then(resData => { this.rows = resData.data })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
   },
 }
 </script>

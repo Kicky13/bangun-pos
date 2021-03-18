@@ -321,6 +321,7 @@ export default {
       identitas: this.formData.no_identitas ?? '',
       shopLogo: null,
       token: this.formData.token,
+      shopCode: this.formData.kode_toko,
       imageURL: null,
       selectedContry: 'select_value',
       selectedLanguage: 'nothing_selected',
@@ -382,6 +383,7 @@ export default {
           telp_pemilik: this.ownerNumber,
           alamat_pemilik: this.address,
           kasir: cashier,
+          kode_toko: this.shopCode,
         }).then(response => {
           console.log(response)
           const { data } = response
