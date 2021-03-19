@@ -12,6 +12,12 @@ module.exports = {
     },
   },
   configureWebpack: {
+    optimization: {
+      splitChunks: {
+        minSize: 10000,
+        maxSize: 250000,
+      },
+    },
     resolve: {
       alias: {
         '@themeConfig': path.resolve(__dirname, 'themeConfig.js'),

@@ -3,5 +3,5 @@ export default {
   storageTokenName: 'accesstoken',
 
   //   Customer
-  customerList: 'user/customer',
+  customer: 'user/customer',
 }
