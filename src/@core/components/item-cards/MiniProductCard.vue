@@ -2,17 +2,17 @@
   <b-card
     class="text-center"
   >
-    <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
-      <b-img
-        :alt="`${product.name}-${product.id}`"
-        thumbnail
-        sizes="35"
-        style="background-color: white; border: none"
-        fluid
-        class="card-img-top"
-        :src="product.image"
-      />
-    </b-link>
+    <!-- <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }"> -->
+    <b-img
+      :alt="`${product.name}-${product.id}`"
+      thumbnail
+      sizes="35"
+      style="background-color: white; border: none"
+      fluid
+      class="card-img-top"
+      :src="product.image"
+    />
+    <!-- </b-link> -->
     <div class="truncate text-center">
       <h5 class="mb-25 font-weight-bolder">
         {{ product.price }} / PCS
@@ -31,7 +31,7 @@
 
 <script>
 import {
-  BCard, BLink, BImg,
+  BCard, BImg,
 } from 'bootstrap-vue'
 
 export default {
@@ -39,7 +39,7 @@ export default {
     BCard,
     // BAvatar,
     // BButton,
-    BLink,
+    // BLink,
     BImg,
   },
   props: {
