@@ -113,7 +113,8 @@
           no-body
         >
           <!-- Product Details -->
-          <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
+          <!-- <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }"> -->
+          <b-link @click="getProduct(product)">
             <mini-product-card
               :product="product"
               :item-click="handleCartActionClick"
@@ -310,6 +311,7 @@ import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 import store from '@/store/index'
 // import antrianModule from '@/views/sales/pos/antrianModule'
 import { useEcommerceUi } from './ActionHandling'
+import { parentComponent } from './PageContent.vue'
 
 export default {
   directives: {
@@ -424,6 +426,11 @@ export default {
   created() {
     this.$http.get('/app-data/salesPending')
       .then(res => { this.rows = res.data })
+  },
+  methods: {
+    getProduct(product) {
+      parentComponent.$emit('getProduct', product)
+    },
   },
   setup() {
     const {

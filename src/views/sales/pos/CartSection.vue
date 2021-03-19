@@ -280,7 +280,7 @@
                   variant="warning"
                   class="mb-1"
                   block
-                  @click="handleCartActionClick(product)"
+                  @click="handleCartActionClick(Items)"
                 >
                   Antrian
                 </b-button>
@@ -501,8 +501,8 @@
             cancel-title="Kembali"
           >
             <template v-slot:modal-title>
-              <h4>Data Pendukung</h4>
-              <small>Lengkapi form di bawah ini untuk mempermudah transaksi anda</small>
+              <h4>Selesaikan Pembayaran</h4>
+              <small>Mohon dicek kembali sebelum menyelesaikan pembayaran</small>
             </template>
             <b-form>
               <b-row>
@@ -582,7 +582,7 @@
                 </b-col>
                 <b-col sm="6">
                   <b-form-group
-                    label="No. Pembayaran"
+                    label="No. Referensi"
                     label-for="idBayar"
                     label-cols-md="5"
                   >
@@ -700,6 +700,11 @@
                   </b-form-group>
                 </b-col>
               </b-row>
+              <b-row>
+                <b-col sm="12">
+                  <b-form-textarea></b-form-textarea>
+                </b-col>
+              </b-row>
             </b-form>
           </b-modal>
           <!-- End of Payment Modal -->
@@ -717,6 +722,7 @@ import {
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
 // import { useEcommerceUi } from '../useEcommerce'
+import { parentComponent } from './PageContent.vue'
 
 export default {
   components: {
@@ -968,6 +974,23 @@ export default {
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
+    parentComponent.$on('getProduct', product => {
+      const isInCart = this.items.find(item => item.id === product.id)
+      if (isInCart) {
+        isInCart.quantity += 1
+      } else {
+        const newProduct = {
+          id: product.id,
+          name: product.name,
+          stock: 100,
+          quantity: 1,
+          price: product.price,
+          subtotal: product.price,
+        }
+        this.items.unshift(newProduct)
+      }
+      this.makeToast(product.name)
+    })
   },
   destroyed() {
     window.removeEventListener('resize', this.initTrHeight)
@@ -990,6 +1013,13 @@ export default {
       this.trSetHeight(null)
       this.$nextTick(() => {
         this.trSetHeight(this.$refs.form.scrollHeight)
+      })
+    },
+    makeToast(title) {
+      this.$bvToast.toast('Berhasil ditambahkan', {
+        title,
+        variant: 'danger',
+        toaster: 'b-toaster-bottom-right',
       })
     },
   },
