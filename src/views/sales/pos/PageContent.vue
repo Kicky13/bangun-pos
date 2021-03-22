@@ -10,10 +10,13 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { BRow, BCol } from 'bootstrap-vue'
 
 import CartSection from './CartSection.vue'
 import ItemSection from './ItemSection.vue'
+
+export const parentComponent = new Vue()
 
 export default {
   components: {

@@ -32,7 +32,7 @@
     <div style="margin-left: 20px; margin-right: 20px; margin-top: 50px;">
       <div
         style="color: #ea5455; background-color: #ea5455; min-height: 100px; padding: 10px 0"
-        class="content-header navbar-container align-items-center"
+        class="content-header container align-items-center"
       >
         <div
           style="margin-left: 30px; margin-top: 20px; margin-bottom: 20px;"

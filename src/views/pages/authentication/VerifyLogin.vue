@@ -121,45 +121,6 @@ export default {
             console.log(error)
           })
       }
-      // useJwt.login({
-      //   email: this.userEmail,
-      //   password: this.password,
-      // })
-      //   .then(response => {
-      //     const { userData } = response.data
-      //     useJwt.setToken(response.data.accessToken)
-      //     useJwt.setRefreshToken(response.data.refreshToken)
-      //     localStorage.setItem('userData', JSON.stringify(userData))
-      //     this.$ability.update(userData.ability)
-
-      //     // ? This is just for demo purpose. Don't think CASL is role based in this case, we used role in if condition just for ease
-      //     this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
-      //       .then(() => {
-      //         this.$toast({
-      //           component: ToastificationContent,
-      //           position: 'top-right',
-      //           props: {
-      //             title: `Welcome ${userData.fullName || userData.username}`,
-      //             icon: 'CoffeeIcon',
-      //             variant: 'success',
-      //             text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
-      //           },
-      //         })
-      //       })
-      //       .catch(error => {
-      //       //   this.$refs.loginForm.setErrors(error.response.data.error)
-      //         this.$toast({
-      //           component: ToastificationContent,
-      //           position: 'top-right',
-      //           props: {
-      //             title: `Error ${error.response.data.error}`,
-      //             icon: 'CoffeeIcon',
-      //             variant: 'error',
-      //             text: 'Token unverified, please try again',
-      //           },
-      //         })
-      //       })
-      //   })
     },
     setDataUser() {
       const { toko, role } = this

@@ -19,6 +19,8 @@
       >
         <div class="w-100 d-lg-flex align-items-center justify-content-center px-5">
           <b-img
+            v-once
+            lazy="loading"
             fluid
             :src="imgUrl"
             alt="Login V2"
@@ -44,6 +46,8 @@
             title-tag="h2"
           >
             <b-img
+              v-once
+              lazy="loading"
               fluid
               :src="logoUrl"
               alt="Logo POS Retail"
@@ -261,7 +265,7 @@ export default {
       status: '',
       password: 'admin',
       userEmail: 'admin@demo.com',
-      sideImg: require('@/assets/images/pages/Login_POS1Medium.png'),
+      sideImg: require('@/assets/images/pages/Login_POS1Medium-compressed.jpg'),
       logoImg: require('@/assets/images/logo/POSRetailBlack.png'),
       // sideImg: require('@/assets/images/pages/login-v2.svg'),
 
@@ -338,7 +342,7 @@ export default {
 <style scoped lang="scss">
 @media (min-width: 992px) {
   .logincontainer {
-    background-image: url('~@/assets/images/pages/Login_POS1Medium.png');
+    background-image: url('~@/assets/images/pages/Login_POS1Medium-compressed.jpg');
     background-repeat: no-repeat;
     background-size: cover;
   }

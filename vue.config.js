@@ -12,6 +12,12 @@ module.exports = {
     },
   },
   configureWebpack: {
+    optimization: {
+      splitChunks: {
+        minSize: 10000,
+        maxSize: 250000,
+      },
+    },
     resolve: {
       alias: {
         '@themeConfig': path.resolve(__dirname, 'themeConfig.js'),
@@ -20,6 +26,13 @@ module.exports = {
         '@axios': path.resolve(__dirname, 'src/libs/axios'),
       },
     },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        minSize: 10000,
+        maxSize: 200000,
+      }
+    }
   },
   chainWebpack: config => {
     config.module

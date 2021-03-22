@@ -53,7 +53,7 @@
               <b-form-input
                 id="phone"
                 v-model="ownerNumber"
-                :state="ownerNumber.length > 0"
+                :state="ownerNumber.length > 5 && ownerNumber.charAt(0) === '0'"
                 type="number"
               />
               <b-form-invalid-feedback>
@@ -215,7 +215,7 @@
                 id="shopphone"
                 v-model="shopNumber"
                 type="number"
-                :state="shopNumber.length > 0"
+                :state="shopNumber.length > 5 && shopNumber.charAt(0) === '0'"
               />
               <b-form-invalid-feedback>
                 Telp Toko wajib diisi
@@ -319,6 +319,7 @@ export default {
       shopNumber: this.formData.telp_toko ?? '',
       address: this.formData.alamat ?? '',
       identitas: this.formData.no_identitas ?? '',
+      shopCode: this.formData.kode_toko ?? '',
       shopLogo: null,
       token: this.formData.token,
       imageURL: null,
@@ -382,6 +383,7 @@ export default {
           telp_pemilik: this.ownerNumber,
           alamat_pemilik: this.address,
           kasir: cashier,
+          kode_toko: this.shopCode,
         }).then(response => {
           console.log(response)
           const { data } = response
@@ -475,11 +477,17 @@ export default {
       if (!this.shopName && this.shopName === '') {
         errMsg.push('Nama Toko wajib diisi')
       }
-      if (!this.ownerNumber && this.ownerNumber === '') {
-        errMsg.push('Telp Pemilik wajib diisi')
+      if (this.ownerNumber.length > 5) {
+        errMsg.push('Telp Pemilik wajib diisi minimal 6 karakter')
       }
-      if (!this.shopNumber && this.shopNumber === '') {
-        errMsg.push('Telp Toko wajib diisi')
+      if (this.shopNumber.length > 5) {
+        errMsg.push('Telp Toko wajib diisi minimal 6 karakter')
+      }
+      if (!this.ownerNumber.charAt(0) === '0') {
+        errMsg.push('no Telp wajib diawali dengan 0')
+      }
+      if (!this.shopNumber.charAt(0) === '0') {
+        errMsg.push('no Telp Toko wajib diawali dengan 0')
       }
       if (!this.address && this.address === '') {
         errMsg.push('Alamat wajib diisi')

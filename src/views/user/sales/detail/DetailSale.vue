@@ -1,7 +1,10 @@
 <template>
   <div>
     <b-row align-h="center">
-      <b-col cols="12" lg="7">
+      <b-col
+        cols="12"
+        lg="7"
+      >
         <b-card>
           <!-- Customer Form Section -->
           <div>
@@ -77,7 +80,11 @@
                 >
 
                   <!-- Item Name -->
-                  <b-col cols="12" md="4" class="mb-2 mb-md-0">
+                  <b-col
+                    cols="12"
+                    md="4"
+                    class="mb-2 mb-md-0"
+                  >
                     <b-row>
                       <b-col>
                         <span>
@@ -87,7 +94,10 @@
                     </b-row>
                     <b-row>
                       <b-col>
-                        <span style="font-weight: bold; font-size: 14px;" class="text-danger">
+                        <span
+                          style="font-weight: bold; font-size: 14px;"
+                          class="text-danger"
+                        >
                           {{ item.name }}
                         </span>
                       </b-col>
@@ -95,7 +105,10 @@
                   </b-col>
 
                   <!-- Price -->
-                  <b-col cols="4" md="3">
+                  <b-col
+                    cols="4"
+                    md="3"
+                  >
                     <b-form-group
                       label="Price"
                       label-for="price"
@@ -109,7 +122,10 @@
                   </b-col>
 
                   <!-- Quantity -->
-                  <b-col cols="4" md="2">
+                  <b-col
+                    cols="4"
+                    md="2"
+                  >
                     <b-form-group
                       label="Qty"
                       label-for="quantity"
@@ -333,18 +349,30 @@
           <!-- Action Button Section -->
           <div>
             <b-row>
-              <b-col cols="12" md="3"></b-col>
-              <b-col cols="12" md="3"></b-col>
-              <b-col cols="12" md="3">
-                  <b-button
-                    v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                    class="mb-1"
-                    block
-                  >
-                    Print
-                  </b-button>
+              <b-col
+                cols="12"
+                md="3"
+              />
+              <b-col
+                cols="12"
+                md="3"
+              />
+              <b-col
+                cols="12"
+                md="3"
+              >
+                <b-button
+                  v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+                  class="mb-1"
+                  block
+                >
+                  Print
+                </b-button>
               </b-col>
-              <b-col cols="12" md="3">
+              <b-col
+                cols="12"
+                md="3"
+              >
                 <b-button
                   v-ripple.400="'rgba(40, 199, 111, 0.15)'"
                   class="mb-1"
