@@ -170,7 +170,7 @@
 
     <!-- Modal Section -->
     <bayar-modal />
-    <add-customer />
+    <!-- <add-customer /> -->
 
     <!-- Add Customer -->
     <b-modal
@@ -294,11 +294,11 @@ import {
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
-import BayarModal from './forms/modals/BayarModal.vue'
-import AddCustomer from './forms/modals/Add.vue'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import BayarModal from './forms/modals/BayarModal.vue'
+// import AddCustomer from './forms/modals/Add.vue'
 // import { codeBasic } from './search'
 
 const appService = new ApiService()
@@ -313,7 +313,7 @@ export default {
     BFormSelect,
     BCard,
     BayarModal,
-    AddCustomer,
+    // AddCustomer,
     BModal,
     BRow,
     BCol,
