@@ -64,8 +64,10 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.categoryAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
@@ -90,18 +92,20 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.subcategoryAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 13px;"> Sub Kategori</span></b-button>
+                  /><span style="font-size: 13px;"> Sub-Kategori</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col cols="4">
                   <b-form-group
-                    label="Type"
+                    label="Tipe Produk"
                     label-for="type"
                   >
                     <b-form-select
@@ -118,16 +122,18 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.typeAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 13px;"> Type</span></b-button>
+                  /><span style="font-size: 13px;"> Tipe Produk</span></b-button>
                 </b-col>
                 <b-col cols="4">
                   <b-form-group
-                    label="Brand"
+                    label="Brand / Merk Produk"
                     label-for="brand"
                   >
                     <b-form-select
@@ -144,12 +150,14 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.brandAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 13px;"> Brand</span></b-button>
+                  /><span style="font-size: 13px;"> Brand / Merk</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
@@ -167,7 +175,7 @@
                 </b-col>
                 <b-col cols="4">
                   <b-form-group
-                    label="Unit"
+                    label="Satuan Penjualan"
                     label-for="unit"
                   >
                     <b-form-select
@@ -183,18 +191,20 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.unitsAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 13px;"> Unit</span></b-button>
+                  /><span style="font-size: 13px;"> Satuan</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col cols="6">
                   <b-form-group
-                    label="Attach Picture"
+                    label="Lampirkan Gambar Produk"
                     label-for="attachment"
                   >
                     <b-form-file
@@ -222,7 +232,8 @@
             </div>
           </b-col>
           <b-col cols="4">
-            <span>Image Preview</span>
+            <span>Pratinjau Gambar Produk :</span>
+            <br>
             <b-img
               v-if="productimgurl"
               :src="productimgurl"
@@ -268,7 +279,7 @@
                 style="float: right;"
                 @click="formSubmitted"
               >
-                <span>Submit Product</span>
+                <span>Tambahkan Produk</span>
               </b-button>
             </div>
           </b-col>
@@ -346,57 +357,8 @@ export default {
       selectedUnit: null,
       selectedType: null,
       selectedFile: '',
-      listProdukSIG: ['Semen Gresik', 'Semen Padang', 'Semen Tiga Roda'],
-      detailProdukSIG: [
-        {
-          id_produk: '1',
-          kode_produk: '1',
-          nama_produk: 'Semen Gresik',
-          img_produk: 'pos-retail.com/Semen Gresik.png',
-          id_category: '1',
-          nama_category: 'Semen',
-          id_subcategory: '1',
-          nama_subcategory: 'PCC',
-          id_brand: '1',
-          nama_brand: 'SIG',
-          id_type: '1',
-          nama_type: 'BAG',
-          id_uom: '1',
-          nama_uom: 'ZAK',
-        },
-        {
-          id_produk: '1',
-          kode_produk: '1',
-          nama_produk: 'Semen Padang',
-          img_produk: 'pos-retail.com/Semen Gresik.png',
-          id_category: '1',
-          nama_category: 'Semen',
-          id_subcategory: '1',
-          nama_subcategory: 'PCC',
-          id_brand: '1',
-          nama_brand: 'SIG',
-          id_type: '1',
-          nama_type: 'BAG',
-          id_uom: '1',
-          nama_uom: 'ZAK',
-        },
-        {
-          id_produk: '1',
-          kode_produk: '1',
-          nama_produk: 'Semen Tiga Roda',
-          img_produk: 'pos-retail.com/Semen Gresik.png',
-          id_category: '1',
-          nama_category: 'Semen',
-          id_subcategory: '1',
-          nama_subcategory: 'PCC',
-          id_brand: '1',
-          nama_brand: 'Tiga Roda',
-          id_type: '1',
-          nama_type: 'BAG',
-          id_uom: '1',
-          nama_uom: 'ZAK',
-        },
-      ],
+      listProdukSIG: [],
+      detailProdukSIG: [],
       statusItems: [
         {
           value: null,
@@ -508,6 +470,22 @@ export default {
                 variant: 'success',
               },
             })
+            this.disableStdInput = false
+            this.productimgurl = null
+            this.productCode = ''
+            this.productName = ''
+            this.productPrice = ''
+            this.productNote = ''
+            this.selectedCategory = null
+            this.selectedStatus = null
+            this.selectedSubCategory = null
+            this.selectedBrand = null
+            this.selectedUnit = null
+            this.selectedType = null
+            this.selectedFile = null
+            // router.push({ name: '/myproduct', params: { userId: 123 }})
+            // router.push({ name: 'myproduct'})
+            this.$router.push('/myproduct')
           } else {
             this.$toast({
               component: ToastificationContent,
@@ -721,6 +699,7 @@ export default {
       axios({
         method: 'post',
         url: 'product',
+        timeout: 5000,
         headers: {
           token: authService.getHeaderToken(),
           'content-type': 'application/json',

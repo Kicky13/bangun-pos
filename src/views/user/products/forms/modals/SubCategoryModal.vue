@@ -82,6 +82,7 @@ import {
 import Ripple from 'vue-ripple-directive'
 import axios from '@axios'
 import authService from '@/connection/connection'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   components: {
@@ -142,9 +143,26 @@ export default {
         if (data.result) {
           // console.log('Permintaan Sukses')
           this.modalShow = false
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: data.message,
+              icon: 'CoffeeIcon',
+              variant: 'success',
+            },
+          })
+          this.$parent.setListSubCategory()
         } else {
           // console.log('Permintaan Gagal Diproses')
           this.modalShow = true
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: data.message,
+              icon: 'AlertCircleIcon',
+              variant: 'danger',
+            },
+          })
         }
       })
     },
