@@ -5,7 +5,7 @@
     ok-title="Simpan"
     cancel-variant="outline-secondary"
   >
-    <b-container>
+    <b-form>
       <b-row>
         <b-col cols="6">
           <b-form-group
@@ -47,11 +47,10 @@
             label="Tipe Pembayaran"
             label-for="tipe-pembayaran"
           >
-            <v-select
+            <b-form-select
               id="tipe-pembayaran"
-              v-model="selected"
-              :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
-              :options="option"
+              v-model="selectedType"
+              :options="typeItem"
             />
           </b-form-group>
         </b-col>
@@ -89,31 +88,53 @@
           </b-form-group>
         </b-col>
       </b-row>
-    </b-container>
+    </b-form>
   </b-modal>
 </template>
 
 <script>
 import {
-  BModal, BContainer, BRow, BCol, BFormGroup, BFormInput, VBModal,
+  BModal, BRow, BCol, BFormGroup, BFormInput, VBModal, BForm, BFormSelect,
 } from 'bootstrap-vue'
-import vSelect from 'vue-select'
+// import vSelect from 'vue-select'
 // import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 
 export default {
   components: {
     BModal,
-    BContainer,
+    // BContainer,
     BRow,
     BCol,
     BFormGroup,
     BFormInput,
-    vSelect,
+    // vSelect,
+    BForm,
+    BFormSelect,
   },
   directives: {
     'b-modal': VBModal,
     Ripple,
+  },
+  data() {
+    return {
+      selectedType: null,
+      typeItem: [
+        {
+          value: null,
+          text: 'Select Pembayaran',
+          disabled: true,
+        },
+        {
+          value: null,
+          text: 'KREDIT',
+        },
+        {
+          value: null,
+          text: 'CASH',
+        },
+      ],
+    }
   },
 }
 </script>

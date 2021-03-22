@@ -1,51 +1,49 @@
 <template>
-  <b-card>
-
-    <div class="demo-inline-spacing">
-
-      <!-- input search -->
-      <div
-        class="d-flex justify-content-end"
-        style="float:left;"
-      >
-        <b-form-group>
-          <div
-            class="d-flex align-items-center"
-            style="width: 700px !important;"
-          >
-            <label
-              class="mr-1"
-              style="font-size: 16px; font-weight: bold;"
-            >Search</label>
+  <b-modal
+    id="detailTrans"
+    centered
+    size="xl"
+    hide-footer
+  >
+    <!-- search input -->
+    <div class="custom-search d-flex">
+      <b-form-group>
+        <div class="d-flex align-items-center">
+          <b-input-group class="input-group-merge">
             <b-form-input
               v-model="searchTerm"
-              placeholder="Masukkan kata kunci pencarian disini"
+              placeholder="Search"
               type="text"
               class="d-inline-block"
             />
-          </div>
-        </b-form-group>
-      </div>
-      <div style="float:left;margin-left:10px;">
-        <b-button
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="danger"
-          style="margin-top: -15px;"
-        >
-          Print
-        </b-button>
-      </div>
-    </div>
+            <b-input-group-append is-text>
+              <feather-icon
+                icon="SearchIcon"
+                class="text-muted"
+              />
+            </b-input-group-append>
+          </b-input-group>
+        </div>
+      </b-form-group>
+    </div><br>
 
     <!-- table -->
     <vue-good-table
       :columns="columns"
       :rows="rows"
       :rtl="direction"
-      :select-options="{ enabled: true }"
       :search-options="{
         enabled: true,
         externalQuery: searchTerm }"
+      :select-options="{
+        enabled: true,
+        selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
+        selectionInfoClass: 'custom-class',
+        selectionText: 'rows selected',
+        clearSelectionText: 'clear',
+        disableSelectInfo: true, // disable the select info panel on top
+        selectAllByGroup: true, // when used in combination with a grouped table, add a checkbox in the header row to check/uncheck the entire group
+      }"
       :pagination-options="{
         enabled: true,
         perPage:pageLength
@@ -55,11 +53,9 @@
         slot="table-row"
         slot-scope="props"
       >
-
         <!-- Column: Status -->
-
         <span v-if="props.column.field === 'status'">
-          <b-badge :variant="paymentVariant(props.row.status)">
+          <b-badge :variant="statusVariant(props.row.status)">
             {{ props.row.status }}
           </b-badge>
         </span>
@@ -69,18 +65,17 @@
           <span>
             <b-button
               v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-              v-b-modal.detailTrans
               size="sm"
               variant="outline-secondary"
             >
-              View Detail
+              Lanjut
             </b-button>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
             >
-              Log Pemb.
+              Hapus
             </b-button>
           </span>
         </span>
@@ -98,16 +93,16 @@
       >
         <div class="d-flex justify-content-between flex-wrap">
           <div class="d-flex align-items-center mb-0 mt-1">
-            <span class="text-nowrap">
+            <span class="text-nowrap ">
               Showing 1 to
             </span>
             <b-form-select
               v-model="pageLength"
-              :options="['3','5','10','25','50','100']"
+              :options="['3','5','10']"
               class="mx-1"
               @input="(value)=>props.perPageChanged({currentPerPage:value})"
             />
-            <span class="text-nowrap "> of {{ props.total }} entries </span>
+            <span class="text-nowrap"> of {{ props.total }} entries </span>
           </div>
           <div>
             <b-pagination
@@ -139,77 +134,59 @@
         </div>
       </template>
     </vue-good-table>
-
-    <!-- Modal Section -->
-    <detail-modal />
-  </b-card>
+  </b-modal>
 </template>
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BBadge, BCard,
+  BModal, BFormGroup, BFormInput, VBModal, BFormSelect, BBadge, BInputGroup, BInputGroupAppend, BButton, BPagination,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
-import store from '@/store/index'
+import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 import Ripple from 'vue-ripple-directive'
-import DetailModal from './modals/DetailModal.vue'
 
 export default {
   components: {
-    BButton,
-    VueGoodTable,
-    BPagination,
+    BModal,
     BFormGroup,
     BFormInput,
     BFormSelect,
+    VueGoodTable,
+    FeatherIcon,
     BBadge,
-    BCard,
-    DetailModal,
+    BInputGroup,
+    BInputGroupAppend,
+    BButton,
+    BPagination,
   },
   directives: {
-    // 'b-modal': VBModal,
+    'b-modal': VBModal,
     Ripple,
   },
   data() {
     return {
-      selectedPembayaran: null,
-      selectedStatus: null,
-      pembayaranItems: [
+      pageLength: 5,
+      dir: false,
+      selectedType: null,
+      typeItem: [
         {
           value: null,
-          text: 'Semua',
-          // disabled: true,
+          text: 'Select Pembayaran',
+          disabled: true,
         },
         {
-          value: 'CASH',
-          text: 'CASH',
-        },
-        {
-          value: 'Kredit / Hutang',
+          value: null,
           text: 'KREDIT',
         },
-      ],
-      statusItems: [
         {
           value: null,
-          text: 'Semua',
-          // disabled: true,
-        },
-        {
-          value: 'Lunas',
-          text: 'Lunas',
-        },
-        {
-          value: 'Belum Lunas',
-          text: 'Belum Lunas',
+          text: 'CASH',
         },
       ],
-      pageLength: 10,
-      dir: false,
       columns: [
         {
           label: 'Kode Penjualan',
-          field: 'saleCode',
+          field: 'kodePenjualan',
         },
         {
           label: 'Customer',
@@ -236,66 +213,55 @@ export default {
           field: 'ongkir',
         },
         {
-          label: 'Type Pembayaran',
-          field: 'typeBayar',
-          sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['CASH', 'KREDIT'],
-          },
-        },
-        {
           label: 'Status',
           field: 'status',
-          sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['LUNAS', 'BELUM_LUNAS'],
-          },
         },
         {
           label: 'Action',
           field: 'action',
-          sortable: false,
         },
       ],
       rows: [],
       searchTerm: '',
+      status: [{
+        1: 'Pending',
+        2: 'Done',
+      },
+      {
+        1: 'light-danger',
+        2: 'light-success',
+      }],
     }
   },
   computed: {
-    salesVariant() {
+    statusVariant() {
       const statusColor = {
-        Draft: 'light-primary',
-        Completed: 'light-secondary',
+        /* eslint-disable key-spacing */
+        Pending : 'light-danger',
+        Done : 'light-success',
+        /* eslint-enable key-spacing */
       }
-      return status => statusColor[status]
-    },
-    paymentVariant() {
-      const statusColor = {
-        LUNAS: 'light-secondary',
-        BELUM_LUNAS: 'light-primary',
-      }
+
       return status => statusColor[status]
     },
     direction() {
-      if (store.state.appConfig.isRTL) {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.dir = true
-        return this.dir
-      }
+      // if (store.state.appConfig.isRTL) {
+      //   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      //   this.dir = true
+      //   return this.dir
+      // }
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.dir = false
       return this.dir
     },
   },
-  destroyed() {
-    this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
-  },
   created() {
-    this.$http.get('/app-data/customerTrans')
+    this.$http.get('/app-data/transDetail')
       .then(res => { this.rows = res.data })
-    this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
   },
 }
 </script>
+
+<style lang="scss">
+  @import "../node_modules/vue-good-table/src/styles/style.scss";
+</style>
