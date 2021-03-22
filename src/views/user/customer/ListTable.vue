@@ -1,6 +1,6 @@
 <template>
   <b-card>
-
+    <loading-grow v-if="isLoading" />
     <div class="demo-inline-spacing">
 
       <!-- input search -->
@@ -171,18 +171,137 @@
     <!-- Modal Section -->
     <bayar-modal />
     <add-customer />
+
+    <!-- Add Customer -->
+    <b-modal
+      id="customerAdd"
+      centered
+      size="lg"
+      title="Tambah Customer"
+      ok-title="Simpan"
+      cancel-title="Tutup"
+      ok-variant="danger"
+      @ok="handleOk"
+    >
+      <b-form>
+        <b-row>
+          <b-col cols="6">
+            <b-form-group
+              label="Nama Customer :"
+              label-for="customerName"
+            >
+              <b-form-input
+                id="customerName"
+                v-model="customerName"
+                :state="customerName.length > 0"
+              />
+              <b-form-invalid-feedback>
+                Nama Customer wajib diisi
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col cols="6">
+            <b-form-group
+              label-for="reference"
+              label="No. Referensi (Tukang JagoBagun) :"
+            >
+              <b-form-input
+                id="reference"
+                v-model="jagobangunRef"
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="6">
+            <b-form-group
+              label="Nomor Handphone : "
+              label-for="phone"
+            >
+              <b-form-input
+                id="phone"
+                v-model="customerPhone"
+                :state="customerPhone.length > 0 && customerPhone.charAt(0) === '0'"
+                type="number"
+              />
+              <b-form-invalid-feedback>
+                Telepon Customer wajib diisi dengan benar
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col cols="6">
+            <b-form-group
+              label-for="ktp"
+              label="Nomor Identitas/KTP"
+            >
+              <b-form-input
+                id="ktp"
+                v-model="identityNumber"
+                :state="identityNumber.length > 0"
+                type="number"
+              />
+              <b-form-invalid-feedback>
+                No Identitas Customer wajib diisi
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="12">
+            <b-form-group
+              label="Alamat :"
+              label-for="address"
+            >
+              <b-form-textarea
+                id="address"
+                v-model="customerAddress"
+                :state="customerAddress.length > 0"
+                rows="4"
+              />
+              <b-form-invalid-feedback>
+                Alamat Customer wajib diisi
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </b-form>
+    </b-modal>
+    <b-modal
+      id="askSubmit"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Yes"
+      cancel-title="No"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="handleSubmit"
+      @cancel="handleCancel"
+    >
+      <div class="d-block text-center">
+        <h3>Proceed ?</h3>
+      </div>
+    </b-modal>
+    <!-- End of Customer Add -->
   </b-card>
 </template>
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, VBModal,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BModal, VBModal, BRow, BCol, BFormTextarea, BForm, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 import BayarModal from './forms/modals/BayarModal.vue'
 import AddCustomer from './forms/modals/Add.vue'
+import ApiService from '@/connection/apiService'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+// import { codeBasic } from './search'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -195,6 +314,13 @@ export default {
     BCard,
     BayarModal,
     AddCustomer,
+    BModal,
+    BRow,
+    BCol,
+    BFormTextarea,
+    BForm,
+    BFormInvalidFeedback,
+    LoadingGrow,
   },
   directives: {
     'b-modal': VBModal,
@@ -202,8 +328,14 @@ export default {
   },
   data() {
     return {
+      customerName: '',
+      customerPhone: '',
+      jagobangunRef: '',
+      identityNumber: '',
+      customerAddress: '',
       selectedPembayaran: null,
       selectedStatus: null,
+      isLoading: false,
       statusItems: [
         {
           value: null,
@@ -273,8 +405,103 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/customerUser')
-      .then(res => { this.rows = res.data })
+    this.fetchCustomerList()
+  },
+  methods: {
+    fetchCustomerList() {
+      appService.getCustomer({
+        limit: 50,
+        q: '',
+        page: 1,
+      }).then(response => {
+        const res = response.data.data
+        if (res.length > 0) {
+          console.log(res)
+        // this.rows = res
+        } else {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Data Not Found',
+              icon: 'CoffeeIcon',
+              variant: 'danger',
+              text: 'Data empty on server, using dummy data now',
+            },
+          })
+          this.$http.get('/app-data/customerUser')
+            .then(resData => { this.rows = resData.data })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    handleOk(okBtn) {
+      if (this.formValidate()) {
+        this.$bvModal.show('askSubmit')
+      } else {
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Form incomplete',
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+            text: 'Please complete form before submit',
+          },
+        })
+        okBtn.preventDefault()
+      }
+    },
+    handleCancel() {
+      this.$bvModal.show('customerAdd')
+    },
+    handleSubmit() {
+      console.log('OK')
+      this.isLoading = true
+      this.fetchCustomerInsert()
+    },
+    fetchCustomerInsert() {
+      appService.addCustomer({
+        nama_customer: this.customerName,
+        telp_customer: this.customerPhone,
+        no_identitas: this.identityNumber,
+        alamat: this.customerAddress,
+        no_references: this.jagobangunRef,
+      }).then(response => {
+        console.log(response)
+        this.isLoading = false
+      }).catch(err => {
+        console.log(err)
+        this.isLoading = false
+      })
+    },
+    formValidate() {
+      const errMsg = []
+
+      if (this.customerName.length === 0) {
+        errMsg.push('customerName')
+      }
+      if (this.customerPhone.length === 0) {
+        errMsg.push('customerPhone')
+      }
+      if (!this.customerPhone.charAt(0) === '0') {
+        errMsg.push('customerPhoneFormat')
+      }
+      if (this.identityNumber.length === 0) {
+        errMsg.push('identityNumber')
+      }
+      if (this.customerAddress.length === 0) {
+        errMsg.push('customerAddress')
+      }
+
+      console.log(this.customerPhone.charAt(0))
+
+      if (errMsg.length === 0) {
+        return true
+      }
+      return false
+    },
   },
 }
 </script>
