@@ -114,6 +114,24 @@ export default [
     },
   },
   {
+    path: '/mycustomer/trans',
+    name: 'user-customer-list-trans',
+    component: () => import('@/views/user/customer/forms/ListBayar.vue'),
+    meta: {
+      // pageTitle: 'Customer',
+      resource: 'CustomerUser',
+      action: 'manage',
+      redTitle: 'Data Transaksi',
+      redSubs: 'Catatan transaksi yang pernah dilakukan dengan customer.',
+      // breadcrumb: [
+      //   {
+      //     text: 'Customer',
+      //     active: true,
+      //   },
+      // ],
+    },
+  },
+  {
     path: '/mydashboard',
     name: 'user-dashboard',
     component: () => import('@/views/user/dashboard/List.vue'),

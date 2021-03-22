@@ -91,11 +91,13 @@
               v-ripple.400="'rgba(186, 191, 199, 0.15)'"
               size="sm"
               variant="outline-secondary"
+              :to="{ name: 'user-customer-list-trans'}"
             >
               List Trans.
             </b-button>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              v-b-modal.listBayar
               size="sm"
               variant="outline-danger"
             >
@@ -167,6 +169,8 @@
     </vue-good-table>
 
     <!-- Modal Section -->
+    <bayar-modal />
+    <!-- <add-customer /> -->
 
     <!-- Add Customer -->
     <b-modal
@@ -280,7 +284,6 @@
       </div>
     </b-modal>
     <!-- End of Customer Add -->
-
   </b-card>
 </template>
 
@@ -288,13 +291,14 @@
 import {
   BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BModal, VBModal, BRow, BCol, BFormTextarea, BForm, BFormInvalidFeedback,
 } from 'bootstrap-vue'
-// import vSelect from 'vue-select'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import BayarModal from './forms/modals/BayarModal.vue'
+// import AddCustomer from './forms/modals/Add.vue'
 // import { codeBasic } from './search'
 
 const appService = new ApiService()
@@ -307,10 +311,9 @@ export default {
     BFormGroup,
     BFormInput,
     BFormSelect,
-    // BDropdown,
-    // BDropdownItem,
-    // BBadge,
     BCard,
+    BayarModal,
+    // AddCustomer,
     BModal,
     BRow,
     BCol,
@@ -337,7 +340,6 @@ export default {
         {
           value: null,
           text: 'Semua',
-          // disabled: true,
         },
         {
           value: 'Lunas',

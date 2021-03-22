@@ -26,33 +26,6 @@
           </div>
         </b-form-group>
       </div>
-      <!-- <div style="float:left;width: 300px !important; margin-left:10px;">
-        <b-form-group
-          label="Pembayaran"
-          label-for="pembayaran"
-          label-cols-md="4"
-        >
-          <b-form-select
-            id="pembayaran"
-            v-model="selectedPembayaran"
-            :options="pembayaranItems"
-          />
-        </b-form-group>
-      </div> -->
-      <!-- <div style="float:left;width: 300px !important; margin-left:10px;">
-        <b-form-group
-          label="Status"
-          label-for="status"
-          label-cols-md="4"
-        >
-          <b-form-select
-            id="status"
-            v-model="selectedStatus"
-            :options="statusItems"
-          />
-        </b-form-group>
-      </div> -->
-
       <div style="float:left;margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
@@ -85,55 +58,29 @@
 
         <!-- Column: Status -->
 
-        <span v-if="props.column.field === 'paymentStatus'">
-          <b-badge :variant="paymentVariant(props.row.paymentStatus)">
-            {{ props.row.paymentStatus }}
-          </b-badge>
-        </span>
-
-        <span v-else-if="props.column.field === 'saleStatus'">
-          <b-badge :variant="salesVariant(props.row.saleStatus)">
-            {{ props.row.saleStatus }}
+        <span v-if="props.column.field === 'status'">
+          <b-badge :variant="paymentVariant(props.row.status)">
+            {{ props.row.status }}
           </b-badge>
         </span>
 
         <!-- Column: Action -->
         <span v-else-if="props.column.field === 'action'">
           <span>
-            <b-dropdown
-              variant="link"
-              toggle-class="text-decoration-none"
-              no-caret
+            <b-button
+              v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+              size="sm"
+              variant="outline-secondary"
             >
-              <template v-slot:button-content>
-                <feather-icon
-                  icon="MoreVerticalIcon"
-                  size="16"
-                  class="text-body align-middle mr-25"
-                />
-              </template>
-              <b-dropdown-item :to="{name: 'detail-user-sale', params: {id: props.row.id}}">
-                <feather-icon
-                  icon="FileTextIcon"
-                  class="mr-50"
-                />
-                <span>Detail</span>
-              </b-dropdown-item>
-              <!-- <b-dropdown-item>
-                <feather-icon
-                  icon="Edit2Icon"
-                  class="mr-50"
-                />
-                <span>Edit</span>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <feather-icon
-                  icon="TrashIcon"
-                  class="mr-50"
-                />
-                <span>Delete</span>
-              </b-dropdown-item> -->
-            </b-dropdown>
+              View Detail
+            </b-button>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
+              variant="outline-danger"
+            >
+              Log Pemb.
+            </b-button>
           </span>
         </span>
 
@@ -197,7 +144,7 @@
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem, BBadge, BCard,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BBadge, BCard,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
@@ -212,8 +159,6 @@ export default {
     BFormGroup,
     BFormInput,
     BFormSelect,
-    BDropdown,
-    BDropdownItem,
     BBadge,
     BCard,
   },
@@ -222,88 +167,72 @@ export default {
   },
   data() {
     return {
+      selectedPembayaran: null,
+      selectedStatus: null,
+      pembayaranItems: [
+        {
+          value: null,
+          text: 'Semua',
+          // disabled: true,
+        },
+        {
+          value: 'CASH',
+          text: 'CASH',
+        },
+        {
+          value: 'Kredit / Hutang',
+          text: 'KREDIT',
+        },
+      ],
+      statusItems: [
+        {
+          value: null,
+          text: 'Semua',
+          // disabled: true,
+        },
+        {
+          value: 'Lunas',
+          text: 'Lunas',
+        },
+        {
+          value: 'Belum Lunas',
+          text: 'Belum Lunas',
+        },
+      ],
       pageLength: 10,
       dir: false,
       columns: [
         {
           label: 'Kode Penjualan',
           field: 'saleCode',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Sales ID',
-          // },
-        },
-        {
-          label: 'Tanggal',
-          field: 'date',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Date',
-          // },
         },
         {
           label: 'Customer',
           field: 'customer',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Biller',
-          // },
         },
         {
-          label: 'Kode Referensi',
-          field: 'ref',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Reference',
-          // },
+          label: 'Ref. Code',
+          field: 'refCode',
         },
         {
-          label: 'Kasir',
-          field: 'biller',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Biller',
-          // },
-        },
-        {
-          label: 'Sub Total',
-          field: 'subtotal',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Customer',
-          // },
+          label: 'Sub. Total',
+          field: 'subTotal',
         },
         {
           label: 'Diskon',
-          field: 'disc',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Total',
-          // },
-        },
-        {
-          label: 'Ongkos Kirim',
-          field: 'ship',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Status',
-          // },
+          field: 'diskon',
         },
         {
           label: 'Pajak',
-          field: 'tax',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Paid',
-          // },
+          field: 'pajak',
         },
         {
-          label: 'Pembayaran',
-          field: 'typePayment',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Pembayaran',
-          // },
+          label: 'Ongkir',
+          field: 'ongkir',
+        },
+        {
+          label: 'Type Pembayaran',
+          field: 'typeBayar',
           sortable: false,
           filterOptions: {
             enabled: true,
@@ -312,15 +241,11 @@ export default {
         },
         {
           label: 'Status',
-          field: 'paymentStatus',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Status',
-          // },
+          field: 'status',
           sortable: false,
           filterOptions: {
             enabled: true,
-            filterDropdownItems: ['LUNAS', 'UTANG'],
+            filterDropdownItems: ['LUNAS', 'BELUM_LUNAS'],
           },
         },
         {
@@ -344,7 +269,7 @@ export default {
     paymentVariant() {
       const statusColor = {
         LUNAS: 'light-secondary',
-        UTANG: 'light-primary',
+        BELUM_LUNAS: 'light-primary',
       }
       return status => statusColor[status]
     },
@@ -360,14 +285,8 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/salesUser')
+    this.$http.get('/app-data/customerTrans')
       .then(res => { this.rows = res.data })
   },
 }
 </script>
-
-<style lang="scss">
-.vgt-table {
-  font-size: 12px !important;
-}
-</style>
