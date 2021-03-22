@@ -334,6 +334,7 @@ export default {
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
       disableStdInput: false,
       matchedItem: [],
+      searchProductSIG: '',
       productCode: '',
       productName: '',
       productPrice: '',
@@ -455,6 +456,7 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
   mounted() {
+    this.setListProductSIG()
     this.setListCategory()
     // this.setListSubCategory()
     this.setListBrand()
@@ -519,7 +521,7 @@ export default {
         })
       }
     },
-    setProdukDetail() {
+    async setProdukDetail() {
       // console.log(this.productName)
       const itemlist = this.detailProdukSIG
       this.matchedItem = []
@@ -552,6 +554,7 @@ export default {
         this.productCode = this.matchedItem.kode_produk
         this.productName = this.matchedItem.nama_produk
         this.selectedCategory = this.matchedItem.id_category
+        await this.setListSubCategory()
         this.selectedSubCategory = this.matchedItem.id_subcategory
         this.selectedBrand = this.matchedItem.id_brand
         this.selectedUnit = this.matchedItem.id_uom
@@ -561,7 +564,7 @@ export default {
         // console.log(this.disableStdInput)
       }
     },
-    setListCategory() {
+    async setListCategory() {
       axios({
         method: 'post',
         url: 'category',
@@ -590,7 +593,7 @@ export default {
         }
       })
     },
-    setListSubCategory() {
+    async setListSubCategory() {
       const param = {
         id_category: this.selectedCategory,
       }
@@ -624,7 +627,7 @@ export default {
         }
       })
     },
-    setListBrand() {
+    async setListBrand() {
       axios({
         method: 'post',
         url: 'brand',
@@ -653,7 +656,7 @@ export default {
         }
       })
     },
-    setListType() {
+    async setListType() {
       axios({
         method: 'post',
         url: 'type',
@@ -682,7 +685,7 @@ export default {
         }
       })
     },
-    setListUOM() {
+    async setListUOM() {
       axios({
         method: 'post',
         url: 'uom',
@@ -708,6 +711,50 @@ export default {
               text: item.nama_uom,
             })
           })
+        }
+      })
+    },
+    async setListProductSIG() {
+      const param = {
+        q: this.searchProductSIG,
+      }
+      axios({
+        method: 'post',
+        url: 'product',
+        headers: {
+          token: authService.getHeaderToken(),
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+        data: param,
+      }).then(response => {
+        const { data } = response
+        this.listProdukSIG = []
+        this.detailProdukSIG = []
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.listProdukSIG.push(item.nama_produk)
+            this.detailProdukSIG.push({
+              id_produk: item.id_produk,
+              kode_produk: item.kode_produk,
+              nama_produk: item.nama_produk,
+              img_produk: item.img_produk,
+              id_category: item.id_category,
+              nama_category: item.nama_category,
+              id_subcategory: item.id_subcategory,
+              nama_subcategory: item.nama_subcategory,
+              id_brand: item.id_brand,
+              nama_brand: item.nama_brand,
+              id_type: item.id_type,
+              nama_type: item.nama_type,
+              id_uom: item.id_uom,
+              nama_uom: item.nama_uom,
+            })
+          })
+          // console.log(this.listProdukSIG)
+          // console.log(this.detailProdukSIG)
         }
       })
     },
