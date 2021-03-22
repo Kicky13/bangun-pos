@@ -1,6 +1,7 @@
 <template>
   <b-modal
     id="brandAdd"
+    v-model="modalShow"
     centered
     size="lg"
     title="Tambah Brand / Merek"
@@ -67,6 +68,7 @@ import {
 import Ripple from 'vue-ripple-directive'
 import axios from '@axios'
 import authService from '@/connection/connection'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   components: {
@@ -116,9 +118,26 @@ export default {
         if (data.result) {
           // console.log('Permintaan Sukses')
           this.modalShow = false
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: data.message,
+              icon: 'CoffeeIcon',
+              variant: 'success',
+            },
+          })
+          this.$parent.setListBrand()
         } else {
           // console.log('Permintaan Gagal Diproses')
           this.modalShow = true
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: data.message,
+              icon: 'AlertCircleIcon',
+              variant: 'danger',
+            },
+          })
         }
       })
     },
