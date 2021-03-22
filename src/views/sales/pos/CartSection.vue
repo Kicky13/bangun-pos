@@ -702,7 +702,7 @@
               </b-row>
               <b-row>
                 <b-col sm="12">
-                  <b-form-textarea></b-form-textarea>
+                  <b-form-textarea />
                 </b-col>
               </b-row>
             </b-form>
