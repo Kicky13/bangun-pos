@@ -44,6 +44,7 @@ export default class AuthService {
     setToken(token) {
       this.token = token
       localStorage.setItem(this.config.storageTokenName, token)
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`
     }
 
     getToken() {

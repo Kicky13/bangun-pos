@@ -300,14 +300,15 @@ import {
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import Ripple from 'vue-ripple-directive'
-import axios from '@axios'
-import authService from '@/connection/connection'
+import ApiService from '@/connection/apiService'
 import CategoryModal from './modals/CategoryModal.vue'
 import SubCategoryModal from './modals/SubCategoryModal.vue'
 import TypeModal from './modals/TypeModal.vue'
 import BrandModal from './modals/BrandModal.vue'
 import UnitsModal from './modals/UnitsModal.vue'
 // import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -449,16 +450,7 @@ export default {
         param.append('uom', this.selectedUnit)
         param.append('notes', this.productNote)
         console.log(param)
-        axios({
-          method: 'post',
-          url: 'product/store',
-          headers: {
-            token: authService.getHeaderToken(),
-            'content-type': 'application/json',
-            accept: 'application/json',
-          },
-          data: param,
-        }).then(response => {
+        appService.storeProduct(param).then(response => {
           const { data } = response
           console.log(data)
           if (data.result) {
@@ -543,15 +535,7 @@ export default {
       }
     },
     async setListCategory() {
-      axios({
-        method: 'post',
-        url: 'category',
-        headers: {
-          token: authService.getHeaderToken(),
-          'content-type': 'application/json',
-          accept: 'application/json',
-        },
-      }).then(response => {
+      appService.getCategoryList().then(response => {
         const { data } = response
         this.categoryItems = []
         this.categoryItems.push({
@@ -575,16 +559,7 @@ export default {
       const param = {
         id_category: this.selectedCategory,
       }
-      axios({
-        method: 'post',
-        url: 'subcategory',
-        headers: {
-          token: authService.getHeaderToken(),
-          'content-type': 'application/json',
-          accept: 'application/json',
-        },
-        data: param,
-      }).then(response => {
+      appService.getSubcategoryList(param).then(response => {
         const { data } = response
         console.log(data)
         this.subCategoryItems = []
@@ -606,15 +581,7 @@ export default {
       })
     },
     async setListBrand() {
-      axios({
-        method: 'post',
-        url: 'brand',
-        headers: {
-          token: authService.getHeaderToken(),
-          'content-type': 'application/json',
-          accept: 'application/json',
-        },
-      }).then(response => {
+      appService.getBrandList().then(response => {
         const { data } = response
         this.brandItems = []
         this.brandItems.push({
@@ -635,15 +602,7 @@ export default {
       })
     },
     async setListType() {
-      axios({
-        method: 'post',
-        url: 'type',
-        headers: {
-          token: authService.getHeaderToken(),
-          'content-type': 'application/json',
-          accept: 'application/json',
-        },
-      }).then(response => {
+      appService.getTypeList().then(response => {
         const { data } = response
         this.typeItems = []
         this.typeItems.push({
@@ -664,15 +623,7 @@ export default {
       })
     },
     async setListUOM() {
-      axios({
-        method: 'post',
-        url: 'uom',
-        headers: {
-          token: authService.getHeaderToken(),
-          'content-type': 'application/json',
-          accept: 'application/json',
-        },
-      }).then(response => {
+      appService.getUomList().then(response => {
         const { data } = response
         this.unitItems = []
         this.unitItems.push({
@@ -696,17 +647,7 @@ export default {
       const param = {
         q: this.searchProductSIG,
       }
-      axios({
-        method: 'post',
-        url: 'product',
-        timeout: 5000,
-        headers: {
-          token: authService.getHeaderToken(),
-          'content-type': 'application/json',
-          accept: 'application/json',
-        },
-        data: param,
-      }).then(response => {
+      appService.getProductSigList(param).then(response => {
         const { data } = response
         this.listProdukSIG = []
         this.detailProdukSIG = []

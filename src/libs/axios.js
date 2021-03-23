@@ -7,7 +7,7 @@ const axiosIns = axios.create({
   // You can add your headers here
   // ================================
   baseURL: 'https://api-posretail.metrojasa.com/api/',
-  timeout: 1000,
+  timeout: 15000,
   // headers: {'X-Custom-Header': 'foobar'}
 })
 
