@@ -1053,7 +1053,6 @@ export default {
       })
     },
     addToAntrian() {
-      // this.items.splice(0, this.items.length)
       this.resetButton()
       this.makeToast('Antrian')
     },
