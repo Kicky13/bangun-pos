@@ -13,8 +13,16 @@
                   >
                     <b-form-input
                       id="kode"
-                      placeholder="Cari kode atau scan barcode produk"
+                      v-model="productCode"
+                      name="kode"
+                      placeholder="Masukkan kode atau scan barcode pada kemasan produk"
+                      :disabled="disableStdInput"
+                      :state="productCode.length > 0 && productCode.charAt(0) === '0'"
+                      type="number"
                     />
+                    <b-form-invalid-feedback>
+                      Kode Produk Wajib Diisi
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
@@ -24,7 +32,20 @@
                   >
                     <b-form-input
                       id="nama"
+                      v-model="productName"
+                      name="nama"
+                      list="produk-sig"
+                      placeholder="Masukkan nama produk"
+                      :state="productName.length > 0"
+                      @change="setProdukDetail"
                     />
+                    <b-form-datalist
+                      id="produk-sig"
+                      :options="listProdukSIG"
+                    />
+                    <b-form-invalid-feedback>
+                      Nama Produk Wajib Diisi
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -37,8 +58,15 @@
                     <b-form-select
                       id="category"
                       v-model="selectedCategory"
+                      name="category"
                       :options="categoryItems"
+                      :disabled="disableStdInput"
+                      :state="selectedCategory != null"
+                      @change="setListSubCategory"
                     />
+                    <b-form-invalid-feedback>
+                      Kategori wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -46,8 +74,10 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.categoryAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
@@ -61,8 +91,14 @@
                     <b-form-select
                       id="subcategory"
                       v-model="selectedSubCategory"
+                      name="subcategory"
+                      :disabled="disableStdInput"
                       :options="subCategoryItems"
+                      :state="selectedSubCategory != null"
                     />
+                    <b-form-invalid-feedback>
+                      Sub Kategori wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -70,25 +106,33 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.subcategoryAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 13px;"> Sub Kategori</span></b-button>
+                  /><span style="font-size: 13px;"> Sub-Kategori</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col cols="4">
                   <b-form-group
-                    label="Type"
+                    label="Tipe Produk"
                     label-for="type"
                   >
                     <b-form-select
                       id="type"
                       v-model="selectedType"
+                      name="type"
+                      :disabled="disableStdInput"
                       :options="typeItems"
+                      :state="selectedType != null"
                     />
+                    <b-form-invalid-feedback>
+                      Tipe Produk wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -96,23 +140,31 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.typeAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 13px;"> Type</span></b-button>
+                  /><span style="font-size: 13px;"> Tipe Produk</span></b-button>
                 </b-col>
                 <b-col cols="4">
                   <b-form-group
-                    label="Brand"
+                    label="Brand / Merk Produk"
                     label-for="brand"
                   >
                     <b-form-select
                       id="brand"
                       v-model="selectedBrand"
+                      name="brand"
+                      :disabled="disableStdInput"
                       :options="brandItems"
+                      :state="selectedBrand != null"
                     />
+                    <b-form-invalid-feedback>
+                      Brand / merk wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -120,12 +172,14 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.brandAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 13px;"> Brand</span></b-button>
+                  /><span style="font-size: 13px;"> Brand / Merk</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
@@ -134,19 +188,33 @@
                     label="Harga jual"
                     label-for="sellprice"
                   >
-                    <b-form-input id="sellprice" />
+                    <b-form-input
+                      id="sellprice"
+                      v-model="productPrice"
+                      :state="productPrice.length > 0 && productPrice.charAt(0) != '0'"
+                      type="number"
+                      name="sellprice"
+                    />
+                    <b-form-invalid-feedback>
+                      Harga Produk wajib diisi dengan benar
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="4">
                   <b-form-group
-                    label="Unit"
+                    label="Satuan Penjualan"
                     label-for="unit"
                   >
                     <b-form-select
                       id="unit"
                       v-model="selectedUnit"
+                      name="unit"
                       :options="unitItems"
+                      :state="selectedUnit != null"
                     />
+                    <b-form-invalid-feedback>
+                      Satuan jual wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -154,22 +222,25 @@
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.unitsAdd
                     type="submit"
+                    block
                     variant="primary"
                     class="mt-0 mt-md-2"
+                    style="text-align : left;"
                   ><feather-icon
                     icon="PlusIcon"
                     size="16"
-                  /><span style="font-size: 13px;"> Unit</span></b-button>
+                  /><span style="font-size: 13px;"> Satuan</span></b-button>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col cols="6">
                   <b-form-group
-                    label="Attach Picture"
+                    label="Lampirkan Gambar Produk"
                     label-for="attachment"
                   >
                     <b-form-file
                       id="attachment"
+                      name="attachment"
                       accept="image/jpeg, image/png"
                       @change="onFileChange"
                     />
@@ -183,15 +254,21 @@
                     <b-form-select
                       id="status"
                       v-model="selectedStatus"
+                      name="status"
                       :options="statusItems"
+                      :state="selectedStatus != null"
                     />
+                    <b-form-invalid-feedback>
+                      Status Produk wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
               </b-row>
             </div>
           </b-col>
           <b-col cols="4">
-            <span>Image Preview</span>
+            <span>Pratinjau Gambar Produk :</span>
+            <br>
             <b-img
               v-if="productimgurl"
               :src="productimgurl"
@@ -216,6 +293,8 @@
             >
               <b-form-textarea
                 id="note"
+                v-model="productNote"
+                name="note"
                 rows="3"
               />
             </b-form-group>
@@ -233,8 +312,9 @@
                 type="submit"
                 variant="primary"
                 style="float: right;"
+                @click="formSubmitted"
               >
-                <span>Submit Product</span>
+                <span>Tambahkan Produk</span>
               </b-button>
             </div>
           </b-col>
@@ -251,15 +331,19 @@
 
 <script>
 import {
-  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal,
+  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal, BFormDatalist, BFormInvalidFeedback,
 } from 'bootstrap-vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import Ripple from 'vue-ripple-directive'
+import ApiService from '@/connection/apiService'
 import CategoryModal from './modals/CategoryModal.vue'
 import SubCategoryModal from './modals/SubCategoryModal.vue'
 import TypeModal from './modals/TypeModal.vue'
 import BrandModal from './modals/BrandModal.vue'
 import UnitsModal from './modals/UnitsModal.vue'
 // import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -279,9 +363,13 @@ export default {
     TypeModal,
     BrandModal,
     UnitsModal,
+    BFormDatalist,
     // BInputGroup,
     // BInputGroupPrepend,
     // FeatherIcon,
+    BFormInvalidFeedback,
+    // eslint-disable-next-line vue/no-unused-components
+    ToastificationContent,
   },
   directives: {
     'b-modal': VBModal,
@@ -291,12 +379,22 @@ export default {
     return {
       productimgurl: null,
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
+      disableStdInput: false,
+      matchedItem: [],
+      searchProductSIG: '',
+      productCode: '',
+      productName: '',
+      productPrice: '',
+      productNote: '',
       selectedCategory: null,
       selectedStatus: null,
       selectedSubCategory: null,
       selectedBrand: null,
       selectedUnit: null,
       selectedType: null,
+      selectedFile: '',
+      listProdukSIG: [],
+      detailProdukSIG: [],
       statusItems: [
         {
           value: null,
@@ -318,28 +416,12 @@ export default {
           text: 'Pilih salah satu kategori',
           disabled: true,
         },
-        {
-          value: 'Raw',
-          text: 'Raw',
-        },
-        {
-          value: 'Bahan Bangunan',
-          text: 'Bahan Bangunan',
-        },
       ],
       subCategoryItems: [
         {
           value: null,
           text: 'Pilih salah satu sub kategori',
           disabled: true,
-        },
-        {
-          value: 'Besi',
-          text: 'Besi',
-        },
-        {
-          value: 'Semen',
-          text: 'Semen',
         },
       ],
       brandItems: [
@@ -348,14 +430,6 @@ export default {
           text: 'Pilih salah satu brand',
           disabled: true,
         },
-        {
-          value: 'Semen Gresik',
-          text: 'Semen Gresik',
-        },
-        {
-          value: 'Tiga Roda',
-          text: 'Tiga Roda',
-        },
       ],
       unitItems: [
         {
@@ -363,28 +437,12 @@ export default {
           text: 'Pilih salah satu unit',
           disabled: true,
         },
-        {
-          value: 'EACH',
-          text: 'EACH',
-        },
-        {
-          value: 'ZAK',
-          text: 'ZAK',
-        },
       ],
       typeItems: [
         {
           value: null,
           text: 'Pilih salah satu tipe',
           disabled: true,
-        },
-        {
-          value: 'Alat',
-          text: 'Alat',
-        },
-        {
-          value: 'Bahan',
-          text: 'Bahan',
         },
       ],
     }
@@ -395,10 +453,308 @@ export default {
   destroyed() {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
+  mounted() {
+    this.setListProductSIG()
+    this.setListCategory()
+    // this.setListSubCategory()
+    this.setListBrand()
+    this.setListType()
+    this.setListUOM()
+  },
   methods: {
     onFileChange(e) {
       const file = e.target.files[0]
+      this.selectedFile = file
       this.productimgurl = URL.createObjectURL(file)
+    },
+    async formSubmitted() {
+      // const param = {
+      //   id_category: this.selectedCategory,
+      // }
+      if (this.formValidate()) {
+        console.log('a')
+        const param = new FormData()
+        param.append('gambar_product', this.selectedFile)
+        param.append('id_subcategory', this.selectedSubCategory)
+        param.append('id_brand', this.selectedBrand)
+        param.append('id_type', this.selectedType)
+        param.append('kode_product', this.productCode)
+        param.append('nama_product', this.productName)
+        param.append('price', this.productPrice)
+        param.append('qty', 0)
+        param.append('uom', this.selectedUnit)
+        param.append('notes', this.productNote)
+        console.log(param)
+        appService.storeProduct(param).then(response => {
+          const { data } = response
+          console.log(data)
+          if (data.result) {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Sukses Menambahkan Produk',
+                icon: 'CoffeeIcon',
+                variant: 'success',
+              },
+            })
+            this.disableStdInput = false
+            this.productimgurl = null
+            this.productCode = ''
+            this.productName = ''
+            this.productPrice = ''
+            this.productNote = ''
+            this.selectedCategory = null
+            this.selectedStatus = null
+            this.selectedSubCategory = null
+            this.selectedBrand = null
+            this.selectedUnit = null
+            this.selectedType = null
+            this.selectedFile = null
+            // router.push({ name: '/myproduct', params: { userId: 123 }})
+            // router.push({ name: 'myproduct'})
+            this.$router.push('/myproduct')
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Gagal Menambahkan Produk',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+              },
+            })
+          }
+        })
+      }
+    },
+    async setProdukDetail() {
+      // console.log(this.productName)
+      const itemlist = this.detailProdukSIG
+      this.matchedItem = []
+      itemlist.forEach(item => {
+        if ((item.nama_produk).toLowerCase() === (this.productName).toLowerCase()) {
+          // console.log(item)
+          this.matchedItem = item
+        }
+      })
+      // console.log(this.matchedItem)
+      // console.log(this.matchedItem.length)
+      // console.log((this.matchedItem).length)
+      if (this.matchedItem.length === 0) {
+        this.disableStdInput = false
+        // console.log(this.disableStdInput)
+        // this.productimgurl = null
+        // this.productCode = ''
+        // this.productName = ''
+        // this.productPrice = ''
+        // this.productNote = ''
+        this.selectedCategory = null
+        this.selectedStatus = null
+        this.selectedSubCategory = null
+        this.selectedBrand = null
+        this.selectedUnit = null
+        this.selectedType = null
+        this.selectedFile = null
+      } else {
+        // console.log(item)
+        this.productCode = this.matchedItem.kode_produk
+        this.productName = this.matchedItem.nama_produk
+        this.selectedCategory = this.matchedItem.id_category
+        await this.setListSubCategory()
+        this.selectedSubCategory = this.matchedItem.id_subcategory
+        this.selectedBrand = this.matchedItem.id_brand
+        this.selectedUnit = this.matchedItem.id_uom
+        this.selectedType = this.matchedItem.id_type
+        this.selectedFile = null
+        this.disableStdInput = true
+        // console.log(this.disableStdInput)
+      }
+    },
+    async setListCategory() {
+      appService.getCategoryList().then(response => {
+        const { data } = response
+        this.categoryItems = []
+        this.categoryItems.push({
+          value: null,
+          text: 'Pilih salah satu kategori',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.categoryItems.push({
+              value: item.id,
+              text: item.nama_category,
+            })
+          })
+        }
+      })
+    },
+    async setListSubCategory() {
+      const param = {
+        id_category: this.selectedCategory,
+      }
+      appService.getSubcategoryList(param).then(response => {
+        const { data } = response
+        console.log(data)
+        this.subCategoryItems = []
+        this.subCategoryItems.push({
+          value: null,
+          text: 'Pilih salah satu Sub-Kategori',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.subCategoryItems.push({
+              value: item.id,
+              text: item.nama_category,
+            })
+          })
+        }
+      })
+    },
+    async setListBrand() {
+      appService.getBrandList().then(response => {
+        const { data } = response
+        this.brandItems = []
+        this.brandItems.push({
+          value: null,
+          text: 'Pilih salah satu Brand / Merek',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.brandItems.push({
+              value: item.id,
+              text: item.nama_brand,
+            })
+          })
+        }
+      })
+    },
+    async setListType() {
+      appService.getTypeList().then(response => {
+        const { data } = response
+        this.typeItems = []
+        this.typeItems.push({
+          value: null,
+          text: 'Pilih salah satu Tipe',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.typeItems.push({
+              value: item.id,
+              text: item.nama_type,
+            })
+          })
+        }
+      })
+    },
+    async setListUOM() {
+      appService.getUomList().then(response => {
+        const { data } = response
+        this.unitItems = []
+        this.unitItems.push({
+          value: null,
+          text: 'Pilih salah satu Unit / UOM',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.unitItems.push({
+              value: item.id,
+              text: item.nama_uom,
+            })
+          })
+        }
+      })
+    },
+    async setListProductSIG() {
+      const param = {
+        q: this.searchProductSIG,
+      }
+      appService.getProductSigList(param).then(response => {
+        const { data } = response
+        this.listProdukSIG = []
+        this.detailProdukSIG = []
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.listProdukSIG.push(item.nama_produk)
+            this.detailProdukSIG.push({
+              id_produk: item.id_produk,
+              kode_produk: item.kode_produk,
+              nama_produk: item.nama_produk,
+              img_produk: item.img_produk,
+              id_category: item.id_category,
+              nama_category: item.nama_category,
+              id_subcategory: item.id_subcategory,
+              nama_subcategory: item.nama_subcategory,
+              id_brand: item.id_brand,
+              nama_brand: item.nama_brand,
+              id_type: item.id_type,
+              nama_type: item.nama_type,
+              id_uom: item.id_uom,
+              nama_uom: item.nama_uom,
+            })
+          })
+          // console.log(this.listProdukSIG)
+          // console.log(this.detailProdukSIG)
+        }
+      })
+    },
+    formValidate() {
+      const errMsg = []
+
+      if (!this.productCode && this.productCode === '') {
+        errMsg.push('Kode Produk Wajib Diisi')
+      }
+      if (!this.productName && this.productName === '') {
+        errMsg.push('Nama Produk Wajib Diisi')
+      }
+      if (!this.selectedSubCategory && this.selectedSubCategory === null) {
+        errMsg.push('Sub Kategory Wajib Diisi')
+      }
+      if (!this.selectedBrand && this.selectedBrand === null) {
+        errMsg.push('Brand / Merek Wajib Diisi')
+      }
+      if (!this.selectedUnit && this.selectedUnit === null) {
+        errMsg.push('Unit / UOM Wajib Diisi')
+      }
+      if (!this.selectedType && this.selectedType === null) {
+        errMsg.push('Tipe Produk Wajib Diisi')
+      }
+      if (!this.productPrice && this.productPrice === '') {
+        errMsg.push('Harga Produk Wajib Diisi')
+      }
+      if (!this.selectedStatus && this.selectedStatus === null) {
+        errMsg.push('Status Wajib Diisi')
+      }
+
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      return false
     },
   },
 }
