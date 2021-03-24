@@ -12,6 +12,7 @@ export default {
   type: 'type',
   uom: 'uom',
   productSig: 'product',
+  productToko: 'product/listProduct',
 
   // Store
   storeProduct: 'product/store',

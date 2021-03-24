@@ -10,9 +10,10 @@
         <b-col cols="6">
           <b-input-group class="input-group-merge">
             <b-form-input
-              v-model="filters.q"
+              v-model="searchProductToko"
               placeholder="Search Product"
               class="search-product"
+              @input="setListProductToko"
             />
             <b-input-group-append is-text>
               <feather-icon
@@ -33,11 +34,11 @@
               style="margin-left: 5px;"
             >
               <b-dropdown-item
-                v-for="sortOption in sortByOptions"
-                :key="sortOption.value"
-                @click="sortBy=sortOption"
+                v-for="sortCategoryOption in sortByCategoryOptions"
+                :key="sortCategoryOption.value"
+                @click="setCategory(sortCategoryOption)"
               >
-                {{ sortOption.text }}
+                {{ sortCategoryOption.text }}
               </b-dropdown-item>
             </b-dropdown>
             <b-dropdown
@@ -48,11 +49,11 @@
               style="margin-left: 5px;"
             >
               <b-dropdown-item
-                v-for="sortOption in sortByOptions"
-                :key="sortOption.value"
-                @click="sortBy=sortOption"
+                v-for="sortSubCategoryOption in sortBySubCategoryOptions"
+                :key="sortSubCategoryOption.value"
+                @click="setSubCategory(sortSubCategoryOption)"
               >
-                {{ sortOption.text }}
+                {{ sortSubCategoryOption.text }}
               </b-dropdown-item>
             </b-dropdown>
             <b-dropdown
@@ -63,11 +64,11 @@
               style="margin-left: 5px;"
             >
               <b-dropdown-item
-                v-for="sortOption in sortByOptions"
-                :key="sortOption.value"
-                @click="sortBy=sortOption"
+                v-for="sortBrandOption in sortByBrandOptions"
+                :key="sortBrandOption.value"
+                @click="setBrand(sortBrandOption)"
               >
-                {{ sortOption.text }}
+                {{ sortBrandOption.text }}
               </b-dropdown-item>
             </b-dropdown>
             <b-dropdown
@@ -80,7 +81,7 @@
               <b-dropdown-item
                 v-for="sortOption in sortByOptions"
                 :key="sortOption.value"
-                @click="sortBy=sortOption"
+                @click="setSort(sortOption)"
               >
                 {{ sortOption.text }}
               </b-dropdown-item>
@@ -116,8 +117,11 @@
           <!-- Product Details -->
           <mini-product-card
             :product="product"
-            :item-click="handleCartActionClick"
           />
+          <!-- <mini-product-card
+            :product="product"
+            :item-click="handleCartActionClick"
+          /> -->
         </b-col>
       </b-row>
     </section>
@@ -168,104 +172,273 @@ import {
   BDropdown, BDropdownItem, BRow, BCol, BInputGroup, BInputGroupAppend, BFormInput, BPagination, BButton,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-import { watch } from '@vue/composition-api'
-import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
-// import ShopLeftFilterSidebar from './ECommerceShopLeftFilterSidebar.vue'
+import ApiService from '@/connection/apiService'
+// import { watch } from '@vue/composition-api'
+// import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
 import MiniProductCard from '@core/components/item-cards/CardKatalogProduk.vue'
-// import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/dummyFilter'
-import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/produkFilter'
-// import { useEcommerceUi } from './ActionHandling'
+// import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/produkFilter'
+
+const appService = new ApiService()
 
 export default {
   directives: {
     Ripple,
   },
   components: {
-    // BSV
     BDropdown,
     BDropdownItem,
-    // BFormRadioGroup,
-    // BFormRadio,
     BRow,
     BCol,
     BInputGroup,
     BInputGroupAppend,
     BFormInput,
-    // BCard,
-    // BCardBody,
-    // BLink,
-    // BImg,
-    // BCardText,
     BButton,
     BPagination,
-
-    // SFC
-    // ShopLeftFilterSidebar,
     MiniProductCard,
   },
-  setup() {
-    const {
-      filters, filterOptions, sortBy, sortByOptions, sortByCategory, sortByCategoryOptions, sortBySubCategory, sortBySubCategoryOptions, sortByBrand, sortByBrandOptions,
-    } = useShopFiltersSortingAndPagination()
-
-    // const { handleCartActionClick, toggleProductInWishlist } = useEcommerceUi()
-
-    const {
-      itemView, itemViewOptions, totalProducts,
-    } = useShopUi()
-
-    const { products, fetchProducts } = useShopRemoteData()
-
-    const { mqShallShowLeftSidebar } = useResponsiveAppLeftSidebarVisibility()
-
-    // Wrapper Function for `fetchProducts` which can be triggered initially and upon changes of filters
-    const fetchShopProducts = () => {
-      fetchProducts({
-        q: filters.value.q,
-        sortBy: sortBy.value.value,
-        page: filters.value.page,
-        perPage: 12,
-      })
-        .then(response => {
-          products.value = response.data.products
-          totalProducts.value = response.data.total
-        })
-    }
-
-    fetchShopProducts()
-
-    watch([filters, sortBy], () => {
-      fetchShopProducts()
-    }, {
-      deep: true,
-    })
-
+  data() {
     return {
-      // useShopFiltersSortingAndPagination
-      filters,
-      filterOptions,
-      sortBy,
-      sortByOptions,
-      sortByCategory,
-      sortByCategoryOptions,
-      sortBySubCategory,
-      sortBySubCategoryOptions,
-      sortByBrand,
-      sortByBrandOptions,
-
-      // useShopUi
-      itemView,
-      itemViewOptions,
-      totalProducts,
-      // toggleProductInWishlist,
-      // handleCartActionClick,
-
-      // useShopRemoteData
-      products,
-
-      // mqShallShowLeftSidebar
-      mqShallShowLeftSidebar,
+      searchProductToko: '',
+      selectedCategory: '',
+      selectedBrand: '',
+      selectedSubCategory: '',
+      selectedSort: 'price-asc',
+      filters: [{
+        q: '',
+        categories: [],
+        subcategories: [],
+        brands: [],
+        page: 1,
+        perPage: 12,
+      }],
+      filterOptions: [{
+        categories: [],
+        subcategories: [],
+        brands: [],
+      }],
+      sortBy: [{ text: 'Harga Terendah', value: 'price-asc' }],
+      sortByOptions: [
+        { text: 'Harga Terendah', value: 'price-asc' },
+        { text: 'Harga Tertinggi', value: 'price-desc' },
+      ],
+      sortByCategory: [{ text: '', value: '' }],
+      sortByCategoryOptions: [],
+      sortBySubCategory: [{ text: '', value: '' }],
+      sortBySubCategoryOptions: [],
+      sortByBrand: [{ text: '', value: '' }],
+      sortByBrandOptions: [],
+      itemView: 'grid-view',
+      itemViewOptions: [
+        { icon: 'GridIcon', value: 'grid-view' },
+        { icon: 'ListIcon', value: 'list-view' },
+      ],
+      totalProducts: 0,
+      products: [],
     }
+  },
+  mounted() {
+    this.setListCategory()
+    // this.setListSubCategory()
+    this.setListBrand()
+    this.setListProductToko()
+  },
+  methods: {
+    async setCategory(param) {
+      this.selectedCategory = param.value
+      await this.setListSubCategory()
+      this.sortByCategory.text = param.text
+      this.sortByCategory.value = param.value
+      this.setListProductToko()
+    },
+    async setSubCategory(param) {
+      this.selectedSubCategory = param.value
+      this.sortByCategory.text = param.text
+      this.sortByCategory.value = param.value
+      this.setListProductToko()
+    },
+    async setBrand(param) {
+      this.selectedBrand = param.value
+      this.sortByBrand.text = param.text
+      this.sortByBrand.value = param.value
+      this.setListProductToko()
+    },
+    async setSort(param) {
+      this.selectedSort = param.value
+      this.sortBy.text = param.text
+      this.sortBy.value = param.value
+      this.setListProductToko()
+    },
+    async setListCategory() {
+      appService.getCategoryList().then(response => {
+        const { data } = response
+        this.sortByCategoryOptions = []
+        if (data.data) {
+          this.sortByCategoryOptions.push({
+            value: '',
+            text: 'Semua Kategori',
+          })
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.sortByCategoryOptions.push({
+              value: item.id,
+              text: item.nama_category,
+            })
+          })
+        }
+      })
+    },
+    async setListSubCategory() {
+      // console.log('sub kategori')
+      const param = {
+        id_category: this.selectedCategory,
+      }
+      appService.getSubcategoryList(param).then(response => {
+        const { data } = response
+        this.sortBySubCategoryOptions = []
+        if (data.data) {
+          this.sortBySubCategoryOptions.push({
+            value: '',
+            text: 'Semua Sub-Kategori',
+          })
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.sortBySubCategoryOptions.push({
+              value: item.id,
+              text: item.nama_category,
+            })
+          })
+        }
+      })
+    },
+    async setListBrand() {
+      appService.getBrandList().then(response => {
+        const { data } = response
+        this.sortByBrandOptions = []
+        if (data.data) {
+          this.sortByBrandOptions.push({
+            value: '',
+            text: 'Semua Brand',
+          })
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.sortByBrandOptions.push({
+              value: item.id,
+              text: item.nama_brand,
+            })
+          })
+        }
+      })
+    },
+    async setListType() {
+      appService.getTypeList().then(response => {
+        const { data } = response
+        this.typeItems = []
+        this.typeItems.push({
+          value: null,
+          text: 'Pilih salah satu Tipe',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.typeItems.push({
+              value: item.id,
+              text: item.nama_type,
+            })
+          })
+        }
+      })
+    },
+    async setListUOM() {
+      appService.getUomList().then(response => {
+        const { data } = response
+        this.unitItems = []
+        this.unitItems.push({
+          value: null,
+          text: 'Pilih salah satu Unit / UOM',
+          disabled: true,
+        })
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          itemlist.forEach(item => {
+            this.unitItems.push({
+              value: item.id,
+              text: item.nama_uom,
+            })
+          })
+        }
+      })
+    },
+    async setListProductToko() {
+      // const param = {
+      //   q: this.searchProductToko,
+      //   kategori: this.selectedCategory,
+      //   subkategori: this.selectedSubCategory,
+      //   brand: this.selectedBrand,
+      // }
+      const param = {
+        q: this.searchProductToko,
+      }
+      console.log(this.selectedCategory)
+      console.log(this.selectedSubCategory)
+      console.log(this.selectedBrand)
+      if (this.selectedCategory !== '') {
+        param.kategori = this.selectedCategory
+      }
+      if (this.selectedSubCategory !== '') {
+        param.subkategori = this.selectedSubCategory
+      }
+      if (this.selectedBrand !== '') {
+        param.brand = this.selectedBrand
+      }
+      console.log(param)
+      // const param = new FormData()
+      // param.append('q', this.searchProductToko)
+      // if (this.selectedCategory !== '') {
+      //   param.append('kategori', this.selectedCategory)
+      // }
+      // if (this.selectedSubCategory !== '') {
+      //   param.append('subkategori', this.selectedSubCategory)
+      // }
+      // if (this.selectedBrand !== '') {
+      //   param.append('brand', this.selectedBrand)
+      // }
+      appService.getProductTokoList(param).then(response => {
+        const { data } = response
+        this.products = []
+        if (data.data) {
+          // console.log(data.data)
+          const itemlist = data.data
+          // console.log(itemlist.length)
+          this.totalProducts = itemlist.length
+          itemlist.forEach(item => {
+            this.products.push({
+              // id_produk: item.id_produk,
+              // kode_produk: item.kode_produk,
+              // nama_produk: item.nama_produk,
+              // img_produk: item.img_produk,
+              // id_category: item.id_category,
+              // nama_category: item.nama_category,
+              // id_subcategory: item.id_subcategory,
+              // nama_subcategory: item.nama_subcategory,
+              // id_brand: item.id_brand,
+              // nama_brand: item.nama_brand,
+              // id_type: item.id_type,
+              // nama_type: item.nama_type,
+              // id_uom: item.id_uom,
+              // nama_uom: item.nama_uom,
+              id: item.kode_produk,
+              name: item.nama_produk,
+              qty: item.nama_uom,
+              price: item.price,
+              image: item.img_produk,
+            })
+          })
+        }
+      })
+    },
   },
 }
 </script>

@@ -18,33 +18,46 @@
     </b-card-header>
     <b-card-body>
       <b-img
-        :alt="`${product.name}-${product.id}`"
-        style="background-color:white; border:none; max-width:90%;"
+        v-if="product.image"
+        :alt="`${product.id}-${product.name}`"
+        style="background-color:white; border:none; max-width:90%; height: 150px; margin-bottom:1rem; margin-top:0.5rem"
         fluid
         center
         class="card-img-top"
         :src="product.image"
       />
-      <p class="font-italic">
+      <b-img
+        v-else
+        :alt="`${product.id}-${product.name}`"
+        style="background-color:white; border:none; max-width:90%; height: 150px; margin-bottom:1rem; margin-top:0.5rem"
+        fluid
+        center
+        class="card-img-top"
+        :src="require('@/assets/images/slider/06.jpg')"
+      />
+      <!-- <p class="font-italic">
         {{ product.id }}
-      </p>
+      </p> -->
       <h5
         v-if="product.name.length<=40"
         style="height:3rem; font-weight:bold;"
       >
-        {{ product.id }}-{{ product.name }}
+        <i>{{ product.id }}</i> / {{ product.name }}
       </h5>
       <h5
         v-else
         style="height:3rem; font-weight:bold;"
       >
-        {{ product.id }}-{{ product.name.substring(0,40)+"..." }}
+        <i>{{ product.id }}</i> / {{ product.name.substring(0,40)+"..." }}
       </h5>
     </b-card-body>
     <div>
       <b-card-footer>
-        <p class="font-italic">
-          {{ product.price }} / QTY
+        <p
+          class="font-italic"
+          style="margin-bottom:1rem;"
+        >
+          Rp. {{ product.price }} / {{ product.qty }}
         </p>
       </b-card-footer>
     </div>

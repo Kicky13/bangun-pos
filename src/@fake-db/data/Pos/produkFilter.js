@@ -11,7 +11,7 @@ export const useShopFiltersSortingAndPagination = () => {
     brands: [],
     // ratings: null,
     page: 1,
-    perPage: 6,
+    perPage: 12,
   })
 
   const filterOptions = {
@@ -56,24 +56,24 @@ export const useShopFiltersSortingAndPagination = () => {
   }
 
   // Sorting
-  const sortBy = ref({ text: 'Lowest', value: 'price-asc' })
+  const sortBy = ref({ text: 'Harga Terendah', value: 'price-asc' })
   const sortByOptions = [
     // { text: 'Featured', value: 'featured' },
     { text: 'Harga Terendah', value: 'price-asc' },
     { text: 'Harga Tertinggi', value: 'price-desc' },
   ]
   // Filtering
-  const sortByCategory = ref({ text: 'Lowest', value: 'price-asc' })
+  const sortByCategory = ref({ text: 'Harga Terendah', value: 'price-asc' })
   const sortByCategoryOptions = [
     { text: 'Harga Terendah', value: 'price-asc' },
     { text: 'Harga Tertinggi', value: 'price-desc' },
   ]
-  const sortBySubCategory = ref({ text: 'Lowest', value: 'price-asc' })
+  const sortBySubCategory = ref({ text: 'Harga Terendah', value: 'price-asc' })
   const sortBySubCategoryOptions = [
     { text: 'Harga Terendah', value: 'price-asc' },
     { text: 'Harga Tertinggi', value: 'price-desc' },
   ]
-  const sortByBrand = ref({ text: 'Lowest', value: 'price-asc' })
+  const sortByBrand = ref({ text: 'Harga Terendah', value: 'price-asc' })
   const sortByBrandOptions = [
     { text: 'Harga Terendah', value: 'price-asc' },
     { text: 'Harga Tertinggi', value: 'price-desc' },

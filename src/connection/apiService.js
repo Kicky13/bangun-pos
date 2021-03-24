@@ -73,6 +73,14 @@ export default class ApiService {
       })
     }
 
+    getProductTokoList(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.productToko,
+        data: param,
+      })
+    }
+
     storeProduct(param) {
       return axios({
         method: 'post',
