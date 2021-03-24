@@ -69,7 +69,7 @@
           <span>
             <b-button
               v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-              v-b-modal.detailTrans
+              :to="{name: 'user-customer-list-trans-detail', params: {id: props.row.id}}"
               size="sm"
               variant="outline-secondary"
             >
@@ -77,6 +77,7 @@
             </b-button>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              v-b-modal.logTrans
               size="sm"
               variant="outline-danger"
             >
@@ -141,7 +142,7 @@
     </vue-good-table>
 
     <!-- Modal Section -->
-    <detail-modal />
+    <log-modal />
   </b-card>
 </template>
 
@@ -152,7 +153,7 @@ import {
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
-import DetailModal from './modals/DetailModal.vue'
+import LogModal from './modals/LogModal.vue'
 
 export default {
   components: {
@@ -164,7 +165,7 @@ export default {
     BFormSelect,
     BBadge,
     BCard,
-    DetailModal,
+    LogModal,
   },
   directives: {
     // 'b-modal': VBModal,
@@ -299,3 +300,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.vgt-table {
+  font-size: 12px !important;
+}
+</style>
