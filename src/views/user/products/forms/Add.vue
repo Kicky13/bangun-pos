@@ -15,8 +15,10 @@
                       id="kode"
                       v-model="productCode"
                       name="kode"
-                      placeholder="Cari kode atau scan barcode produk"
+                      placeholder="Masukkan kode atau scan barcode pada kemasan produk"
                       :disabled="disableStdInput"
+                      :state="productCode.length > 0 && productCode.charAt(0) === '0'"
+                      type="number"
                     />
                     <b-form-invalid-feedback>
                       Kode Produk Wajib Diisi
@@ -34,12 +36,16 @@
                       name="nama"
                       list="produk-sig"
                       placeholder="Masukkan nama produk"
+                      :state="productName.length > 0"
                       @change="setProdukDetail"
                     />
                     <b-form-datalist
                       id="produk-sig"
                       :options="listProdukSIG"
                     />
+                    <b-form-invalid-feedback>
+                      Nama Produk Wajib Diisi
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -55,8 +61,12 @@
                       name="category"
                       :options="categoryItems"
                       :disabled="disableStdInput"
+                      :state="selectedCategory != null"
                       @change="setListSubCategory"
                     />
+                    <b-form-invalid-feedback>
+                      Kategori wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -84,7 +94,11 @@
                       name="subcategory"
                       :disabled="disableStdInput"
                       :options="subCategoryItems"
+                      :state="selectedSubCategory != null"
                     />
+                    <b-form-invalid-feedback>
+                      Sub Kategori wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -114,7 +128,11 @@
                       name="type"
                       :disabled="disableStdInput"
                       :options="typeItems"
+                      :state="selectedType != null"
                     />
+                    <b-form-invalid-feedback>
+                      Tipe Produk wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -142,7 +160,11 @@
                       name="brand"
                       :disabled="disableStdInput"
                       :options="brandItems"
+                      :state="selectedBrand != null"
                     />
+                    <b-form-invalid-feedback>
+                      Brand / merk wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -169,8 +191,13 @@
                     <b-form-input
                       id="sellprice"
                       v-model="productPrice"
+                      :state="productPrice.length > 0 && productPrice.charAt(0) != '0'"
+                      type="number"
                       name="sellprice"
                     />
+                    <b-form-invalid-feedback>
+                      Harga Produk wajib diisi dengan benar
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="4">
@@ -183,7 +210,11 @@
                       v-model="selectedUnit"
                       name="unit"
                       :options="unitItems"
+                      :state="selectedUnit != null"
                     />
+                    <b-form-invalid-feedback>
+                      Satuan jual wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="2">
@@ -225,7 +256,11 @@
                       v-model="selectedStatus"
                       name="status"
                       :options="statusItems"
+                      :state="selectedStatus != null"
                     />
+                    <b-form-invalid-feedback>
+                      Status Produk wajib dipilih
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
               </b-row>

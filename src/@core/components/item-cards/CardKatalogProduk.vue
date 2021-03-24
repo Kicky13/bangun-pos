@@ -2,7 +2,6 @@
   <b-card
     class="text-center"
     no-body
-    style="height:21rem"
   >
     <b-card-header class="text-right">
       <b-button
@@ -17,7 +16,7 @@
         <!-- <edit-icon size="1.5x" class="custom-class"></edit-icon> -->
       </b-button>
     </b-card-header>
-    <b-link :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }">
+    <b-card-body>
       <b-img
         :alt="`${product.name}-${product.id}`"
         style="background-color:white; border:none; max-width:90%;"
@@ -26,30 +25,35 @@
         class="card-img-top"
         :src="product.image"
       />
-    </b-link>
+      <p class="font-italic">
+        {{ product.id }}
+      </p>
+      <h5
+        v-if="product.name.length<=40"
+        style="height:3rem; font-weight:bold;"
+      >
+        {{ product.id }}-{{ product.name }}
+      </h5>
+      <h5
+        v-else
+        style="height:3rem; font-weight:bold;"
+      >
+        {{ product.id }}-{{ product.name.substring(0,40)+"..." }}
+      </h5>
+    </b-card-body>
     <div>
-      <p class="font-italic">
-        20200101000{{ product.id }}
-      </p>
-      <h5>
-        {{ product.id }}-{{ product.name }}
-      </h5>
-      <!-- <h5 v-if="product.name.length<=15">
-        {{ product.id }}-{{ product.name }}
-      </h5>
-      <h5 v-else>
-        {{ product.id }}-{{ product.name.substring(0,15)+"..." }}
-      </h5> -->
-      <p class="font-italic">
-        {{ product.price }}
-      </p>
+      <b-card-footer>
+        <p class="font-italic">
+          {{ product.price }} / QTY
+        </p>
+      </b-card-footer>
     </div>
   </b-card>
 </template>
 
 <script>
 import {
-  BCard, BButton, BLink, BImg,
+  BCard, BButton, BImg,
 } from 'bootstrap-vue'
 // import { EditIcon } from 'vue-feather-icons'
 
@@ -58,7 +62,7 @@ export default {
     BCard,
     // BAvatar,
     BButton,
-    BLink,
+    // BLink,
     BImg,
     // EditIcon,
   },

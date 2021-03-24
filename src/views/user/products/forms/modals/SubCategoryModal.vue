@@ -36,9 +36,13 @@
             <b-form-select
               id="category"
               v-model="selectedCategory"
+              :state="selectedCategory != null"
               name="category"
               :options="categoryItems"
             />
+            <b-form-invalid-feedback>
+              Kategori wajib dipilih
+            </b-form-invalid-feedback>
           </b-form-group>
         </b-col>
         <b-col cols="6">
@@ -49,8 +53,12 @@
             <b-form-input
               id="subcategoryName"
               v-model="subcategoryName"
+              :state="subcategoryName.length > 0"
               name="subcategoryName"
             />
+            <b-form-invalid-feedback>
+              Nama Sub Kategori wajib diisi
+            </b-form-invalid-feedback>
           </b-form-group>
         </b-col>
       </b-row>
@@ -75,7 +83,7 @@
 
 <script>
 import {
-  BModal, VBModal, BRow, BCol, BFormGroup, BFormInput, BFormTextarea, BFormSelect,
+  BModal, VBModal, BRow, BCol, BFormGroup, BFormInput, BFormTextarea, BFormSelect, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 // import vSelect from 'vue-select'
 // import store from '@/store/index'
@@ -93,6 +101,7 @@ export default {
     BFormGroup,
     BFormInput,
     BFormSelect,
+    BFormInvalidFeedback,
     //  vSelect,
   },
   directives: {

@@ -70,6 +70,21 @@
                 {{ sortOption.text }}
               </b-dropdown-item>
             </b-dropdown>
+            <b-dropdown
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              text="Urutkan"
+              right
+              variant="outline-primary"
+              style="margin-left: 5px;"
+            >
+              <b-dropdown-item
+                v-for="sortOption in sortByOptions"
+                :key="sortOption.value"
+                @click="sortBy=sortOption"
+              >
+                {{ sortOption.text }}
+              </b-dropdown-item>
+            </b-dropdown>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               variant="primary"
@@ -157,8 +172,9 @@ import { watch } from '@vue/composition-api'
 import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
 // import ShopLeftFilterSidebar from './ECommerceShopLeftFilterSidebar.vue'
 import MiniProductCard from '@core/components/item-cards/CardKatalogProduk.vue'
-import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/dummyFilter'
-import { useEcommerceUi } from './ActionHandling'
+// import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/dummyFilter'
+import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/produkFilter'
+// import { useEcommerceUi } from './ActionHandling'
 
 export default {
   directives: {
@@ -189,10 +205,10 @@ export default {
   },
   setup() {
     const {
-      filters, filterOptions, sortBy, sortByOptions,
+      filters, filterOptions, sortBy, sortByOptions, sortByCategory, sortByCategoryOptions, sortBySubCategory, sortBySubCategoryOptions, sortByBrand, sortByBrandOptions,
     } = useShopFiltersSortingAndPagination()
 
-    const { handleCartActionClick, toggleProductInWishlist } = useEcommerceUi()
+    // const { handleCartActionClick, toggleProductInWishlist } = useEcommerceUi()
 
     const {
       itemView, itemViewOptions, totalProducts,
@@ -230,13 +246,19 @@ export default {
       filterOptions,
       sortBy,
       sortByOptions,
+      sortByCategory,
+      sortByCategoryOptions,
+      sortBySubCategory,
+      sortBySubCategoryOptions,
+      sortByBrand,
+      sortByBrandOptions,
 
       // useShopUi
       itemView,
       itemViewOptions,
       totalProducts,
-      toggleProductInWishlist,
-      handleCartActionClick,
+      // toggleProductInWishlist,
+      // handleCartActionClick,
 
       // useShopRemoteData
       products,
