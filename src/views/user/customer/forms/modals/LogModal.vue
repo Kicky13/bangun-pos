@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="detailTrans"
+    id="logTrans"
     centered
     size="xl"
     hide-footer
@@ -256,7 +256,7 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/transDetail')
+    this.$http.get('/app-data/transLog')
       .then(res => { this.rows = res.data })
   },
 }
