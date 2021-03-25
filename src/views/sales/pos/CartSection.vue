@@ -53,6 +53,7 @@
                 <b-form-input
                   id="jagoId"
                   placeholder="No. Referensi Jago Bangunan"
+                  :value="noReference"
                 />
               </b-col>
             </b-row>
@@ -207,7 +208,7 @@
                     <b-form-input
                       id="items"
                       style="text-align: right;"
-                      value="4(4)"
+                      :value="items.length + '(' + totalQuantities + ')'"
                       plaintext
                     />
                   </b-input-group>
@@ -227,7 +228,7 @@
                     <b-form-input
                       id="subtotal"
                       style="text-align: right;"
-                      value="8190 "
+                      :value="totalSubtotal + ' '"
                       disabled
                     />
                   </b-input-group>
@@ -263,6 +264,7 @@
                   variant="secondary"
                   class="mb-1"
                   block
+                  @click="resetButton"
                 >
                   Batal
                 </b-button>
@@ -280,7 +282,7 @@
                   variant="warning"
                   class="mb-1"
                   block
-                  @click="handleCartActionClick(Items)"
+                  @click="handleCartActionClick(items); addToAntrian();"
                 >
                   Antrian
                 </b-button>
@@ -723,6 +725,7 @@ import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
 // import { useEcommerceUi } from '../useEcommerce'
 import { parentComponent } from './PageContent.vue'
+import { useEcommerceUi } from './ActionHandling'
 
 export default {
   components: {
@@ -757,6 +760,7 @@ export default {
       selectedType: null,
       selectedBrand: null,
       selectedUnits: null,
+      noReference: '38942808192',
       cashierItems: [
         {
           value: null,
@@ -799,28 +803,36 @@ export default {
         stock: 100,
         quantity: 10,
         price: 34,
-        subtotal: 340,
+        subtotal() {
+          return this.price * this.quantity
+        },
       }, {
         id: 20200001910,
         name: 'Apple Watch Series 4 GPS',
         stock: 50,
         quantity: 2,
         price: 22,
-        subtotal: 44,
+        subtotal() {
+          return this.price * this.quantity
+        },
       }, {
         id: 20200001911,
         name: 'Apple Macbook Air Latest Version',
         stock: 70,
         quantity: 3,
         price: 110,
-        subtotal: 330,
+        subtotal() {
+          return this.price * this.quantity
+        },
       }, {
         id: 20200001912,
         name: 'Beats Headphone',
         stock: 143,
         quantity: 21,
         price: 12,
-        subtotal: 252,
+        subtotal() {
+          return this.price * this.quantity
+        },
       }],
       warehouses: [{
         value: null,
@@ -969,6 +981,22 @@ export default {
       }],
     }
   },
+  computed: {
+    totalQuantities() {
+      let total = 0
+      this.items.forEach(item => {
+        total += item.quantity
+      })
+      return total
+    },
+    totalSubtotal() {
+      let total = 0
+      this.items.forEach(item => {
+        total += item.subtotal()
+      })
+      return total
+    },
+  },
   mounted() {
     this.initTrHeight()
   },
@@ -985,7 +1013,9 @@ export default {
           stock: 100,
           quantity: 1,
           price: product.price,
-          subtotal: product.price,
+          subtotal() {
+            return this.price * this.quantity
+          },
         }
         this.items.unshift(newProduct)
       }
@@ -1022,6 +1052,22 @@ export default {
         toaster: 'b-toaster-bottom-right',
       })
     },
+    addToAntrian() {
+      this.resetButton()
+      this.makeToast('Antrian')
+    },
+    resetButton() {
+      this.selectedCustomer = null
+      this.selectedCashier = null
+      this.noReference = ''
+      this.items = []
+    },
+  },
+  setup() {
+    const { handleCartActionClick } = useEcommerceUi()
+    return {
+      handleCartActionClick,
+    }
   },
 }
 </script>
