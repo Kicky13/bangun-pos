@@ -56,9 +56,9 @@
       <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          v-b-modal.customerAdd
           variant="primary"
           style="margin-top: -15px;"
+          @click="addCustomer"
         >
           Tambahkan Customer
         </b-button>
@@ -107,6 +107,7 @@
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
+              @click="editData(props.formattedRow)"
             >
               Edit
             </b-button>
@@ -328,6 +329,7 @@ export default {
   },
   data() {
     return {
+      customerID: '',
       customerName: '',
       customerPhone: '',
       jagobangunRef: '',
@@ -336,6 +338,7 @@ export default {
       selectedPembayaran: null,
       selectedStatus: null,
       isLoading: false,
+      editForm: false,
       statusItems: [
         {
           value: null,
@@ -409,15 +412,17 @@ export default {
   },
   methods: {
     fetchCustomerList() {
+      this.isLoading = true
       appService.getCustomer({
         limit: 50,
         q: '',
         page: 1,
       }).then(response => {
         const res = response.data.data
+        this.isLoading = false
         if (res.length > 0) {
-          console.log(res)
-        // this.rows = res
+          // console.log(res)
+          res.forEach(this.setupRows)
         } else {
           this.$toast({
             component: ToastificationContent,
@@ -434,7 +439,44 @@ export default {
         }
       }).catch(err => {
         console.log(err)
+        this.isLoading = false
       })
+    },
+    clearForm() {
+      this.customerName = ''
+      this.customerPhone = ''
+      this.jagobangunRef = ''
+      this.identityNumber = ''
+      this.customerAddress = ''
+    },
+    setForm(data) {
+      this.customerID = data.custCode
+      this.customerName = data.customer
+      this.customerPhone = data.nohp
+      this.jagobangunRef = ''
+      this.identityNumber = ''
+      this.customerAddress = ''
+    },
+    setupRows(data) {
+      const res = {
+        custCode: 'dum001',
+        customer: data.nama,
+        nohp: data.telp_customer,
+        jumTrans: '1000',
+        totalTrans: '1000',
+        sudahBayar: '1000',
+        sisaHutang: '0',
+      }
+      this.rows.push(res)
+    },
+    addCustomer() {
+      this.editForm = false
+      this.$bvModal.show('customerAdd')
+    },
+    editData(propsData) {
+      this.setForm(propsData)
+      this.editForm = true
+      this.$bvModal.show('customerAdd')
     },
     handleOk(okBtn) {
       if (this.formValidate()) {
@@ -457,19 +499,53 @@ export default {
       this.$bvModal.show('customerAdd')
     },
     handleSubmit() {
-      console.log('OK')
+      // console.log('OK')
       this.isLoading = true
-      this.fetchCustomerInsert()
+      if (this.editForm) {
+        this.fetchUpdateCustomer()
+      } else {
+        this.fetchCustomerInsert()
+      }
     },
-    fetchCustomerInsert() {
-      appService.addCustomer({
+    fetchUpdateCustomer() {
+      const data = {
         nama_customer: this.customerName,
         telp_customer: this.customerPhone,
         no_identitas: this.identityNumber,
         alamat: this.customerAddress,
         no_references: this.jagobangunRef,
-      }).then(response => {
+      }
+      appService.updateCustomer(this.customerID, data).then(response => {
         console.log(response)
+        this.clearForm()
+        this.rows = []
+        this.fetchCustomerList()
+        this.editForm = false
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    fetchCustomerInsert() {
+      const data = {
+        nama_customer: this.customerName,
+        telp_customer: this.customerPhone,
+        no_identitas: this.identityNumber,
+        alamat: this.customerAddress,
+        no_references: this.jagobangunRef,
+      }
+      appService.addCustomer(data).then(response => {
+        console.log(response)
+        const dataRes = {
+          custCode: 'dum001',
+          customer: data.nama_customer,
+          nohp: data.telp_customer,
+          jumTrans: '0',
+          totalTrans: '0',
+          sudahBayar: '0',
+          sisaHutang: '0',
+        }
+        this.rows.push(dataRes)
+        this.clearForm()
         this.isLoading = false
       }).catch(err => {
         console.log(err)
