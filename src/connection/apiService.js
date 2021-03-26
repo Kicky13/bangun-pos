@@ -80,4 +80,12 @@ export default class ApiService {
         data: param,
       })
     }
+
+    updateCustomer(param, formData) {
+      return axios({
+        method: 'post',
+        url: `${this.urlCnf.customer}/${param}`,
+        data: formData,
+      })
+    }
 }
