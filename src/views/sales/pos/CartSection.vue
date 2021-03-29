@@ -179,7 +179,7 @@
                     font-style: italic;
                     text-align: center;"
                   >
-                    Keranjang kosong
+                    --- Keranjang Kosong ---
                   </div>
                 </template>
               </div>
@@ -282,7 +282,7 @@
                   variant="warning"
                   class="mb-1"
                   block
-                  @click="handleCartActionClick(items); addToAntrian();"
+                  @click="addToAntrian"
                 >
                   Antrian
                 </b-button>
@@ -1019,7 +1019,7 @@ export default {
         }
         this.items.unshift(newProduct)
       }
-      this.makeToast(product.name)
+      this.makeToast(product.name, 'Berhasil ditambahkan ke keranjang')
     })
   },
   destroyed() {
@@ -1045,16 +1045,12 @@ export default {
         this.trSetHeight(this.$refs.form.scrollHeight)
       })
     },
-    makeToast(title) {
-      this.$bvToast.toast('Berhasil ditambahkan', {
+    makeToast(title, content) {
+      this.$bvToast.toast(content, {
         title,
         variant: 'danger',
         toaster: 'b-toaster-bottom-right',
       })
-    },
-    addToAntrian() {
-      this.resetButton()
-      this.makeToast('Antrian')
     },
     resetButton() {
       this.selectedCustomer = null
@@ -1065,8 +1061,18 @@ export default {
   },
   setup() {
     const { handleCartActionClick } = useEcommerceUi()
+    function addToAntrian() {
+      if (this.items.length) {
+        handleCartActionClick(this.items)
+        this.resetButton()
+        this.makeToast('Daftar Belanja', 'Berhasil ditambahkan ke daftar antrian')
+      } else {
+        this.makeToast('Keranjang Masih Kosong', 'Silahkan isi keranjang belanja terlebih dahulu')
+      }
+    }
     return {
-      handleCartActionClick,
+      // handleCartActionClick,
+      addToAntrian,
     }
   },
 }
