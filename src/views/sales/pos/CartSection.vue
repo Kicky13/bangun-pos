@@ -313,9 +313,7 @@
             centered
             size="lg"
             title="Tambah Customer"
-            ok-title="Simpan"
-            cancel-title="Tutup"
-            ok-variant="danger"
+            hide-footer
           >
             <b-form>
               <b-row>
@@ -365,6 +363,25 @@
                       rows="4"
                     />
                   </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col
+                  cols="12"
+                  class="text-right"
+                >
+                  <b-button
+                    class="mr-1"
+                    @click="$bvModal.hide('customerAdd')"
+                  >
+                    Tutup
+                  </b-button>
+                  <b-button
+                    variant="danger"
+                    @click="saveNewCustomer"
+                  >
+                    Simpan
+                  </b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -1057,6 +1074,11 @@ export default {
       this.selectedCashier = null
       this.noReference = ''
       this.items = []
+    },
+    saveNewCustomer() {
+      this.selectedCustomer = null
+      this.selectedCashier = null
+      this.$bvModal.hide('customerAdd')
     },
   },
   setup() {
