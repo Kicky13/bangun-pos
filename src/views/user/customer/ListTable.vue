@@ -49,6 +49,7 @@
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="primary"
           style="margin-top: -15px;"
+          @click="handleDelete"
         >
           Delete
         </b-button>
@@ -67,6 +68,7 @@
 
     <!-- table -->
     <vue-good-table
+      ref="dataCustomer"
       :columns="columns"
       :rows="rows"
       :rtl="direction"
@@ -360,16 +362,26 @@ export default {
           label: 'Kode Customer',
           field: 'custCode',
         },
-        // {
-        //   label: 'ID Customer',
-        //   field: 'customerID',
-        //   hidden: true,
-        // },
-        // {
-        //   label: 'Alamat Customer',
-        //   field: 'address',
-        //   hidden: true,
-        // },
+        {
+          label: 'Encoded ID',
+          field: 'encodedID',
+          hidden: true,
+        },
+        {
+          label: 'ID Customer',
+          field: 'customerID',
+          hidden: true,
+        },
+        {
+          label: 'Alamat Customer',
+          field: 'address',
+          hidden: true,
+        },
+        {
+          label: 'No Identitas',
+          field: 'identitas',
+          hidden: true,
+        },
         {
           label: 'Customer',
           field: 'customer',
@@ -464,18 +476,23 @@ export default {
       this.customerName = data.customer
       this.customerPhone = data.nohp
       this.jagobangunRef = ''
-      this.identityNumber = ''
-      this.customerAddress = ''
+      this.identityNumber = data.identitas
+      this.customerAddress = data.address
     },
     setupRows(data) {
       const res = {
-        custCode: 'dum001',
+        encodedID: data.id,
+        custCode: data.kode_customer,
+        customerID: data.toko.id,
         customer: data.nama,
+        shopName: data.toko.name,
         nohp: data.telp_customer,
-        jumTrans: '1000',
-        totalTrans: '1000',
-        sudahBayar: '1000',
-        sisaHutang: '0',
+        address: data.alamat,
+        identitas: data.no_identitas,
+        jumTrans: data.sum_transaction,
+        totalTrans: data.total_transaction,
+        sudahBayar: data.paid_debt,
+        sisaHutang: data.remaining_debt,
       }
       this.rows.push(res)
     },
@@ -563,6 +580,30 @@ export default {
         this.isLoading = false
       })
     },
+    handleDelete() {
+      this.isLoading = true
+      const { selectedRows } = this.$refs.dataCustomer
+      selectedRows.forEach(this.fetchDeleteCustomer)
+    },
+    fetchDeleteCustomer(data) {
+      appService.deleteCustomer(data.encodedID).then(response => {
+        console.log(response)
+        this.rows = []
+        this.fetchCustomerList()
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Deleted',
+            icon: 'CoffeIcon',
+            variant: 'success',
+            text: 'Item deleted',
+          },
+        })
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     formValidate() {
       const errMsg = []
 
@@ -580,6 +621,9 @@ export default {
       }
       if (this.customerAddress.length === 0) {
         errMsg.push('customerAddress')
+      }
+      if (this.jagobangunRef.length === 0) {
+        errMsg.push('jagobangunRef')
       }
 
       console.log(this.customerPhone.charAt(0))

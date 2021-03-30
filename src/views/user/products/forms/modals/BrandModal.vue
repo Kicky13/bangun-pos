@@ -35,8 +35,12 @@
             <b-form-input
               id="brandName"
               v-model="brandName"
+              :state="brandName.length > 0"
               name="brandName"
             />
+            <b-form-invalid-feedback>
+              Nama Brand / Merk wajib diisi
+            </b-form-invalid-feedback>
           </b-form-group>
         </b-col>
       </b-row>
@@ -61,7 +65,7 @@
 
 <script>
 import {
-  BModal, VBModal, BRow, BCol, BFormGroup, BFormInput, BFormTextarea,
+  BModal, VBModal, BRow, BCol, BFormGroup, BFormInput, BFormTextarea, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 // import vSelect from 'vue-select'
 // import store from '@/store/index'
@@ -78,6 +82,7 @@ export default {
     BCol,
     BFormGroup,
     BFormInput,
+    BFormInvalidFeedback,
     // vSelect,
   },
   directives: {

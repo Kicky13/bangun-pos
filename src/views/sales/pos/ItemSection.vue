@@ -35,27 +35,51 @@
                 </b-dropdown-item>
               </b-dropdown>
               <!-- Filter Button -->
-              <b-button
+              <b-dropdown
                 v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-                variant="danger"
+                text="Kategori"
+                right
+                variant="outline-primary"
                 style="margin-left: 5px;"
               >
-                <span>KATEGORI</span>
-              </b-button>
-              <b-button
+                <b-dropdown-item
+                  v-for="category in categories"
+                  :key="category.id"
+                  @click="setCategory(category)"
+                >
+                  {{ category.name }}
+                </b-dropdown-item>
+              </b-dropdown>
+              <b-dropdown
                 v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-                variant="danger"
+                text="Sub Kategori"
+                right
+                variant="outline-primary"
                 style="margin-left: 5px;"
               >
-                <span>SUB KATEGORI</span>
-              </b-button>
-              <b-button
+                <b-dropdown-item
+                  v-for="subCategory in subCategories"
+                  :key="subCategory.id"
+                  @click="setSubCategory(subCategory)"
+                >
+                  {{ subCategory.name }}
+                </b-dropdown-item>
+              </b-dropdown>
+              <b-dropdown
                 v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-                variant="danger"
+                text="Brand"
+                right
+                variant="outline-primary"
                 style="margin-left: 5px;"
               >
-                <span>BRAND</span>
-              </b-button>
+                <b-dropdown-item
+                  v-for="brand in brands"
+                  :key="brand.id"
+                  @click="setBrand(brand)"
+                >
+                  {{ brand.name }}
+                </b-dropdown-item>
+              </b-dropdown>
               <b-button
                 v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                 variant="secondary-outline"
@@ -310,8 +334,11 @@ import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from
 import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 import store from '@/store/index'
 // import antrianModule from '@/views/sales/pos/antrianModule'
+import ApiService from '@/connection/apiService'
 import { useEcommerceUi } from './ActionHandling'
 import { parentComponent } from './PageContent.vue'
+
+const appService = new ApiService()
 
 export default {
   directives: {
@@ -399,6 +426,9 @@ export default {
         1: 'light-danger',
         2: 'light-success',
       }],
+      categories: [],
+      subCategories: [],
+      brands: [],
     }
   },
   computed: {
@@ -423,6 +453,10 @@ export default {
       return this.dir
     },
   },
+  mounted() {
+    this.getAllCategories()
+    this.getAllBrands()
+  },
   created() {
     this.$http.get('/app-data/salesPending')
       .then(res => { this.rows = res.data })
@@ -430,6 +464,70 @@ export default {
   methods: {
     getProduct(product) {
       parentComponent.$emit('getProduct', product)
+    },
+    async setCategory(param) {
+      await this.getSubCategoryByCategory(param)
+    },
+    setSubCategory(param) {
+      console.log(param.name)
+    },
+    setBrand(param) {
+      console.log(param.name)
+    },
+    async getAllCategories() {
+      appService.getCategoryList().then(response => {
+        const { data } = response.data
+        if (data) {
+          this.categories.push({
+            id: '',
+            name: 'Semua Kategori',
+          })
+          data.forEach(item => {
+            this.categories.push({
+              id: item.id,
+              name: item.nama_category,
+            })
+          })
+        }
+      })
+    },
+    async getSubCategoryByCategory(category) {
+      const param = {
+        id_category: category.id,
+      }
+      appService.getSubcategoryList(param).then(response => {
+        this.subCategories = []
+        const { data } = response.data
+        if (data) {
+          this.subCategories.push({
+            id: '',
+            name: 'Semua Sub-Kategori',
+          })
+          data.forEach(item => {
+            this.subCategories.push({
+              id: item.id,
+              name: item.nama_category,
+            })
+          })
+        }
+      })
+    },
+    async getAllBrands() {
+      appService.getBrandList().then(response => {
+        const { data } = response.data
+        if (data) {
+          this.brands.push({
+            id: '',
+            name: 'Semua Brand',
+          })
+          data.forEach(item => {
+            this.brands.push({
+              id: item.id,
+              name: item.nama_brand,
+            })
+          })
+        }
+      })
     },
   },
   setup() {

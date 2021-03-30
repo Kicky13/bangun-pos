@@ -377,7 +377,7 @@ const data = {
 // ------------------------------------------------
 mock.onGet('/apps/ecommerce/products').reply(config => {
   // eslint-disable-next-line object-curly-newline
-  const { q = '', sortBy = 'featured', perPage = 9, page = 1 } = config.params
+  const { q = '', sortBy = 'featured', perPage = 12, page = 1 } = config.params
 
   const queryLowered = q.toLowerCase()
 

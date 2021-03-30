@@ -5,11 +5,6 @@ export default class ApiService {
     urlCnf = { ...apiConfig }
 
     constructor() {
-      axios.defaults.headers.common = {
-        'content-type': 'application/json',
-        accept: 'application/json',
-        token: localStorage.getItem(this.urlCnf.storageTokenName),
-      }
       axios.defaults.headers.Authorization = `Bearer ${localStorage.getItem(this.urlCnf.storageTokenName)}`
     }
 
@@ -27,6 +22,10 @@ export default class ApiService {
         url: this.urlCnf.customer,
         data: param,
       })
+    }
+
+    deleteCustomer(param) {
+      return axios.delete(`${this.urlCnf.customer}/${param}`)
     }
 
     getCategoryList() {
@@ -73,10 +72,22 @@ export default class ApiService {
       })
     }
 
+    getProductTokoList(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.productToko,
+        data: param,
+      })
+    }
+
     storeProduct(param) {
       return axios({
         method: 'post',
         url: this.urlCnf.storeProduct,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          accept: 'multipart/form-data',
+        },
         data: param,
       })
     }

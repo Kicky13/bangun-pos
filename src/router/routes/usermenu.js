@@ -114,7 +114,7 @@ export default [
     },
   },
   {
-    path: '/mycustomer/trans',
+    path: '/mycustomer/transaksi',
     name: 'user-customer-list-trans',
     component: () => import('@/views/user/customer/forms/ListBayar.vue'),
     meta: {
@@ -126,6 +126,24 @@ export default [
       // breadcrumb: [
       //   {
       //     text: 'Customer',
+      //     active: true,
+      //   },
+      // ],
+    },
+  },
+  {
+    path: '/mycustomer/transaksi/:id',
+    name: 'user-customer-list-trans-detail',
+    component: () => import('@/views/user/customer/forms/DetailTrans.vue'),
+    meta: {
+      // pageTitle: 'Penjualan',
+      resource: 'CustomerUser',
+      action: 'manage',
+      redTitle: 'Detail Data Transaksi',
+      redSubs: 'Detail Data Transaksi yang pernah dilakukan oleh customer.',
+      // breadcrumb: [
+      //   {
+      //     text: 'Sales',
       //     active: true,
       //   },
       // ],
