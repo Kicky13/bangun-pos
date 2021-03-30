@@ -360,6 +360,16 @@ export default {
           label: 'Kode Customer',
           field: 'custCode',
         },
+        // {
+        //   label: 'ID Customer',
+        //   field: 'customerID',
+        //   hidden: true,
+        // },
+        // {
+        //   label: 'Alamat Customer',
+        //   field: 'address',
+        //   hidden: true,
+        // },
         {
           label: 'Customer',
           field: 'customer',
@@ -421,7 +431,7 @@ export default {
         const res = response.data.data
         this.isLoading = false
         if (res.length > 0) {
-          // console.log(res)
+          console.log(res)
           res.forEach(this.setupRows)
         } else {
           this.$toast({
@@ -471,6 +481,7 @@ export default {
     },
     addCustomer() {
       this.editForm = false
+      this.clearForm()
       this.$bvModal.show('customerAdd')
     },
     editData(propsData) {
