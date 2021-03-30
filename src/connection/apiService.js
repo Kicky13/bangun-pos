@@ -96,4 +96,12 @@ export default class ApiService {
         data: formData,
       })
     }
+
+    getSales(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.sales,
+        params: param,
+      })
+    }
 }
