@@ -80,6 +80,14 @@ export default class ApiService {
       })
     }
 
+    getProductTokoListPage(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.productTokoPage,
+        data: param,
+      })
+    }
+
     storeProduct(param) {
       return axios({
         method: 'post',
@@ -97,6 +105,14 @@ export default class ApiService {
         method: 'post',
         url: `${this.urlCnf.customer}/${param}`,
         data: formData,
+      })
+    }
+
+    getSales(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.sales,
+        params: param,
       })
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <b-card>
-
+    <!-- <loading-grow v-if="isLoading" /> -->
     <div class="demo-inline-spacing">
 
       <!-- input search -->
@@ -26,33 +26,26 @@
           </div>
         </b-form-group>
       </div>
-      <!-- <div style="float:left;width: 300px !important; margin-left:10px;">
-        <b-form-group
-          label="Pembayaran"
-          label-for="pembayaran"
-          label-cols-md="4"
-        >
+      <div style="float:left;width: 200px !important; margin-left:10px;">
+        <b-form-group>
           <b-form-select
             id="pembayaran"
             v-model="selectedPembayaran"
             :options="pembayaranItems"
+            @input="advanceSearch"
           />
         </b-form-group>
-      </div> -->
-      <!-- <div style="float:left;width: 300px !important; margin-left:10px;">
-        <b-form-group
-          label="Status"
-          label-for="status"
-          label-cols-md="4"
-        >
+      </div>
+      <div style="float:left;width: 200px !important; margin-left:10px;">
+        <b-form-group>
           <b-form-select
             id="status"
             v-model="selectedStatus"
             :options="statusItems"
+            @input="advanceSearch"
           />
         </b-form-group>
-      </div> -->
-
+      </div>
       <div style="float:left;margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
@@ -202,7 +195,11 @@ import {
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
-// import { codeBasic } from './search'
+import ApiService from '@/connection/apiService'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+// import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -216,112 +213,89 @@ export default {
     BDropdownItem,
     BBadge,
     BCard,
+    // LoadingGrow,
   },
   directives: {
     Ripple,
   },
   data() {
     return {
+      selectedPembayaran: null,
+      selectedStatus: null,
       pageLength: 10,
       dir: false,
+      pembayaranItems: [
+        {
+          value: null,
+          text: 'Semua Pembayaran',
+        },
+        {
+          value: 'CASH',
+          text: 'CASH',
+        },
+        {
+          value: 'KREDIT',
+          text: 'KREDIT',
+        },
+      ],
+      statusItems: [
+        {
+          value: null,
+          text: 'Semua Status',
+        },
+        {
+          value: 'LUNAS',
+          text: 'LUNAS',
+        },
+        {
+          value: 'UTANG',
+          text: 'UTANG',
+        },
+      ],
       columns: [
         {
           label: 'Kode Penjualan',
           field: 'saleCode',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Sales ID',
-          // },
         },
         {
           label: 'Tanggal',
           field: 'date',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Date',
-          // },
         },
         {
           label: 'Customer',
           field: 'customer',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Biller',
-          // },
         },
         {
           label: 'Kode Referensi',
           field: 'ref',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Reference',
-          // },
         },
         {
           label: 'Kasir',
           field: 'biller',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Biller',
-          // },
         },
         {
           label: 'Sub Total',
           field: 'subtotal',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Customer',
-          // },
         },
         {
           label: 'Diskon',
           field: 'disc',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Total',
-          // },
         },
         {
           label: 'Ongkos Kirim',
           field: 'ship',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Status',
-          // },
         },
         {
           label: 'Pajak',
           field: 'tax',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Paid',
-          // },
         },
         {
           label: 'Pembayaran',
           field: 'typePayment',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Pembayaran',
-          // },
-          sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['CASH', 'KREDIT'],
-          },
         },
         {
           label: 'Status',
           field: 'paymentStatus',
-          // filterOptions: {
-          //   enabled: true,
-          //   placeholder: 'Search Status',
-          // },
-          sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['LUNAS', 'UTANG'],
-          },
         },
         {
           label: 'Action',
@@ -360,8 +334,61 @@ export default {
     },
   },
   created() {
-    this.$http.get('/app-data/salesUser')
-      .then(res => { this.rows = res.data })
+    this.fetchSalesList()
+  },
+  methods: {
+    advanceSearch(val) {
+      this.searchTerm = val
+    },
+    fetchSalesList() {
+      this.isLoading = true
+      appService.getSales({
+        limit: 50,
+        status: '',
+        q: '',
+        page: 1,
+      }).then(response => {
+        const res = response.data.data
+        this.isLoading = false
+        if (res.length > 0) {
+          // console.log(res)
+          res.forEach(this.setupRows)
+        } else {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Data Not Found',
+              icon: 'CoffeeIcon',
+              variant: 'danger',
+              text: 'Data empty on server, using dummy data now',
+            },
+          })
+          this.$http.get('/app-data/salesUser')
+            .then(resData => { this.rows = resData.data })
+        }
+      }).catch(err => {
+        console.log(err)
+        this.isLoading = false
+      })
+    },
+    setupRows(data) {
+      const res = {
+        date: '2020-11-18',
+        saleCode: 'TB001/2021/00000000001',
+        ref: 'jago-022129',
+        biller: 'Kasir 01',
+        saleStatus: 'Draft',
+        customer: data.nama,
+        subtotal: '1000000',
+        disc: '25000',
+        ship: '50000',
+        tax: '0',
+        typePayment: 'CASH',
+        paymentStatus: 'LUNAS',
+      }
+      this.rows.push(res)
+    },
   },
 }
 </script>

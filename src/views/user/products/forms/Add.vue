@@ -17,7 +17,7 @@
                       name="kode"
                       placeholder="Masukkan kode atau scan barcode pada kemasan produk"
                       :disabled="disableStdInput"
-                      :state="productCode.length > 0 && productCode.charAt(0) === '0'"
+                      :state="productCode.length > 0"
                       type="number"
                     />
                     <b-form-invalid-feedback>
@@ -487,7 +487,7 @@ export default {
         param.append('notes', this.productNote)
         appService.storeProduct(param).then(response => {
           const { data } = response
-          console.log(data)
+          // console.log(data)
           if (data.result) {
             this.$toast({
               component: ToastificationContent,
