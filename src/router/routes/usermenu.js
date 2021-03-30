@@ -43,7 +43,7 @@ export default [
       // pageTitle: 'Produk',
       resource: 'ProductUser',
       action: 'manage',
-      redTitle: 'Product',
+      redTitle: 'Katalog Produk',
       redSubs: 'Berikut list produk yang kamu jual',
       // breadcrumb: [
       //   {
@@ -78,6 +78,7 @@ export default [
     path: '/myproduct/edit',
     name: 'user-product-edit',
     component: () => import('@/views/user/products/forms/Edit.vue'),
+    props: true,
     meta: {
       // pageTitle: 'Tambah Produk',
       resource: 'ProductUser',

@@ -7,7 +7,10 @@ export default class ApiService {
     constructor() {
       axios.defaults.headers.common = {
         'content-type': 'application/json',
+        // 'content-type': 'multipart/form-data,application/x-www-form-urlencoded,application/json',
+        // 'content-type': 'multipart/form-data',
         accept: 'application/json',
+        // accept: 'application/json,*/*',
         token: localStorage.getItem(this.urlCnf.storageTokenName),
       }
       axios.defaults.headers.Authorization = `Bearer ${localStorage.getItem(this.urlCnf.storageTokenName)}`
@@ -77,6 +80,14 @@ export default class ApiService {
       return axios({
         method: 'post',
         url: this.urlCnf.productToko,
+        data: param,
+      })
+    }
+
+    getProductTokoListPage(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.productTokoPage,
         data: param,
       })
     }
