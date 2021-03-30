@@ -18,7 +18,7 @@
                       placeholder="Masukkan kode atau scan barcode pada kemasan produk"
                       :disabled="disableStdInput"
                       :state="productCode.length > 0 && productCode.charAt(0) === '0'"
-                      type="number"
+                      type="text"
                     />
                     <b-form-invalid-feedback>
                       Kode Produk Wajib Diisi
@@ -36,6 +36,7 @@
                       name="nama"
                       list="produk-sig"
                       placeholder="Masukkan nama produk"
+                      :disabled="disableStdInput"
                       :state="productName.length > 0"
                       @change="setProdukDetail"
                     />
@@ -50,7 +51,7 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col cols="4">
+                <b-col cols="6">
                   <b-form-group
                     label="Kategori"
                     label-for="category"
@@ -69,7 +70,7 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="2">
+                <!-- <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.categoryAdd
@@ -82,8 +83,8 @@
                     icon="PlusIcon"
                     size="16"
                   /><span style="font-size: 13px;"> Kategori</span></b-button>
-                </b-col>
-                <b-col cols="4">
+                </b-col> -->
+                <b-col cols="6">
                   <b-form-group
                     label="Sub Kategori"
                     label-for="subcategory"
@@ -101,7 +102,7 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="2">
+                <!-- <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.subcategoryAdd
@@ -114,10 +115,10 @@
                     icon="PlusIcon"
                     size="16"
                   /><span style="font-size: 13px;"> Sub-Kategori</span></b-button>
-                </b-col>
+                </b-col> -->
               </b-row>
               <b-row>
-                <b-col cols="4">
+                <b-col cols="6">
                   <b-form-group
                     label="Tipe Produk"
                     label-for="type"
@@ -135,7 +136,7 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="2">
+                <!-- <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.typeAdd
@@ -148,8 +149,8 @@
                     icon="PlusIcon"
                     size="16"
                   /><span style="font-size: 13px;"> Tipe Produk</span></b-button>
-                </b-col>
-                <b-col cols="4">
+                </b-col> -->
+                <b-col cols="6">
                   <b-form-group
                     label="Brand / Merk Produk"
                     label-for="brand"
@@ -167,7 +168,7 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="2">
+                <!-- <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.brandAdd
@@ -180,7 +181,7 @@
                     icon="PlusIcon"
                     size="16"
                   /><span style="font-size: 13px;"> Brand / Merk</span></b-button>
-                </b-col>
+                </b-col> -->
               </b-row>
               <b-row>
                 <b-col cols="6">
@@ -314,7 +315,7 @@
                 style="float: right;"
                 @click="formSubmitted"
               >
-                <span>Tambahkan Produk</span>
+                <span>Simpan Produk</span>
               </b-button>
             </div>
           </b-col>
@@ -375,13 +376,96 @@ export default {
     'b-modal': VBModal,
     Ripple,
   },
+  props: {
+    editid: {
+      type: Number,
+      default: 0,
+    },
+    editname: {
+      type: String,
+      default: '',
+    },
+    editqty: {
+      type: Number,
+      default: 0,
+    },
+    editprice: {
+      type: Number,
+      default: 0,
+    },
+    editimage: {
+      type: String,
+      default: '',
+    },
+    editidproduk: {
+      type: Number,
+      default: 0,
+    },
+    editkodeproduk: {
+      type: Number,
+      default: 0,
+    },
+    editnamaproduk: {
+      type: String,
+      default: '',
+    },
+    editimgproduk: {
+      type: String,
+      default: '',
+    },
+    editidcategory: {
+      type: String,
+      default: '',
+    },
+    editnamacategory: {
+      type: String,
+      default: '',
+    },
+    editidsubcategory: {
+      type: String,
+      default: '',
+    },
+    editnamasubcategory: {
+      type: String,
+      default: '',
+    },
+    editidbrand: {
+      type: String,
+      default: '',
+    },
+    editnamabrand: {
+      type: String,
+      default: '',
+    },
+    editidtype: {
+      type: String,
+      default: '',
+    },
+    editnamatype: {
+      type: String,
+      default: '',
+    },
+    editiduom: {
+      type: String,
+      default: '',
+    },
+    editnamauom: {
+      type: String,
+      default: '',
+    },
+    editisavailable: {
+      type: Number,
+      default: 1,
+    },
+  },
   data() {
     return {
       productimgurl: null,
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
-      disableStdInput: false,
+      disableStdInput: true,
       matchedItem: [],
       searchProductSIG: '',
+      productId: '',
       productCode: '',
       productName: '',
       productPrice: '',
@@ -456,16 +540,30 @@ export default {
   mounted() {
     this.setListProductSIG()
     this.setListCategory()
-    // this.setListSubCategory()
     this.setListBrand()
     this.setListType()
     this.setListUOM()
+    this.filldata()
   },
   methods: {
     onFileChange(e) {
       const file = e.target.files[0]
       this.selectedFile = file
       this.productimgurl = URL.createObjectURL(file)
+    },
+    async filldata() {
+      this.productId = this.editidproduk
+      this.productimgurl = this.editimgproduk
+      this.productCode = this.editkodeproduk
+      this.productName = this.editname
+      this.productPrice = this.editprice
+      this.selectedCategory = this.editidcategory
+      await this.setListSubCategory()
+      this.selectedStatus = this.editisavailable
+      this.selectedBrand = this.editidbrand
+      this.selectedUnit = this.editiduom
+      this.selectedType = this.editidtype
+      this.selectedSubCategory = this.editidsubcategory
     },
     async formSubmitted() {
       // const param = {

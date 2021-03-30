@@ -342,7 +342,7 @@ export default {
 <style scoped lang="scss">
 @media (min-width: 992px) {
   .logincontainer {
-    background-image: url('~@/assets/images/pages/Login_POS1Medium-compressed.jpg');
+    background-image: url('~@/assets/images/pages/Login_POS1Medium.jpg');
     background-repeat: no-repeat;
     background-size: cover;
   }

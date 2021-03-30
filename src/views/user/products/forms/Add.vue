@@ -17,7 +17,7 @@
                       name="kode"
                       placeholder="Masukkan kode atau scan barcode pada kemasan produk"
                       :disabled="disableStdInput"
-                      :state="productCode.length > 0 && productCode.charAt(0) === '0'"
+                      :state="productCode.length > 0"
                       type="number"
                     />
                     <b-form-invalid-feedback>
@@ -472,22 +472,36 @@ export default {
       //   id_category: this.selectedCategory,
       // }
       if (this.formValidate()) {
-        console.log('a')
-        const param = new FormData()
-        param.append('gambar_product', this.selectedFile)
-        param.append('id_subcategory', this.selectedSubCategory)
-        param.append('id_brand', this.selectedBrand)
-        param.append('id_type', this.selectedType)
-        param.append('kode_product', this.productCode)
-        param.append('nama_product', this.productName)
-        param.append('price', this.productPrice)
-        param.append('qty', 0)
-        param.append('uom', this.selectedUnit)
-        param.append('notes', this.productNote)
-        console.log(param)
-        appService.storeProduct(param).then(response => {
+        // console.log('a')
+        // const param = new FormData()
+        // param.append('gambar_product', this.selectedFile)
+        // param.append('id_subcategory', this.selectedSubCategory)
+        // param.append('id_brand', this.selectedBrand)
+        // param.append('id_type', this.selectedType)
+        // param.append('kode_product', this.productCode)
+        // param.append('nama_product', this.productName)
+        // param.append('price', this.productPrice)
+        // param.append('qty', 0)
+        // param.append('uom', this.selectedUnit)
+        // param.append('notes', this.productNote)
+        // param.append('is_available', this.selectedStatus)
+        // console.log(param)
+        // appService.storeProduct(param).then(response => {
+        appService.storeProduct({
+          id_subcategory: this.selectedSubCategory,
+          id_brand: this.selectedBrand,
+          id_type: this.selectedType,
+          kode_product: this.productCode,
+          nama_product: this.productName,
+          price: this.productPrice,
+          qty: 0,
+          uom: this.selectedUnit,
+          notes: this.productNote,
+          is_available: this.selectedStatus,
+          gambar_product: this.selectedFile,
+        }).then(response => {
           const { data } = response
-          console.log(data)
+          // console.log(data)
           if (data.result) {
             this.$toast({
               component: ToastificationContent,
