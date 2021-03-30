@@ -2,6 +2,9 @@ export default {
   // Token
   storageTokenName: 'accesstoken',
 
+  // Sales
+  sales: 'user/listtransaction',
+
   // Customer
   customer: 'user/customer',
 
