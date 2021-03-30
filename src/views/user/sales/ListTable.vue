@@ -1,6 +1,6 @@
 <template>
   <b-card>
-    <!-- <loading-grow v-if="isLoading" /> -->
+    <loading-grow v-if="isLoading" />
     <div class="demo-inline-spacing">
 
       <!-- input search -->
@@ -32,7 +32,6 @@
             id="pembayaran"
             v-model="selectedPembayaran"
             :options="pembayaranItems"
-            @input="advanceSearch"
           />
         </b-form-group>
       </div>
@@ -42,7 +41,6 @@
             id="status"
             v-model="selectedStatus"
             :options="statusItems"
-            @input="advanceSearch"
           />
         </b-form-group>
       </div>
@@ -197,7 +195,7 @@ import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
-// import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
 
 const appService = new ApiService()
 
@@ -213,7 +211,7 @@ export default {
     BDropdownItem,
     BBadge,
     BCard,
-    // LoadingGrow,
+    LoadingGrow,
   },
   directives: {
     Ripple,
@@ -222,6 +220,7 @@ export default {
     return {
       selectedPembayaran: null,
       selectedStatus: null,
+      isLoading: false,
       pageLength: 10,
       dir: false,
       pembayaranItems: [
@@ -337,9 +336,9 @@ export default {
     this.fetchSalesList()
   },
   methods: {
-    advanceSearch(val) {
-      this.searchTerm = val
-    },
+    // advanceSearch(val) {
+    //   this.searchTerm = val
+    // },
     fetchSalesList() {
       this.isLoading = true
       appService.getSales({
