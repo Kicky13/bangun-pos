@@ -11,7 +11,7 @@
           <b-input-group class="input-group-merge">
             <b-form-input
               v-model="searchProductToko"
-              placeholder="Search Product"
+              placeholder="Cari Produk dengan memasukkan nama atau kode"
               class="search-product"
               @input="setListProductToko"
             />
@@ -98,7 +98,8 @@
         </b-col>
       </b-row>
     </div>
-
+    <br>
+    <p>Menampilkan <b>{{ rows - 1 }}</b> produk. Dengan Kategori dari <b>{{ selectedCategoryText }}</b> , Subkategori dari <b>{{ selectedSubCategoryText }}</b> dan Brand / Merk dari <b>{{ selectedBrandText }}</b>  </p>
     <!-- Products -->
     <section
       style="margin-top: 10px;"
@@ -106,8 +107,9 @@
     >
       <b-row>
         <b-col
-          v-for="product in products"
-          :key="product.id"
+          v-for="productitem in itemsForList"
+          id="itemList"
+          :key="productitem.id_produk"
           xl="2"
           md="6"
           sm="10"
@@ -116,7 +118,7 @@
         >
           <!-- Product Details -->
           <mini-product-card
-            :product="product"
+            :product="productitem"
           />
           <!-- <mini-product-card
             :product="product"
@@ -131,39 +133,16 @@
       <b-row>
         <b-col cols="12">
           <b-pagination
-            v-model="filters.page"
-            :total-rows="totalProducts"
-            :per-page="filters.perPage"
-            first-number
+            v-model="currentPage"
+            :total-rows="rows"
+            :per-page="perPage"
+            aria-controls="itemList"
             align="center"
-            last-number
-            class="pagination-danger"
-          >
-            <template #prev-text>
-              <feather-icon
-                icon="ChevronLeftIcon"
-                size="18"
-              />
-            </template>
-            <template #next-text>
-              <feather-icon
-                icon="ChevronRightIcon"
-                size="18"
-              />
-            </template>
-          </b-pagination>
+            @change="handlePageChange"
+          />
         </b-col>
       </b-row>
     </section>
-
-    <!-- Sidebar -->
-    <!-- <portal to="content-renderer-sidebar-detached-left">
-      <shop-left-filter-sidebar
-        :filters="filters"
-        :filter-options="filterOptions"
-        :mq-shall-show-left-sidebar.sync="mqShallShowLeftSidebar"
-      />
-    </portal> -->
   </div>
 </template>
 
@@ -198,24 +177,19 @@ export default {
   },
   data() {
     return {
+      currentPage: 1,
+      perPage: 12,
+      rows: 0,
+      productStoreList: [],
+      itemsForList: [],
       searchProductToko: '',
       selectedCategory: '',
       selectedBrand: '',
       selectedSubCategory: '',
+      selectedCategoryText: 'Semua Kategori',
+      selectedBrandText: 'Semua Brand / Merk',
+      selectedSubCategoryText: 'Semua Sub Kategori',
       selectedSort: 'price-asc',
-      filters: [{
-        q: '',
-        categories: [],
-        subcategories: [],
-        brands: [],
-        page: 1,
-        perPage: 12,
-      }],
-      filterOptions: [{
-        categories: [],
-        subcategories: [],
-        brands: [],
-      }],
       sortBy: [{ text: 'Harga Terendah', value: 'price-asc' }],
       sortByOptions: [
         { text: 'Harga Terendah', value: 'price-asc' },
@@ -232,19 +206,29 @@ export default {
         { icon: 'GridIcon', value: 'grid-view' },
         { icon: 'ListIcon', value: 'list-view' },
       ],
-      totalProducts: 0,
-      products: [],
     }
   },
   mounted() {
     this.setListCategory()
-    // this.setListSubCategory()
     this.setListBrand()
     this.setListProductToko()
   },
   methods: {
+    handlePageChange(value) {
+      this.currentPage = value
+      console.log(this.currentPage)
+      this.setListProductToko()
+    },
+    formatPrice(value) {
+      console.log(value)
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      console.log(val)
+      console.log(val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    },
     async setCategory(param) {
       this.selectedCategory = param.value
+      this.selectedCategoryText = param.text
       await this.setListSubCategory()
       this.sortByCategory.text = param.text
       this.sortByCategory.value = param.value
@@ -252,12 +236,14 @@ export default {
     },
     async setSubCategory(param) {
       this.selectedSubCategory = param.value
+      this.selectedSubCategoryText = param.text
       this.sortByCategory.text = param.text
       this.sortByCategory.value = param.value
       this.setListProductToko()
     },
     async setBrand(param) {
       this.selectedBrand = param.value
+      this.selectedBrandText = param.text
       this.sortByBrand.text = param.text
       this.sortByBrand.value = param.value
       this.setListProductToko()
@@ -288,7 +274,6 @@ export default {
       })
     },
     async setListSubCategory() {
-      // console.log('sub kategori')
       const param = {
         id_category: this.selectedCategory,
       }
@@ -339,7 +324,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.typeItems.push({
@@ -360,7 +344,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.unitItems.push({
@@ -372,18 +355,9 @@ export default {
       })
     },
     async setListProductToko() {
-      // const param = {
-      //   q: this.searchProductToko,
-      //   kategori: this.selectedCategory,
-      //   subkategori: this.selectedSubCategory,
-      //   brand: this.selectedBrand,
-      // }
       const param = {
         q: this.searchProductToko,
       }
-      console.log(this.selectedCategory)
-      console.log(this.selectedSubCategory)
-      console.log(this.selectedBrand)
       if (this.selectedCategory !== '') {
         param.kategori = this.selectedCategory
       }
@@ -393,50 +367,46 @@ export default {
       if (this.selectedBrand !== '') {
         param.brand = this.selectedBrand
       }
-      console.log(param)
-      // const param = new FormData()
-      // param.append('q', this.searchProductToko)
-      // if (this.selectedCategory !== '') {
-      //   param.append('kategori', this.selectedCategory)
-      // }
-      // if (this.selectedSubCategory !== '') {
-      //   param.append('subkategori', this.selectedSubCategory)
-      // }
-      // if (this.selectedBrand !== '') {
-      //   param.append('brand', this.selectedBrand)
-      // }
+      param.sortBy = this.selectedSort
+      param.PerPage = this.perPageProducts
+      param.Page = this.pageProducts
       appService.getProductTokoList(param).then(response => {
         const { data } = response
-        this.products = []
+        this.itemsForList = []
+        this.productStoreList = []
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
-          // console.log(itemlist.length)
           this.totalProducts = itemlist.length
           itemlist.forEach(item => {
-            this.products.push({
-              // id_produk: item.id_produk,
-              // kode_produk: item.kode_produk,
-              // nama_produk: item.nama_produk,
-              // img_produk: item.img_produk,
-              // id_category: item.id_category,
-              // nama_category: item.nama_category,
-              // id_subcategory: item.id_subcategory,
-              // nama_subcategory: item.nama_subcategory,
-              // id_brand: item.id_brand,
-              // nama_brand: item.nama_brand,
-              // id_type: item.id_type,
-              // nama_type: item.nama_type,
-              // id_uom: item.id_uom,
-              // nama_uom: item.nama_uom,
+            this.productStoreList.push({
               id: item.kode_produk,
               name: item.nama_produk,
               qty: item.nama_uom,
               price: item.price,
               image: item.img_produk,
+              id_produk: item.id_produk,
+              kode_produk: item.kode_produk,
+              nama_produk: item.nama_produk,
+              img_produk: item.img_produk,
+              id_category: item.id_category,
+              nama_category: item.nama_category,
+              id_subcategory: item.id_subcategory,
+              nama_subcategory: item.nama_subcategory,
+              id_brand: item.id_brand,
+              nama_brand: item.nama_brand,
+              id_type: item.id_type,
+              nama_type: item.nama_type,
+              id_uom: item.id_uom,
+              nama_uom: item.nama_uom,
+              is_available: item.is_available,
             })
           })
         }
+        this.rows = this.productStoreList.length + 1
+        this.itemsForList = this.productStoreList.slice(
+          (this.currentPage - 1) * this.perPage,
+          this.currentPage * this.perPage,
+        )
       })
     },
   },

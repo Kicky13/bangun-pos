@@ -16,6 +16,7 @@ export default {
   uom: 'uom',
   productSig: 'product',
   productToko: 'product/listProduct',
+  productTokoPage: 'product/productToko',
 
   // Store
   storeProduct: 'product/store',

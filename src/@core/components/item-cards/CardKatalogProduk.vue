@@ -3,20 +3,25 @@
     class="text-center"
     no-body
   >
-    <b-card-header class="text-right">
+    <b-card-header
+      class="text-right"
+      style="padding: 0rem !important"
+    >
       <b-button
         :variant="color"
         tag="a"
-        class="btn-icon"
-        :to="{ name: 'user-product-edit'}"
+        class="btn-icon float-sm-right"
+        style="margin: 0.5rem;"
+        :to="{ name: 'user-product-edit', params: {editid: product.id, editname: product.name, editqty: product.qty, editprice: product.price, editimage: product.image, editidproduk: product.id_produk, editkodeproduk: product.kode_produk, editnamaproduk: product.nama_produk, editimgproduk: product.img_produk, editidcategory: product.id_category, editnamacategory: product.nama_category, editidsubcategory: product.id_subcategory, editnamasubcategory: product.nama_subcategory, editidbrand: product.id_brand, editnamabrand: product.nama_brand, editidtype: product.id_type, editnamatype: product.nama_type, editiduom: product.id_uom, editnamauom: product.nama_uom, editisavailable: product.is_available}}"
       >
         <feather-icon
           icon="EditIcon"
         />
-        <!-- <edit-icon size="1.5x" class="custom-class"></edit-icon> -->
       </b-button>
     </b-card-header>
-    <b-card-body>
+    <b-card-body
+      style="padding: 0rem !important"
+    >
       <b-img
         v-if="product.image"
         :alt="`${product.id}-${product.name}`"
@@ -51,28 +56,31 @@
         <i>{{ product.id }}</i> / {{ product.name.substring(0,40)+"..." }}
       </h5>
     </b-card-body>
-    <div>
-      <b-card-footer>
-        <p
-          class="font-italic"
-          style="margin-bottom:1rem;"
-        >
-          Rp. {{ product.price }} / {{ product.qty }}
-        </p>
-      </b-card-footer>
-    </div>
+    <b-card-footer
+      style="padding: 0rem !important"
+    >
+      <p
+        class="font-italic"
+        style="margin-bottom:1rem;margin-top:1rem;"
+      >
+        Rp. {{ formatPrice(product.price) }} / {{ product.qty }}
+      </p>
+    </b-card-footer>
   </b-card>
 </template>
 
 <script>
 import {
-  BCard, BButton, BImg,
+  BCard, BButton, BImg, BCardHeader, BCardBody, BCardFooter,
 } from 'bootstrap-vue'
 // import { EditIcon } from 'vue-feather-icons'
 
 export default {
   components: {
     BCard,
+    BCardHeader,
+    BCardBody,
+    BCardFooter,
     // BAvatar,
     BButton,
     // BLink,
@@ -81,16 +89,22 @@ export default {
   },
   props: {
     product: {
-      type: Array,
+      type: Object,
       required: true,
     },
-    itemClick: {
-      type: Function,
-      required: true,
-    },
+    // itemClick: {
+    //   type: Function,
+    //   required: true,
+    // },
     color: {
       type: String,
       default: 'primary',
+    },
+  },
+  methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
   },
 }

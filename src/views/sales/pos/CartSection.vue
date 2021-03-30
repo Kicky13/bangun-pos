@@ -179,7 +179,7 @@
                     font-style: italic;
                     text-align: center;"
                   >
-                    Keranjang kosong
+                    --- Keranjang Kosong ---
                   </div>
                 </template>
               </div>
@@ -282,7 +282,7 @@
                   variant="warning"
                   class="mb-1"
                   block
-                  @click="handleCartActionClick(items); addToAntrian();"
+                  @click="addToAntrian"
                 >
                   Antrian
                 </b-button>
@@ -313,9 +313,7 @@
             centered
             size="lg"
             title="Tambah Customer"
-            ok-title="Simpan"
-            cancel-title="Tutup"
-            ok-variant="danger"
+            hide-footer
           >
             <b-form>
               <b-row>
@@ -365,6 +363,25 @@
                       rows="4"
                     />
                   </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col
+                  cols="12"
+                  class="text-right"
+                >
+                  <b-button
+                    class="mr-1"
+                    @click="$bvModal.hide('customerAdd')"
+                  >
+                    Tutup
+                  </b-button>
+                  <b-button
+                    variant="danger"
+                    @click="saveNewCustomer"
+                  >
+                    Simpan
+                  </b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -1019,7 +1036,7 @@ export default {
         }
         this.items.unshift(newProduct)
       }
-      this.makeToast(product.name)
+      this.makeToast(product.name, 'Berhasil ditambahkan ke keranjang')
     })
   },
   destroyed() {
@@ -1045,16 +1062,12 @@ export default {
         this.trSetHeight(this.$refs.form.scrollHeight)
       })
     },
-    makeToast(title) {
-      this.$bvToast.toast('Berhasil ditambahkan', {
+    makeToast(title, content) {
+      this.$bvToast.toast(content, {
         title,
         variant: 'danger',
         toaster: 'b-toaster-bottom-right',
       })
-    },
-    addToAntrian() {
-      this.resetButton()
-      this.makeToast('Antrian')
     },
     resetButton() {
       this.selectedCustomer = null
@@ -1062,11 +1075,26 @@ export default {
       this.noReference = ''
       this.items = []
     },
+    saveNewCustomer() {
+      this.selectedCustomer = null
+      this.selectedCashier = null
+      this.$bvModal.hide('customerAdd')
+    },
   },
   setup() {
     const { handleCartActionClick } = useEcommerceUi()
+    function addToAntrian() {
+      if (this.items.length) {
+        handleCartActionClick(this.items)
+        this.resetButton()
+        this.makeToast('Daftar Belanja', 'Berhasil ditambahkan ke daftar antrian')
+      } else {
+        this.makeToast('Keranjang Masih Kosong', 'Silahkan isi keranjang belanja terlebih dahulu')
+      }
+    }
     return {
-      handleCartActionClick,
+      // handleCartActionClick,
+      addToAntrian,
     }
   },
 }
