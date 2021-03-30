@@ -372,6 +372,7 @@ export default {
       param.Page = this.pageProducts
       appService.getProductTokoList(param).then(response => {
         const { data } = response
+        this.itemsForList = []
         this.productStoreList = []
         if (data.data) {
           const itemlist = data.data
