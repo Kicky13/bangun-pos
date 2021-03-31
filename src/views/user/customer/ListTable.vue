@@ -442,8 +442,7 @@ export default {
       }).then(response => {
         const res = response.data.data
         this.isLoading = false
-        if (res.length > 0) {
-          console.log(res)
+        if (res) {
           res.forEach(this.setupRows)
         } else {
           this.$toast({
