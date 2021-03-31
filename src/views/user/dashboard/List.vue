@@ -43,48 +43,49 @@ export default {
         // allinProgress: '25,000,000.00',
         // series: [83],
       },
-      transactionData: [
-        {
-          mode: 'Semen Gresik 50 Kg',
-          types: 'Rp. 50,000.00 / Zak',
-          avatar: 'DollarSignIcon',
-          avatarVariant: 'light-primary',
-          payment: '2000 Zak',
-          deduction: false,
-        },
-        {
-          mode: 'Bata Ringan',
-          types: 'Rp. 5,000.00 / Pcs',
-          avatar: 'DollarSignIcon',
-          avatarVariant: 'light-primary',
-          payment: '1800 Pcs',
-          deduction: false,
-        },
-        {
-          mode: 'Papan Triplex 1.5 cm',
-          types: 'Rp. 65,000.00 / Lbr',
-          avatar: 'DollarSignIcon',
-          avatarVariant: 'light-primary',
-          payment: '780 Lbr',
-          deduction: false,
-        },
-        {
-          mode: 'Pasir Hitam',
-          types: 'Rp. 75,000.00 / M3',
-          avatar: 'DollarSignIcon',
-          avatarVariant: 'light-primary',
-          payment: '500 M3',
-          deduction: false,
-        },
-        {
-          mode: 'Coral (Campuran Beton)',
-          types: 'Rp. 65,000.00 / M3',
-          avatar: 'DollarSignIcon',
-          avatarVariant: 'light-primary',
-          payment: '400 M3',
-          deduction: false,
-        },
-      ],
+      transactionData: [],
+      // transactionData: [
+      //   {
+      //     mode: 'Semen Gresik 50 Kg',
+      //     types: 'Rp. 50,000.00 / Zak',
+      //     avatar: 'DollarSignIcon',
+      //     avatarVariant: 'light-primary',
+      //     payment: '2000 Zak',
+      //     deduction: false,
+      //   },
+      //   {
+      //     mode: 'Bata Ringan',
+      //     types: 'Rp. 5,000.00 / Pcs',
+      //     avatar: 'DollarSignIcon',
+      //     avatarVariant: 'light-primary',
+      //     payment: '1800 Pcs',
+      //     deduction: false,
+      //   },
+      //   {
+      //     mode: 'Papan Triplex 1.5 cm',
+      //     types: 'Rp. 65,000.00 / Lbr',
+      //     avatar: 'DollarSignIcon',
+      //     avatarVariant: 'light-primary',
+      //     payment: '780 Lbr',
+      //     deduction: false,
+      //   },
+      //   {
+      //     mode: 'Pasir Hitam',
+      //     types: 'Rp. 75,000.00 / M3',
+      //     avatar: 'DollarSignIcon',
+      //     avatarVariant: 'light-primary',
+      //     payment: '500 M3',
+      //     deduction: false,
+      //   },
+      //   {
+      //     mode: 'Coral (Campuran Beton)',
+      //     types: 'Rp. 65,000.00 / M3',
+      //     avatar: 'DollarSignIcon',
+      //     avatarVariant: 'light-primary',
+      //     payment: '400 M3',
+      //     deduction: false,
+      //   },
+      // ],
     }
   },
   created() {
@@ -97,7 +98,7 @@ export default {
   },
   mounted() {
     this.getGoalOverviewData()
-    this.getTransactionsData()
+    this.getTransactionsData('week')
   },
   methods: {
     getGoalOverviewData() {

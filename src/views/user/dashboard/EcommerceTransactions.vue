@@ -21,13 +21,13 @@
             class="text-body cursor-pointer"
           />
         </template>
-        <b-dropdown-item href="#">
+        <b-dropdown-item @click="changeDisplay('week')">
           1 Minggu Terakhir
         </b-dropdown-item>
-        <b-dropdown-item href="#">
+        <b-dropdown-item @click="changeDisplay('month')">
           1 Bulan Terakhir
         </b-dropdown-item>
-        <b-dropdown-item href="#">
+        <b-dropdown-item @click="changeDisplay('year')">
           1 Tahun Terakhir
         </b-dropdown-item>
       </b-dropdown>
@@ -102,6 +102,16 @@ export default {
     data: {
       type: Array,
       default: () => [],
+    },
+  },
+  mounted() {
+    // this.getGoalOverviewData()
+    // this.getTransactionsData()
+  },
+  methods: {
+    changeDisplay(param) {
+      console.log(param)
+      this.$parent.getTransactionsData(param)
     },
   },
 }
