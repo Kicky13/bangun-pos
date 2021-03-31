@@ -468,7 +468,7 @@ export default {
     },
     async formSubmitted() {
       if (this.formValidate()) {
-        console.log('a')
+        // console.log('a')
         const param = new FormData()
         param.append('gambar_product', this.selectedFile)
         param.append('id_category', this.selectedCategory)

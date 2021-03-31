@@ -18,6 +18,12 @@ export default {
   productToko: 'product/listProduct',
   productTokoPage: 'product/productToko',
 
-  // Store
+  // Store & Update Produk Toko
   storeProduct: 'product/store',
+  updateProduct: 'product/update',
+
+  // Dashboard
+  graphData: 'dashboard',
+  getGoalOverviewData: 'dashboard/sales',
+  getTransactionsData: 'dashboard/product',
 }

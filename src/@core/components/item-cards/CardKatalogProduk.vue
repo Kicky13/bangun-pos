@@ -12,7 +12,7 @@
         tag="a"
         class="btn-icon float-sm-right"
         style="margin: 0.5rem;"
-        :to="{ name: 'user-product-edit', params: {editid: product.id, editname: product.name, editqty: product.qty, editprice: product.price, editimage: product.image, editidproduk: product.id_produk, editkodeproduk: product.kode_produk, editnamaproduk: product.nama_produk, editimgproduk: product.img_produk, editidcategory: product.id_category, editnamacategory: product.nama_category, editidsubcategory: product.id_subcategory, editnamasubcategory: product.nama_subcategory, editidbrand: product.id_brand, editnamabrand: product.nama_brand, editidtype: product.id_type, editnamatype: product.nama_type, editiduom: product.id_uom, editnamauom: product.nama_uom, editisavailable: product.is_available}}"
+        :to="{ name: 'user-product-edit', params: {editid: product.id, editname: product.name, editqty: product.qty, editprice: product.price, editimage: product.image, editidproduk: product.id_produk, editkodeproduk: product.kode_produk, editnamaproduk: product.nama_produk, editimgproduk: product.img_produk, editidcategory: product.id_category, editnamacategory: product.nama_category, editidsubcategory: product.id_subcategory, editnamasubcategory: product.nama_subcategory, editidbrand: product.id_brand, editnamabrand: product.nama_brand, editidtype: product.id_type, editnamatype: product.nama_type, editiduom: product.id_uom, editnamauom: product.nama_uom, editisavailable: product.is_available, editidprice: product.id_price}}"
       >
         <feather-icon
           icon="EditIcon"
