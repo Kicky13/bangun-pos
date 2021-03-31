@@ -322,7 +322,10 @@
                     label="Nama Customer"
                     label-for="customerName"
                   >
-                    <b-form-input id="customerName" />
+                    <b-form-input
+                      id="customerName"
+                      v-model="customerBaru.nama_customer"
+                    />
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
@@ -330,7 +333,10 @@
                     label-for="reference"
                     label="No. Reference"
                   >
-                    <b-form-input id="reference" />
+                    <b-form-input
+                      id="reference"
+                      v-model="customerBaru.no_references"
+                    />
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -340,7 +346,10 @@
                     label="Nomor HP"
                     label-for="phone"
                   >
-                    <b-form-input id="phone" />
+                    <b-form-input
+                      id="phone"
+                      v-model="customerBaru.telp_customer"
+                    />
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
@@ -348,7 +357,10 @@
                     label-for="ktp"
                     label="Nomor KTP"
                   >
-                    <b-form-input id="ktp" />
+                    <b-form-input
+                      id="ktp"
+                      v-model="customerBaru.no_identitas"
+                    />
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -361,6 +373,7 @@
                     <b-form-textarea
                       id="address"
                       rows="4"
+                      v-model="customerBaru.alamat"
                     />
                   </b-form-group>
                 </b-col>
@@ -913,6 +926,13 @@ export default {
       //   value: 'Kikik',
       //   text: 'Kikik',
       // }],
+      customerBaru: {
+        nama_customer: '',
+        telp_customer: '',
+        no_identitas: '',
+        alamat: '',
+        no_references: '',
+      },
       customers: [],
       nextTodoId: 2,
       kategori: [{
@@ -1080,7 +1100,21 @@ export default {
       this.noReference = ''
       this.items = []
     },
-    addNewCustomer() {
+    async addNewCustomer() {
+      const newCustomer = {
+        nama_customer: this.customerBaru.nama_customer,
+        telp_customer: this.customerBaru.telp_customer,
+        no_identitas: this.customerBaru.no_identitas,
+        alamat: this.customerBaru.alamat,
+        no_references: this.customerBaru.no_references,
+      }
+      appService.addCustomer(newCustomer).then(response => {
+        console.log(response)
+        this.makeToast('Customer Baru', 'Berhasil ditambahkan ke daftar customer')
+        this.getAllCustomers()
+      }).catch(err => {
+        console.log(err)
+      })
       this.selectedCustomer = null
       this.selectedCashier = null
       this.$bvModal.hide('customerAdd')
@@ -1088,6 +1122,8 @@ export default {
     async getAllCustomers() {
       appService.getCustomer().then(response => {
         const { data } = response.data
+        console.log(data)
+        this.customers = []
         if (data) {
           this.customers.push({
             value: null,
