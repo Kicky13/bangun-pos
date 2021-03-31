@@ -378,7 +378,7 @@
                   </b-button>
                   <b-button
                     variant="danger"
-                    @click="saveNewCustomer"
+                    @click="addNewCustomer"
                   >
                     Simpan
                   </b-button>
@@ -741,8 +741,11 @@ import {
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
 // import { useEcommerceUi } from '../useEcommerce'
+import ApiService from '@/connection/apiService'
 import { parentComponent } from './PageContent.vue'
 import { useEcommerceUi } from './ActionHandling'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -893,23 +896,24 @@ export default {
         value: 698983,
         text: '698983 - Warehouse Padang',
       }],
-      customers: [{
-        value: null,
-        text: 'Walk-in Customer',
-        disabled: true,
-      },
-      {
-        value: 'Fauzan',
-        text: 'Fauzan',
-      },
-      {
-        value: 'Robiyanto',
-        text: 'Robiyanto',
-      },
-      {
-        value: 'Kikik',
-        text: 'Kikik',
-      }],
+      // customers: [{
+      //   value: null,
+      //   text: 'Walk-in Customer',
+      //   disabled: true,
+      // },
+      // {
+      //   value: 'Fauzan',
+      //   text: 'Fauzan',
+      // },
+      // {
+      //   value: 'Robiyanto',
+      //   text: 'Robiyanto',
+      // },
+      // {
+      //   value: 'Kikik',
+      //   text: 'Kikik',
+      // }],
+      customers: [],
       nextTodoId: 2,
       kategori: [{
         value: null,
@@ -1016,6 +1020,7 @@ export default {
   },
   mounted() {
     this.initTrHeight()
+    this.getAllCustomers()
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
@@ -1075,10 +1080,27 @@ export default {
       this.noReference = ''
       this.items = []
     },
-    saveNewCustomer() {
+    addNewCustomer() {
       this.selectedCustomer = null
       this.selectedCashier = null
       this.$bvModal.hide('customerAdd')
+    },
+    async getAllCustomers() {
+      appService.getCustomer().then(response => {
+        const { data } = response.data
+        if (data) {
+          this.customers.push({
+            value: null,
+            text: 'Walk-in Customer',
+          })
+          data.forEach(item => {
+            this.customers.push({
+              value: item.nama,
+              text: item.nama,
+            })
+          })
+        }
+      })
     },
   },
   setup() {
