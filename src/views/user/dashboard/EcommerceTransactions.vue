@@ -21,50 +21,60 @@
             class="text-body cursor-pointer"
           />
         </template>
-        <b-dropdown-item href="#">
-          Last Week
+        <b-dropdown-item @click="changeDisplay('week')">
+          1 Minggu Terakhir
         </b-dropdown-item>
-        <b-dropdown-item href="#">
-          Last Month
+        <b-dropdown-item @click="changeDisplay('month')">
+          1 Bulan Terakhir
         </b-dropdown-item>
-        <b-dropdown-item href="#">
-          Last Year
+        <b-dropdown-item @click="changeDisplay('year')">
+          1 Tahun Terakhir
         </b-dropdown-item>
       </b-dropdown>
     </b-card-header>
 
     <b-card-body>
       <div
-        v-for="transaction in data"
-        :key="transaction.mode"
-        class="transaction-item"
+        v-if="data.length > 0"
       >
-        <b-media no-body>
-          <b-media-aside>
-            <b-avatar
-              rounded
-              size="42"
-              :variant="transaction.avatarVariant"
-            >
-              <feather-icon
-                size="18"
-                :icon="transaction.avatar"
-              />
-            </b-avatar>
-          </b-media-aside>
-          <b-media-body>
-            <h6 class="transaction-title">
-              {{ transaction.mode }}
-            </h6>
-            <small>{{ transaction.types }}</small>
-          </b-media-body>
-        </b-media>
         <div
-          class="font-weight-bolder"
-          :class="transaction.deduction ? 'text-danger':'text-success'"
+          v-for="transaction in data"
+          :key="transaction.mode"
+          class="transaction-item"
         >
-          {{ transaction.payment }}
+          <b-media no-body>
+            <b-media-aside>
+              <b-avatar
+                rounded
+                size="42"
+                :variant="transaction.avatarVariant"
+              >
+                <feather-icon
+                  size="18"
+                  :icon="transaction.avatar"
+                />
+              </b-avatar>
+            </b-media-aside>
+            <b-media-body>
+              <h6 class="transaction-title">
+                {{ transaction.mode }}
+              </h6>
+              <small>{{ transaction.types }}</small>
+            </b-media-body>
+          </b-media>
+          <div
+            class="font-weight-bolder"
+            :class="transaction.deduction ? 'text-danger':'text-success'"
+          >
+            {{ transaction.payment }}
+          </div>
         </div>
+      </div>
+      <div
+        v-else
+        style="text-align:center; color:red"
+      >
+        <p>===== Belum Ada Catatan Transaksi =====</p>
       </div>
     </b-card-body>
   </b-card>
@@ -92,6 +102,16 @@ export default {
     data: {
       type: Array,
       default: () => [],
+    },
+  },
+  mounted() {
+    // this.getGoalOverviewData()
+    // this.getTransactionsData()
+  },
+  methods: {
+    changeDisplay(param) {
+      console.log(param)
+      this.$parent.getTransactionsData(param)
     },
   },
 }
