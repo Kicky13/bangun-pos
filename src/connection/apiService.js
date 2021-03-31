@@ -28,6 +28,14 @@ export default class ApiService {
       return axios.delete(`${this.urlCnf.customer}/${param}`)
     }
 
+    getCashier(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.cashier,
+        params: param,
+      })
+    }
+
     getCategoryList() {
       return axios({
         method: 'post',

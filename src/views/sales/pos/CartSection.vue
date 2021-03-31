@@ -46,7 +46,7 @@
                 <b-form-select
                   id="customer"
                   v-model="selectedCashier"
-                  :options="cashierItems"
+                  :options="cashiers"
                 />
               </b-col>
               <b-col cols="5">
@@ -372,8 +372,8 @@
                   >
                     <b-form-textarea
                       id="address"
-                      rows="4"
                       v-model="customerBaru.alamat"
+                      rows="4"
                     />
                   </b-form-group>
                 </b-col>
@@ -783,18 +783,43 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
+      selectedCustomer: null,
+      selectedCashier: null,
       selectedWarehouse: null,
       selectedBiller: null,
-      selectedCustomer: null,
       selectedMetode: null,
-      selectedCashier: null,
       selectedKategori: null,
       selectedSubKategori: null,
       selectedType: null,
       selectedBrand: null,
       selectedUnits: null,
       noReference: '38942808192',
-      cashierItems: [
+      /* customers: [{
+        value: null,
+        text: 'Walk-in Customer',
+        disabled: true,
+      },
+      {
+        value: 'Fauzan',
+        text: 'Fauzan',
+      },
+      {
+        value: 'Robiyanto',
+        text: 'Robiyanto',
+      },
+      {
+        value: 'Kikik',
+        text: 'Kikik',
+      }], */
+      customers: [],
+      customerBaru: {
+        nama_customer: '',
+        telp_customer: '',
+        no_identitas: '',
+        alamat: '',
+        no_references: '',
+      },
+      /* cashierItems: [
         {
           value: null,
           text: 'Pilih Kasir',
@@ -812,7 +837,8 @@ export default {
           value: 'Kasir 03',
           text: 'Kasir 03',
         },
-      ],
+      ], */
+      cashiers: [],
       methodBayar: [{
         value: null,
         text: 'Pilih salah satu metode pembayaran',
@@ -909,31 +935,6 @@ export default {
         value: 698983,
         text: '698983 - Warehouse Padang',
       }],
-      // customers: [{
-      //   value: null,
-      //   text: 'Walk-in Customer',
-      //   disabled: true,
-      // },
-      // {
-      //   value: 'Fauzan',
-      //   text: 'Fauzan',
-      // },
-      // {
-      //   value: 'Robiyanto',
-      //   text: 'Robiyanto',
-      // },
-      // {
-      //   value: 'Kikik',
-      //   text: 'Kikik',
-      // }],
-      customerBaru: {
-        nama_customer: '',
-        telp_customer: '',
-        no_identitas: '',
-        alamat: '',
-        no_references: '',
-      },
-      customers: [],
       nextTodoId: 2,
       kategori: [{
         value: null,
@@ -1041,6 +1042,7 @@ export default {
   mounted() {
     this.initTrHeight()
     this.getAllCustomers()
+    this.getAllCashiers()
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
@@ -1100,6 +1102,24 @@ export default {
       this.noReference = ''
       this.items = []
     },
+    async getAllCustomers() {
+      appService.getCustomer().then(response => {
+        const { data } = response.data
+        this.customers = []
+        if (data) {
+          this.customers.push({
+            value: null,
+            text: 'Walk-in Customer',
+          })
+          data.forEach(item => {
+            this.customers.push({
+              value: item.nama,
+              text: item.nama,
+            })
+          })
+        }
+      })
+    },
     async addNewCustomer() {
       const newCustomer = {
         nama_customer: this.customerBaru.nama_customer,
@@ -1119,20 +1139,21 @@ export default {
       this.selectedCashier = null
       this.$bvModal.hide('customerAdd')
     },
-    async getAllCustomers() {
-      appService.getCustomer().then(response => {
+    async getAllCashiers() {
+      const param = {
+        limit: 15,
+      }
+      appService.getCashier(param).then(response => {
         const { data } = response.data
-        console.log(data)
-        this.customers = []
         if (data) {
-          this.customers.push({
+          this.cashiers.push({
             value: null,
-            text: 'Walk-in Customer',
+            text: 'Pilih Kasir',
           })
           data.forEach(item => {
-            this.customers.push({
-              value: item.nama,
-              text: item.nama,
+            this.cashiers.push({
+              value: item.name,
+              text: item.name,
             })
           })
         }
