@@ -457,6 +457,10 @@ export default {
       type: Number,
       default: 1,
     },
+    editidprice: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -465,6 +469,7 @@ export default {
       disableStdInput: true,
       matchedItem: [],
       searchProductSIG: '',
+      priceId: '',
       productId: '',
       productCode: '',
       productName: '',
@@ -552,6 +557,7 @@ export default {
       this.productimgurl = URL.createObjectURL(file)
     },
     async filldata() {
+      this.priceId = this.editidprice
       this.productId = this.editidproduk
       this.productimgurl = this.editimgproduk
       this.productCode = this.editkodeproduk
@@ -566,63 +572,67 @@ export default {
       this.selectedSubCategory = this.editidsubcategory
     },
     async formSubmitted() {
-      this.$toast({
-        component: ToastificationContent,
-        props: {
-          title: 'Fitur Sedang Maintenance, Silahkan Coba Beberapa Saat Lagi',
-          icon: 'AlertCircleIcon',
-          variant: 'danger',
-        },
-      })
-      // if (this.formValidate()) {
-      //   const param = new FormData()
-      //   param.append('gambar_product', this.selectedFile)
-      //   param.append('id_subcategory', this.selectedSubCategory)
-      //   param.append('id_brand', this.selectedBrand)
-      //   param.append('id_type', this.selectedType)
-      //   param.append('kode_product', this.productCode)
-      //   param.append('nama_product', this.productName)
-      //   param.append('price', this.productPrice)
-      //   param.append('qty', 0)
-      //   param.append('uom', this.selectedUnit)
-      //   param.append('notes', this.productNote)
-      //   appService.storeProduct(param).then(response => {
-      //     const { data } = response
-      //     if (data.result) {
-      //       this.$toast({
-      //         component: ToastificationContent,
-      //         props: {
-      //           title: 'Sukses Menambahkan Produk',
-      //           icon: 'CoffeeIcon',
-      //           variant: 'success',
-      //         },
-      //       })
-      //       this.disableStdInput = false
-      //       this.productimgurl = null
-      //       this.productCode = ''
-      //       this.productName = ''
-      //       this.productPrice = ''
-      //       this.productNote = ''
-      //       this.selectedCategory = null
-      //       this.selectedStatus = null
-      //       this.selectedSubCategory = null
-      //       this.selectedBrand = null
-      //       this.selectedUnit = null
-      //       this.selectedType = null
-      //       this.selectedFile = null
-      //       this.$router.push('/myproduct')
-      //     } else {
-      //       this.$toast({
-      //         component: ToastificationContent,
-      //         props: {
-      //           title: 'Gagal Menambahkan Produk',
-      //           icon: 'AlertCircleIcon',
-      //           variant: 'danger',
-      //         },
-      //       })
-      //     }
-      //   })
-      // }
+      // this.$toast({
+      //   component: ToastificationContent,
+      //   props: {
+      //     title: 'Fitur Sedang Maintenance, Silahkan Coba Beberapa Saat Lagi',
+      //     icon: 'AlertCircleIcon',
+      //     variant: 'danger',
+      //   },
+      // })
+      if (this.formValidate()) {
+        const param = new FormData()
+        param.append('gambar_product', this.selectedFile)
+        param.append('id_product', this.productId)
+        param.append('id_price', this.priceId)
+        param.append('id_category', this.selectedCategory)
+        param.append('id_subcategory', this.selectedSubCategory)
+        param.append('id_brand', this.selectedBrand)
+        param.append('id_type', this.selectedType)
+        param.append('kode_product', this.productCode)
+        param.append('nama_product', this.productName)
+        param.append('price', this.productPrice)
+        param.append('qty', 0)
+        param.append('uom', this.selectedUnit)
+        param.append('notes', this.productNote)
+        param.append('is_available', this.selectedStatus)
+        appService.updateProduct(param).then(response => {
+          const { data } = response
+          if (data.result) {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Sukses Mengubah Deskripsi Produk',
+                icon: 'CoffeeIcon',
+                variant: 'success',
+              },
+            })
+            this.disableStdInput = false
+            this.productimgurl = null
+            this.productCode = ''
+            this.productName = ''
+            this.productPrice = ''
+            this.productNote = ''
+            this.selectedCategory = null
+            this.selectedStatus = null
+            this.selectedSubCategory = null
+            this.selectedBrand = null
+            this.selectedUnit = null
+            this.selectedType = null
+            this.selectedFile = null
+            this.$router.push('/myproduct')
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Gagal Mengubah Deskripsi Produk',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+              },
+            })
+          }
+        })
+      }
     },
     async setProdukDetail() {
       const itemlist = this.detailProdukSIG

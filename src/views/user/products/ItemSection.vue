@@ -109,7 +109,7 @@
         <b-col
           v-for="productitem in itemsForList"
           id="itemList"
-          :key="productitem.id_produk"
+          :key="productitem.id_price"
           xl="2"
           md="6"
           sm="10"
@@ -398,6 +398,7 @@ export default {
               nama_type: item.nama_type,
               id_uom: item.id_uom,
               nama_uom: item.nama_uom,
+              id_price: item.id_price,
               is_available: item.is_available,
             })
           })

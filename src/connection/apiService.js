@@ -100,6 +100,18 @@ export default class ApiService {
       })
     }
 
+    updateProduct(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.updateProduct,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          accept: 'multipart/form-data',
+        },
+        data: param,
+      })
+    }
+
     updateCustomer(param, formData) {
       return axios({
         method: 'post',
@@ -112,6 +124,30 @@ export default class ApiService {
       return axios({
         method: 'get',
         url: this.urlCnf.sales,
+        params: param,
+      })
+    }
+
+    getGraphData(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.graphData,
+        params: param,
+      })
+    }
+
+    getGoalOverviewData() {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getGoalOverviewData,
+        // params: param,
+      })
+    }
+
+    getTransactionsData(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getTransactionsData,
         params: param,
       })
     }
