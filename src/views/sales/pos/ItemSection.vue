@@ -14,7 +14,7 @@
                 @click="mqShallShowLeftSidebar = true"
               />
               <div class="search-results">
-                {{ totalProducts }} results found
+                {{ totalProduct }} results found
               </div>
             </div>
             <div class="view-options d-flex">
@@ -22,16 +22,16 @@
               <!-- Sort Button -->
               <b-dropdown
                 v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-                :text="sortBy.text"
+                text="Urutkan"
                 right
                 variant="outline-danger"
               >
                 <b-dropdown-item
-                  v-for="sortOption in sortByOptions"
-                  :key="sortOption.value"
-                  @click="sortBy=sortOption"
+                  v-for="sortType in sortTypes"
+                  :key="sortType.value"
+                  @click="sortByPrice(sortType)"
                 >
-                  {{ sortOption.text }}
+                  {{ sortType.text }}
                 </b-dropdown-item>
               </b-dropdown>
               <!-- Filter Button -->
@@ -45,7 +45,7 @@
                 <b-dropdown-item
                   v-for="category in categories"
                   :key="category.id"
-                  @click="setCategory(category)"
+                  @click="getCategoryValue(category)"
                 >
                   {{ category.name }}
                 </b-dropdown-item>
@@ -60,7 +60,7 @@
                 <b-dropdown-item
                   v-for="subCategory in subCategories"
                   :key="subCategory.id"
-                  @click="setSubCategory(subCategory)"
+                  @click="getSubCategoryValue(subCategory)"
                 >
                   {{ subCategory.name }}
                 </b-dropdown-item>
@@ -106,9 +106,10 @@
         <b-col cols="12">
           <b-input-group class="input-group-merge">
             <b-form-input
-              v-model="filters.q"
+              v-model="searchProduct"
               placeholder="Search Product"
               class="search-product"
+              @input="getAllProducts"
             />
             <b-input-group-append is-text>
               <feather-icon
@@ -128,8 +129,8 @@
     >
       <b-row>
         <b-col
-          v-for="product in products"
-          :key="product.id"
+          v-for="product in productList"
+          :key="product.id_produk"
           xl="4"
           md="12"
           sm="12"
@@ -138,7 +139,7 @@
         >
           <!-- Product Details -->
           <!-- <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }"> -->
-          <b-link @click="getProduct(product)">
+          <b-link @click="addProductToCart(product)">
             <mini-product-card
               :product="product"
               :item-click="handleCartActionClick"
@@ -154,13 +155,14 @@
       <b-row>
         <b-col cols="12">
           <b-pagination
-            v-model="filters.page"
-            :total-rows="totalProducts"
-            :per-page="filters.perPage"
+            v-model="currentPage"
+            :total-rows="totalProduct"
+            :per-page="perPage"
             first-number
             align="center"
             last-number
             class="pagination-danger"
+            @change="handlePageChange"
           >
             <template #prev-text>
               <feather-icon
@@ -376,6 +378,25 @@ export default {
   },
   data() {
     return {
+      sortTypes: [
+        { text: 'Harga Terendah', value: 'price-asc' },
+        { text: 'Harga Tertinggi', value: 'price-desc' },
+      ],
+      selectedSortType: null,
+      categories: [],
+      selectedCategory: '',
+      subCategories: [{
+        id: '',
+        name: 'Semua Sub-Kategori',
+      }],
+      selectedSubCategory: '',
+      brands: [],
+      selectedBrand: '',
+      searchProduct: '',
+      productList: [],
+      totalProduct: 0,
+      currentPage: 1,
+      perPage: 6,
       pageLength: 5,
       dir: false,
       columns: [
@@ -416,7 +437,7 @@ export default {
           field: 'action',
         },
       ],
-      rows: [],
+      // rows: [],
       searchTerm: '',
       status: [{
         1: 'Pending',
@@ -426,9 +447,6 @@ export default {
         1: 'light-danger',
         2: 'light-success',
       }],
-      categories: [],
-      subCategories: [],
-      brands: [],
     }
   },
   computed: {
@@ -456,23 +474,30 @@ export default {
   mounted() {
     this.getAllCategories()
     this.getAllBrands()
+    this.getAllProducts()
   },
   created() {
     this.$http.get('/app-data/salesPending')
       .then(res => { this.rows = res.data })
   },
   methods: {
-    getProduct(product) {
-      parentComponent.$emit('getProduct', product)
+    async sortByPrice(param) {
+      this.selectedSortType = param.value
+      this.getAllProducts()
     },
-    async setCategory(param) {
+    async getCategoryValue(param) {
+      this.selectedCategory = param.id
+      this.selectedSubCategory = ''
       await this.getSubCategoryByCategory(param)
+      this.getAllProducts()
     },
-    setSubCategory(param) {
-      console.log(param.name)
+    getSubCategoryValue(param) {
+      this.selectedSubCategory = param.id
+      this.getAllProducts()
     },
     setBrand(param) {
-      console.log(param.name)
+      this.selectedBrand = param.id
+      this.getAllProducts()
     },
     async getAllCategories() {
       appService.getCategoryList().then(response => {
@@ -496,19 +521,20 @@ export default {
         id_category: category.id,
       }
       appService.getSubcategoryList(param).then(response => {
-        this.subCategories = []
+        this.subCategories = [{
+          id: '',
+          name: 'Semua Sub-Kategori',
+        }]
         const { data } = response.data
         if (data) {
-          this.subCategories.push({
-            id: '',
-            name: 'Semua Sub-Kategori',
-          })
-          data.forEach(item => {
-            this.subCategories.push({
-              id: item.id,
-              name: item.nama_category,
+          if (param.id_category) {
+            data.forEach(item => {
+              this.subCategories.push({
+                id: item.id,
+                name: item.nama_category,
+              })
             })
-          })
+          }
         }
       })
     },
@@ -528,6 +554,46 @@ export default {
           })
         }
       })
+    },
+    async getAllProducts() {
+      const param = {
+        q: this.searchProduct,
+      }
+      if (this.selectedCategory !== '') {
+        param.kategori = this.selectedCategory
+      }
+      if (this.selectedSubCategory !== '') {
+        param.subkategori = this.selectedSubCategory
+      }
+      if (this.selectedBrand !== '') {
+        param.brand = this.selectedBrand
+      }
+      param.sortBy = this.selectedSortType
+      appService.getProductTokoList(param).then(response => {
+        const { data } = response.data
+        this.totalProduct = data.length
+        this.productList = []
+        if (data) {
+          data.forEach(item => {
+            const product = {
+              id_produk: item.id_produk,
+              // image: item.img_produk,
+              image: item.img_produk ? item.img_produk : '/img/06.95d1c509.jpg',
+              price: item.price,
+              name: item.nama_produk,
+            }
+            this.productList.push(product)
+          })
+          this.productList = this.productList.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage)
+        }
+      })
+    },
+    handlePageChange(value) {
+      this.currentPage = value
+      this.getAllProducts()
+    },
+    addProductToCart(product) {
+      parentComponent.$emit('addProductToCart', product)
     },
   },
   setup() {
