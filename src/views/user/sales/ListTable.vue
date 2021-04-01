@@ -103,7 +103,7 @@
                   class="text-body align-middle mr-25"
                 />
               </template>
-              <b-dropdown-item :to="{name: 'detail-user-sale', params: {id: props.row.id}}">
+              <b-dropdown-item :to="{name: 'detail-user-sale'}">
                 <feather-icon
                   icon="FileTextIcon"
                   class="mr-50"
@@ -342,9 +342,8 @@ export default {
     fetchSalesList() {
       this.isLoading = true
       appService.getSales({
-        limit: 50,
-        status: '',
-        q: '',
+        limit: 10,
+        status: 'paid',
         page: 1,
       }).then(response => {
         const res = response.data.data
@@ -373,16 +372,15 @@ export default {
     },
     setupRows(data) {
       const res = {
-        date: '2020-11-18',
-        saleCode: 'TB001/2021/00000000001',
-        ref: 'jago-022129',
+        date: data.date_transaction,
+        saleCode: data.kode_transaksi,
+        ref: data.no_references,
         biller: 'Kasir 01',
-        saleStatus: 'Draft',
-        customer: data.nama,
-        subtotal: '1000000',
-        disc: '25000',
-        ship: '50000',
-        tax: '0',
+        customer: 'Kikik Setyawan',
+        subtotal: data.sub_total,
+        disc: data.discount,
+        ship: data.shipping,
+        tax: data.tax,
         typePayment: 'CASH',
         paymentStatus: 'LUNAS',
       }
