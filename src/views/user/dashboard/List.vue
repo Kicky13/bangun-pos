@@ -5,7 +5,12 @@
     </b-col>
     <b-col cols="4">
       <ecommerce-goal-overview :data="goalOverview" />
-      <ecommerce-transactions :data="transactionData" />
+      <ecommerce-transactions
+        :data="transactionData"
+        :rentang="textDisplay"
+        :mulai="tanggalStart"
+        :akhir="tanggalEnd"
+      />
     </b-col>
   </b-row>
 </template>
@@ -31,6 +36,9 @@ export default {
   data() {
     return {
       data: {},
+      textDisplay: '1 Minggu Terakhir',
+      tanggalStart: '',
+      tanggalEnd: '',
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
       goalOverview: {
         totalTransaction: '0',
@@ -98,7 +106,7 @@ export default {
   },
   mounted() {
     this.getGoalOverviewData()
-    this.getTransactionsData('last_week')
+    this.getTransactionsData('last_week', this.textDisplay)
   },
   methods: {
     getGoalOverviewData() {
@@ -119,7 +127,7 @@ export default {
         }
       })
     },
-    getTransactionsData(duration) {
+    getTransactionsData(duration, textdisp) {
       const param = {
         filter: duration,
       }
@@ -130,6 +138,9 @@ export default {
         // }
         this.transactionData = []
         if (data.data) {
+          this.textDisplay = textdisp
+          this.tanggalStart = data.tgl_start
+          this.tanggalEnd = data.tgl_end
           const itemlist = data.data
           itemlist.forEach(item => {
             this.transactionData.push({
@@ -137,7 +148,8 @@ export default {
               types: `${item.price} / ${item.nama_uom}`,
               avatar: 'DollarSignIcon',
               avatarVariant: 'light-primary',
-              payment: `${item.price} / ${item.nama_uom}`,
+              // payment: `${item.price} / ${item.nama_uom}`,
+              payment: `${item.qty} x ${item.nama_uom}`,
               deduction: false,
               // id: item.kode_produk,
               // name: item.nama_produk,
