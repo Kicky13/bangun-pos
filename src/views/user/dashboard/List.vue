@@ -98,7 +98,7 @@ export default {
   },
   mounted() {
     this.getGoalOverviewData()
-    this.getTransactionsData('week')
+    this.getTransactionsData('last_week')
   },
   methods: {
     getGoalOverviewData() {
@@ -121,7 +121,7 @@ export default {
     },
     getTransactionsData(duration) {
       const param = {
-        display: duration,
+        filter: duration,
       }
       appService.getTransactionsData(param).then(response => {
         const { data } = response
