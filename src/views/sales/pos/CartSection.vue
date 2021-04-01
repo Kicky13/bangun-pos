@@ -46,7 +46,7 @@
                 <b-form-select
                   id="customer"
                   v-model="selectedCashier"
-                  :options="cashierItems"
+                  :options="cashiers"
                 />
               </b-col>
               <b-col cols="5">
@@ -322,7 +322,10 @@
                     label="Nama Customer"
                     label-for="customerName"
                   >
-                    <b-form-input id="customerName" />
+                    <b-form-input
+                      id="customerName"
+                      v-model="customerBaru.nama_customer"
+                    />
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
@@ -330,7 +333,10 @@
                     label-for="reference"
                     label="No. Reference"
                   >
-                    <b-form-input id="reference" />
+                    <b-form-input
+                      id="reference"
+                      v-model="customerBaru.no_references"
+                    />
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -340,7 +346,10 @@
                     label="Nomor HP"
                     label-for="phone"
                   >
-                    <b-form-input id="phone" />
+                    <b-form-input
+                      id="phone"
+                      v-model="customerBaru.telp_customer"
+                    />
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
@@ -348,7 +357,10 @@
                     label-for="ktp"
                     label="Nomor KTP"
                   >
-                    <b-form-input id="ktp" />
+                    <b-form-input
+                      id="ktp"
+                      v-model="customerBaru.no_identitas"
+                    />
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -360,6 +372,7 @@
                   >
                     <b-form-textarea
                       id="address"
+                      v-model="customerBaru.alamat"
                       rows="4"
                     />
                   </b-form-group>
@@ -378,7 +391,7 @@
                   </b-button>
                   <b-button
                     variant="danger"
-                    @click="saveNewCustomer"
+                    @click="addNewCustomer"
                   >
                     Simpan
                   </b-button>
@@ -741,8 +754,11 @@ import {
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
 // import { useEcommerceUi } from '../useEcommerce'
+import ApiService from '@/connection/apiService'
 import { parentComponent } from './PageContent.vue'
 import { useEcommerceUi } from './ActionHandling'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -767,18 +783,43 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
+      selectedCustomer: null,
+      selectedCashier: null,
       selectedWarehouse: null,
       selectedBiller: null,
-      selectedCustomer: null,
       selectedMetode: null,
-      selectedCashier: null,
       selectedKategori: null,
       selectedSubKategori: null,
       selectedType: null,
       selectedBrand: null,
       selectedUnits: null,
       noReference: '38942808192',
-      cashierItems: [
+      /* customers: [{
+        value: null,
+        text: 'Walk-in Customer',
+        disabled: true,
+      },
+      {
+        value: 'Fauzan',
+        text: 'Fauzan',
+      },
+      {
+        value: 'Robiyanto',
+        text: 'Robiyanto',
+      },
+      {
+        value: 'Kikik',
+        text: 'Kikik',
+      }], */
+      customers: [],
+      customerBaru: {
+        nama_customer: '',
+        telp_customer: '',
+        no_identitas: '',
+        alamat: '',
+        no_references: '',
+      },
+      /* cashierItems: [
         {
           value: null,
           text: 'Pilih Kasir',
@@ -796,7 +837,8 @@ export default {
           value: 'Kasir 03',
           text: 'Kasir 03',
         },
-      ],
+      ], */
+      cashiers: [],
       methodBayar: [{
         value: null,
         text: 'Pilih salah satu metode pembayaran',
@@ -892,23 +934,6 @@ export default {
       {
         value: 698983,
         text: '698983 - Warehouse Padang',
-      }],
-      customers: [{
-        value: null,
-        text: 'Walk-in Customer',
-        disabled: true,
-      },
-      {
-        value: 'Fauzan',
-        text: 'Fauzan',
-      },
-      {
-        value: 'Robiyanto',
-        text: 'Robiyanto',
-      },
-      {
-        value: 'Kikik',
-        text: 'Kikik',
       }],
       nextTodoId: 2,
       kategori: [{
@@ -1016,6 +1041,8 @@ export default {
   },
   mounted() {
     this.initTrHeight()
+    this.getAllCustomers()
+    this.getAllCashiers()
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
@@ -1075,10 +1102,62 @@ export default {
       this.noReference = ''
       this.items = []
     },
-    saveNewCustomer() {
+    async getAllCustomers() {
+      appService.getCustomer().then(response => {
+        const { data } = response.data
+        this.customers = []
+        if (data) {
+          this.customers.push({
+            value: null,
+            text: 'Walk-in Customer',
+          })
+          data.forEach(item => {
+            this.customers.push({
+              value: item.nama,
+              text: item.nama,
+            })
+          })
+        }
+      })
+    },
+    async addNewCustomer() {
+      const newCustomer = {
+        nama_customer: this.customerBaru.nama_customer,
+        telp_customer: this.customerBaru.telp_customer,
+        no_identitas: this.customerBaru.no_identitas,
+        alamat: this.customerBaru.alamat,
+        no_references: this.customerBaru.no_references,
+      }
+      appService.addCustomer(newCustomer).then(response => {
+        console.log(response)
+        this.makeToast('Customer Baru', 'Berhasil ditambahkan ke daftar customer')
+        this.getAllCustomers()
+      }).catch(err => {
+        console.log(err)
+      })
       this.selectedCustomer = null
       this.selectedCashier = null
       this.$bvModal.hide('customerAdd')
+    },
+    async getAllCashiers() {
+      const param = {
+        limit: 15,
+      }
+      appService.getCashier(param).then(response => {
+        const { data } = response.data
+        if (data) {
+          this.cashiers.push({
+            value: null,
+            text: 'Pilih Kasir',
+          })
+          data.forEach(item => {
+            this.cashiers.push({
+              value: item.name,
+              text: item.name,
+            })
+          })
+        }
+      })
     },
   },
   setup() {

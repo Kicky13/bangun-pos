@@ -8,6 +8,9 @@ export default {
   // Customer
   customer: 'user/customer',
 
+  // Cashier
+  cashier: 'user/cashier',
+
   // List
   category: 'category',
   subcategory: 'subcategory',
