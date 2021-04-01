@@ -17,8 +17,8 @@
                       name="kode"
                       placeholder="Masukkan kode atau scan barcode pada kemasan produk"
                       :disabled="disableStdInput"
-                      :state="productCode.length > 0 && productCode.charAt(0) === '0'"
-                      type="number"
+                      :state="productCode.length > 0"
+                      type="text"
                     />
                     <b-form-invalid-feedback>
                       Kode Produk Wajib Diisi
@@ -36,6 +36,7 @@
                       name="nama"
                       list="produk-sig"
                       placeholder="Masukkan nama produk"
+                      :disabled="disableStdInput"
                       :state="productName.length > 0"
                       @change="setProdukDetail"
                     />
@@ -50,7 +51,7 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col cols="4">
+                <b-col cols="6">
                   <b-form-group
                     label="Kategori"
                     label-for="category"
@@ -69,7 +70,7 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="2">
+                <!-- <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.categoryAdd
@@ -82,8 +83,8 @@
                     icon="PlusIcon"
                     size="16"
                   /><span style="font-size: 13px;"> Kategori</span></b-button>
-                </b-col>
-                <b-col cols="4">
+                </b-col> -->
+                <b-col cols="6">
                   <b-form-group
                     label="Sub Kategori"
                     label-for="subcategory"
@@ -101,7 +102,7 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="2">
+                <!-- <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.subcategoryAdd
@@ -114,10 +115,10 @@
                     icon="PlusIcon"
                     size="16"
                   /><span style="font-size: 13px;"> Sub-Kategori</span></b-button>
-                </b-col>
+                </b-col> -->
               </b-row>
               <b-row>
-                <b-col cols="4">
+                <b-col cols="6">
                   <b-form-group
                     label="Tipe Produk"
                     label-for="type"
@@ -135,7 +136,7 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="2">
+                <!-- <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.typeAdd
@@ -148,8 +149,8 @@
                     icon="PlusIcon"
                     size="16"
                   /><span style="font-size: 13px;"> Tipe Produk</span></b-button>
-                </b-col>
-                <b-col cols="4">
+                </b-col> -->
+                <b-col cols="6">
                   <b-form-group
                     label="Brand / Merk Produk"
                     label-for="brand"
@@ -167,7 +168,7 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="2">
+                <!-- <b-col cols="2">
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.brandAdd
@@ -180,7 +181,7 @@
                     icon="PlusIcon"
                     size="16"
                   /><span style="font-size: 13px;"> Brand / Merk</span></b-button>
-                </b-col>
+                </b-col> -->
               </b-row>
               <b-row>
                 <b-col cols="6">
@@ -314,7 +315,7 @@
                 style="float: right;"
                 @click="formSubmitted"
               >
-                <span>Tambahkan Produk</span>
+                <span>Simpan Produk</span>
               </b-button>
             </div>
           </b-col>
@@ -375,13 +376,101 @@ export default {
     'b-modal': VBModal,
     Ripple,
   },
+  props: {
+    editid: {
+      type: String,
+      default: '',
+    },
+    editname: {
+      type: String,
+      default: '',
+    },
+    editqty: {
+      type: String,
+      default: '',
+    },
+    editprice: {
+      type: String,
+      default: '',
+    },
+    editimage: {
+      type: String,
+      default: '',
+    },
+    editidproduk: {
+      type: Number,
+      default: 0,
+    },
+    editkodeproduk: {
+      type: String,
+      default: '',
+    },
+    editnamaproduk: {
+      type: String,
+      default: '',
+    },
+    editimgproduk: {
+      type: String,
+      default: '',
+    },
+    editidcategory: {
+      type: String,
+      default: '',
+    },
+    editnamacategory: {
+      type: String,
+      default: '',
+    },
+    editidsubcategory: {
+      type: String,
+      default: '',
+    },
+    editnamasubcategory: {
+      type: String,
+      default: '',
+    },
+    editidbrand: {
+      type: String,
+      default: '',
+    },
+    editnamabrand: {
+      type: String,
+      default: '',
+    },
+    editidtype: {
+      type: String,
+      default: '',
+    },
+    editnamatype: {
+      type: String,
+      default: '',
+    },
+    editiduom: {
+      type: String,
+      default: '',
+    },
+    editnamauom: {
+      type: String,
+      default: '',
+    },
+    editisavailable: {
+      type: Number,
+      default: 1,
+    },
+    editidprice: {
+      type: Number,
+      default: 0,
+    },
+  },
   data() {
     return {
       productimgurl: null,
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
-      disableStdInput: false,
+      disableStdInput: true,
       matchedItem: [],
       searchProductSIG: '',
+      priceId: '',
+      productId: '',
       productCode: '',
       productName: '',
       productPrice: '',
@@ -456,10 +545,10 @@ export default {
   mounted() {
     this.setListProductSIG()
     this.setListCategory()
-    // this.setListSubCategory()
     this.setListBrand()
     this.setListType()
     this.setListUOM()
+    this.filldata()
   },
   methods: {
     onFileChange(e) {
@@ -467,14 +556,36 @@ export default {
       this.selectedFile = file
       this.productimgurl = URL.createObjectURL(file)
     },
+    async filldata() {
+      this.priceId = this.editidprice
+      this.productId = this.editidproduk
+      this.productimgurl = this.editimgproduk
+      this.productCode = this.editkodeproduk
+      this.productName = this.editname
+      this.productPrice = this.editprice
+      this.selectedCategory = this.editidcategory
+      await this.setListSubCategory()
+      this.selectedStatus = this.editisavailable
+      this.selectedBrand = this.editidbrand
+      this.selectedUnit = this.editiduom
+      this.selectedType = this.editidtype
+      this.selectedSubCategory = this.editidsubcategory
+    },
     async formSubmitted() {
-      // const param = {
-      //   id_category: this.selectedCategory,
-      // }
+      // this.$toast({
+      //   component: ToastificationContent,
+      //   props: {
+      //     title: 'Fitur Sedang Maintenance, Silahkan Coba Beberapa Saat Lagi',
+      //     icon: 'AlertCircleIcon',
+      //     variant: 'danger',
+      //   },
+      // })
       if (this.formValidate()) {
-        console.log('a')
         const param = new FormData()
         param.append('gambar_product', this.selectedFile)
+        param.append('id_product', this.productId)
+        param.append('id_price', this.priceId)
+        param.append('id_category', this.selectedCategory)
         param.append('id_subcategory', this.selectedSubCategory)
         param.append('id_brand', this.selectedBrand)
         param.append('id_type', this.selectedType)
@@ -484,15 +595,14 @@ export default {
         param.append('qty', 0)
         param.append('uom', this.selectedUnit)
         param.append('notes', this.productNote)
-        console.log(param)
-        appService.storeProduct(param).then(response => {
+        param.append('is_available', this.selectedStatus)
+        appService.updateProduct(param).then(response => {
           const { data } = response
-          console.log(data)
           if (data.result) {
             this.$toast({
               component: ToastificationContent,
               props: {
-                title: 'Sukses Menambahkan Produk',
+                title: 'Sukses Mengubah Deskripsi Produk',
                 icon: 'CoffeeIcon',
                 variant: 'success',
               },
@@ -510,14 +620,12 @@ export default {
             this.selectedUnit = null
             this.selectedType = null
             this.selectedFile = null
-            // router.push({ name: '/myproduct', params: { userId: 123 }})
-            // router.push({ name: 'myproduct'})
             this.$router.push('/myproduct')
           } else {
             this.$toast({
               component: ToastificationContent,
               props: {
-                title: 'Gagal Menambahkan Produk',
+                title: 'Gagal Mengubah Deskripsi Produk',
                 icon: 'AlertCircleIcon',
                 variant: 'danger',
               },
@@ -527,26 +635,15 @@ export default {
       }
     },
     async setProdukDetail() {
-      // console.log(this.productName)
       const itemlist = this.detailProdukSIG
       this.matchedItem = []
       itemlist.forEach(item => {
         if ((item.nama_produk).toLowerCase() === (this.productName).toLowerCase()) {
-          // console.log(item)
           this.matchedItem = item
         }
       })
-      // console.log(this.matchedItem)
-      // console.log(this.matchedItem.length)
-      // console.log((this.matchedItem).length)
       if (this.matchedItem.length === 0) {
         this.disableStdInput = false
-        // console.log(this.disableStdInput)
-        // this.productimgurl = null
-        // this.productCode = ''
-        // this.productName = ''
-        // this.productPrice = ''
-        // this.productNote = ''
         this.selectedCategory = null
         this.selectedStatus = null
         this.selectedSubCategory = null
@@ -555,7 +652,6 @@ export default {
         this.selectedType = null
         this.selectedFile = null
       } else {
-        // console.log(item)
         this.productCode = this.matchedItem.kode_produk
         this.productName = this.matchedItem.nama_produk
         this.selectedCategory = this.matchedItem.id_category
@@ -566,7 +662,6 @@ export default {
         this.selectedType = this.matchedItem.id_type
         this.selectedFile = null
         this.disableStdInput = true
-        // console.log(this.disableStdInput)
       }
     },
     async setListCategory() {
@@ -579,7 +674,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.categoryItems.push({
@@ -596,7 +690,6 @@ export default {
       }
       appService.getSubcategoryList(param).then(response => {
         const { data } = response
-        console.log(data)
         this.subCategoryItems = []
         this.subCategoryItems.push({
           value: null,
@@ -604,7 +697,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.subCategoryItems.push({
@@ -625,7 +717,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.brandItems.push({
@@ -646,7 +737,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.typeItems.push({
@@ -667,7 +757,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.unitItems.push({
@@ -687,7 +776,6 @@ export default {
         this.listProdukSIG = []
         this.detailProdukSIG = []
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.listProdukSIG.push(item.nama_produk)
@@ -708,8 +796,6 @@ export default {
               nama_uom: item.nama_uom,
             })
           })
-          // console.log(this.listProdukSIG)
-          // console.log(this.detailProdukSIG)
         }
       })
     },

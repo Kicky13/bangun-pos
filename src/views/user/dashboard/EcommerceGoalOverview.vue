@@ -75,11 +75,11 @@ import {
   BCard, BCardHeader, BRow, BCol, BCardText,
 } from 'bootstrap-vue'
 // import VueApexCharts from 'vue-apexcharts'
-import { $themeColors } from '@themeConfig'
+// import { $themeColors } from '@themeConfig'
 
-const $strokeColor = '#ebe9f1'
-const $textHeadingColor = '#5e5873'
-const $goalStrokeColor2 = '#51e5a8'
+// const $strokeColor = '#ebe9f1'
+// const $textHeadingColor = '#5e5873'
+// const $goalStrokeColor2 = '#51e5a8'
 export default {
   components: {
     // VueApexCharts,
@@ -97,68 +97,69 @@ export default {
   },
   data() {
     return {
-      goalOverviewRadialBar: {
-        chart: {
-          height: 245,
-          type: 'radialBar',
-          sparkline: {
-            enabled: true,
-          },
-          dropShadow: {
-            enabled: true,
-            blur: 3,
-            left: 1,
-            top: 1,
-            opacity: 0.1,
-          },
-        },
-        colors: [$goalStrokeColor2],
-        plotOptions: {
-          radialBar: {
-            offsetY: -10,
-            startAngle: -150,
-            endAngle: 150,
-            hollow: {
-              size: '77%',
-            },
-            track: {
-              background: $strokeColor,
-              strokeWidth: '50%',
-            },
-            dataLabels: {
-              name: {
-                show: false,
-              },
-              value: {
-                color: $textHeadingColor,
-                fontSize: '2.86rem',
-                fontWeight: '600',
-              },
-            },
-          },
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'dark',
-            type: 'horizontal',
-            shadeIntensity: 0.5,
-            gradientToColors: [$themeColors.success],
-            inverseColors: true,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [0, 100],
-          },
-        },
-        stroke: {
-          lineCap: 'round',
-        },
-        grid: {
-          padding: {
-            bottom: 30,
-          },
-        },
-      },
+      mdata: {},
+      // goalOverviewRadialBar: {
+      //   chart: {
+      //     height: 245,
+      //     type: 'radialBar',
+      //     sparkline: {
+      //       enabled: true,
+      //     },
+      //     dropShadow: {
+      //       enabled: true,
+      //       blur: 3,
+      //       left: 1,
+      //       top: 1,
+      //       opacity: 0.1,
+      //     },
+      //   },
+      //   colors: [$goalStrokeColor2],
+      //   plotOptions: {
+      //     radialBar: {
+      //       offsetY: -10,
+      //       startAngle: -150,
+      //       endAngle: 150,
+      //       hollow: {
+      //         size: '77%',
+      //       },
+      //       track: {
+      //         background: $strokeColor,
+      //         strokeWidth: '50%',
+      //       },
+      //       dataLabels: {
+      //         name: {
+      //           show: false,
+      //         },
+      //         value: {
+      //           color: $textHeadingColor,
+      //           fontSize: '2.86rem',
+      //           fontWeight: '600',
+      //         },
+      //       },
+      //     },
+      //   },
+      //   fill: {
+      //     type: 'gradient',
+      //     gradient: {
+      //       shade: 'dark',
+      //       type: 'horizontal',
+      //       shadeIntensity: 0.5,
+      //       gradientToColors: [$themeColors.success],
+      //       inverseColors: true,
+      //       opacityFrom: 1,
+      //       opacityTo: 1,
+      //       stops: [0, 100],
+      //     },
+      //   },
+      //   stroke: {
+      //     lineCap: 'round',
+      //   },
+      //   grid: {
+      //     padding: {
+      //       bottom: 30,
+      //     },
+      //   },
+      // },
     }
   },
 }

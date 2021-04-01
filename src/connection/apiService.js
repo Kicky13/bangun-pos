@@ -80,10 +80,30 @@ export default class ApiService {
       })
     }
 
+    getProductTokoListPage(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.productTokoPage,
+        data: param,
+      })
+    }
+
     storeProduct(param) {
       return axios({
         method: 'post',
         url: this.urlCnf.storeProduct,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          accept: 'multipart/form-data',
+        },
+        data: param,
+      })
+    }
+
+    updateProduct(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.updateProduct,
         headers: {
           'Content-Type': 'multipart/form-data',
           accept: 'multipart/form-data',
@@ -97,6 +117,54 @@ export default class ApiService {
         method: 'post',
         url: `${this.urlCnf.customer}/${param}`,
         data: formData,
+      })
+    }
+
+    getSales(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.sales,
+        params: param,
+      })
+    }
+
+    getGraphData(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.graphData,
+        params: param,
+      })
+    }
+
+    getGoalOverviewData() {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getGoalOverviewData,
+        // params: param,
+      })
+    }
+
+    getTransactionsData(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getTransactionsData,
+        params: param,
+      })
+    }
+
+    payDebt(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.payDebt,
+        data: param,
+      })
+    }
+
+    historyList(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.transactHistory,
+        data: param,
       })
     }
 }

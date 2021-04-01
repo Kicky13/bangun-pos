@@ -17,7 +17,7 @@
                       name="kode"
                       placeholder="Masukkan kode atau scan barcode pada kemasan produk"
                       :disabled="disableStdInput"
-                      :state="productCode.length > 0 && productCode.charAt(0) === '0'"
+                      :state="productCode.length > 0"
                       type="number"
                     />
                     <b-form-invalid-feedback>
@@ -456,7 +456,6 @@ export default {
   mounted() {
     this.setListProductSIG()
     this.setListCategory()
-    // this.setListSubCategory()
     this.setListBrand()
     this.setListType()
     this.setListUOM()
@@ -468,11 +467,8 @@ export default {
       this.productimgurl = URL.createObjectURL(file)
     },
     async formSubmitted() {
-      // const param = {
-      //   id_category: this.selectedCategory,
-      // }
       if (this.formValidate()) {
-        console.log('a')
+        // console.log('a')
         const param = new FormData()
         param.append('gambar_product', this.selectedFile)
         param.append('id_category', this.selectedCategory)
@@ -485,9 +481,9 @@ export default {
         param.append('qty', 0)
         param.append('uom', this.selectedUnit)
         param.append('notes', this.productNote)
+        param.append('is_available', this.selectedStatus)
         appService.storeProduct(param).then(response => {
           const { data } = response
-          console.log(data)
           if (data.result) {
             this.$toast({
               component: ToastificationContent,
@@ -510,8 +506,6 @@ export default {
             this.selectedUnit = null
             this.selectedType = null
             this.selectedFile = null
-            // router.push({ name: '/myproduct', params: { userId: 123 }})
-            // router.push({ name: 'myproduct'})
             this.$router.push('/myproduct')
           } else {
             this.$toast({
@@ -527,26 +521,15 @@ export default {
       }
     },
     async setProdukDetail() {
-      // console.log(this.productName)
       const itemlist = this.detailProdukSIG
       this.matchedItem = []
       itemlist.forEach(item => {
         if ((item.nama_produk).toLowerCase() === (this.productName).toLowerCase()) {
-          // console.log(item)
           this.matchedItem = item
         }
       })
-      // console.log(this.matchedItem)
-      // console.log(this.matchedItem.length)
-      // console.log((this.matchedItem).length)
       if (this.matchedItem.length === 0) {
         this.disableStdInput = false
-        // console.log(this.disableStdInput)
-        // this.productimgurl = null
-        // this.productCode = ''
-        // this.productName = ''
-        // this.productPrice = ''
-        // this.productNote = ''
         this.selectedCategory = null
         this.selectedStatus = null
         this.selectedSubCategory = null
@@ -555,7 +538,6 @@ export default {
         this.selectedType = null
         this.selectedFile = null
       } else {
-        // console.log(item)
         this.productCode = this.matchedItem.kode_produk
         this.productName = this.matchedItem.nama_produk
         this.selectedCategory = this.matchedItem.id_category
@@ -566,7 +548,6 @@ export default {
         this.selectedType = this.matchedItem.id_type
         this.selectedFile = null
         this.disableStdInput = true
-        // console.log(this.disableStdInput)
       }
     },
     async setListCategory() {
@@ -579,11 +560,10 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.categoryItems.push({
-              value: item.kode_category,
+              value: item.id,
               text: item.nama_category,
             })
           })
@@ -596,7 +576,6 @@ export default {
       }
       appService.getSubcategoryList(param).then(response => {
         const { data } = response
-        console.log(data)
         this.subCategoryItems = []
         this.subCategoryItems.push({
           value: null,
@@ -604,7 +583,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.subCategoryItems.push({
@@ -625,7 +603,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.brandItems.push({
@@ -646,7 +623,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.typeItems.push({
@@ -667,7 +643,6 @@ export default {
           disabled: true,
         })
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.unitItems.push({
@@ -687,7 +662,6 @@ export default {
         this.listProdukSIG = []
         this.detailProdukSIG = []
         if (data.data) {
-          // console.log(data.data)
           const itemlist = data.data
           itemlist.forEach(item => {
             this.listProdukSIG.push(item.nama_produk)
@@ -708,8 +682,6 @@ export default {
               nama_uom: item.nama_uom,
             })
           })
-          // console.log(this.listProdukSIG)
-          // console.log(this.detailProdukSIG)
         }
       })
     },
