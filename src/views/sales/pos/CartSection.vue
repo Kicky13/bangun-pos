@@ -1046,13 +1046,13 @@ export default {
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
-    parentComponent.$on('getProduct', product => {
+    parentComponent.$on('addProductToCart', product => {
       const isInCart = this.items.find(item => item.id === product.id)
       if (isInCart) {
         isInCart.quantity += 1
       } else {
         const newProduct = {
-          id: product.id,
+          id: product.id_produk,
           name: product.name,
           stock: 100,
           quantity: 1,
