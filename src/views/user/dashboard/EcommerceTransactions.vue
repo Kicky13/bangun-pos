@@ -21,13 +21,13 @@
             class="text-body cursor-pointer"
           />
         </template>
-        <b-dropdown-item @click="changeDisplay('last_week')">
+        <b-dropdown-item @click="changeDisplay('last_week', '1 Minggu Terakhir')">
           1 Minggu Terakhir
         </b-dropdown-item>
-        <b-dropdown-item @click="changeDisplay('last_month')">
+        <b-dropdown-item @click="changeDisplay('last_month', '1 Bulan Terakhir')">
           1 Bulan Terakhir
         </b-dropdown-item>
-        <b-dropdown-item @click="changeDisplay('last_year')">
+        <b-dropdown-item @click="changeDisplay('last_year', '1 Tahun Terakhir')">
           1 Tahun Terakhir
         </b-dropdown-item>
       </b-dropdown>
@@ -74,7 +74,11 @@
         v-else
         style="text-align:center; color:red"
       >
-        <p>===== Belum Ada Catatan Transaksi =====</p>
+        <p><i>----- Belum Ada Catatan Transaksi -----</i></p>
+      </div>
+      <div style="margin-top: 10px;">
+        <br>
+        <small><i>*). Menampilkan Data {{ rentang }} ( <b>{{ mulai }}</b> s/d <b>{{ akhir }}</b> )</i></small>
       </div>
     </b-card-body>
   </b-card>
@@ -103,15 +107,28 @@ export default {
       type: Array,
       default: () => [],
     },
+    rentang: {
+      type: String,
+      default: '1 Minggu Terakhir',
+    },
+    mulai: {
+      type: String,
+      default: '',
+    },
+    akhir: {
+      type: String,
+      default: '',
+    },
   },
   mounted() {
     // this.getGoalOverviewData()
     // this.getTransactionsData()
   },
   methods: {
-    changeDisplay(param) {
+    changeDisplay(param, textdisp) {
       console.log(param)
-      this.$parent.getTransactionsData(param)
+      console.log(textdisp)
+      this.$parent.getTransactionsData(param, textdisp)
     },
   },
 }
