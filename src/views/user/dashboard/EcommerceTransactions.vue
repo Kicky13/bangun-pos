@@ -21,13 +21,13 @@
             class="text-body cursor-pointer"
           />
         </template>
-        <b-dropdown-item @click="changeDisplay('week')">
+        <b-dropdown-item @click="changeDisplay('last_week')">
           1 Minggu Terakhir
         </b-dropdown-item>
-        <b-dropdown-item @click="changeDisplay('month')">
+        <b-dropdown-item @click="changeDisplay('last_month')">
           1 Bulan Terakhir
         </b-dropdown-item>
-        <b-dropdown-item @click="changeDisplay('year')">
+        <b-dropdown-item @click="changeDisplay('last_year')">
           1 Tahun Terakhir
         </b-dropdown-item>
       </b-dropdown>
