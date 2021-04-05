@@ -85,7 +85,7 @@
     <!-- Footer -->
     <footer
       class="footer footer-light"
-      style="background-color: black; color: white;"
+      style="background: #343a40 !important; color: white;"
       :class="[footerTypeClass]"
     >
       <slot name="footer">
