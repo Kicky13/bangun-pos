@@ -103,7 +103,9 @@
                   class="text-body align-middle mr-25"
                 />
               </template>
-              <b-dropdown-item :to="{name: 'detail-user-sale'}">
+              <b-dropdown-item
+                :to="{name: 'detail-user-sale', params: {id: props.row.id}}"
+              >
                 <feather-icon
                   icon="FileTextIcon"
                   class="mr-50"
@@ -375,14 +377,14 @@ export default {
         date: data.date_transaction,
         saleCode: data.kode_transaksi,
         ref: data.no_references,
-        biller: 'Kasir 01',
-        customer: 'Kikik Setyawan',
+        biller: data.kasir,
+        customer: data.customer.nama_customer,
         subtotal: data.sub_total,
         disc: data.discount,
         ship: data.shipping,
         tax: data.tax,
-        typePayment: 'CASH',
-        paymentStatus: 'LUNAS',
+        typePayment: data.payment_type_str,
+        paymentStatus: data.status,
       }
       this.rows.push(res)
     },
