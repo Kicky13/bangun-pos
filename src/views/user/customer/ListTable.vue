@@ -93,15 +93,15 @@
               v-ripple.400="'rgba(186, 191, 199, 0.15)'"
               size="sm"
               variant="outline-secondary"
-              :to="{ name: 'user-customer-list-trans'}"
+              :to="{ name: 'customer-history-trans', params: { id: props.formattedRow.encodedID } }"
             >
               List Trans.
             </b-button>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              v-b-modal.listBayar
               size="sm"
               variant="outline-danger"
+              @click="pembayaran(props.formattedRow)"
             >
               Bayar
             </b-button>
@@ -171,9 +171,133 @@
       </template>
     </vue-good-table>
 
-    <!-- Modal Section -->
-    <bayar-modal />
-    <!-- <add-customer /> -->
+    <!-- Pay Debt -->
+    <b-modal
+      id="listBayar"
+      size="lg"
+      ok-title="Simpan"
+      cancel-variant="outline-secondary"
+      @ok="handleSubmitPay"
+    >
+      <b-form>
+        <b-row>
+          <b-col cols="6">
+            <b-form-group
+              label="Kode Customer"
+              label-for="code-customer"
+            >
+              <b-form-input
+                id="code-customer"
+                v-model="customerCode"
+                placeholder="Masukkan Code Customer"
+                disabled
+              />
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group
+              label="Nama Customer"
+              label-for="nama-customer"
+            >
+              <b-form-input
+                id="nama-customer"
+                v-model="customerName"
+                placeholder="Masukkan Nama Customer"
+                disabled
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="6">
+            <b-form-group
+              label="Sisa Hutang"
+              label-for="sisa-hutnag"
+            >
+              <b-form-input
+                id="sisa-hutang"
+                v-model="remainingDebt"
+                placeholder="nominal"
+                disabled
+              />
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group
+              label="Tipe Pembayaran"
+              label-for="tipe-pembayaran"
+            >
+              <b-form-select
+                id="tipe-pembayaran"
+                v-model="selectedType"
+                :options="typeItem"
+              />
+              <b-form-invalid-feedback>
+                Pilih salah satu tipe pembayaran
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row class="mt-2">
+          <b-col cols="2" />
+          <b-col cols="10">
+            <b-form-group
+              label="No. Pembayaran"
+              label-for="no-pembayaran"
+              label-cols-md="5"
+              label-align="right"
+              class="font-weight-bold"
+            >
+              <b-form-input
+                id="no-pembayaran"
+                v-model="paymentID"
+                placeholder="nominal"
+                disabled
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="2" />
+          <b-col cols="10">
+            <b-form-group
+              label="Bayar"
+              label-for="bayar"
+              label-cols-md="5"
+              class="font-weight-bold text-right"
+            >
+              <b-form-input
+                id="bayar"
+                v-model="paySum"
+                :state="paySum > 0"
+                placeholder="nominal"
+              />
+            </b-form-group>
+            <b-form-invalid-feedback>
+              Jumlah yg dibayarkan tidak boleh 0
+            </b-form-invalid-feedback>
+          </b-col>
+        </b-row>
+      </b-form>
+    </b-modal>
+    <b-modal
+      id="askPay"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Yes"
+      cancel-title="No"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="fetchPayDebt"
+      @cancel="handleCancelPay"
+    >
+      <div class="d-block text-center">
+        <h3>Proceed ?</h3>
+      </div>
+    </b-modal>
+    <!-- <End of pay debt /> -->
 
     <!-- Add Customer -->
     <b-modal
@@ -300,7 +424,6 @@ import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
-import BayarModal from './forms/modals/BayarModal.vue'
 // import AddCustomer from './forms/modals/Add.vue'
 // import { codeBasic } from './search'
 
@@ -315,7 +438,6 @@ export default {
     BFormInput,
     BFormSelect,
     BCard,
-    BayarModal,
     // AddCustomer,
     BModal,
     BRow,
@@ -331,7 +453,11 @@ export default {
   },
   data() {
     return {
-      customerID: '',
+      customerCode: '',
+      remainingDebt: 0,
+      paymentID: '',
+      paySum: 0,
+      selectedType: null,
       customerName: '',
       customerPhone: '',
       jagobangunRef: '',
@@ -341,6 +467,25 @@ export default {
       selectedStatus: null,
       isLoading: false,
       editForm: false,
+      typeItem: [
+        {
+          value: null,
+          text: 'Select Pembayaran',
+          disabled: true,
+        },
+        {
+          value: 1,
+          text: 'Cash',
+        },
+        {
+          value: 2,
+          text: 'Transfer',
+        },
+        {
+          value: 3,
+          text: 'Gopay',
+        },
+      ],
       statusItems: [
         {
           value: null,
@@ -429,6 +574,7 @@ export default {
       return this.dir
     },
   },
+  watch: {},
   created() {
     this.fetchCustomerList()
   },
@@ -455,8 +601,6 @@ export default {
               text: 'Data empty on server, using dummy data now',
             },
           })
-          this.$http.get('/app-data/customerUser')
-            .then(resData => { this.rows = resData.data })
         }
       }).catch(err => {
         console.log(err)
@@ -563,13 +707,18 @@ export default {
       appService.addCustomer(data).then(response => {
         console.log(response)
         const dataRes = {
-          custCode: 'dum001',
-          customer: data.nama_customer,
+          encodedID: data.uuid,
+          custCode: data.kode_customer,
+          customerID: data.toko.id,
+          customer: data.nama,
+          shopName: data.toko.name,
           nohp: data.telp_customer,
-          jumTrans: '0',
-          totalTrans: '0',
-          sudahBayar: '0',
-          sisaHutang: '0',
+          address: data.alamat,
+          identitas: data.no_identitas,
+          jumTrans: 0,
+          totalTrans: 0,
+          sudahBayar: 0,
+          sisaHutang: 0,
         }
         this.rows.push(dataRes)
         this.clearForm()
@@ -582,7 +731,20 @@ export default {
     handleDelete() {
       this.isLoading = true
       const { selectedRows } = this.$refs.dataCustomer
-      selectedRows.forEach(this.fetchDeleteCustomer)
+      if (selectedRows.length > 0) {
+        selectedRows.forEach(this.fetchDeleteCustomer)
+      } else {
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Error',
+            icon: 'CoffeIcon',
+            variant: 'danger',
+            text: 'Select 1 or more item to delete',
+          },
+        })
+      }
     },
     fetchDeleteCustomer(data) {
       appService.deleteCustomer(data.encodedID).then(response => {
@@ -631,6 +793,117 @@ export default {
         return true
       }
       return false
+    },
+    pembayaran(propsData) {
+      console.log(propsData)
+      this.setBayar(propsData)
+      this.$bvModal.show('listBayar')
+    },
+    validatePay() {
+      const errMsg = []
+
+      if (this.customerCode.length === 0) {
+        errMsg.push('CustomerCode')
+      }
+      if (this.customerName.length === 0) {
+        errMsg.push('CustomerName')
+      }
+      if (this.paySum === 0) {
+        errMsg.push('PayAmount')
+      }
+      if (this.selectedType === null) {
+        errMsg.push('SelectedType')
+      }
+      // if (this.remainingDebt === 0) {
+      //   errMsg.push('RemainingDebt')
+      //   this.$toast({
+      //     component: ToastificationContent,
+      //     position: 'top-right',
+      //     props: {
+      //       title: 'Error',
+      //       icon: 'AlertCircleIcon',
+      //       variant: 'danger',
+      //       text: 'This customer has no remaining debt',
+      //     },
+      //   })
+      // }
+      if (this.paymentID === 0) {
+        errMsg.push('PayID')
+      }
+
+      if (errMsg.length === 0) {
+        return true
+      }
+      return false
+    },
+    handleSubmitPay(okBtn) {
+      if (this.validatePay()) {
+        this.$bvModal.show('askPay')
+      } else {
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Error',
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+            text: 'Please complete form',
+          },
+        })
+        okBtn.preventDefault()
+      }
+    },
+    handleCancelPay() {
+      this.$bvModal.show('listBayar')
+    },
+    fetchPayDebt() {
+      this.isLoading = true
+      appService.payDebt({
+        id_customer: this.paymentID,
+        id_debt: this.paymentID,
+        pay_amount: this.paySum,
+        type_payment: this.selectedType,
+        tax: 0,
+        notes: 'test pay',
+        customer_code: this.customerCode,
+        cashback: 0,
+      }).then(response => {
+        console.log(response)
+        this.clearBayar()
+        this.isLoading = false
+        this.$$bvModal.hide('listBayar')
+      }).catch(err => {
+        const errMsg = JSON.parse(err.request.response)
+        this.isLoading = false
+        const msg = errMsg.errors
+        if (msg.id_customer) {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Error',
+              icon: 'AlertCircleIcon',
+              variant: 'danger',
+              text: msg.id_customer[0],
+            },
+          })
+        }
+      })
+    },
+    setBayar(data) {
+      this.customerCode = data.custCode
+      this.customerName = data.customer
+      this.remainingDebt = data.sisaHutang
+      this.paymentID = data.encodedID
+      this.paySum = 0
+    },
+    clearBayar() {
+      this.customerCode = ''
+      this.customerName = ''
+      this.paymentID = ''
+      this.remainingDebt = 0
+      this.paySum = 0
+      this.paymentID = 0
     },
   },
 }

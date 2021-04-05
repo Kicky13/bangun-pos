@@ -14,6 +14,7 @@
           >
             <b-form-input
               id="code-customer"
+              v-model="customerCode"
               placeholder="Masukkan Code Customer"
             />
           </b-form-group>
@@ -25,6 +26,7 @@
           >
             <b-form-input
               id="nama-customer"
+              v-model="customerName"
               placeholder="Masukkan Nama Customer"
             />
           </b-form-group>
@@ -38,6 +40,7 @@
           >
             <b-form-input
               id="sisa-hutang"
+              v-model="remainingDebt"
               placeholder="nominal"
             />
           </b-form-group>
@@ -67,6 +70,7 @@
           >
             <b-form-input
               id="no-pembayaran"
+              v-model="paymentID"
               placeholder="nominal"
             />
           </b-form-group>
@@ -83,6 +87,7 @@
           >
             <b-form-input
               id="bayar"
+              v-model="paySum"
               placeholder="nominal"
             />
           </b-form-group>
@@ -116,8 +121,19 @@ export default {
     'b-modal': VBModal,
     Ripple,
   },
+  props: {
+    dataCustomer: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
+      customerCode: '',
+      customerName: '',
+      remainingDebt: 0,
+      paymentID: '',
+      paySum: 0,
       selectedType: null,
       typeItem: [
         {
@@ -135,6 +151,28 @@ export default {
         },
       ],
     }
+  },
+  created() {
+    this.initiateModal()
+  },
+  methods: {
+    initiateModal() {
+      if (this.dataCustomer) {
+        this.setBayar(this.dataCustomer)
+      }
+    },
+    setBayar(data) {
+      this.customerCode = data.custCode
+      this.customerName = data.customer
+      this.remainingDebt = data.sisaHutang
+    },
+    clearBayar() {
+      this.customerCode = ''
+      this.customerName = ''
+      this.remainingDebt = 0
+      this.paymentID = ''
+      this.paySum = 0
+    },
   },
 }
 </script>

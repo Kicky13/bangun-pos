@@ -151,9 +151,13 @@ import {
   BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BBadge, BCard,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
+import { useRouter } from '@core/utils/utils'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
+import ApiService from '@/connection/apiService'
 import LogModal from './modals/LogModal.vue'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -173,6 +177,7 @@ export default {
   },
   data() {
     return {
+      customerID: this.id,
       selectedPembayaran: null,
       selectedStatus: null,
       pembayaranItems: [
@@ -264,6 +269,14 @@ export default {
       searchTerm: '',
     }
   },
+  setup() {
+    const { route } = useRouter()
+    const { id } = route.value.params
+
+    return {
+      id,
+    }
+  },
   computed: {
     salesVariant() {
       const statusColor = {
@@ -294,9 +307,18 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
   created() {
-    this.$http.get('/app-data/customerTrans')
-      .then(res => { this.rows = res.data })
+    this.fetchListTransaksi()
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
+  },
+  methods: {
+    fetchListTransaksi() {
+      appService.historyList({ id_customer: this.customerID }).then(response => {
+        console.log(response)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    setRows() {},
   },
 }
 </script>
