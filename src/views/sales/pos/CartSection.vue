@@ -856,43 +856,7 @@ export default {
         value: 'Gopay',
         text: 'Gopay',
       }],
-      items: [{
-        id: 20200001909,
-        name: 'Google - Google Home - White/Slate fabric',
-        stock: 100,
-        quantity: 10,
-        price: 34,
-        subtotal() {
-          return this.price * this.quantity
-        },
-      }, {
-        id: 20200001910,
-        name: 'Apple Watch Series 4 GPS',
-        stock: 50,
-        quantity: 2,
-        price: 22,
-        subtotal() {
-          return this.price * this.quantity
-        },
-      }, {
-        id: 20200001911,
-        name: 'Apple Macbook Air Latest Version',
-        stock: 70,
-        quantity: 3,
-        price: 110,
-        subtotal() {
-          return this.price * this.quantity
-        },
-      }, {
-        id: 20200001912,
-        name: 'Beats Headphone',
-        stock: 143,
-        quantity: 21,
-        price: 12,
-        subtotal() {
-          return this.price * this.quantity
-        },
-      }],
+      items: [],
       warehouses: [{
         value: null,
         text: 'Select a Warehouse',
@@ -1047,14 +1011,14 @@ export default {
   created() {
     window.addEventListener('resize', this.initTrHeight)
     parentComponent.$on('addProductToCart', product => {
-      const isInCart = this.items.find(item => item.id === product.id)
+      console.log(product)
+      const isInCart = this.items.find(item => item.id_produk === product.id_produk)
       if (isInCart) {
         isInCart.quantity += 1
       } else {
         const newProduct = {
-          id: product.id_produk,
+          id_produk: product.id_produk,
           name: product.name,
-          stock: 100,
           quantity: 1,
           price: product.price,
           subtotal() {
