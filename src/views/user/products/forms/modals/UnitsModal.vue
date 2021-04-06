@@ -66,7 +66,7 @@
               id="unitNotes"
               v-model="unitNotes"
               name="unitNotes"
-              rows="4"
+              rows="5"
             />
           </b-form-group>
         </b-col>
