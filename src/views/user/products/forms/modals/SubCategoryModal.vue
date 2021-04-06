@@ -14,7 +14,11 @@
   >
     <b-form>
       <b-row>
-        <b-col cols="6">
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
           <b-form-group
             label="Kode Sub Kategori :"
             label-for="subcategoryCode"
@@ -27,8 +31,16 @@
             />
           </b-form-group>
         </b-col>
-        <b-col cols="6" />
-        <b-col cols="6">
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        />
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
           <b-form-group
             label="Kategori :"
             label-for="categoryCode"
@@ -45,7 +57,11 @@
             </b-form-invalid-feedback>
           </b-form-group>
         </b-col>
-        <b-col cols="6">
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
           <b-form-group
             label="Nama Sub Kategori :"
             label-for="subcategoryName"
@@ -63,7 +79,11 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col cols="12">
+        <b-col
+          lg="12"
+          md="12"
+          sm="12"
+        >
           <b-form-group
             label="Notes :"
             label-for="subcategoryNotes"
