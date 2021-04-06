@@ -396,6 +396,9 @@ import {
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
+// import ApiService from '@/connection/apiService'
+
+// const appService = new ApiService()
 
 export default {
   components: {
@@ -640,7 +643,7 @@ export default {
   created() {
     window.addEventListener('resize', this.initTrHeight)
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
-    this.$http.get('/app-data/salesUser')
+    this.$http.get('/app-data/salesDetail')
       .then(res => {
         this.dataPenjualan = res.data.find(data => data.id === parseInt(this.$route.params.id, 10))
       })

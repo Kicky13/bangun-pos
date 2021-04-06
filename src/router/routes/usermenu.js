@@ -18,7 +18,7 @@ export default [
     },
   },
   {
-    path: '/mysale/:id',
+    path: '/mysale/detail',
     name: 'detail-user-sale',
     component: () => import('@/views/user/sales/detail/DetailSale.vue'),
     meta: {
