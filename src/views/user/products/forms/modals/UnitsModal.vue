@@ -14,7 +14,11 @@
   >
     <b-form>
       <b-row>
-        <b-col cols="6">
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
           <b-form-group
             label="Kode Unit :"
             label-for="unitCode"
@@ -27,7 +31,11 @@
             />
           </b-form-group>
         </b-col>
-        <b-col cols="6">
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
           <b-form-group
             label="Nama Unit :"
             label-for="unitName"
@@ -45,7 +53,11 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col cols="12">
+        <b-col
+          lg="12"
+          md="12"
+          sm="12"
+        >
           <b-form-group
             label="Notes :"
             label-for="unitNotes"
@@ -54,7 +66,7 @@
               id="unitNotes"
               v-model="unitNotes"
               name="unitNotes"
-              rows="4"
+              rows="5"
             />
           </b-form-group>
         </b-col>

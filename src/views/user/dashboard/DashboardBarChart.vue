@@ -3,7 +3,10 @@
     <b-card-header>
       <b-card-title>Trend Penjualan di Toko</b-card-title>
       <!-- datepicker -->
-      <div class="d-flex align-items-center">
+      <div
+        class="d-flex align-items-center"
+        style="width: 100%;"
+      >
         <flat-pickr
           v-model="rangePicker"
           :config="{ mode: 'range'}"

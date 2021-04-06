@@ -7,7 +7,11 @@
     <!-- Searchbar -->
     <div class="ecommerce-searchbar mt-1">
       <b-row>
-        <b-col cols="6">
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
           <b-input-group class="input-group-merge">
             <b-form-input
               v-model="searchProductToko"
@@ -23,9 +27,19 @@
             </b-input-group-append>
           </b-input-group>
         </b-col>
-        <b-col cols="6">
-          <div class="view-options d-flex">
-            <!-- Filter Button -->
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
+          <!-- <div class="view-options d-flex"> -->
+          <!-- Filter Button -->
+          <b-col
+            class="space-5"
+            lg="2"
+            md="2"
+            sm="12"
+          >
             <b-dropdown
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               text="Kategori"
@@ -41,6 +55,13 @@
                 {{ sortCategoryOption.text }}
               </b-dropdown-item>
             </b-dropdown>
+          </b-col>
+          <b-col
+            class="space-5"
+            lg="3"
+            md="3"
+            sm="12"
+          >
             <b-dropdown
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               text="Sub Kategori"
@@ -56,6 +77,13 @@
                 {{ sortSubCategoryOption.text }}
               </b-dropdown-item>
             </b-dropdown>
+          </b-col>
+          <b-col
+            class="space-5"
+            lg="2"
+            md="2"
+            sm="12"
+          >
             <b-dropdown
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               text="Brand"
@@ -71,6 +99,13 @@
                 {{ sortBrandOption.text }}
               </b-dropdown-item>
             </b-dropdown>
+          </b-col>
+          <b-col
+            class="space-5"
+            lg="2"
+            md="2"
+            sm="12"
+          >
             <b-dropdown
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               text="Urutkan"
@@ -86,6 +121,13 @@
                 {{ sortOption.text }}
               </b-dropdown-item>
             </b-dropdown>
+          </b-col>
+          <b-col
+            class="space-5"
+            lg="3"
+            md="3"
+            sm="12"
+          >
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               variant="primary"
@@ -94,7 +136,8 @@
             >
               Tambah Produk
             </b-button>
-          </div>
+          </b-col>
+          <!-- </div> -->
         </b-col>
       </b-row>
     </div>
@@ -424,5 +467,9 @@ export default {
     display: flex;
     align-items: center;
   }
+}
+.space-5 {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 </style>

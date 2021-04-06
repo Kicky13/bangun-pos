@@ -3,10 +3,18 @@
     <b-card>
       <b-form @submit.prevent>
         <b-row>
-          <b-col cols="8">
+          <b-col
+            lg="8"
+            md="8"
+            sm="12"
+          >
             <div>
               <b-row>
-                <b-col cols="6">
+                <b-col
+                  lg="6"
+                  md="6"
+                  sm="12"
+                >
                   <b-form-group
                     label="Kode Product"
                     label-for="kode"
@@ -25,7 +33,11 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="6">
+                <b-col
+                  lg="6"
+                  md="6"
+                  sm="12"
+                >
                   <b-form-group
                     label="Nama Produk"
                     label-for="nama"
@@ -51,7 +63,11 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col cols="6">
+                <b-col
+                  lg="6"
+                  md="6"
+                  sm="12"
+                >
                   <b-form-group
                     label="Kategori"
                     label-for="category"
@@ -84,7 +100,11 @@
                     size="16"
                   /><span style="font-size: 13px;"> Kategori</span></b-button>
                 </b-col> -->
-                <b-col cols="6">
+                <b-col
+                  lg="6"
+                  md="6"
+                  sm="12"
+                >
                   <b-form-group
                     label="Sub Kategori"
                     label-for="subcategory"
@@ -118,7 +138,11 @@
                 </b-col> -->
               </b-row>
               <b-row>
-                <b-col cols="6">
+                <b-col
+                  lg="6"
+                  md="6"
+                  sm="12"
+                >
                   <b-form-group
                     label="Tipe Produk"
                     label-for="type"
@@ -150,7 +174,11 @@
                     size="16"
                   /><span style="font-size: 13px;"> Tipe Produk</span></b-button>
                 </b-col> -->
-                <b-col cols="6">
+                <b-col
+                  lg="6"
+                  md="6"
+                  sm="12"
+                >
                   <b-form-group
                     label="Brand / Merk Produk"
                     label-for="brand"
@@ -184,7 +212,11 @@
                 </b-col> -->
               </b-row>
               <b-row>
-                <b-col cols="6">
+                <b-col
+                  lg="6"
+                  md="6"
+                  sm="12"
+                >
                   <b-form-group
                     label="Harga jual"
                     label-for="sellprice"
@@ -201,7 +233,11 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="4">
+                <b-col
+                  lg="4"
+                  md="4"
+                  sm="12"
+                >
                   <b-form-group
                     label="Satuan Penjualan"
                     label-for="unit"
@@ -218,7 +254,11 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="2">
+                <b-col
+                  lg="2"
+                  md="2"
+                  sm="12"
+                >
                   <b-button
                     v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                     v-b-modal.unitsAdd
@@ -234,7 +274,11 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col cols="6">
+                <b-col
+                  lg="6"
+                  md="6"
+                  sm="12"
+                >
                   <b-form-group
                     label="Lampirkan Gambar Produk"
                     label-for="attachment"
@@ -247,7 +291,11 @@
                     />
                   </b-form-group>
                 </b-col>
-                <b-col cols="6">
+                <b-col
+                  lg="6"
+                  md="6"
+                  sm="12"
+                >
                   <b-form-group
                     label="Status"
                     label-for="status"
@@ -267,7 +315,11 @@
               </b-row>
             </div>
           </b-col>
-          <b-col cols="4">
+          <b-col
+            lg="4"
+            md="4"
+            sm="12"
+          >
             <span>Pratinjau Gambar Produk :</span>
             <br>
             <b-img
@@ -287,7 +339,11 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col cols="12">
+          <b-col
+            lg="12"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label="Note"
               label-for="note"
@@ -302,10 +358,15 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col cols="10" />
           <b-col
-            cols="2"
-            xl="2"
+            lg="10"
+            md="10"
+            sm="12"
+          />
+          <b-col
+            lg="2"
+            md="2"
+            sm="12"
           >
             <div>
               <b-button
@@ -315,7 +376,7 @@
                 style="float: right;"
                 @click="formSubmitted"
               >
-                <span>Simpan Produk</span>
+                <span>Perbarui Info Produk</span>
               </b-button>
             </div>
           </b-col>

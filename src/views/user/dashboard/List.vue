@@ -1,9 +1,17 @@
 <template>
   <b-row>
-    <b-col cols="8">
+    <b-col
+      lg="8"
+      md="8"
+      sm="12"
+    >
       <dashboard-bar-chart />
     </b-col>
-    <b-col cols="4">
+    <b-col
+      lg="4"
+      md="4"
+      sm="12"
+    >
       <ecommerce-goal-overview :data="goalOverview" />
       <ecommerce-transactions
         :data="transactionData"
