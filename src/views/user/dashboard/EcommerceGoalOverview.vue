@@ -26,7 +26,9 @@
     /> -->
     <b-row class="text-center mx-0">
       <b-col
-        cols="12"
+        lg="12"
+        md="12"
+        sm="12"
         class="border-top border-right d-flex align-items-between flex-column py-1"
       >
         <h1 class="font-weight-bolder mb-0">
@@ -34,7 +36,9 @@
         </h1>
       </b-col>
       <b-col
-        cols="6"
+        lg="6"
+        md="6"
+        sm="12"
         class="border-top border-right d-flex align-items-between flex-column py-1"
       >
         <b-card-text class="text-muted mb-0">
@@ -45,7 +49,9 @@
         </h3>
       </b-col>
       <b-col
-        cols="6"
+        lg="6"
+        md="6"
+        sm="12"
         class="border-top d-flex align-items-between flex-column py-1"
       >
         <b-card-text class="text-muted mb-0">
@@ -56,7 +62,9 @@
         </h3>
       </b-col>
       <b-col
-        cols="12"
+        lg="12"
+        md="12"
+        sm="12"
         class="border-top border-right d-flex align-items-between flex-column py-1"
       >
         <b-card-text class="text-muted mb-0">

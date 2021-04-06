@@ -89,6 +89,15 @@
       :class="[footerTypeClass]"
     >
       <slot name="footer">
+        <app-content-footer />
+      </slot>
+    </footer>
+    <footer
+      class="footer footer-light"
+      style="background: black !important; color: white;"
+      :class="[footerTypeClass]"
+    >
+      <slot name="footer">
         <app-footer />
       </slot>
     </footer>
@@ -101,6 +110,7 @@
 import AppBreadcrumb from '@core/layouts/components/AppBreadcrumb.vue'
 import AppNavbarHorizontalLayout from '@core/layouts/components/app-navbar/AppNavbarHorizontalLayout.vue'
 import AppNavbarHorizontalLayoutBrand from '@core/layouts/components/app-navbar/AppNavbarHorizontalLayoutBrand.vue'
+import AppContentFooter from '@core/layouts/components/AppContentFooter.vue'
 import AppFooter from '@core/layouts/components/AppFooter.vue'
 import useAppConfig from '@core/app-config/useAppConfig'
 import { BNavbar } from 'bootstrap-vue'
@@ -128,6 +138,7 @@ export default {
     AppBreadcrumb,
     AppNavbarHorizontalLayout,
     AppNavbarHorizontalLayoutBrand,
+    AppContentFooter,
     AppFooter,
     HorizontalNavMenu,
     HorizontalNavMenuUser,
