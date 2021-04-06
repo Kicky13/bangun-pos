@@ -82,8 +82,8 @@
                 <template v-if="items.length">
                   <b-row
                     v-for="(item, index) in items"
-                    :id="item.id"
-                    :key="item.id"
+                    :id="item.id_produk"
+                    :key="item.id_produk"
                     ref="row"
                   >
                     <!-- Item Name -->
@@ -91,7 +91,7 @@
                       <b-row>
                         <b-col>
                           <span>
-                            {{ item.id }}
+                            {{ item.id_produk }}
                             <feather-icon
                               v-b-modal.cartProductEdit
                               icon="EditIcon"
@@ -706,8 +706,7 @@
                     >
                       <b-form-input
                         id="paid"
-                        v-model="inputBayar"
-                        value="8942808192"
+                        v-model="inputPaid"
                         style="text-align: right"
                       />
                     </b-input-group>
@@ -725,9 +724,9 @@
                     >
                       <b-form-input
                         id="paidReturn"
-                        :value="kembalian"
-                        readonly
                         style="text-align: right;"
+                        :value="kembalian"
+                        disabled
                       />
                     </b-input-group>
                   </b-form-group>
@@ -1009,9 +1008,9 @@ export default {
       inputDiscount: 0,
       inputTax: 0,
       inputOngkir: 0,
-      inputBayar: 0,
+      inputPaid: 0,
+      kodeTransaction: '',
       note: '',
-      kodeTransaction: null,
     }
   },
   computed: {
@@ -1030,14 +1029,10 @@ export default {
       return total
     },
     grandTotal() {
-      let total = 0
-      total = parseInt(this.totalSubtotal, 10) - parseInt(this.inputDiscount, 10) + parseInt(this.inputTax, 10) + parseInt(this.inputOngkir, 10)
-      return total
+      return Number(this.totalSubtotal) - Number(this.inputDiscount) + Number(this.inputTax) + Number(this.inputOngkir)
     },
     kembalian() {
-      let total = 0
-      total = this.inputBayar ? parseInt(this.inputBayar, 10) - parseInt(this.grandTotal, 10) : 0
-      return total
+      return this.inputPaid ? Number(this.inputPaid) - Number(this.grandTotal) : 0
     },
   },
   mounted() {
@@ -1187,32 +1182,26 @@ export default {
         discount: this.inputDiscount,
         shipping: this.inputOngkir,
         tax: this.inputTax,
-        pay_amount: this.inputBayar,
+        pay_amount: this.inputPaid,
         payment_type: this.selectedMetode,
         items: products,
       }
       console.log(param)
       appService.updatePayTransaction(param).then(response => {
         console.log(response)
-        this.makeToast('Berhasil Disimpan', 'Silahkan cek di daftar penjualan')
+        this.makeToast('Transaksi Berhasil Disimpan', 'Silahkan cek transaksi di daftar penjualan')
         this.resetButton()
       }).catch(err => {
         console.log(err)
-        this.makeToast('Gagal Disimpan', 'Silahkan lengkapi form pembayaran')
+        this.makeToast('Transaksi Gagal Disimpan', 'Silahkan lengkapi form pembayaran terlebih dahulu')
       })
       this.$bvModal.hide('paymentModal')
     },
     currentDate() {
       const d = new Date()
       const year = d.getFullYear().toString()
-      let month = (d.getMonth() + 1).toString()
-      let day = d.getDate().toString()
-      if (month.length < 2) {
-        month = `0${month}`
-      }
-      if (day.length < 2) {
-        day = `0${day}`
-      }
+      const month = (d.getMonth() + 1).toString().padStart(2, '0')
+      const day = d.getDate().toString().padStart(2, '0')
       return [year, month, day].join('-')
     },
   },
