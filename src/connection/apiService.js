@@ -159,4 +159,19 @@ export default class ApiService {
         params: param,
       })
     }
+
+    getKodeTransaction() {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.kodeTransaction,
+      })
+    }
+
+    updatePayTransaction(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.payTransaction,
+        data: param,
+      })
+    }
 }

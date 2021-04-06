@@ -11,6 +11,10 @@ export default {
   // Cashier
   cashier: 'user/cashier',
 
+  // Transaction
+  kodeTransaction: 'user/transaction/generatecode',
+  payTransaction: 'user/transaction/pay',
+
   // List
   category: 'category',
   subcategory: 'subcategory',

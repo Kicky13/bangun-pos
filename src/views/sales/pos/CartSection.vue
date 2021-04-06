@@ -228,7 +228,7 @@
                     <b-form-input
                       id="subtotal"
                       style="text-align: right;"
-                      :value="totalSubtotal + ' '"
+                      :value="totalSubtotal"
                       disabled
                     />
                   </b-input-group>
@@ -529,8 +529,7 @@
           <b-modal
             id="paymentModal"
             size="lg"
-            ok-title="Selesai"
-            cancel-title="Kembali"
+            hide-footer
           >
             <template v-slot:modal-title>
               <h4>Selesaikan Pembayaran</h4>
@@ -550,7 +549,7 @@
                       <b-form-input
                         id="items"
                         style="text-align: right;"
-                        value="4(4)"
+                        :value="items.length + '(' + totalQuantities + ')'"
                         plaintext
                       />
                     </b-input-group>
@@ -573,7 +572,7 @@
                       <b-form-input
                         id="subtotal"
                         style="text-align: right;"
-                        value="8190 "
+                        :value="totalSubtotal"
                         disabled
                       />
                     </b-input-group>
@@ -606,8 +605,8 @@
                     >
                       <b-form-input
                         id="discount"
+                        v-model="inputDiscount"
                         style="text-align: right;"
-                        value="0"
                       />
                     </b-input-group>
                   </b-form-group>
@@ -639,7 +638,7 @@
                     >
                       <b-form-input
                         id="tax"
-                        value="0"
+                        v-model="inputTax"
                         style="text-align: right;"
                       />
                     </b-input-group>
@@ -672,7 +671,7 @@
                     >
                       <b-form-input
                         id="ongkir"
-                        value="0"
+                        v-model="inputOngkir"
                         style="text-align: right;"
                       />
                     </b-input-group>
@@ -688,7 +687,7 @@
                   >
                     <div class="alert-body text-center">
                       <h3>
-                        <strong>Grand Total : 43.839.21</strong>
+                        <strong>Grand Total : {{ grandTotal }}</strong>
                       </h3>
                     </div>
                   </b-alert>
@@ -707,6 +706,7 @@
                     >
                       <b-form-input
                         id="paid"
+                        v-model="inputBayar"
                         value="8942808192"
                         style="text-align: right"
                       />
@@ -725,7 +725,8 @@
                     >
                       <b-form-input
                         id="paidReturn"
-                        value="0"
+                        :value="kembalian"
+                        readonly
                         style="text-align: right;"
                       />
                     </b-input-group>
@@ -734,7 +735,28 @@
               </b-row>
               <b-row>
                 <b-col sm="12">
-                  <b-form-textarea />
+                  <b-form-textarea
+                    v-model="note"
+                  />
+                </b-col>
+              </b-row>
+              <b-row class="mt-2">
+                <b-col
+                  cols="12"
+                  class="text-right"
+                >
+                  <b-button
+                    class="mr-1"
+                    @click="$bvModal.hide('paymentModal')"
+                  >
+                    Kembali
+                  </b-button>
+                  <b-button
+                    variant="danger"
+                    @click="handleTransaction"
+                  >
+                    Selesai
+                  </b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -842,18 +864,17 @@ export default {
       methodBayar: [{
         value: null,
         text: 'Pilih salah satu metode pembayaran',
-        disabled: true,
       },
       {
-        value: 'Cash',
+        value: 1,
         text: 'Cash',
       },
       {
-        value: 'Transfer',
+        value: 2,
         text: 'Transfer Bank',
       },
       {
-        value: 'Gopay',
+        value: 3,
         text: 'Gopay',
       }],
       items: [],
@@ -985,6 +1006,12 @@ export default {
         value: 'unit3',
         text: 'Unit 3',
       }],
+      inputDiscount: 0,
+      inputTax: 0,
+      inputOngkir: 0,
+      inputBayar: 0,
+      note: '',
+      kodeTransaction: null,
     }
   },
   computed: {
@@ -1002,6 +1029,16 @@ export default {
       })
       return total
     },
+    grandTotal() {
+      let total = 0
+      total = parseInt(this.totalSubtotal, 10) - parseInt(this.inputDiscount, 10) + parseInt(this.inputTax, 10) + parseInt(this.inputOngkir, 10)
+      return total
+    },
+    kembalian() {
+      let total = 0
+      total = this.inputBayar ? parseInt(this.inputBayar, 10) - parseInt(this.grandTotal, 10) : 0
+      return total
+    },
   },
   mounted() {
     this.initTrHeight()
@@ -1010,28 +1047,11 @@ export default {
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
-    parentComponent.$on('addProductToCart', product => {
-      console.log(product)
-      const isInCart = this.items.find(item => item.id_produk === product.id_produk)
-      if (isInCart) {
-        isInCart.quantity += 1
-      } else {
-        const newProduct = {
-          id_produk: product.id_produk,
-          name: product.name,
-          quantity: 1,
-          price: product.price,
-          subtotal() {
-            return this.price * this.quantity
-          },
-        }
-        this.items.unshift(newProduct)
-      }
-      this.makeToast(product.name, 'Berhasil ditambahkan ke keranjang')
-    })
+    this.addProductToList()
   },
   destroyed() {
     window.removeEventListener('resize', this.initTrHeight)
+    parentComponent.$off('addProductToCart')
   },
   methods: {
     repeateAgain() {
@@ -1051,6 +1071,26 @@ export default {
       this.trSetHeight(null)
       this.$nextTick(() => {
         this.trSetHeight(this.$refs.form.scrollHeight)
+      })
+    },
+    addProductToList() {
+      parentComponent.$on('addProductToCart', product => {
+        const isInCart = this.items.find(item => item.id_produk === product.id_produk)
+        if (isInCart) {
+          isInCart.quantity += 1
+        } else {
+          const newProduct = {
+            id_produk: product.id_produk,
+            name: product.name,
+            quantity: 1,
+            price: product.price,
+            subtotal() {
+              return this.price * this.quantity
+            },
+          }
+          this.items.unshift(newProduct)
+        }
+        this.makeToast(product.name, 'Berhasil ditambahkan ke keranjang')
       })
     },
     makeToast(title, content) {
@@ -1077,7 +1117,7 @@ export default {
           })
           data.forEach(item => {
             this.customers.push({
-              value: item.nama,
+              value: item.id,
               text: item.nama,
             })
           })
@@ -1116,12 +1156,64 @@ export default {
           })
           data.forEach(item => {
             this.cashiers.push({
-              value: item.name,
+              value: item.id,
               text: item.name,
             })
           })
         }
       })
+    },
+    async handleTransaction() {
+      appService.getKodeTransaction().then(response => {
+        const { data } = response
+        this.kodeTransaction = data.kode
+        this.saveTransaction(this.kodeTransaction)
+      })
+    },
+    async saveTransaction(kode) {
+      const products = []
+      this.items.forEach(item => {
+        products.push({
+          qty: item.quantity,
+          notes: this.note,
+          id_product: item.id_produk,
+        })
+      })
+      const param = {
+        date_transaction: this.currentDate(),
+        customer_id: this.selectedCustomer,
+        cashier_id: this.selectedCashier,
+        kode_transaction: kode,
+        discount: this.inputDiscount,
+        shipping: this.inputOngkir,
+        tax: this.inputTax,
+        pay_amount: this.inputBayar,
+        payment_type: this.selectedMetode,
+        items: products,
+      }
+      console.log(param)
+      appService.updatePayTransaction(param).then(response => {
+        console.log(response)
+        this.makeToast('Berhasil Disimpan', 'Silahkan cek di daftar penjualan')
+        this.resetButton()
+      }).catch(err => {
+        console.log(err)
+        this.makeToast('Gagal Disimpan', 'Silahkan lengkapi form pembayaran')
+      })
+      this.$bvModal.hide('paymentModal')
+    },
+    currentDate() {
+      const d = new Date()
+      const year = d.getFullYear().toString()
+      let month = (d.getMonth() + 1).toString()
+      let day = d.getDate().toString()
+      if (month.length < 2) {
+        month = `0${month}`
+      }
+      if (day.length < 2) {
+        day = `0${day}`
+      }
+      return [year, month, day].join('-')
     },
   },
   setup() {
