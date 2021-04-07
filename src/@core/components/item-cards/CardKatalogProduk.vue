@@ -45,13 +45,13 @@
       </p> -->
       <h5
         v-if="product.name.length<=40"
-        style="height:3rem; font-weight:bold;"
+        style="height:3rem; font-weight:bold; padding: 5px;"
       >
         <i>{{ product.id }}</i> / {{ product.name }}
       </h5>
       <h5
         v-else
-        style="height:3rem; font-weight:bold;"
+        style="height:3rem; font-weight:bold; padding: 5px;"
       >
         <i>{{ product.id }}</i> / {{ product.name.substring(0,40)+"..." }}
       </h5>

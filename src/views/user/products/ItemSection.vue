@@ -12,7 +12,7 @@
           md="6"
           sm="12"
         >
-          <b-input-group class="input-group-merge">
+          <b-input-group class="input-group-merge space-5">
             <b-form-input
               v-model="searchProductToko"
               placeholder="Cari Produk dengan memasukkan nama atau kode"
@@ -32,112 +32,79 @@
           md="6"
           sm="12"
         >
-          <!-- <div class="view-options d-flex"> -->
-          <!-- Filter Button -->
-          <b-col
+          <b-dropdown
+            v-ripple.400="'rgba(234, 84, 85, 0.15)'"
             class="space-5"
-            lg="2"
-            md="2"
-            sm="12"
+            text="Kategori"
+            right
+            variant="outline-primary"
+            style="margin-left: 5px;"
           >
-            <b-dropdown
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              text="Kategori"
-              right
-              variant="outline-primary"
-              style="margin-left: 5px;"
+            <b-dropdown-item
+              v-for="sortCategoryOption in sortByCategoryOptions"
+              :key="sortCategoryOption.value"
+              @click="setCategory(sortCategoryOption)"
             >
-              <b-dropdown-item
-                v-for="sortCategoryOption in sortByCategoryOptions"
-                :key="sortCategoryOption.value"
-                @click="setCategory(sortCategoryOption)"
-              >
-                {{ sortCategoryOption.text }}
-              </b-dropdown-item>
-            </b-dropdown>
-          </b-col>
-          <b-col
+              {{ sortCategoryOption.text }}
+            </b-dropdown-item>
+          </b-dropdown>
+          <b-dropdown
+            v-ripple.400="'rgba(234, 84, 85, 0.15)'"
             class="space-5"
-            lg="3"
-            md="3"
-            sm="12"
+            text="Sub Kategori"
+            right
+            variant="outline-primary"
+            style="margin-left: 5px;"
           >
-            <b-dropdown
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              text="Sub Kategori"
-              right
-              variant="outline-primary"
-              style="margin-left: 5px;"
+            <b-dropdown-item
+              v-for="sortSubCategoryOption in sortBySubCategoryOptions"
+              :key="sortSubCategoryOption.value"
+              @click="setSubCategory(sortSubCategoryOption)"
             >
-              <b-dropdown-item
-                v-for="sortSubCategoryOption in sortBySubCategoryOptions"
-                :key="sortSubCategoryOption.value"
-                @click="setSubCategory(sortSubCategoryOption)"
-              >
-                {{ sortSubCategoryOption.text }}
-              </b-dropdown-item>
-            </b-dropdown>
-          </b-col>
-          <b-col
+              {{ sortSubCategoryOption.text }}
+            </b-dropdown-item>
+          </b-dropdown>
+          <b-dropdown
+            v-ripple.400="'rgba(234, 84, 85, 0.15)'"
             class="space-5"
-            lg="2"
-            md="2"
-            sm="12"
+            text="Brand"
+            right
+            variant="outline-primary"
+            style="margin-left: 5px;"
           >
-            <b-dropdown
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              text="Brand"
-              right
-              variant="outline-primary"
-              style="margin-left: 5px;"
+            <b-dropdown-item
+              v-for="sortBrandOption in sortByBrandOptions"
+              :key="sortBrandOption.value"
+              @click="setBrand(sortBrandOption)"
             >
-              <b-dropdown-item
-                v-for="sortBrandOption in sortByBrandOptions"
-                :key="sortBrandOption.value"
-                @click="setBrand(sortBrandOption)"
-              >
-                {{ sortBrandOption.text }}
-              </b-dropdown-item>
-            </b-dropdown>
-          </b-col>
-          <b-col
+              {{ sortBrandOption.text }}
+            </b-dropdown-item>
+          </b-dropdown>
+          <b-dropdown
+            v-ripple.400="'rgba(234, 84, 85, 0.15)'"
             class="space-5"
-            lg="2"
-            md="2"
-            sm="12"
+            text="Urutkan"
+            right
+            variant="outline-primary"
+            style="margin-left: 5px;"
           >
-            <b-dropdown
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              text="Urutkan"
-              right
-              variant="outline-primary"
-              style="margin-left: 5px;"
+            <b-dropdown-item
+              v-for="sortOption in sortByOptions"
+              :key="sortOption.value"
+              @click="setSort(sortOption)"
             >
-              <b-dropdown-item
-                v-for="sortOption in sortByOptions"
-                :key="sortOption.value"
-                @click="setSort(sortOption)"
-              >
-                {{ sortOption.text }}
-              </b-dropdown-item>
-            </b-dropdown>
-          </b-col>
-          <b-col
+              {{ sortOption.text }}
+            </b-dropdown-item>
+          </b-dropdown>
+          <b-button
+            v-ripple.400="'rgba(234, 84, 85, 0.15)'"
             class="space-5"
-            lg="3"
-            md="3"
-            sm="12"
+            variant="primary"
+            style="margin-left: 5px;"
+            :to="{ name: 'user-product-add'}"
           >
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              variant="primary"
-              style="margin-left: 5px;"
-              :to="{ name: 'user-product-add'}"
-            >
-              Tambah Produk
-            </b-button>
-          </b-col>
-          <!-- </div> -->
+            Tambah Produk
+          </b-button>
         </b-col>
       </b-row>
     </div>
