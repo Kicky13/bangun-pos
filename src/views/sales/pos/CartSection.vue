@@ -13,7 +13,7 @@
                 >
                   <b-form-input
                     id="sellingCode"
-                    value="TB-28373983/947290021"
+                    v-model="kodeTransaction"
                     disabled
                   />
                 </b-form-group>
@@ -52,8 +52,8 @@
               <b-col cols="5">
                 <b-form-input
                   id="jagoId"
+                  v-model="noReference"
                   placeholder="No. Referensi Jago Bangunan"
-                  :value="noReference"
                 />
               </b-col>
             </b-row>
@@ -264,7 +264,7 @@
                   variant="secondary"
                   class="mb-1"
                   block
-                  @click="resetButton"
+                  @click="resetButton(true)"
                 >
                   Batal
                 </b-button>
@@ -619,7 +619,7 @@
                   >
                     <b-form-input
                       id="idBayar"
-                      value="38942808192"
+                      v-model="noReference"
                       style="text-align: right"
                     />
                   </b-form-group>
@@ -752,7 +752,7 @@
                   </b-button>
                   <b-button
                     variant="danger"
-                    @click="handleTransaction"
+                    @click="saveTransaction"
                   >
                     Selesai
                   </b-button>
@@ -814,7 +814,7 @@ export default {
       selectedType: null,
       selectedBrand: null,
       selectedUnits: null,
-      noReference: '38942808192',
+      noReference: null,
       /* customers: [{
         value: null,
         text: 'Walk-in Customer',
@@ -870,11 +870,7 @@ export default {
       },
       {
         value: 2,
-        text: 'Transfer Bank',
-      },
-      {
-        value: 3,
-        text: 'Gopay',
+        text: 'Kredit',
       }],
       items: [],
       warehouses: [{
@@ -1039,6 +1035,7 @@ export default {
     this.initTrHeight()
     this.getAllCustomers()
     this.getAllCashiers()
+    this.setKodeTransaction()
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
@@ -1095,9 +1092,11 @@ export default {
         toaster: 'b-toaster-bottom-right',
       })
     },
-    resetButton() {
+    resetButton(resetCashier) {
       this.selectedCustomer = null
-      this.selectedCashier = null
+      if (resetCashier) {
+        this.selectedCashier = null
+      }
       this.noReference = ''
       this.items = []
     },
@@ -1158,14 +1157,14 @@ export default {
         }
       })
     },
-    async handleTransaction() {
+    async setKodeTransaction() {
       appService.getKodeTransaction().then(response => {
         const { data } = response
         this.kodeTransaction = data.kode
-        this.saveTransaction(this.kodeTransaction)
+        console.log(this.kodeTransaction)
       })
     },
-    async saveTransaction(kode) {
+    async saveTransaction() {
       const products = []
       this.items.forEach(item => {
         products.push({
@@ -1178,19 +1177,25 @@ export default {
         date_transaction: this.currentDate(),
         customer_id: this.selectedCustomer,
         cashier_id: this.selectedCashier,
-        kode_transaction: kode,
+        kode_transaction: this.kodeTransaction,
         discount: this.inputDiscount,
         shipping: this.inputOngkir,
         tax: this.inputTax,
-        pay_amount: this.inputPaid,
+        pay_amount: this.selectedMetode === 1 ? this.grandTotal : 0,
         payment_type: this.selectedMetode,
         items: products,
       }
       console.log(param)
       appService.updatePayTransaction(param).then(response => {
-        console.log(response)
-        this.makeToast('Transaksi Berhasil Disimpan', 'Silahkan cek transaksi di daftar penjualan')
-        this.resetButton()
+        const { data } = response.data
+        if (data) {
+          console.log(response)
+          this.makeToast('Transaksi Berhasil Disimpan', 'Silahkan cek transaksi di daftar penjualan')
+          this.setKodeTransaction()
+          this.resetButton(false)
+        } else {
+          this.makeToast('Transaksi Gagal Disimpan', 'Silahkan lengkapi form pembayaran terlebih dahulu')
+        }
       }).catch(err => {
         console.log(err)
         this.makeToast('Transaksi Gagal Disimpan', 'Silahkan lengkapi form pembayaran terlebih dahulu')
@@ -1210,7 +1215,7 @@ export default {
     function addToAntrian() {
       if (this.items.length) {
         handleCartActionClick(this.items)
-        this.resetButton()
+        this.resetButton(false)
         this.makeToast('Daftar Belanja', 'Berhasil ditambahkan ke daftar antrian')
       } else {
         this.makeToast('Keranjang Masih Kosong', 'Silahkan isi keranjang belanja terlebih dahulu')
