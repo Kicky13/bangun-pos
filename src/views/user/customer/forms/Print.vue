@@ -406,6 +406,7 @@ import {
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
+// import someStyle from '@/assets/scss/print/landscape.css'
 
 export default {
   components: {
@@ -419,6 +420,7 @@ export default {
     BFormSelect,
     BInputGroup,
     BCard,
+    // someStyle,
   },
   directives: {
     Ripple,
@@ -660,17 +662,27 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
   methods: {
+    paperOrientation() {
+      // eslint-disable-next-line global-require
+      return require('@/assets/scss/print/landscape.css')
+      // The path could be '../assets/img.png', etc., which depends on where your vue file is
+    },
     print() {
       this.$htmlToPaper('printMe', null, () => {
         console.warn('done')
       })
     },
     printLandscape() {
+      // eslint-disable-next-line global-require
+      // const paperorientation = require('@/assets/scss/print/landscape.css')
+      const paperorientation = this.paperOrientation()
+      // console.log(paperorientation)
       const localOptions = {
         styles: [
           'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
           'https://unpkg.com/kidlat-css/css/kidlat.css',
           // './landscape.css'
+          paperorientation,
         ],
       }
       this.$htmlToPaper('printMe', localOptions, () => {
