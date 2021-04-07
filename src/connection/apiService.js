@@ -36,6 +36,21 @@ export default class ApiService {
       })
     }
 
+    getKodeTransaction() {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.kodeTransaction,
+      })
+    }
+
+    updatePayTransaction(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.payTransaction,
+        data: param,
+      })
+    }
+
     getCategoryList() {
       return axios({
         method: 'post',
