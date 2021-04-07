@@ -389,7 +389,10 @@ export default {
         id: null,
         name: 'Semua Kategori',
       },
-      subCategories: [],
+      subCategories: [{
+        id: null,
+        name: 'Semua Sub Kategori',
+      }],
       selectedSubCategory: {
         id: null,
         name: 'Semua Sub Kategori',
