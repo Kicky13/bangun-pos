@@ -1,4 +1,7 @@
 export default {
+  // AksesToko Link
+  AksesToko: 'https://qa.aksestoko.id/home',
+
   // Token
   storageTokenName: 'accesstoken',
 

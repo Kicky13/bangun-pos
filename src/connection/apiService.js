@@ -8,6 +8,10 @@ export default class ApiService {
       axios.defaults.headers.Authorization = `Bearer ${localStorage.getItem(this.urlCnf.storageTokenName)}`
     }
 
+    toAksesToko() {
+      window.location.href = this.urlCnf.AksesToko
+    }
+
     getCustomer(param) {
       return axios({
         method: 'get',

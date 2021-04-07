@@ -459,9 +459,9 @@ export default {
       paySum: 0,
       selectedType: null,
       customerName: '',
-      customerPhone: '',
-      jagobangunRef: '',
-      identityNumber: '',
+      customerPhone: 0,
+      jagobangunRef: 0,
+      identityNumber: 0,
       customerAddress: '',
       selectedPembayaran: null,
       selectedStatus: null,
@@ -579,28 +579,22 @@ export default {
     this.fetchCustomerList()
   },
   methods: {
-    fetchCustomerList() {
+    async fetchCustomerList() {
       this.isLoading = true
       appService.getCustomer({
         limit: 50,
         q: '',
         page: 1,
       }).then(response => {
-        const res = response.data.data
+        const res = response.data
         this.isLoading = false
-        if (res) {
-          res.forEach(this.setupRows)
+        if (res.result) {
+          const resdata = res.data
+          if (resdata) {
+            resdata.forEach(this.setupRows)
+          }
         } else {
-          this.$toast({
-            component: ToastificationContent,
-            position: 'top-right',
-            props: {
-              title: 'Data Not Found',
-              icon: 'CoffeeIcon',
-              variant: 'danger',
-              text: 'Data empty on server, using dummy data now',
-            },
-          })
+          appService.toAksesToko()
         }
       }).catch(err => {
         console.log(err)
@@ -814,19 +808,6 @@ export default {
       if (this.selectedType === null) {
         errMsg.push('SelectedType')
       }
-      // if (this.remainingDebt === 0) {
-      //   errMsg.push('RemainingDebt')
-      //   this.$toast({
-      //     component: ToastificationContent,
-      //     position: 'top-right',
-      //     props: {
-      //       title: 'Error',
-      //       icon: 'AlertCircleIcon',
-      //       variant: 'danger',
-      //       text: 'This customer has no remaining debt',
-      //     },
-      //   })
-      // }
       if (this.paymentID === 0) {
         errMsg.push('PayID')
       }
