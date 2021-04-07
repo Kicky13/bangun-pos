@@ -33,4 +33,10 @@ export default {
   graphData: 'dashboard',
   getGoalOverviewData: 'dashboard/sales',
   getTransactionsData: 'dashboard/product',
+
+  // Debt
+  payDebt: 'user/debt',
+
+  // History
+  transactHistory: 'history',
 }

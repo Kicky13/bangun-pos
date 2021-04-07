@@ -174,4 +174,20 @@ export default class ApiService {
         params: param,
       })
     }
+
+    payDebt(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.payDebt,
+        data: param,
+      })
+    }
+
+    historyList(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.transactHistory,
+        data: param,
+      })
+    }
 }
