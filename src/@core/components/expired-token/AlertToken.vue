@@ -4,6 +4,8 @@
     ok-title="Okay"
     hide-header-close
     ok-only
+    centered
+    no-close-on-backdrop
     title="SORRY"
     @ok="gotoAksesToko"
   >
