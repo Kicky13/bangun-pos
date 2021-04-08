@@ -13,11 +13,12 @@
                 size="21"
                 @click="mqShallShowLeftSidebar = true"
               />
-              <div class="search-results">
-                {{ totalProduct }} results found
-              </div>
+              <small class="search-results">
+                <!-- {{ totalProduct }} results found -->
+                Menampilkan <strong>{{ totalProduct }}</strong> produk. Dengan Kategori dari <strong>{{ selectedCategory.name }}</strong>, SubKategori dari <strong>{{ selectedSubCategory.name }}</strong> dan Brand / Merk dari <strong>{{ selectedBrand.name }}</strong>.
+              </small>
             </div>
-            <div class="view-options d-flex">
+            <div class="view-options d-flex mt-1">
 
               <!-- Sort Button -->
               <b-dropdown
@@ -384,14 +385,23 @@ export default {
       ],
       selectedSortType: null,
       categories: [],
-      selectedCategory: '',
+      selectedCategory: {
+        id: null,
+        name: 'Semua Kategori',
+      },
       subCategories: [{
-        id: '',
-        name: 'Semua Sub-Kategori',
+        id: null,
+        name: 'Semua Sub Kategori',
       }],
-      selectedSubCategory: '',
+      selectedSubCategory: {
+        id: null,
+        name: 'Semua Sub Kategori',
+      },
       brands: [],
-      selectedBrand: '',
+      selectedBrand: {
+        id: null,
+        name: 'Semua Brand / Merek',
+      },
       searchProduct: '',
       productList: [],
       totalProduct: 0,
@@ -486,17 +496,23 @@ export default {
       this.getAllProducts()
     },
     async getCategoryValue(param) {
-      this.selectedCategory = param.id
-      this.selectedSubCategory = ''
+      this.selectedCategory.id = param.id
+      this.selectedCategory.name = param.name
+      this.selectedSubCategory = {
+        id: null,
+        name: 'Semua Sub Kategori',
+      }
       await this.getSubCategoryByCategory(param)
       this.getAllProducts()
     },
     getSubCategoryValue(param) {
-      this.selectedSubCategory = param.id
+      this.selectedSubCategory.id = param.id
+      this.selectedSubCategory.name = param.name
       this.getAllProducts()
     },
     setBrand(param) {
-      this.selectedBrand = param.id
+      this.selectedBrand.id = param.id
+      this.selectedBrand.name = param.name
       this.getAllProducts()
     },
     async getAllCategories() {
@@ -504,7 +520,7 @@ export default {
         const { data } = response.data
         if (data) {
           this.categories.push({
-            id: '',
+            id: null,
             name: 'Semua Kategori',
           })
           data.forEach(item => {
@@ -522,7 +538,7 @@ export default {
       }
       appService.getSubcategoryList(param).then(response => {
         this.subCategories = [{
-          id: '',
+          id: null,
           name: 'Semua Sub-Kategori',
         }]
         const { data } = response.data
@@ -543,8 +559,8 @@ export default {
         const { data } = response.data
         if (data) {
           this.brands.push({
-            id: '',
-            name: 'Semua Brand',
+            id: null,
+            name: 'Semua Brand / Merek',
           })
           data.forEach(item => {
             this.brands.push({
@@ -559,14 +575,14 @@ export default {
       const param = {
         q: this.searchProduct,
       }
-      if (this.selectedCategory !== '') {
-        param.kategori = this.selectedCategory
+      if (this.selectedCategory.id !== null) {
+        param.kategori = this.selectedCategory.id
       }
-      if (this.selectedSubCategory !== '') {
-        param.subkategori = this.selectedSubCategory
+      if (this.selectedSubCategory.id !== null) {
+        param.subkategori = this.selectedSubCategory.id
       }
-      if (this.selectedBrand !== '') {
-        param.brand = this.selectedBrand
+      if (this.selectedBrand.id !== null) {
+        param.brand = this.selectedBrand.id
       }
       param.sortBy = this.selectedSortType
       appService.getProductTokoList(param).then(response => {
