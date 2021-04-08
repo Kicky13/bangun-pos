@@ -324,11 +324,11 @@ export default {
     },
     setRows(data) {
       const res = {
-        salesCode: data.kode_transaksi,
+        saleCode: data.kode_transaksi,
         customer: data.customer.nama,
-        refCode: data.no_references,
-        subTotal: data.subtotal,
-        diskon: data.diskon,
+        refCode: data.no_references ?? '-',
+        subTotal: data.sub_total,
+        diskon: data.discount,
         pajak: data.pajak,
         ongkir: data.ongkir,
         typeBayar: data.type_pembayaran,
