@@ -85,13 +85,13 @@
                     {{ item.name }} (<b>{{ item.uom }}</b>)
                   </td>
                   <td style="text-align: right;">
-                    {{ item.price }}
+                    Rp. {{ formatPrice(item.price) }}
                   </td>
                   <td style="text-align: center;">
                     {{ item.quantity }}
                   </td>
                   <td style="text-align: right;">
-                    <b>{{ item.price * item.quantity }}</b>
+                    <b>Rp. {{ formatPrice((item.price * item.quantity)) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -119,7 +119,7 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>{{ dataPenjualan.subtotal }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -133,7 +133,7 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>{{ dataPenjualan.disc }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -147,7 +147,7 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>{{ dataPenjualan.tax }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -161,7 +161,7 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>{{ dataPenjualan.ship }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -175,7 +175,7 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>{{ dataPenjualan.subtotal }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -217,7 +217,7 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>{{ dataPenjualan.ship }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -231,7 +231,7 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>{{ dataPenjualan.ship }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
                   </td>
                 </tr>
               </tbody>
@@ -353,13 +353,13 @@
                     {{ item.name }} (<b>{{ item.uom }}</b>)
                   </td>
                   <td style="text-align: right;">
-                    {{ item.price }}
+                    Rp. {{ formatPrice(item.price) }}
                   </td>
                   <td style="text-align: center;">
                     {{ item.quantity }}
                   </td>
                   <td style="text-align: right;">
-                    <b>{{ item.price * item.quantity }}</b>
+                    <b>Rp. {{ formatPrice((item.price * item.quantity)) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -381,7 +381,7 @@
                     <b>Sub Total :</b>
                   </td>
                   <td style="text-align: right;">
-                    <b>{{ dataPenjualan.subtotal }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -392,7 +392,7 @@
                     <b>Diskon :</b>
                   </td>
                   <td style="text-align: right;">
-                    <b>{{ dataPenjualan.disc }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -403,7 +403,7 @@
                     <b>Pajak :</b>
                   </td>
                   <td style="text-align: right;">
-                    <b>{{ dataPenjualan.tax }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -414,7 +414,7 @@
                     <b>Ongkos Kirim :</b>
                   </td>
                   <td style="text-align: right;">
-                    <b>{{ dataPenjualan.ship }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -425,7 +425,7 @@
                     <b>Grand Total :</b>
                   </td>
                   <td style="text-align: right;">
-                    <b>{{ dataPenjualan.subtotal }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -458,7 +458,7 @@
                     <b>Bayar :</b>
                   </td>
                   <td style="text-align: right;">
-                    <b>{{ dataPenjualan.ship }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -469,7 +469,7 @@
                     <b>Kembalian :</b>
                   </td>
                   <td style="text-align: right;">
-                    <b>{{ dataPenjualan.ship }}</b>
+                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
                   </td>
                 </tr>
               </tbody>
@@ -562,7 +562,10 @@ import {
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
+import ApiService from '@/connection/apiService'
 // import someStyle from '@/assets/scss/print/landscape.css'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -586,53 +589,24 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
-      dataPenjualan: null,
+      dataPenjualan: {
+        id: '53922ae4305e48aa941999a0362b45b5',
+        date: '2020-11-18',
+        saleCode: 'TB001/2021/00000000001',
+        ref: 'jago-022129',
+        biller: 'Kasir 01',
+        saleStatus: 'Draft',
+        customer: 'Munib',
+        subtotal: '1000000',
+        disc: '25000',
+        ship: '50000',
+        tax: '0',
+        typePayment: 'KREDIT',
+        paymentStatus: 'LUNAS',
+      },
+      uuId: '53922ae4305e48aa941999a0362b45b5',
       // eslint-disable-next-line global-require
       logoImg: require('@/assets/images/logo/POSRetailBlack.png'),
-      // eslint-disable-next-line global-require
-      // paperInvoice: require('@/assets/scss/print/landscape.css'),
-      // eslint-disable-next-line global-require
-      // paperReceipt: require('@/assets/scss/print/landscape.css'),
-      cashierItems: [
-        {
-          value: null,
-          text: 'Pilih Kasir',
-          disabled: true,
-        },
-        {
-          value: 'Kasir 01',
-          text: 'Kasir 01',
-        },
-        {
-          value: 'Kasir 02',
-          text: 'Kasir 02',
-        },
-        {
-          value: 'Kasir 03',
-          text: 'Kasir 03',
-        },
-      ],
-      methodBayar: [{
-        value: null,
-        text: 'Pilih salah satu metode pembayaran',
-        disabled: true,
-      },
-      {
-        value: 'CASH',
-        text: 'Cash',
-      },
-      {
-        value: 'TRANSFER',
-        text: 'Transfer Bank',
-      },
-      {
-        value: 'GOPAY',
-        text: 'Gopay',
-      },
-      {
-        value: 'KREDIT',
-        text: 'Kredit',
-      }],
       items: [{
         id: 20200001909,
         name: 'Google - Google Home - White/Slate fabric',
@@ -666,176 +640,41 @@ export default {
         price: 12,
         subtotal: 252,
       }],
-      warehouses: [{
-        value: null,
-        text: 'Select a Warehouse',
-        disabled: true,
-      },
-      {
-        value: 'Gresik',
-        text: 'Gresik',
-      },
-      {
-        value: 'Tuban',
-        text: 'Tuban',
-      },
-      {
-        value: 'Jakarta',
-        text: 'Text',
-      },
-      {
-        value: 'Padang',
-        text: 'Padang',
-      }],
-      billers: [{
-        value: null,
-        text: 'Select a Biller',
-        disabled: true,
-      },
-      {
-        value: 673627,
-        text: '673627 - Warehouse Gresik',
-      },
-      {
-        value: 677289,
-        text: '677289 - Warehouse Tuban',
-      },
-      {
-        value: 678298,
-        text: '678298 - Warehouse - Jakarta',
-      },
-      {
-        value: 698983,
-        text: '698983 - Warehouse Padang',
-      }],
-      customers: [{
-        value: null,
-        text: 'Walk-in Customer',
-        disabled: true,
-      },
-      {
-        value: 'Munib',
-        text: 'Munib',
-      },
-      {
-        value: 'Robiyanto',
-        text: 'Robiyanto',
-      },
-      {
-        value: 'Kikik',
-        text: 'Kikik',
-      }],
-      nextTodoId: 2,
-      kategori: [{
-        value: null,
-        text: 'Select Kategori',
-        disabled: true,
-      },
-      {
-        value: 'kategori1',
-        text: 'Kategori 1',
-      },
-      {
-        value: 'kategori2',
-        text: 'Kategori 2',
-      },
-      {
-        value: 'kategori3',
-        text: 'Kategori 3',
-      }],
-      subKategori: [{
-        value: null,
-        text: 'Select a Sub Kategori',
-        disabled: true,
-      },
-      {
-        value: 'subKategori1',
-        text: 'Sub Kategori 1',
-      },
-      {
-        value: 'subKategori2',
-        text: 'Sub Kategori 2',
-      },
-      {
-        value: 'subKategori3',
-        text: 'Sub Kategori 3',
-      }],
-      type: [{
-        value: null,
-        text: 'Select Type',
-        disabled: true,
-      },
-      {
-        value: 'type1',
-        text: 'Type 1',
-      },
-      {
-        value: 'type2',
-        text: 'Type 2',
-      },
-      {
-        value: 'type3',
-        text: 'Type 3',
-      }],
-      brand: [{
-        value: null,
-        text: 'Select a Brand',
-        disabled: true,
-      },
-      {
-        value: 'brand1',
-        text: 'Brand 1',
-      },
-      {
-        value: 'brand2',
-        text: 'Brand 2',
-      },
-      {
-        value: 'brand3',
-        text: 'Brand 3',
-      }],
-      units: [{
-        value: null,
-        text: 'Select a Unit',
-        disabled: true,
-      },
-      {
-        value: 'unit1',
-        text: 'Unit 1',
-      },
-      {
-        value: 'unit2',
-        text: 'Unit 2',
-      },
-      {
-        value: 'unit3',
-        text: 'Unit 3',
-      }],
     }
   },
   mounted() {
-    this.initTrHeight()
+    // console.log(this.$route.params.id)
+    this.getDetailTransaction(this.$route.params.id)
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
-    this.$http.get('/app-data/transDetail')
-      .then(res => {
-        this.dataPenjualan = res.data.find(data => data.id === parseInt(this.$route.params.id, 10))
-      })
+    // this.$http.get('/app-data/transDetail')
+    //   .then(res => {
+    //     this.dataPenjualan = res.data.find(data => data.id === parseInt(this.$route.params.id, 10))
+    //   })
   },
   destroyed() {
     window.removeEventListener('resize', this.initTrHeight)
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
   methods: {
+    async getDetailTransaction(paramid) {
+      console.log(paramid)
+      this.uuId = paramid
+      appService.getDetailTransaction(this.uuId).then(response => {
+        const { data } = response
+        if (data.data) {
+          console.log(data.data)
+        }
+      })
+    },
     logoUrl() {
       return this.logoImg
     },
-    paperOrientation() {
-      // eslint-disable-next-line global-require
-      return require('@/assets/scss/print/invoice.css')
-      // The path could be '../assets/img.png', etc., which depends on where your vue file is
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     print() {
       this.$htmlToPaper('printReceipt', null, () => {
@@ -843,35 +682,14 @@ export default {
       })
     },
     printLandscape() {
-      // eslint-disable-next-line global-require
-      // const paperorientation = require('@/assets/scss/print/landscape.css')
-      // const paperorientation = this.paperInvoice
-      // console.log(paperorientation)
       const localOptions = {
         styles: [
           'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
           'https://unpkg.com/kidlat-css/css/kidlat.css',
-          // './landscape.css'
-          // paperorientation,
         ],
       }
       this.$htmlToPaper('printMe', localOptions, () => {
         console.warn('done')
-      })
-    },
-    repeateAgain() {
-      this.items.push({
-        id: this.nextTodoId += this.nextTodoId,
-      })
-
-      this.$nextTick(() => {
-        this.trAddHeight(this.$refs.row[0].offsetHeight)
-      })
-    },
-    initTrHeight() {
-      this.trSetHeight(null)
-      this.$nextTick(() => {
-        this.trSetHeight(this.$refs.form.scrollHeight)
       })
     },
   },

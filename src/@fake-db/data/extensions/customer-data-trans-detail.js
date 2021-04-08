@@ -152,6 +152,21 @@ const data = {
       typePayment: 'KREDIT',
       paymentStatus: 'LUNAS',
     },
+    {
+      id: '53922ae4305e48aa941999a0362b45b5',
+      date: '2020-11-18',
+      saleCode: 'TB001/2021/00000000001',
+      ref: 'jago-022129',
+      biller: 'Kasir 01',
+      saleStatus: 'Draft',
+      customer: 'Munib',
+      subtotal: '1000000',
+      disc: '25000',
+      ship: '50000',
+      tax: '0',
+      typePayment: 'KREDIT',
+      paymentStatus: 'LUNAS',
+    },
   ],
   /* eslint-disable global-require */
 }

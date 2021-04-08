@@ -190,4 +190,12 @@ export default class ApiService {
         data: param,
       })
     }
+
+    getDetailTransaction(uuid) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.detailTransaction + uuid,
+        // data: param,
+      })
+    }
 }
