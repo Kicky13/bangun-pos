@@ -452,7 +452,7 @@ export default {
       remainingDebt: 0,
       paymentID: '',
       paySum: 0,
-      selectedType: null,
+      selectedType: 1,
       customerName: '',
       customerPhone: 0,
       jagobangunRef: 0,
@@ -463,23 +463,23 @@ export default {
       isLoading: false,
       editForm: false,
       typeItem: [
-        {
-          value: null,
-          text: 'Select Pembayaran',
-          disabled: true,
-        },
+        // {
+        //   value: null,
+        //   text: 'Select Pembayaran',
+        //   disabled: true,
+        // },
         {
           value: 1,
           text: 'Cash',
         },
-        {
-          value: 2,
-          text: 'Transfer',
-        },
-        {
-          value: 3,
-          text: 'Gopay',
-        },
+        // {
+        //   value: 2,
+        //   text: 'Transfer',
+        // },
+        // {
+        //   value: 3,
+        //   text: 'Gopay',
+        // },
       ],
       statusItems: [
         {
@@ -824,6 +824,8 @@ export default {
         this.clearBayar()
         this.isLoading = false
         this.$$bvModal.hide('listBayar')
+        this.rows = []
+        this.fetchCustomerList()
       }).catch(err => {
         const errMsg = JSON.parse(err.request.response)
         this.isLoading = false
