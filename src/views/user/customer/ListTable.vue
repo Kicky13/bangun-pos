@@ -535,7 +535,7 @@ export default {
           field: 'jumTrans',
         },
         {
-          label: 'Total Trans.',
+          label: 'Nilai Total Trans.',
           field: 'totalTrans',
         },
         {
@@ -621,8 +621,8 @@ export default {
         nohp: data.telp_customer,
         address: data.alamat,
         identitas: data.no_identitas,
-        jumTrans: data.sum_transaction,
-        totalTrans: data.total_transaction,
+        jumTrans: data.total_transaction,
+        totalTrans: data.sum_transaction,
         sudahBayar: data.paid_debt,
         sisaHutang: data.remaining_debt,
       }
