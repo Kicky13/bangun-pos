@@ -17,6 +17,7 @@ export default {
   // Transaction
   kodeTransaction: 'user/transaction/generatecode',
   payTransaction: 'user/transaction/pay',
+  detailTransaction: 'user/transaction/',
 
   // List
   category: 'category',
