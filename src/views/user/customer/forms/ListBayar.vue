@@ -288,7 +288,7 @@ export default {
     paymentVariant() {
       const statusColor = {
         PAID: 'light-secondary',
-        BELUM_LUNAS: 'light-primary',
+        UNPAID: 'light-primary',
       }
       return status => statusColor[status]
     },
@@ -314,7 +314,7 @@ export default {
     fetchListTransaksi() {
       appService.historyList({ id_customer: this.customerID }).then(response => {
         console.log(response)
-        const datares = response.data
+        const datares = response.data.data
         if (datares) {
           datares.forEach(this.setRows)
         }
