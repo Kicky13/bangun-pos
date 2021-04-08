@@ -364,12 +364,8 @@
               <b-form-input
                 id="ktp"
                 v-model="identityNumber"
-                :state="identityNumber.length > 0"
                 type="number"
               />
-              <b-form-invalid-feedback>
-                No Identitas Customer wajib diisi
-              </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
         </b-row>
@@ -382,12 +378,8 @@
               <b-form-textarea
                 id="address"
                 v-model="customerAddress"
-                :state="customerAddress.length > 0"
                 rows="4"
               />
-              <b-form-invalid-feedback>
-                Alamat Customer wajib diisi
-              </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
         </b-row>
@@ -410,6 +402,7 @@
         <h3>Proceed ?</h3>
       </div>
     </b-modal>
+    <alert-token />
     <!-- End of Customer Add -->
   </b-card>
 </template>
@@ -424,6 +417,7 @@ import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
 // import AddCustomer from './forms/modals/Add.vue'
 // import { codeBasic } from './search'
 
@@ -446,6 +440,7 @@ export default {
     BForm,
     BFormInvalidFeedback,
     LoadingGrow,
+    AlertToken,
   },
   directives: {
     'b-modal': VBModal,
@@ -579,7 +574,7 @@ export default {
     this.fetchCustomerList()
   },
   methods: {
-    async fetchCustomerList() {
+    fetchCustomerList() {
       this.isLoading = true
       appService.getCustomer({
         limit: 50,
@@ -594,7 +589,7 @@ export default {
             resdata.forEach(this.setupRows)
           }
         } else {
-          appService.toAksesToko()
+          this.$bvModal.show('tokenExpired')
         }
       }).catch(err => {
         console.log(err)
@@ -618,9 +613,9 @@ export default {
     },
     setupRows(data) {
       const res = {
-        encodedID: data.id,
+        encodedID: data.uuid,
         custCode: data.kode_customer,
-        customerID: data.toko.id,
+        customerID: data.id,
         customer: data.nama,
         shopName: data.toko.name,
         nohp: data.telp_customer,
@@ -699,22 +694,10 @@ export default {
         no_references: this.jagobangunRef,
       }
       appService.addCustomer(data).then(response => {
-        console.log(response)
-        const dataRes = {
-          encodedID: data.uuid,
-          custCode: data.kode_customer,
-          customerID: data.toko.id,
-          customer: data.nama,
-          shopName: data.toko.name,
-          nohp: data.telp_customer,
-          address: data.alamat,
-          identitas: data.no_identitas,
-          jumTrans: 0,
-          totalTrans: 0,
-          sudahBayar: 0,
-          sisaHutang: 0,
-        }
-        this.rows.push(dataRes)
+        const res = response.data.data
+        console.log(res)
+        this.rows = []
+        this.fetchCustomerList()
         this.clearForm()
         this.isLoading = false
       }).catch(err => {
@@ -771,17 +754,6 @@ export default {
       if (!this.customerPhone.charAt(0) === '0') {
         errMsg.push('customerPhoneFormat')
       }
-      if (this.identityNumber.length === 0) {
-        errMsg.push('identityNumber')
-      }
-      if (this.customerAddress.length === 0) {
-        errMsg.push('customerAddress')
-      }
-      if (this.jagobangunRef.length === 0) {
-        errMsg.push('jagobangunRef')
-      }
-
-      console.log(this.customerPhone.charAt(0))
 
       if (errMsg.length === 0) {
         return true
@@ -789,7 +761,6 @@ export default {
       return false
     },
     pembayaran(propsData) {
-      console.log(propsData)
       this.setBayar(propsData)
       this.$bvModal.show('listBayar')
     },
