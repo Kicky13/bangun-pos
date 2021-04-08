@@ -69,7 +69,7 @@
           <span>
             <b-button
               v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-              :to="{name: 'user-customer-list-trans-detail', params: {id: props.row.id}}"
+              :to="{name: 'user-customer-list-trans-detail', params: {id: props.row.transId}}"
               size="sm"
               variant="outline-secondary"
             >
@@ -324,6 +324,7 @@ export default {
     },
     setRows(data) {
       const res = {
+        transId: data.id,
         saleCode: data.kode_transaksi,
         customer: data.customer.nama,
         refCode: data.no_references ?? '-',
