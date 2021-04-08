@@ -551,6 +551,7 @@
                         style="text-align: right;"
                         :value="items.length + '(' + totalQuantities + ')'"
                         plaintext
+                        @keypress="isNumber"
                       />
                     </b-input-group>
                   </b-form-group>
@@ -1025,10 +1026,13 @@ export default {
       return total
     },
     grandTotal() {
+      if (this.selectedMetode === 2) {
+        return 0
+      }
       return Number(this.totalSubtotal) - Number(this.inputDiscount) + Number(this.inputTax) + Number(this.inputOngkir)
     },
     kembalian() {
-      return this.inputPaid ? Number(this.inputPaid) - Number(this.grandTotal) : 0
+      return this.inputPaid > 0 ? Number(this.inputPaid) - Number(this.grandTotal) : 0
     },
   },
   mounted() {
@@ -1161,7 +1165,6 @@ export default {
       appService.getKodeTransaction().then(response => {
         const { data } = response
         this.kodeTransaction = data.kode
-        console.log(this.kodeTransaction)
       })
     },
     async saveTransaction() {
@@ -1181,7 +1184,7 @@ export default {
         discount: this.inputDiscount,
         shipping: this.inputOngkir,
         tax: this.inputTax,
-        pay_amount: this.selectedMetode === 1 ? this.grandTotal : 0,
+        pay_amount: this.grandTotal,
         payment_type: this.selectedMetode,
         items: products,
       }
@@ -1208,6 +1211,9 @@ export default {
       const month = (d.getMonth() + 1).toString().padStart(2, '0')
       const day = d.getDate().toString().padStart(2, '0')
       return [year, month, day].join('-')
+    },
+    isNumber(event) {
+      console.log(event)
     },
   },
   setup() {
