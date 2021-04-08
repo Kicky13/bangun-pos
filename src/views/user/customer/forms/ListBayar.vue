@@ -256,7 +256,7 @@ export default {
           sortable: false,
           filterOptions: {
             enabled: true,
-            filterDropdownItems: ['LUNAS', 'BELUM_LUNAS'],
+            filterDropdownItems: ['PAID', 'BELUM_LUNAS'],
           },
         },
         {
@@ -287,7 +287,7 @@ export default {
     },
     paymentVariant() {
       const statusColor = {
-        LUNAS: 'light-secondary',
+        PAID: 'light-secondary',
         BELUM_LUNAS: 'light-primary',
       }
       return status => statusColor[status]
@@ -314,11 +314,28 @@ export default {
     fetchListTransaksi() {
       appService.historyList({ id_customer: this.customerID }).then(response => {
         console.log(response)
+        const datares = response.data
+        if (datares) {
+          datares.forEach(this.setRows)
+        }
       }).catch(err => {
         console.log(err)
       })
     },
-    setRows() {},
+    setRows(data) {
+      const res = {
+        salesCode: data.kode_transaksi,
+        customer: data.customer.nama,
+        refCode: data.no_references,
+        subTotal: data.subtotal,
+        diskon: data.diskon,
+        pajak: data.pajak,
+        ongkir: data.ongkir,
+        typeBayar: data.type_pembayaran,
+        status: data.status,
+      }
+      this.rows.push(res)
+    },
   },
 }
 </script>
