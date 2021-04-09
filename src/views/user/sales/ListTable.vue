@@ -26,7 +26,7 @@
           </div>
         </b-form-group>
       </div>
-      <div style="float:left;width: 200px !important; margin-left:10px;">
+      <!-- <div style="float:left;width: 200px !important; margin-left:10px;">
         <b-form-group>
           <b-form-select
             id="pembayaran"
@@ -43,7 +43,7 @@
             :options="statusItems"
           />
         </b-form-group>
-      </div>
+      </div> -->
       <div style="float:left;margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
@@ -291,12 +291,22 @@ export default {
           field: 'tax',
         },
         {
-          label: 'Pembayaran',
+          label: 'Type Pembayaran',
           field: 'typePayment',
+          sortable: false,
+          filterOptions: {
+            enabled: true,
+            filterDropdownItems: ['CASH', 'KREDIT'],
+          },
         },
         {
           label: 'Status',
           field: 'paymentStatus',
+          sortable: false,
+          filterOptions: {
+            enabled: true,
+            filterDropdownItems: ['PAID', 'UNPAID'],
+          },
         },
         {
           label: 'Action',
@@ -311,15 +321,15 @@ export default {
   computed: {
     salesVariant() {
       const statusColor = {
-        Draft: 'light-primary',
-        Completed: 'light-secondary',
+        CASH: 'light-primary',
+        KREDIT: 'light-secondary',
       }
       return status => statusColor[status]
     },
     paymentVariant() {
       const statusColor = {
-        LUNAS: 'light-secondary',
-        UTANG: 'light-primary',
+        PAID: 'light-secondary',
+        UNPAID: 'light-primary',
       }
       return status => statusColor[status]
     },
@@ -345,7 +355,6 @@ export default {
       this.isLoading = true
       appService.getSales({
         limit: 10,
-        status: 'paid',
         page: 1,
       }).then(response => {
         const res = response.data.data
