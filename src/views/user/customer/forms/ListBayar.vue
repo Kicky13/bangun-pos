@@ -256,7 +256,7 @@ export default {
           sortable: false,
           filterOptions: {
             enabled: true,
-            filterDropdownItems: ['PAID', 'BELUM_LUNAS'],
+            filterDropdownItems: ['PAID', 'UNPAID'],
           },
         },
         {
