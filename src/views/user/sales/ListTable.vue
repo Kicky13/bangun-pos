@@ -104,7 +104,7 @@
                 />
               </template>
               <b-dropdown-item
-                :to="{name: 'detail-user-sale', params: {id: props.row.id}}"
+                :to="{name: 'user-trans-detail', params: {id: props.row.id}}"
               >
                 <feather-icon
                   icon="FileTextIcon"
@@ -364,8 +364,8 @@ export default {
               text: 'Data empty on server, using dummy data now',
             },
           })
-          this.$http.get('/app-data/salesUser')
-            .then(resData => { this.rows = resData.data })
+          // this.$http.get('/app-data/salesUser')
+          //   .then(resData => { this.rows = resData.data })
         }
       }).catch(err => {
         console.log(err)
@@ -374,10 +374,11 @@ export default {
     },
     setupRows(data) {
       const res = {
+        id: data.uuid,
         date: data.date_transaction,
         saleCode: data.kode_transaksi,
         ref: data.no_references,
-        biller: data.kasir,
+        biller: data.kasir.nama,
         customer: data.customer.nama_customer,
         subtotal: data.sub_total,
         disc: data.discount,

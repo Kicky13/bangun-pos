@@ -169,6 +169,24 @@ export default [
     },
   },
   {
+    path: '/mysale/transaksi/:id',
+    name: 'user-trans-detail',
+    component: () => import('@/views/user/sales/detail/DetailTrans.vue'),
+    meta: {
+      // pageTitle: 'Penjualan',
+      resource: 'CustomerUser',
+      action: 'manage',
+      redTitle: 'Detail Data Transaksi',
+      redSubs: 'Detail Data Transaksi yang pernah dilakukan oleh customer.',
+      // breadcrumb: [
+      //   {
+      //     text: 'Sales',
+      //     active: true,
+      //   },
+      // ],
+    },
+  },
+  {
     path: '/mydashboard',
     name: 'user-dashboard',
     component: () => import('@/views/user/dashboard/List.vue'),
