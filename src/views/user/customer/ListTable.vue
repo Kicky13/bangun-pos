@@ -98,6 +98,7 @@
               List Trans.
             </b-button>
             <b-button
+              v-if="props.row.sisaHutang > 0"
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
@@ -539,7 +540,11 @@ export default {
           field: 'totalTrans',
         },
         {
-          label: 'Sudah Bayar',
+          label: 'Total Hutang',
+          field: 'totalHutang',
+        },
+        {
+          label: 'Hutang Dibayar',
           field: 'sudahBayar',
         },
         {
@@ -623,6 +628,7 @@ export default {
         identitas: data.no_identitas,
         jumTrans: data.total_transaction,
         totalTrans: data.sum_transaction,
+        totalHutang: data.paid_debt + data.remaining_debt,
         sudahBayar: data.paid_debt,
         sisaHutang: data.remaining_debt,
       }

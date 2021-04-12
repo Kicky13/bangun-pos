@@ -2,7 +2,7 @@
   <b-modal
     id="logTrans"
     centered
-    size="xl"
+    size="lg"
     hide-footer
   >
     <!-- search input -->
@@ -167,7 +167,7 @@ export default {
     Ripple,
   },
   props: {
-    transId: {
+    transid: {
       type: String,
       default: '',
     },
@@ -230,12 +230,11 @@ export default {
     },
   },
   watch: {
-    transId: {
+    transid: {
       immediate: true,
       handler() {
-        console.log(this.transId)
-        if (this.transId !== '') {
-          this.getLogTransaction(this.transId)
+        if (this.transid !== '') {
+          this.getLogTransaction(this.transid)
         }
       },
     },
@@ -249,10 +248,13 @@ export default {
   },
   methods: {
     async getLogTransaction(uuid) {
-      appService.getLogTransaction(uuid).then(response => {
-        const { data } = response
-        if (data.data) {
-          console.log(data.data)
+      appService.getLogTransaction({
+        kode_transaksi: uuid,
+      }).then(response => {
+        const datares = response.data.data
+        if (datares) {
+          console.log(datares)
+          datares.forEach(this.setRows)
         }
       })
     },

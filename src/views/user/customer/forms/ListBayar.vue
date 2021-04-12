@@ -315,12 +315,10 @@ export default {
   },
   methods: {
     getLogTrans(transid) {
-      console.log(transid)
       this.selectedTransId = transid
     },
     fetchListTransaksi() {
       appService.historyList({ id_customer: this.customerID }).then(response => {
-        console.log(response)
         const datares = response.data.data
         if (datares) {
           datares.forEach(this.setRows)
