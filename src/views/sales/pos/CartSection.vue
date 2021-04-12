@@ -91,7 +91,7 @@
                       <b-row>
                         <b-col>
                           <span>
-                            {{ item.id_produk }}
+                            {{ item.kode_produk }}
                             <feather-icon
                               v-b-modal.cartProductEdit
                               icon="EditIcon"
@@ -264,7 +264,7 @@
                   variant="secondary"
                   class="mb-1"
                   block
-                  @click="resetButton(true)"
+                  @click="resetButton"
                 >
                   Batal
                 </b-button>
@@ -319,7 +319,7 @@
               <b-row>
                 <b-col cols="6">
                   <b-form-group
-                    label="Nama Customer"
+                    label="Nama Customer :"
                     label-for="customerName"
                   >
                     <b-form-input
@@ -330,8 +330,8 @@
                 </b-col>
                 <b-col cols="6">
                   <b-form-group
+                    label="No. Referensi :"
                     label-for="reference"
-                    label="No. Reference"
                   >
                     <b-form-input
                       id="reference"
@@ -343,7 +343,7 @@
               <b-row>
                 <b-col cols="6">
                   <b-form-group
-                    label="Nomor HP"
+                    label="Nomor Handphone : "
                     label-for="phone"
                   >
                     <b-form-input
@@ -354,8 +354,8 @@
                 </b-col>
                 <b-col cols="6">
                   <b-form-group
+                    label="Nomor Identitas/KTP :"
                     label-for="ktp"
-                    label="Nomor KTP"
                   >
                     <b-form-input
                       id="ktp"
@@ -367,7 +367,7 @@
               <b-row>
                 <b-col cols="12">
                   <b-form-group
-                    label="Alamat"
+                    label="Alamat :"
                     label-for="address"
                   >
                     <b-form-textarea
@@ -805,7 +805,7 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
-      selectedCustomer: null,
+      selectedCustomer: '0',
       selectedCashier: null,
       selectedWarehouse: null,
       selectedBiller: null,
@@ -1077,6 +1077,7 @@ export default {
         } else {
           const newProduct = {
             id_produk: product.id_produk,
+            kode_produk: product.kode_produk,
             name: product.name,
             quantity: 1,
             price: product.price,
@@ -1096,13 +1097,21 @@ export default {
         toaster: 'b-toaster-bottom-right',
       })
     },
-    resetButton(resetCashier) {
-      this.selectedCustomer = null
-      if (resetCashier) {
-        this.selectedCashier = null
-      }
-      this.noReference = ''
+    resetButton() {
+      this.selectedCustomer = '0'
+      this.selectedCashier = null
+      this.noReference = null
       this.items = []
+    },
+    resetSaveTransaction() {
+      this.selectedCustomer = '0'
+      this.inputDiscount = 0
+      this.noReference = null
+      this.inputTax = 0
+      this.selectedMetode = null
+      this.inputOngkir = 0
+      this.inputPaid = 0
+      this.note = ''
     },
     async getAllCustomers() {
       appService.getCustomer().then(response => {
@@ -1110,12 +1119,12 @@ export default {
         this.customers = []
         if (data) {
           this.customers.push({
-            value: null,
+            value: '0',
             text: 'Walk-in Customer',
           })
           data.forEach(item => {
             this.customers.push({
-              value: item.id,
+              value: item.uuid,
               text: item.nama,
             })
           })
@@ -1130,16 +1139,23 @@ export default {
         alamat: this.customerBaru.alamat,
         no_references: this.customerBaru.no_references,
       }
-      appService.addCustomer(newCustomer).then(response => {
-        console.log(response)
-        this.makeToast('Customer Baru', 'Berhasil ditambahkan ke daftar customer')
-        this.getAllCustomers()
-      }).catch(err => {
-        console.log(err)
-      })
-      this.selectedCustomer = null
-      this.selectedCashier = null
-      this.$bvModal.hide('customerAdd')
+      if (this.formAddCustomerValidate()) {
+        appService.addCustomer(newCustomer).then(response => {
+          const { data } = response
+          if (data.message) {
+            this.makeToast('Customer Baru Gagal Ditambahkan', data.message[0])
+          } else {
+            this.makeToast('Customer Baru Berhasil Ditambahkan', 'Silahkan cek di daftar customer')
+            this.getAllCustomers()
+          }
+        }).catch(err => {
+          console.log(err)
+          this.makeToast('Customer Baru Gagal Ditambahkan', 'Silahkan lengkapi form customer terlebih dahulu')
+        })
+        this.selectedCustomer = '0'
+        this.selectedCashier = null
+        this.$bvModal.hide('customerAdd')
+      }
     },
     async getAllCashiers() {
       const param = {
@@ -1154,7 +1170,7 @@ export default {
           })
           data.forEach(item => {
             this.cashiers.push({
-              value: item.id,
+              value: item.uuid,
               text: item.name,
             })
           })
@@ -1189,21 +1205,23 @@ export default {
         items: products,
       }
       console.log(param)
-      appService.updatePayTransaction(param).then(response => {
-        const { data } = response.data
-        if (data) {
+      if (this.formSaveTransactionValidate()) {
+        appService.updatePayTransaction(param).then(response => {
           console.log(response)
-          this.makeToast('Transaksi Berhasil Disimpan', 'Silahkan cek transaksi di daftar penjualan')
-          this.setKodeTransaction()
-          this.resetButton(false)
-        } else {
+          const { data } = response.data
+          if (data.message) {
+            this.makeToast('Transaksi Gagal Disimpan', data.message[0])
+          } else {
+            this.makeToast('Transaksi Berhasil Disimpan', 'Silahkan cek transaksi pembayaran di daftar penjualan')
+            this.setKodeTransaction()
+            this.resetSaveTransaction()
+          }
+        }).catch(err => {
+          console.log(err)
           this.makeToast('Transaksi Gagal Disimpan', 'Silahkan lengkapi form pembayaran terlebih dahulu')
-        }
-      }).catch(err => {
-        console.log(err)
-        this.makeToast('Transaksi Gagal Disimpan', 'Silahkan lengkapi form pembayaran terlebih dahulu')
-      })
-      this.$bvModal.hide('paymentModal')
+        })
+        this.$bvModal.hide('paymentModal')
+      }
     },
     currentDate() {
       const d = new Date()
@@ -1212,8 +1230,50 @@ export default {
       const day = d.getDate().toString().padStart(2, '0')
       return [year, month, day].join('-')
     },
-    isNumber(event) {
-      console.log(event)
+    formAddCustomerValidate() {
+      const title = 'Customer Baru'
+      const content = 'tidak boleh kosong'
+      if (this.customerBaru.nama_customer.trim().length === 0) {
+        this.makeToast(title, `Nama customer ${content}`)
+        return false
+      }
+      if (this.customerBaru.no_references.trim().length === 0) {
+        this.makeToast(title, `Nomor referensi ${content}`)
+        return false
+      }
+      if (this.customerBaru.telp_customer.trim().length === 0) {
+        this.makeToast(title, `Nomor handphone ${content}`)
+        return false
+      }
+      if (this.customerBaru.telp_customer.charAt(0) !== '0') {
+        this.makeToast(title, 'Nomor handphone harus dimulai angka 0')
+        return false
+      }
+      if (this.customerBaru.no_identitas.trim().length === 0) {
+        this.makeToast(title, `Nomor identitas/KTP ${content}`)
+        return false
+      }
+      if (this.customerBaru.alamat.length === 0) {
+        this.makeToast(title, `Alamat ${content}`)
+        return false
+      }
+      return true
+    },
+    formSaveTransactionValidate() {
+      const title = 'Simpan Transaksi'
+      if (this.selectedCashier === null) {
+        this.makeToast(title, 'Silahkan pilih kasir terlebih dahulu')
+        return false
+      }
+      if (this.selectedCustomer === '0') {
+        this.makeToast(title, 'Silahkan pilih customer terlebih dahulu')
+        return false
+      }
+      if (this.selectedMetode === null) {
+        this.makeToast(title, 'Silahkan pilih tipe pembayaran terlebih dahulu')
+        return false
+      }
+      return true
     },
   },
   setup() {
@@ -1221,7 +1281,7 @@ export default {
     function addToAntrian() {
       if (this.items.length) {
         handleCartActionClick(this.items)
-        this.resetButton(false)
+        this.resetButton()
         this.makeToast('Daftar Belanja', 'Berhasil ditambahkan ke daftar antrian')
       } else {
         this.makeToast('Keranjang Masih Kosong', 'Silahkan isi keranjang belanja terlebih dahulu')

@@ -593,7 +593,7 @@ export default {
           data.forEach(item => {
             const product = {
               id_produk: item.id_produk,
-              // image: item.img_produk,
+              kode_produk: item.kode_produk,
               image: item.img_produk ? item.img_produk : '/img/06.95d1c509.jpg',
               price: item.price,
               name: item.nama_produk,
