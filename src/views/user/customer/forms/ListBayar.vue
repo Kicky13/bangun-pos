@@ -76,10 +76,12 @@
               View Detail
             </b-button>
             <b-button
+              v-if="props.row.typeBayar === 'KREDIT'"
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               v-b-modal.logTrans
               size="sm"
               variant="outline-danger"
+              @click="getLogTrans(props.row.transId)"
             >
               Log Pemb.
             </b-button>
@@ -142,7 +144,7 @@
     </vue-good-table>
 
     <!-- Modal Section -->
-    <log-modal />
+    <log-modal :transid="selectedTransId" />
   </b-card>
 </template>
 
@@ -180,6 +182,7 @@ export default {
       customerID: this.id,
       selectedPembayaran: null,
       selectedStatus: null,
+      selectedTransId: null,
       pembayaranItems: [
         {
           value: null,
@@ -311,6 +314,10 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
   },
   methods: {
+    getLogTrans(transid) {
+      console.log(transid)
+      this.selectedTransId = transid
+    },
     fetchListTransaksi() {
       appService.historyList({ id_customer: this.customerID }).then(response => {
         console.log(response)

@@ -43,4 +43,5 @@ export default {
 
   // History
   transactHistory: 'history',
+  logTransaction: 'user/historypayment',
 }

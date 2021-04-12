@@ -143,7 +143,10 @@ import {
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
+import ApiService from '@/connection/apiService'
 import Ripple from 'vue-ripple-directive'
+
+const appService = new ApiService()
 
 export default {
   components: {
@@ -163,62 +166,33 @@ export default {
     'b-modal': VBModal,
     Ripple,
   },
+  props: {
+    transId: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       pageLength: 5,
       dir: false,
       selectedType: null,
-      typeItem: [
-        {
-          value: null,
-          text: 'Select Pembayaran',
-          disabled: true,
-        },
-        {
-          value: null,
-          text: 'KREDIT',
-        },
-        {
-          value: null,
-          text: 'CASH',
-        },
-      ],
       columns: [
         {
-          label: 'Kode Penjualan',
-          field: 'kodePenjualan',
+          label: 'Kode Pembayaran',
+          field: 'logId',
         },
         {
-          label: 'Customer',
-          field: 'customer',
+          label: 'Tanggal Bayar',
+          field: 'tanggalBayar',
         },
         {
-          label: 'Ref. Code',
-          field: 'refCode',
+          label: 'Jumlah Bayar',
+          field: 'jumlahBayar',
         },
         {
-          label: 'Sub. Total',
-          field: 'subTotal',
-        },
-        {
-          label: 'Diskon',
-          field: 'diskon',
-        },
-        {
-          label: 'Pajak',
-          field: 'pajak',
-        },
-        {
-          label: 'Ongkir',
-          field: 'ongkir',
-        },
-        {
-          label: 'Status',
-          field: 'status',
-        },
-        {
-          label: 'Action',
-          field: 'action',
+          label: 'Type Pembayaran',
+          field: 'tipeBayar',
         },
       ],
       rows: [],
@@ -255,9 +229,43 @@ export default {
       return this.dir
     },
   },
+  watch: {
+    transId: {
+      immediate: true,
+      handler() {
+        console.log(this.transId)
+        if (this.transId !== '') {
+          this.getLogTransaction(this.transId)
+        }
+      },
+    },
+  },
   created() {
-    this.$http.get('/app-data/transLog')
-      .then(res => { this.rows = res.data })
+    // this.getLogTransaction(this.$parent.selectedTransId)
+    // this.$http.get('/app-data/transLog')
+    //   .then(res => { this.rows = res.data })
+  },
+  mounted() {
+  },
+  methods: {
+    async getLogTransaction(uuid) {
+      appService.getLogTransaction(uuid).then(response => {
+        const { data } = response
+        if (data.data) {
+          console.log(data.data)
+        }
+      })
+    },
+    setRows(data) {
+      const res = {
+        logId: data.id,
+        jumlahBayar: data.amount,
+        tipeBayar: data.payment_type,
+        // refCode: data.no_references ?? '-',
+        tanggalBayar: data.created_at,
+      }
+      this.rows.push(res)
+    },
   },
 }
 </script>
