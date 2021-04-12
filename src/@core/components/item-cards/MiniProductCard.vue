@@ -15,7 +15,7 @@
     <!-- </b-link> -->
     <div class="truncate text-center">
       <h5 class="mb-25 font-weight-bolder">
-        {{ product.price }} / PCS
+        Rp. {{ formatPrice(product.price) }} / PCS
       </h5>
       <span
         v-if="product.name.length<=15"
@@ -54,6 +54,12 @@ export default {
     color: {
       type: String,
       default: 'primary',
+    },
+  },
+  methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
   },
 }
