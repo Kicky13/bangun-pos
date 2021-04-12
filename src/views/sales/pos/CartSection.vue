@@ -91,7 +91,7 @@
                       <b-row>
                         <b-col>
                           <span>
-                            {{ item.id_produk }}
+                            {{ item.kode_produk }}
                             <feather-icon
                               v-b-modal.cartProductEdit
                               icon="EditIcon"
@@ -1077,6 +1077,7 @@ export default {
         } else {
           const newProduct = {
             id_produk: product.id_produk,
+            kode_produk: product.kode_produk,
             name: product.name,
             quantity: 1,
             price: product.price,
