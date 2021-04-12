@@ -32,7 +32,7 @@
         class="border-top border-right d-flex align-items-between flex-column py-1"
       >
         <h1 class="font-weight-bolder mb-0">
-          Rp. {{ data.totalTransaction }}
+          Rp. {{ formatPrice(data.totalTransaction) }}
         </h1>
       </b-col>
       <b-col
@@ -45,7 +45,7 @@
           Sudah Dibayar (Hari Ini)
         </b-card-text>
         <h3 class="font-weight-bolder mb-0">
-          Rp. {{ data.completed }}
+          Rp. {{ formatPrice(data.completed) }}
         </h3>
       </b-col>
       <b-col
@@ -58,7 +58,7 @@
           Belum Dibayar (Hari Ini)
         </b-card-text>
         <h3 class="font-weight-bolder mb-0">
-          Rp. {{ data.inProgress }}
+          Rp. {{ formatPrice(data.inProgress) }}
         </h3>
       </b-col>
       <b-col
@@ -71,7 +71,7 @@
           Transaksi Belum di Bayar Hingga Hari Ini
         </b-card-text>
         <h1 class="font-weight-bolder mb-0">
-          Rp. {{ data.allinProgress }}
+          Rp. {{ formatPrice(data.allinProgress) }}
         </h1>
       </b-col>
     </b-row>
@@ -169,6 +169,15 @@ export default {
       //   },
       // },
     }
+  },
+  methods: {
+    formatPrice(value) {
+      console.log(value)
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      console.log(val)
+      console.log(val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    },
   },
 }
 </script>

@@ -203,11 +203,12 @@ export default class ApiService {
       })
     }
 
-    getLogTransaction(uuid) {
-      console.log(uuid)
+    getLogTransaction(param) {
+      // console.log(uuid)
       return axios({
         method: 'get',
         url: this.urlCnf.logTransaction,
+        params: param,
         // data: param,
       })
     }
