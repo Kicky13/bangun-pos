@@ -1103,6 +1103,16 @@ export default {
       this.noReference = null
       this.items = []
     },
+    resetAddNewCustomer() {
+      this.customerBaru = {
+        nama_customer: '',
+        telp_customer: '',
+        no_identitas: '',
+        alamat: '',
+        no_references: '',
+      }
+      this.selectedCustomer = '0'
+    },
     resetSaveTransaction() {
       this.selectedCustomer = '0'
       this.inputDiscount = 0
@@ -1147,6 +1157,7 @@ export default {
           } else {
             this.makeToast('Customer Baru Berhasil Ditambahkan', 'Silahkan cek di daftar customer')
             this.getAllCustomers()
+            this.resetAddNewCustomer()
           }
         }).catch(err => {
           console.log(err)
@@ -1253,7 +1264,7 @@ export default {
         this.makeToast(title, `Nomor identitas/KTP ${content}`)
         return false
       }
-      if (this.customerBaru.alamat.length === 0) {
+      if (this.customerBaru.alamat.trim().length === 0) {
         this.makeToast(title, `Alamat ${content}`)
         return false
       }
@@ -1261,15 +1272,21 @@ export default {
     },
     formSaveTransactionValidate() {
       const title = 'Simpan Transaksi'
-      if (this.selectedCashier === null) {
+      if (!this.items.length) {
+        this.makeToast(title, 'Keranjang belanja masih kosong')
+        this.$bvModal.hide('paymentModal')
+        return false
+      }
+      if (!this.selectedCashier) {
         this.makeToast(title, 'Silahkan pilih kasir terlebih dahulu')
+        this.$bvModal.hide('paymentModal')
         return false
       }
       if (this.selectedCustomer === '0') {
         this.makeToast(title, 'Silahkan pilih customer terlebih dahulu')
         return false
       }
-      if (this.selectedMetode === null) {
+      if (!this.selectedMetode) {
         this.makeToast(title, 'Silahkan pilih tipe pembayaran terlebih dahulu')
         return false
       }
