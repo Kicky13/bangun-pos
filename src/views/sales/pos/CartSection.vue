@@ -110,7 +110,7 @@
                       <b-row>
                         <b-col>
                           <span>
-                            $ {{ item.price }} / PCS
+                            Rp. {{ item.price }} / PCS
                           </span>
                         </b-col>
                       </b-row>
@@ -1026,10 +1026,7 @@ export default {
       return total
     },
     grandTotal() {
-      if (this.selectedMetode === 2) {
-        return 0
-      }
-      return Number(this.totalSubtotal) - Number(this.inputDiscount) + Number(this.inputTax) + Number(this.inputOngkir)
+      return this.selectedMetode === 2 ? 0 : Number(this.totalSubtotal) - Number(this.inputDiscount) + Number(this.inputTax) + Number(this.inputOngkir)
     },
     kembalian() {
       return this.inputPaid > 0 ? Number(this.inputPaid) - Number(this.grandTotal) : 0
