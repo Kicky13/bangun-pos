@@ -290,6 +290,22 @@ export default {
     },
   },
   methods: {
+    setDataUser(data) {
+      const userAbility = authService.getAbility(data.role)
+      const { toko } = data
+      const userData = {
+        id: 'admin01',
+        fullName: data.name,
+        username: toko.username,
+        password: data.role,
+        // eslint-disable-next-line global-require
+        avatar: require('@/assets/images/avatars/13-small.png'),
+        email: data.email,
+        role: 'admin',
+        ability: userAbility,
+      }
+      return userData
+    },
     login() {
       console.log('login')
       if (this.validateForm()) {
@@ -297,16 +313,16 @@ export default {
           username: this.userEmail,
           password: this.password,
         }).then(res => {
-          if (res.result) {
-            const userData = authService.getDataToken(res.token)
-            const toko = this.setDataUser(userData)
+          console.log(res.data)
+          if (res.data) {
+            const toko = this.setDataUser(res.data)
+            const role = 'admin'
             localStorage.setItem('userData', JSON.stringify(toko))
             authService.setToken(res.token)
-            // console.log(res.token)
-            const userAbility = authService.getAbility(userData.role)
+            const userAbility = authService.getAbility(role)
             this.$ability.update(userAbility)
 
-            this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
+            this.$router.replace(getHomeRouteForLoggedInUser(role))
               .then(() => {
                 this.$toast({
                   component: ToastificationContent,
@@ -315,7 +331,7 @@ export default {
                     title: `Welcome ${toko.fullName || toko.username}`,
                     icon: 'CoffeeIcon',
                     variant: 'success',
-                    text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
+                    text: `You have successfully logged in as ${role}. Now you can start to explore!`,
                   },
                 })
               })
@@ -326,7 +342,7 @@ export default {
             this.$toast({
               component: ToastificationContent,
               props: {
-                title: res.status,
+                title: 'Oops, Something went wrong',
                 icon: 'AlertCircleIcon',
                 variant: 'danger',
               },
