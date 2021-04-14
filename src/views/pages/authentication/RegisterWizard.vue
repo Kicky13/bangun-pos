@@ -385,7 +385,6 @@ export default {
           kasir: cashier,
           kode_toko: this.shopCode,
         }).then(response => {
-          console.log(response)
           const { data } = response
           if (data.result) {
             const userData = authService.getDataToken(data.token)

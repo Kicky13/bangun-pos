@@ -83,7 +83,6 @@
           <!-- form -->
           <validation-observer
             ref="loginForm"
-            #default="{invalid}"
           >
             <b-form
               class="auth-login-form mt-2"
@@ -166,7 +165,6 @@
                 type="submit"
                 variant="primary"
                 block
-                :disabled="invalid"
                 style="color: #b20838;"
               >
                 Sign in
@@ -229,8 +227,8 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import {
   BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup, BFormCheckbox, BCardText, BCardTitle, BImg, BForm, BButton, BAlert, VBTooltip,
 } from 'bootstrap-vue'
-import useJwt from '@/auth/jwt/useJwt'
 import { required, email } from '@validations'
+import authService from '@/connection/connection'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
 import { getHomeRouteForLoggedInUser } from '@/auth/utils'
@@ -293,43 +291,117 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.loginForm.validate().then(success => {
-        if (success) {
-          useJwt.login({
-            email: this.userEmail,
-            password: this.password,
-          })
-            .then(response => {
-              const { userData } = response.data
-              useJwt.setToken(response.data.accessToken)
-              useJwt.setRefreshToken(response.data.refreshToken)
-              localStorage.setItem('userData', JSON.stringify(userData))
-              this.$ability.update(userData.ability)
+      console.log('login')
+      if (this.validateForm()) {
+        authService.login({
+          username: this.userEmail,
+          password: this.password,
+        }).then(res => {
+          if (res.result) {
+            const userData = authService.getDataToken(res.token)
+            const toko = this.setDataUser(userData)
+            localStorage.setItem('userData', JSON.stringify(toko))
+            authService.setToken(res.token)
+            // console.log(res.token)
+            const userAbility = authService.getAbility(userData.role)
+            this.$ability.update(userAbility)
 
-              // ? This is just for demo purpose as well.
-              // ? Because we are showing eCommerce app's cart items count in navbar
-              // this.$store.commit('app-ecommerce/UPDATE_CART_ITEMS_COUNT', userData.extras.eCommerceCartItemsCount)
-
-              // ? This is just for demo purpose. Don't think CASL is role based in this case, we used role in if condition just for ease
-              this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
-                .then(() => {
-                  this.$toast({
-                    component: ToastificationContent,
-                    position: 'top-right',
-                    props: {
-                      title: `Welcome ${userData.fullName || userData.username}`,
-                      icon: 'CoffeeIcon',
-                      variant: 'success',
-                      text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
-                    },
-                  })
+            this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
+              .then(() => {
+                this.$toast({
+                  component: ToastificationContent,
+                  position: 'top-right',
+                  props: {
+                    title: `Welcome ${toko.fullName || toko.username}`,
+                    icon: 'CoffeeIcon',
+                    variant: 'success',
+                    text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
+                  },
                 })
-                .catch(error => {
-                  this.$refs.loginForm.setErrors(error.response.data.error)
-                })
+              })
+              .catch(error => {
+                console.log(error)
+              })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: res.status,
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+              },
             })
-        }
-      })
+          }
+        }).catch(err => {
+          const msg = JSON.parse(err.request.response)
+          if ('error' in msg) {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'ERROR!',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+                text: msg.error,
+              },
+            })
+          }
+        })
+      }
+      // this.$refs.loginForm.validate().then(success => {
+      //   if (success) {
+      //     useJwt.login({
+      //       email: this.userEmail,
+      //       password: this.password,
+      //     })
+      //       .then(response => {
+      //         const { userData } = response.data
+      //         useJwt.setToken(response.data.accessToken)
+      //         useJwt.setRefreshToken(response.data.refreshToken)
+      //         localStorage.setItem('userData', JSON.stringify(userData))
+      //         this.$ability.update(userData.ability)
+
+      //         // ? This is just for demo purpose as well.
+      //         // ? Because we are showing eCommerce app's cart items count in navbar
+      //         // this.$store.commit('app-ecommerce/UPDATE_CART_ITEMS_COUNT', userData.extras.eCommerceCartItemsCount)
+
+      //         // ? This is just for demo purpose. Don't think CASL is role based in this case, we used role in if condition just for ease
+      //         this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
+      //           .then(() => {
+      // this.$toast({
+      //   component: ToastificationContent,
+      //   position: 'top-right',
+      //   props: {
+      //     title: `Welcome ${userData.fullName || userData.username}`,
+      //     icon: 'CoffeeIcon',
+      //     variant: 'success',
+      //     text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
+      //   },
+      // })
+      //           })
+      //           .catch(error => {
+      //             this.$refs.loginForm.setErrors(error.response.data.error)
+      //           })
+      //       })
+      //   }
+      // })
+    },
+    validateForm() {
+      const errMsg = []
+
+      if (!this.userEmail.length > 0) {
+        errMsg.push('Username wajib diisi')
+      }
+
+      if (!this.password.length > 0) {
+        errMsg.push('Password wajib diisi')
+      }
+
+      if (errMsg.length === 0) {
+        return true
+      }
+
+      return false
     },
   },
 }

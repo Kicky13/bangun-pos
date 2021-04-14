@@ -684,8 +684,7 @@ export default {
       appService.updateCustomer(this.customerID, data).then(response => {
         console.log(response)
         this.clearForm()
-        this.rows = []
-        this.fetchCustomerList()
+        this.refreshTable()
         this.editForm = false
       }).catch(err => {
         console.log(err)
@@ -702,8 +701,7 @@ export default {
       appService.addCustomer(data).then(response => {
         const res = response.data.data
         console.log(res)
-        this.rows = []
-        this.fetchCustomerList()
+        this.refreshTable()
         this.clearForm()
         this.isLoading = false
       }).catch(err => {
@@ -732,8 +730,7 @@ export default {
     fetchDeleteCustomer(data) {
       appService.deleteCustomer(data.encodedID).then(response => {
         console.log(response)
-        this.rows = []
-        this.fetchCustomerList()
+        this.refreshTable()
         this.$toast({
           component: ToastificationContent,
           position: 'top-right',
@@ -830,8 +827,7 @@ export default {
         this.clearBayar()
         this.isLoading = false
         this.$$bvModal.hide('listBayar')
-        this.rows = []
-        this.fetchCustomerList()
+        this.refreshTable()
       }).catch(err => {
         const errMsg = JSON.parse(err.request.response)
         this.isLoading = false
@@ -864,6 +860,10 @@ export default {
       this.remainingDebt = 0
       this.paySum = 0
       this.paymentID = 0
+    },
+    refreshTable() {
+      this.rows = []
+      this.fetchCustomerList()
     },
   },
 }
