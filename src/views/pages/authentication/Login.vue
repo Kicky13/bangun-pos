@@ -1,18 +1,6 @@
 <template>
   <div class="auth-wrapper auth-v2 logincontainer">
     <b-row class="auth-inner m-0">
-      <!-- Brand logo-->
-      <!-- <b-link class="brand-logo">
-        <h2
-          class="ml-1"
-          style="color: #b20838; font-weight: 800"
-        >
-          POS RETAIL
-        </h2>
-      </b-link> -->
-      <!-- /Brand logo-->
-
-      <!-- Left Text-->
       <b-col
         lg="8"
         class="d-none d-lg-flex align-items-center p-5"
@@ -59,27 +47,6 @@
             <!--Please sign-in to your account and start the adventure-->
           </b-card-text>
 
-          <b-alert
-            variant="primary"
-            show
-          >
-            <div class="alert-body font-small-2">
-              <p>
-                <small class="mr-50"><span class="font-weight-bold">Admin:</span> admin@demo.com | admin</small>
-              </p>
-              <p>
-                <small class="mr-50"><span class="font-weight-bold">User:</span> User@demo.com | User</small>
-              </p>
-            </div>
-            <feather-icon
-              v-b-tooltip.hover.left="'This is just for ACL demo purpose'"
-              icon="HelpCircleIcon"
-              size="18"
-              class="position-absolute"
-              style="top: 10; right: 10;"
-            />
-          </b-alert>
-
           <!-- form -->
           <validation-observer
             ref="loginForm"
@@ -90,21 +57,21 @@
             >
               <!-- email -->
               <b-form-group
-                label="Email"
+                label="Username"
                 label-for="login-email"
               >
                 <validation-provider
                   #default="{ errors }"
                   name="Email"
                   vid="email"
-                  rules="required|email"
+                  rules="required"
                 >
                   <b-form-input
                     id="login-email"
                     v-model="userEmail"
                     :state="errors.length > 0 ? false:null"
                     name="login-email"
-                    placeholder="john@example.com"
+                    placeholder="johnExample"
                   />
                   <small class="text-danger">{{ errors[0] }}</small>
                 </validation-provider>
@@ -114,9 +81,6 @@
               <b-form-group>
                 <div class="d-flex justify-content-between">
                   <label for="login-password">Password</label>
-                  <b-link :to="{name:'auth-forgot-password'}">
-                    <small>Forgot Password?</small>
-                  </b-link>
                 </div>
                 <validation-provider
                   #default="{ errors }"
@@ -149,17 +113,6 @@
                 </validation-provider>
               </b-form-group>
 
-              <!-- checkbox -->
-              <b-form-group>
-                <b-form-checkbox
-                  id="remember-me"
-                  v-model="status"
-                  name="checkbox-1"
-                >
-                  Remember Me
-                </b-form-checkbox>
-              </b-form-group>
-
               <!-- submit buttons -->
               <b-button
                 type="submit"
@@ -167,7 +120,7 @@
                 block
                 style="color: #b20838;"
               >
-                Sign in
+                Masuk
               </b-button>
             </b-form>
           </validation-observer>
@@ -225,7 +178,7 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 // import VuexyLogo from '@core/layouts/components/Logo.vue'
 import {
-  BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup, BFormCheckbox, BCardText, BCardTitle, BImg, BForm, BButton, BAlert, VBTooltip,
+  BRow, BCol, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup, BCardText, BCardTitle, BImg, BForm, BButton, VBTooltip,
 } from 'bootstrap-vue'
 import { required, email } from '@validations'
 import authService from '@/connection/connection'
@@ -242,18 +195,15 @@ export default {
   components: {
     BRow,
     BCol,
-    BLink,
     BFormGroup,
     BFormInput,
     BInputGroupAppend,
     BInputGroup,
-    BFormCheckbox,
     BCardText,
     BCardTitle,
     BImg,
     BForm,
     BButton,
-    BAlert,
     ValidationProvider,
     ValidationObserver,
   },
@@ -261,8 +211,8 @@ export default {
   data() {
     return {
       status: '',
-      password: 'admin',
-      userEmail: 'admin@demo.com',
+      password: '',
+      userEmail: '',
       sideImg: require('@/assets/images/pages/Login_POS1Medium.jpg'),
       logoImg: require('@/assets/images/logo/POSRetailBlack.png'),
       // sideImg: require('@/assets/images/pages/login-v2.svg'),
@@ -290,35 +240,17 @@ export default {
     },
   },
   methods: {
-    setDataUser(data) {
-      const userAbility = authService.getAbility(data.role)
-      const { toko } = data
-      const userData = {
-        id: 'admin01',
-        fullName: data.name,
-        username: toko.username,
-        password: data.role,
-        // eslint-disable-next-line global-require
-        avatar: require('@/assets/images/avatars/13-small.png'),
-        email: data.email,
-        role: 'admin',
-        ability: userAbility,
-      }
-      return userData
-    },
     login() {
-      console.log('login')
       if (this.validateForm()) {
         authService.login({
           username: this.userEmail,
           password: this.password,
         }).then(res => {
-          console.log(res.data)
           if (res.data) {
             const toko = this.setDataUser(res.data)
-            const role = 'admin'
+            const { role } = res.data
             localStorage.setItem('userData', JSON.stringify(toko))
-            authService.setToken(res.token)
+            authService.setToken(res.data.token)
             const userAbility = authService.getAbility(role)
             this.$ability.update(userAbility)
 
@@ -349,58 +281,38 @@ export default {
             })
           }
         }).catch(err => {
-          const msg = JSON.parse(err.request.response)
-          if ('error' in msg) {
-            this.$toast({
-              component: ToastificationContent,
-              position: 'top-right',
-              props: {
-                title: 'ERROR!',
-                icon: 'AlertCircleIcon',
-                variant: 'danger',
-                text: msg.error,
-              },
-            })
+          if (err.request) {
+            const msg = JSON.parse(err.request.response)
+            if ('error' in msg) {
+              this.$toast({
+                component: ToastificationContent,
+                position: 'top-right',
+                props: {
+                  title: 'ERROR!',
+                  icon: 'AlertCircleIcon',
+                  variant: 'danger',
+                  text: msg.error,
+                },
+              })
+            }
           }
         })
       }
-      // this.$refs.loginForm.validate().then(success => {
-      //   if (success) {
-      //     useJwt.login({
-      //       email: this.userEmail,
-      //       password: this.password,
-      //     })
-      //       .then(response => {
-      //         const { userData } = response.data
-      //         useJwt.setToken(response.data.accessToken)
-      //         useJwt.setRefreshToken(response.data.refreshToken)
-      //         localStorage.setItem('userData', JSON.stringify(userData))
-      //         this.$ability.update(userData.ability)
-
-      //         // ? This is just for demo purpose as well.
-      //         // ? Because we are showing eCommerce app's cart items count in navbar
-      //         // this.$store.commit('app-ecommerce/UPDATE_CART_ITEMS_COUNT', userData.extras.eCommerceCartItemsCount)
-
-      //         // ? This is just for demo purpose. Don't think CASL is role based in this case, we used role in if condition just for ease
-      //         this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
-      //           .then(() => {
-      // this.$toast({
-      //   component: ToastificationContent,
-      //   position: 'top-right',
-      //   props: {
-      //     title: `Welcome ${userData.fullName || userData.username}`,
-      //     icon: 'CoffeeIcon',
-      //     variant: 'success',
-      //     text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
-      //   },
-      // })
-      //           })
-      //           .catch(error => {
-      //             this.$refs.loginForm.setErrors(error.response.data.error)
-      //           })
-      //       })
-      //   }
-      // })
+    },
+    setDataUser(data) {
+      const userAbility = authService.getAbility(data.role)
+      const userData = {
+        id: 'admin01',
+        fullName: data.name,
+        username: data.username,
+        password: data.role,
+        // eslint-disable-next-line global-require
+        avatar: require('@/assets/images/avatars/13-small.png'),
+        email: data.email,
+        role: data.role,
+        ability: userAbility,
+      }
+      return userData
     },
     validateForm() {
       const errMsg = []
