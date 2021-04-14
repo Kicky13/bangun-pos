@@ -248,7 +248,6 @@ export default {
         }).then(res => {
           if (res.data) {
             const toko = this.setDataUser(res.data)
-            console.log(toko)
             const { role } = res.data
             localStorage.setItem('userData', JSON.stringify(toko))
             authService.setToken(res.data.token)
