@@ -1,5 +1,6 @@
 <template>
   <div style="height: inherit">
+    <loading-grow v-if="isLoading" />
 
     <!-- Overlay -->
     <div class="body-content-overlay" />
@@ -153,6 +154,7 @@
         </b-col>
       </b-row>
     </section>
+    <alert-token />
   </div>
 </template>
 
@@ -165,6 +167,9 @@ import ApiService from '@/connection/apiService'
 // import { watch } from '@vue/composition-api'
 // import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
 import MiniProductCard from '@core/components/item-cards/CardKatalogProduk.vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
 // import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/produkFilter'
 
 const appService = new ApiService()
@@ -184,9 +189,12 @@ export default {
     BButton,
     BPagination,
     MiniProductCard,
+    LoadingGrow,
+    AlertToken,
   },
   data() {
     return {
+      isLoading: false,
       currentPage: 1,
       perPage: 12,
       rows: 0,
@@ -268,18 +276,33 @@ export default {
       appService.getCategoryList().then(response => {
         const { data } = response
         this.sortByCategoryOptions = []
-        if (data.data) {
-          this.sortByCategoryOptions.push({
-            value: '',
-            text: 'Semua Kategori',
-          })
-          const itemlist = data.data
-          itemlist.forEach(item => {
+        if (data.result) {
+          if (data.data) {
             this.sortByCategoryOptions.push({
-              value: item.id,
-              text: item.nama_category,
+              value: '',
+              text: 'Semua Kategori',
             })
-          })
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.sortByCategoryOptions.push({
+                value: item.id,
+                text: item.nama_category,
+              })
+            })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -290,18 +313,33 @@ export default {
       appService.getSubcategoryList(param).then(response => {
         const { data } = response
         this.sortBySubCategoryOptions = []
-        if (data.data) {
-          this.sortBySubCategoryOptions.push({
-            value: '',
-            text: 'Semua Sub-Kategori',
-          })
-          const itemlist = data.data
-          itemlist.forEach(item => {
+        if (data.result) {
+          if (data.data) {
             this.sortBySubCategoryOptions.push({
-              value: item.id,
-              text: item.nama_category,
+              value: '',
+              text: 'Semua Sub-Kategori',
             })
-          })
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.sortBySubCategoryOptions.push({
+                value: item.id,
+                text: item.nama_category,
+              })
+            })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -309,18 +347,33 @@ export default {
       appService.getBrandList().then(response => {
         const { data } = response
         this.sortByBrandOptions = []
-        if (data.data) {
-          this.sortByBrandOptions.push({
-            value: '',
-            text: 'Semua Brand',
-          })
-          const itemlist = data.data
-          itemlist.forEach(item => {
+        if (data.result) {
+          if (data.data) {
             this.sortByBrandOptions.push({
-              value: item.id,
-              text: item.nama_brand,
+              value: '',
+              text: 'Semua Brand',
             })
-          })
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.sortByBrandOptions.push({
+                value: item.id,
+                text: item.nama_brand,
+              })
+            })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -333,14 +386,29 @@ export default {
           text: 'Pilih salah satu Tipe',
           disabled: true,
         })
-        if (data.data) {
-          const itemlist = data.data
-          itemlist.forEach(item => {
-            this.typeItems.push({
-              value: item.id,
-              text: item.nama_type,
+        if (data.result) {
+          if (data.data) {
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.typeItems.push({
+                value: item.id,
+                text: item.nama_type,
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -353,14 +421,29 @@ export default {
           text: 'Pilih salah satu Unit / UOM',
           disabled: true,
         })
-        if (data.data) {
-          const itemlist = data.data
-          itemlist.forEach(item => {
-            this.unitItems.push({
-              value: item.id,
-              text: item.nama_uom,
+        if (data.result) {
+          if (data.data) {
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.unitItems.push({
+                value: item.id,
+                text: item.nama_uom,
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -384,34 +467,49 @@ export default {
         const { data } = response
         this.itemsForList = []
         this.productStoreList = []
-        if (data.data) {
-          const itemlist = data.data
-          this.totalProducts = itemlist.length
-          itemlist.forEach(item => {
-            this.productStoreList.push({
-              id: item.kode_produk,
-              name: item.nama_produk,
-              qty: item.nama_uom,
-              price: item.price,
-              image: item.img_produk,
-              id_produk: item.id_produk,
-              kode_produk: item.kode_produk,
-              nama_produk: item.nama_produk,
-              img_produk: item.img_produk,
-              id_category: item.id_category,
-              nama_category: item.nama_category,
-              id_subcategory: item.id_subcategory,
-              nama_subcategory: item.nama_subcategory,
-              id_brand: item.id_brand,
-              nama_brand: item.nama_brand,
-              id_type: item.id_type,
-              nama_type: item.nama_type,
-              id_uom: item.id_uom,
-              nama_uom: item.nama_uom,
-              id_price: item.id_price,
-              is_available: item.is_available,
+        if (data.result) {
+          if (data.data) {
+            const itemlist = data.data
+            this.totalProducts = itemlist.length
+            itemlist.forEach(item => {
+              this.productStoreList.push({
+                id: item.kode_produk,
+                name: item.nama_produk,
+                qty: item.nama_uom,
+                price: item.price,
+                image: item.img_produk,
+                id_produk: item.id_produk,
+                kode_produk: item.kode_produk,
+                nama_produk: item.nama_produk,
+                img_produk: item.img_produk,
+                id_category: item.id_category,
+                nama_category: item.nama_category,
+                id_subcategory: item.id_subcategory,
+                nama_subcategory: item.nama_subcategory,
+                id_brand: item.id_brand,
+                nama_brand: item.nama_brand,
+                id_type: item.id_type,
+                nama_type: item.nama_type,
+                id_uom: item.id_uom,
+                nama_uom: item.nama_uom,
+                id_price: item.id_price,
+                is_available: item.is_available,
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
         this.rows = this.productStoreList.length + 1
         this.itemsForList = this.productStoreList.slice(

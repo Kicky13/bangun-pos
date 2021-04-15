@@ -1,5 +1,6 @@
 <template>
   <b-row>
+    <loading-grow v-if="isLoading" />
     <b-col
       lg="8"
       md="8"
@@ -20,6 +21,7 @@
         :akhir="tanggalEnd"
       />
     </b-col>
+    <alert-token />
   </b-row>
 </template>
 
@@ -27,6 +29,8 @@
 import { BRow, BCol } from 'bootstrap-vue'
 // import { getUserData } from '@/auth/utils'
 import ApiService from '@/connection/apiService'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
 import DashboardBarChart from './DashboardBarChart.vue'
 import EcommerceGoalOverview from './EcommerceGoalOverview.vue'
 import EcommerceTransactions from './EcommerceTransactions.vue'
@@ -40,10 +44,13 @@ export default {
     DashboardBarChart,
     EcommerceGoalOverview,
     EcommerceTransactions,
+    LoadingGrow,
+    AlertToken,
   },
   data() {
     return {
       data: {},
+      isLoading: false,
       textDisplay: '1 Minggu Terakhir',
       tanggalStart: '',
       tanggalEnd: '',
@@ -117,7 +124,15 @@ export default {
     this.getTransactionsData('last_week', this.textDisplay)
   },
   methods: {
+    formatPrice(value) {
+      console.log(value)
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      console.log(val)
+      console.log(val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    },
     getGoalOverviewData() {
+      this.isLoading = true
       // const param = {
       //   start_date: StartDate,
       //   end_date: EndDate,
@@ -125,6 +140,7 @@ export default {
       appService.getGoalOverviewData().then(response => {
         const { data } = response
         console.log(data)
+        this.isLoading = false
         if (data.result) {
           this.goalOverview = {
             totalTransaction: data.sales,
@@ -132,10 +148,13 @@ export default {
             inProgress: data.unpaid,
             allinProgress: data.totalUnpaid,
           }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
     getTransactionsData(duration, textdisp) {
+      this.isLoading = true
       const param = {
         filter: duration,
       }
@@ -145,15 +164,17 @@ export default {
         // if (data.data) {
         // }
         this.transactionData = []
-        if (data.data) {
+        this.isLoading = false
+        if (data.result) {
           this.textDisplay = textdisp
           this.tanggalStart = data.tgl_start
           this.tanggalEnd = data.tgl_end
           const itemlist = data.data
           itemlist.forEach(item => {
+            const fomatPrice = this.formatPrice(item.price)
             this.transactionData.push({
               mode: item.nama_product,
-              types: `${item.price} / ${item.nama_uom}`,
+              types: `Rp. ${fomatPrice} / ${item.nama_uom}`,
               avatar: 'DollarSignIcon',
               avatarVariant: 'light-primary',
               // payment: `${item.price} / ${item.nama_uom}`,
@@ -182,6 +203,8 @@ export default {
               // is_available: item.is_available,
             })
           })
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },

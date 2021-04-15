@@ -233,7 +233,8 @@ export default {
     transid: {
       immediate: true,
       handler() {
-        if (this.transid !== '') {
+        // console.log(this.transid)
+        if (this.transid && this.transid !== '') {
           this.getLogTransaction(this.transid)
         }
       },
@@ -252,8 +253,11 @@ export default {
         kode_transaksi: uuid,
       }).then(response => {
         const datares = response.data.data
+        // const { data } = response
+        // console.log(data.result)
+        // const logstat = this.$parent.logStatus(datares, data.result)
         if (datares) {
-          console.log(datares)
+          // console.log(datares)
           datares.forEach(this.setRows)
         }
       })

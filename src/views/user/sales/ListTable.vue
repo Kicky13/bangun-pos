@@ -184,7 +184,7 @@
         </div>
       </template>
     </vue-good-table>
-
+    <alert-token />
   </b-card>
 </template>
 
@@ -198,6 +198,7 @@ import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
 
 const appService = new ApiService()
 
@@ -214,6 +215,7 @@ export default {
     BBadge,
     BCard,
     LoadingGrow,
+    AlertToken,
   },
   directives: {
     Ripple,
@@ -357,24 +359,26 @@ export default {
         limit: 10,
         page: 1,
       }).then(response => {
+        const { data } = response
         const res = response.data.data
         this.isLoading = false
-        if (res.length > 0) {
-          // console.log(res)
-          res.forEach(this.setupRows)
+        if (data.result) {
+          if (res.length > 0) {
+            res.forEach(this.setupRows)
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
         } else {
-          this.$toast({
-            component: ToastificationContent,
-            position: 'top-right',
-            props: {
-              title: 'Data Not Found',
-              icon: 'CoffeeIcon',
-              variant: 'danger',
-              text: 'Data empty on server, using dummy data now',
-            },
-          })
-          // this.$http.get('/app-data/salesUser')
-          //   .then(resData => { this.rows = resData.data })
+          this.$bvModal.show('tokenExpired')
         }
       }).catch(err => {
         console.log(err)

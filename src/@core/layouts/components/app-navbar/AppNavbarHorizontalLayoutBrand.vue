@@ -4,7 +4,7 @@
       <li class="nav-item">
         <b-link
           class="navbar-brand"
-          to="/"
+          to="/mydashboard"
         >
           <span class="brand-logo">
             <b-img
