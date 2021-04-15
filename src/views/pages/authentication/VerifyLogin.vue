@@ -124,12 +124,18 @@ export default {
     },
     setDataUser() {
       const { toko, role } = this
+      console.log(toko)
       const userAbility = authService.getAbility(role)
       const userData = {
         id: toko.id_toko,
         fullName: toko.nama_pemilik,
+        shopName: toko.nama_toko,
         username: toko.kode_toko,
         password: role,
+        ownerAddress: toko.alamat_pemilik,
+        identityNumber: toko.no_identitas,
+        ownerNumber: toko.telp_pemilik,
+        shopNumber: toko.telp_toko,
         // eslint-disable-next-line global-require
         avatar: require('@/assets/images/avatars/13-small.png'),
         email: 'user@demo.com',
