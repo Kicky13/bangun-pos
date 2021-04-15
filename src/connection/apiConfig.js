@@ -19,6 +19,10 @@ export default {
   payTransaction: 'user/transaction/pay',
   detailTransaction: 'user/transaction/',
 
+  // Antrian
+  antrianData: 'user/transaction/load/',
+  addAntrianData: 'user/transaction/queue',
+
   // List
   category: 'category',
   subcategory: 'subcategory',
