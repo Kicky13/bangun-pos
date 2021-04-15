@@ -4,13 +4,17 @@
   >
     <!-- <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }"> -->
     <b-img
-      :alt="`${product.name}-${product.id}`"
+      :alt="`${product.nama_produk}-${product.id_produk}`"
       thumbnail
-      sizes="35"
-      style="background-color: white; border: none"
+      style="background-color:white;
+      border:none;
+      max-width:90%;
+      height: 175px;
+      margin-top: 0.5rem;
+      object-fit: cover;"
       fluid
       class="card-img-top"
-      :src="product.image"
+      :src="product.img_produk"
     />
     <!-- </b-link> -->
     <div class="truncate text-center">
@@ -18,13 +22,13 @@
         Rp. {{ formatPrice(product.price) }} / PCS
       </h5>
       <span
-        v-if="product.name.length<=15"
+        v-if="product.nama_produk.length<=15"
         style="color: black;"
-      >{{ product.id }}-{{ product.name }}</span>
+      >{{ product.id_produk }}-{{ product.nama_produk }}</span>
       <span
         v-else
         style="color: black;"
-      >{{ product.id }}-{{ product.name.substring(0,15)+"..." }}</span>
+      >{{ product.id_produk }}-{{ product.nama_produk.substring(0,15)+"..." }}</span>
     </div>
   </b-card>
 </template>
@@ -64,3 +68,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.card-body {
+  padding: 0rem;
+  margin-bottom: 0.5rem;
+}
+</style>

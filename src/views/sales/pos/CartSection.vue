@@ -1,11 +1,12 @@
 <template>
   <div>
     <b-row>
-      <b-col cols="12">
+      <b-col>
         <b-card>
           <!-- Customer Form Section -->
           <div>
-            <b-row class="mb-0">
+            <b-row>
+              <!-- Selling Code -->
               <b-col cols="5">
                 <b-form-group
                   label="Kode Penjualan"
@@ -13,11 +14,12 @@
                 >
                   <b-form-input
                     id="sellingCode"
-                    v-model="kodeTransaction"
+                    v-model="transactionCode"
                     disabled
                   />
                 </b-form-group>
               </b-col>
+              <!-- Customer List -->
               <b-col cols="5">
                 <b-form-group
                   label="Customer"
@@ -26,29 +28,32 @@
                   <b-form-select
                     id="customer"
                     v-model="selectedCustomer"
-                    :options="customers"
+                    :options="customerList"
                   />
                 </b-form-group>
               </b-col>
+              <!-- Add New Customer Button -->
               <b-col cols="2">
                 <b-button
                   v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-                  v-b-modal.customerAdd
+                  v-b-modal.addCustomer
                   variant="danger"
-                  class="btn-icon mt-0 mt-md-2"
+                  class="btn-icon mt-2"
                 >
                   <feather-icon icon="UserPlusIcon" />
                 </b-button>
               </b-col>
             </b-row>
-            <b-row class="mb-0">
+            <b-row>
+              <!-- Cashier List -->
               <b-col cols="5">
                 <b-form-select
-                  id="customer"
+                  id="cashier"
                   v-model="selectedCashier"
-                  :options="cashiers"
+                  :options="cashierList"
                 />
               </b-col>
+              <!-- No. Reference -->
               <b-col cols="5">
                 <b-form-input
                   id="jagoId"
@@ -58,13 +63,12 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col cols="12">
+              <b-col>
                 <hr>
               </b-col>
             </b-row>
           </div>
           <!-- End Customer Form Section -->
-
           <!-- Cart Section -->
           <div>
             <b-form
@@ -83,12 +87,12 @@
                   <b-row
                     v-for="(item, index) in items"
                     :id="item.id_produk"
-                    :key="item.id_produk"
+                    :key="item.kode_produk"
                     ref="row"
                   >
-                    <!-- Item Name -->
-                    <b-col md="4">
+                    <b-col sm="4">
                       <b-row>
+                        <!-- Product Code -->
                         <b-col>
                           <span>
                             {{ item.kode_produk }}
@@ -101,23 +105,24 @@
                         </b-col>
                       </b-row>
                       <b-row>
+                        <!-- Item Name -->
                         <b-col>
                           <span style="font-weight: bold; font-size: 14px;">
-                            {{ item.name }}
+                            {{ item.nama_produk }}
                           </span>
                         </b-col>
                       </b-row>
                       <b-row>
+                        <!-- Price Item -->
                         <b-col>
                           <span>
-                            Rp. {{ item.price }} / PCS
+                            Rp. {{ formatPrice(item.price) }} / PCS
                           </span>
                         </b-col>
                       </b-row>
                     </b-col>
-
                     <!-- Quantity -->
-                    <b-col md="3">
+                    <b-col sm="3">
                       <b-form-group
                         label="Quantity"
                         label-for="quantity"
@@ -131,11 +136,10 @@
                         />
                       </b-form-group>
                     </b-col>
-
                     <!-- Profession -->
                     <b-col
                       cols="6"
-                      md="3"
+                      sm="3"
                       class="text-md-right"
                     >
                       <b-form-group
@@ -150,12 +154,11 @@
                         />
                       </b-form-group>
                     </b-col>
-
                     <!-- Remove Button -->
                     <b-col
                       cols="6"
-                      md="2"
-                      class="mb-50 text-right text-md-center"
+                      sm="2"
+                      class="text-right text-md-center"
                     >
                       <b-button
                         v-ripple.400="'rgba(234, 84, 85, 0.15)'"
@@ -168,7 +171,7 @@
                         <feather-icon icon="Trash2Icon" />
                       </b-button>
                     </b-col>
-                    <b-col cols="12">
+                    <b-col>
                       <hr>
                     </b-col>
                   </b-row>
@@ -186,79 +189,63 @@
             </b-form>
           </div>
           <!-- End Cart Section -->
-
           <!-- Total Section -->
-          <div>
-            <b-row>
-              <b-col cols="12">
-                <hr>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col sm="6">
-                <b-form-group
-                  label="Items"
-                  label-for="items"
-                  label-cols="6"
-                  label-cols-md="4"
+          <b-row>
+            <b-col>
+              <hr>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="6">
+              <b-form-group
+                label="Item"
+                label-for="items"
+                label-cols="6"
+                label-cols-md="4"
+              >
+                <b-input-group
+                  class="input-group-merge"
                 >
-                  <b-input-group
-                    class="input-group-merge"
-                  >
-                    <b-form-input
-                      id="items"
-                      style="text-align: right;"
-                      :value="items.length + '(' + totalQuantities + ')'"
-                      plaintext
-                    />
-                  </b-input-group>
-                </b-form-group>
-              </b-col>
-              <b-col sm="6">
-                <b-form-group
-                  label="Sub Total"
-                  label-for="subtotal"
-                  label-cols-md="4"
+                  <b-form-input
+                    id="items"
+                    style="text-align: right;"
+                    :value="items.length + '(' + totalQuantity + ')'"
+                    plaintext
+                  />
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+            <b-col md="6">
+              <b-form-group
+                label="Sub Total"
+                label-for="subtotal"
+                label-cols-md="4"
+              >
+                <b-input-group
+                  prepend="Rp."
+                  append=".00"
+                  class="input-group-merge"
                 >
-                  <b-input-group
-                    prepend="$"
-                    append=".00"
-                    class="input-group-merge"
-                  >
-                    <b-form-input
-                      id="subtotal"
-                      style="text-align: right;"
-                      :value="totalSubtotal"
-                      disabled
-                    />
-                  </b-input-group>
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <!-- <b-row style="margin-top: 10px;">
-              <b-col cols="12">
-                <b-form-textarea
-                  id="textarea-rows"
-                  placeholder="Note"
-                  rows="3"
-                />
-              </b-col>
-            </b-row> -->
-            <b-row>
-              <b-col cols="12">
-                <hr>
-              </b-col>
-            </b-row>
-          </div>
+                  <b-form-input
+                    id="subtotal"
+                    style="text-align: right;"
+                    :value="totalSubtotal"
+                    disabled
+                  />
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <hr>
+            </b-col>
+          </b-row>
           <!-- End Total Section -->
-
           <!-- Action Button Section -->
           <div>
             <b-row>
-              <b-col
-                cols="12"
-                md="3"
-              >
+              <b-col md="3">
                 <b-button
                   v-ripple.400="'rgba(113, 102, 240, 0.15)'"
                   variant="secondary"
@@ -269,34 +256,27 @@
                   Batal
                 </b-button>
               </b-col>
-              <b-col
-                cols="12"
-                md="3"
-              />
-              <b-col
-                cols="12"
-                md="3"
-              >
+              <b-col md="3" />
+              <b-col md="3">
                 <b-button
                   v-ripple.400="'rgba(186, 191, 199, 0.15)'"
                   variant="warning"
                   class="mb-1"
                   block
+                  :style="!items.length ? {opacity: opacityValue, cursor: cursorValue} : ''"
                   @click="addToAntrian"
                 >
                   Antrian
                 </b-button>
               </b-col>
-              <b-col
-                cols="12"
-                md="3"
-              >
+              <b-col md="3">
                 <b-button
                   v-ripple.400="'rgba(40, 199, 111, 0.15)'"
-                  v-b-modal.paymentModal
                   variant="danger"
                   class="mb-1"
                   block
+                  :style="!items.length ? {opacity: opacityValue, cursor: cursorValue} : ''"
+                  @click="handlePaymentModal"
                 >
                   Bayar
                 </b-button>
@@ -304,12 +284,10 @@
             </b-row>
           </div>
           <!-- End Action Button Section -->
-
           <!-- Modal Section -->
-
           <!-- Add Customer -->
           <b-modal
-            id="customerAdd"
+            id="addCustomer"
             centered
             size="lg"
             title="Tambah Customer"
@@ -325,7 +303,12 @@
                     <b-form-input
                       id="customerName"
                       v-model="customerBaru.nama_customer"
+                      :state="customerBaru.nama_customer.length > 0"
+                      trim
                     />
+                    <b-form-invalid-feedback>
+                      Nama customer tidak boleh kosong
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
@@ -336,6 +319,7 @@
                     <b-form-input
                       id="reference"
                       v-model="customerBaru.no_references"
+                      trim
                     />
                   </b-form-group>
                 </b-col>
@@ -343,23 +327,29 @@
               <b-row>
                 <b-col cols="6">
                   <b-form-group
-                    label="Nomor Handphone : "
+                    label="No. Handphone : "
                     label-for="phone"
                   >
                     <b-form-input
                       id="phone"
                       v-model="customerBaru.telp_customer"
+                      :state="customerBaru.telp_customer.length > 0"
+                      trim
                     />
+                    <b-form-invalid-feedback>
+                      No. handphone tidak boleh kosong
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col cols="6">
                   <b-form-group
-                    label="Nomor Identitas/KTP :"
+                    label="No. Identitas/KTP :"
                     label-for="ktp"
                   >
                     <b-form-input
                       id="ktp"
                       v-model="customerBaru.no_identitas"
+                      trim
                     />
                   </b-form-group>
                 </b-col>
@@ -373,6 +363,7 @@
                     <b-form-textarea
                       id="address"
                       v-model="customerBaru.alamat"
+                      trim
                       rows="4"
                     />
                   </b-form-group>
@@ -385,7 +376,7 @@
                 >
                   <b-button
                     class="mr-1"
-                    @click="$bvModal.hide('customerAdd')"
+                    @click="$bvModal.hide('addCustomer')"
                   >
                     Tutup
                   </b-button>
@@ -400,7 +391,6 @@
             </b-form>
           </b-modal>
           <!-- End of Customer Add -->
-
           <!-- Edit Cart Product -->
           <b-modal
             id="cartProductEdit"
@@ -524,7 +514,6 @@
             </b-form>
           </b-modal>
           <!-- End of Edit Cart Product -->
-
           <!-- Payment Modal -->
           <b-modal
             id="paymentModal"
@@ -541,7 +530,7 @@
                   <b-form-group
                     label="Items"
                     label-for="items"
-                    label-cols-md="4"
+                    label-cols="4"
                   >
                     <b-input-group
                       class="input-group-merge"
@@ -549,9 +538,8 @@
                       <b-form-input
                         id="items"
                         style="text-align: right;"
-                        :value="items.length + '(' + totalQuantities + ')'"
+                        :value="items.length + '(' + totalQuantity + ')'"
                         plaintext
-                        @keypress="isNumber"
                       />
                     </b-input-group>
                   </b-form-group>
@@ -563,10 +551,10 @@
                   <b-form-group
                     label="Sub Total"
                     label-for="subtotal"
-                    label-cols-md="4"
+                    label-cols="4"
                   >
                     <b-input-group
-                      prepend="$"
+                      prepend="Rp."
                       append=".00"
                       class="input-group-merge"
                     >
@@ -588,7 +576,7 @@
                     <b-form-select
                       id="customer"
                       v-model="selectedCustomer"
-                      :options="customers"
+                      :options="customerList"
                     />
                   </b-form-group>
                 </b-col>
@@ -607,6 +595,7 @@
                       <b-form-input
                         id="discount"
                         v-model="inputDiscount"
+                        type="number"
                         style="text-align: right;"
                       />
                     </b-input-group>
@@ -621,6 +610,7 @@
                     <b-form-input
                       id="idBayar"
                       v-model="noReference"
+                      type="number"
                       style="text-align: right"
                     />
                   </b-form-group>
@@ -640,6 +630,7 @@
                       <b-form-input
                         id="tax"
                         v-model="inputTax"
+                        type="number"
                         style="text-align: right;"
                       />
                     </b-input-group>
@@ -653,8 +644,8 @@
                   >
                     <b-form-select
                       id="tipebayar"
-                      v-model="selectedMetode"
-                      :options="methodBayar"
+                      v-model="selectedPaymentMethod"
+                      :options="paymentMethod"
                     />
                   </b-form-group>
                 </b-col>
@@ -673,6 +664,7 @@
                       <b-form-input
                         id="ongkir"
                         v-model="inputOngkir"
+                        type="number"
                         style="text-align: right;"
                       />
                     </b-input-group>
@@ -708,6 +700,7 @@
                       <b-form-input
                         id="paid"
                         v-model="inputPaid"
+                        type="number"
                         style="text-align: right"
                       />
                     </b-input-group>
@@ -741,10 +734,7 @@
                 </b-col>
               </b-row>
               <b-row class="mt-2">
-                <b-col
-                  cols="12"
-                  class="text-right"
-                >
+                <b-col class="text-right">
                   <b-button
                     class="mr-1"
                     @click="$bvModal.hide('paymentModal')"
@@ -762,20 +752,19 @@
             </b-form>
           </b-modal>
           <!-- End of Payment Modal -->
-
           <!-- End of Modal Section -->
-        </b-card></b-col>
+        </b-card>
+      </b-col>
     </b-row>
   </div>
 </template>
 
 <script>
 import {
-  BRow, BCol, BCard, BForm, BFormGroup, BFormInput, BButton, BFormSpinbutton, BAlert, BFormSelect, BInputGroup, BModal, BFormTextarea, VBModal,
+  BRow, BCol, BCard, BForm, BFormGroup, BFormInput, BButton, BFormSpinbutton, BAlert, BFormSelect, BInputGroup, BModal, BFormTextarea, VBModal, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
-// import { useEcommerceUi } from '../useEcommerce'
 import ApiService from '@/connection/apiService'
 import { parentComponent } from './PageContent.vue'
 import { useEcommerceUi } from './ActionHandling'
@@ -797,6 +786,7 @@ export default {
     BFormSelect,
     BInputGroup,
     BCard,
+    BFormInvalidFeedback,
   },
   directives: {
     Ripple,
@@ -805,35 +795,23 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
-      selectedCustomer: '0',
+      transactionCode: '',
+      // List Item
+      customerList: [],
+      cashierList: [],
+      items: [],
+      // Selected Item
+      selectedCustomer: null,
       selectedCashier: null,
-      selectedWarehouse: null,
-      selectedBiller: null,
-      selectedMetode: null,
+      selectedPaymentMethod: null,
       selectedKategori: null,
       selectedSubKategori: null,
       selectedType: null,
       selectedBrand: null,
       selectedUnits: null,
-      noReference: null,
-      /* customers: [{
-        value: null,
-        text: 'Walk-in Customer',
-        disabled: true,
-      },
-      {
-        value: 'Fauzan',
-        text: 'Fauzan',
-      },
-      {
-        value: 'Robiyanto',
-        text: 'Robiyanto',
-      },
-      {
-        value: 'Kikik',
-        text: 'Kikik',
-      }], */
-      customers: [],
+      selectedWarehouse: null,
+      selectedBiller: null,
+      noReference: '',
       customerBaru: {
         nama_customer: '',
         telp_customer: '',
@@ -841,27 +819,9 @@ export default {
         alamat: '',
         no_references: '',
       },
-      /* cashierItems: [
-        {
-          value: null,
-          text: 'Pilih Kasir',
-          disabled: true,
-        },
-        {
-          value: 'Kasir 01',
-          text: 'Kasir 01',
-        },
-        {
-          value: 'Kasir 02',
-          text: 'Kasir 02',
-        },
-        {
-          value: 'Kasir 03',
-          text: 'Kasir 03',
-        },
-      ], */
-      cashiers: [],
-      methodBayar: [{
+      inputDiscount: 0,
+      inputTax: 0,
+      paymentMethod: [{
         value: null,
         text: 'Pilih salah satu metode pembayaran',
       },
@@ -873,7 +833,9 @@ export default {
         value: 2,
         text: 'Kredit',
       }],
-      items: [],
+      inputOngkir: 0,
+      inputPaid: 0,
+      note: '',
       warehouses: [{
         value: null,
         text: 'Select a Warehouse',
@@ -910,7 +872,7 @@ export default {
       },
       {
         value: 678298,
-        text: '678298 - Warehouse - Jakarta',
+        text: '678298 - Warehouse Jakarta',
       },
       {
         value: 698983,
@@ -1002,16 +964,12 @@ export default {
         value: 'unit3',
         text: 'Unit 3',
       }],
-      inputDiscount: 0,
-      inputTax: 0,
-      inputOngkir: 0,
-      inputPaid: 0,
-      kodeTransaction: '',
-      note: '',
+      opacityValue: 0.5,
+      cursorValue: 'auto !important',
     }
   },
   computed: {
-    totalQuantities() {
+    totalQuantity() {
       let total = 0
       this.items.forEach(item => {
         total += item.quantity
@@ -1025,18 +983,24 @@ export default {
       })
       return total
     },
+    inputCheck() {
+      if (this.customerBaru.nama_customer.trim().length > 0) {
+        return true
+      }
+      return false
+    },
     grandTotal() {
-      return this.selectedMetode === 2 ? 0 : Number(this.totalSubtotal) - Number(this.inputDiscount) + Number(this.inputTax) + Number(this.inputOngkir)
+      return this.selectedPaymentMethod === 2 ? 0 : Number(this.totalSubtotal) - Number(this.inputDiscount) + Number(this.inputTax) + Number(this.inputOngkir)
     },
     kembalian() {
       return this.inputPaid > 0 ? Number(this.inputPaid) - Number(this.grandTotal) : 0
     },
   },
   mounted() {
-    this.initTrHeight()
+    this.setTransactionCode()
     this.getAllCustomers()
     this.getAllCashiers()
-    this.setKodeTransaction()
+    this.initTrHeight()
   },
   created() {
     window.addEventListener('resize', this.initTrHeight)
@@ -1047,92 +1011,49 @@ export default {
     parentComponent.$off('addProductToCart')
   },
   methods: {
-    repeateAgain() {
-      this.items.push({
-        id: this.nextTodoId += this.nextTodoId,
+    test() {
+      console.log('test')
+    },
+    async setTransactionCode() {
+      appService.getKodeTransaction().then(response => {
+        const { data } = response
+        this.transactionCode = data.kode
       })
-
-      this.$nextTick(() => {
-        this.trAddHeight(this.$refs.row[0].offsetHeight)
-      })
-    },
-    removeItem(index) {
-      this.items.splice(index, 1)
-      this.trTrimHeight(this.$refs.row[0].offsetHeight)
-    },
-    initTrHeight() {
-      this.trSetHeight(null)
-      this.$nextTick(() => {
-        this.trSetHeight(this.$refs.form.scrollHeight)
-      })
-    },
-    addProductToList() {
-      parentComponent.$on('addProductToCart', product => {
-        const isInCart = this.items.find(item => item.id_produk === product.id_produk)
-        if (isInCart) {
-          isInCart.quantity += 1
-        } else {
-          const newProduct = {
-            id_produk: product.id_produk,
-            kode_produk: product.kode_produk,
-            name: product.name,
-            quantity: 1,
-            price: product.price,
-            subtotal() {
-              return this.price * this.quantity
-            },
-          }
-          this.items.unshift(newProduct)
-        }
-        this.makeToast(product.name, 'Berhasil ditambahkan ke keranjang')
-      })
-    },
-    makeToast(title, content) {
-      this.$bvToast.toast(content, {
-        title,
-        variant: 'danger',
-        toaster: 'b-toaster-bottom-right',
-      })
-    },
-    resetButton() {
-      this.selectedCustomer = '0'
-      this.selectedCashier = null
-      this.noReference = null
-      this.items = []
-    },
-    resetAddNewCustomer() {
-      this.customerBaru = {
-        nama_customer: '',
-        telp_customer: '',
-        no_identitas: '',
-        alamat: '',
-        no_references: '',
-      }
-      this.selectedCustomer = '0'
-    },
-    resetSaveTransaction() {
-      this.selectedCustomer = '0'
-      this.inputDiscount = 0
-      this.noReference = null
-      this.inputTax = 0
-      this.selectedMetode = null
-      this.inputOngkir = 0
-      this.inputPaid = 0
-      this.note = ''
     },
     async getAllCustomers() {
       appService.getCustomer().then(response => {
         const { data } = response.data
-        this.customers = []
+        console.log(data)
+        this.customerList = []
         if (data) {
-          this.customers.push({
-            value: '0',
+          this.customerList.push({
+            value: null,
             text: 'Walk-in Customer',
           })
           data.forEach(item => {
-            this.customers.push({
+            this.customerList.push({
               value: item.uuid,
               text: item.nama,
+            })
+          })
+        }
+      })
+    },
+    async getAllCashiers() {
+      const param = {
+        limit: 15,
+      }
+      appService.getCashier(param).then(response => {
+        const { data } = response.data
+        if (data) {
+          this.cashierList.push({
+            value: null,
+            text: 'Pilih Kasir',
+          })
+          data.forEach(item => {
+            this.cashierList.push({
+              value: item.uuid,
+              text: item.name,
             })
           })
         }
@@ -1146,7 +1067,7 @@ export default {
         alamat: this.customerBaru.alamat,
         no_references: this.customerBaru.no_references,
       }
-      if (this.formAddCustomerValidate()) {
+      if (this.formAddNewCustomerValidate()) {
         appService.addCustomer(newCustomer).then(response => {
           const { data } = response
           if (data.message) {
@@ -1158,37 +1079,30 @@ export default {
           }
         }).catch(err => {
           console.log(err)
-          this.makeToast('Customer Baru Gagal Ditambahkan', 'Silahkan lengkapi form customer terlebih dahulu')
+          this.makeToast('Customer Baru Gagal Ditambahkan', 'Silahkan lengkapi form terlebih dahulu')
         })
-        this.selectedCustomer = '0'
-        this.selectedCashier = null
-        this.$bvModal.hide('customerAdd')
+        this.$bvModal.hide('addCustomer')
       }
     },
-    async getAllCashiers() {
-      const param = {
-        limit: 15,
-      }
-      appService.getCashier(param).then(response => {
-        const { data } = response.data
-        if (data) {
-          this.cashiers.push({
-            value: null,
-            text: 'Pilih Kasir',
-          })
-          data.forEach(item => {
-            this.cashiers.push({
-              value: item.uuid,
-              text: item.name,
-            })
-          })
+    addProductToList() {
+      parentComponent.$on('addProductToCart', product => {
+        const isInCart = this.items.find(item => item.id_produk === product.id_produk)
+        if (isInCart) {
+          isInCart.quantity += 1
+        } else {
+          const newProduct = {
+            id_produk: product.id_produk,
+            kode_produk: product.kode_produk,
+            price: product.price,
+            nama_produk: product.nama_produk,
+            quantity: 1,
+            subtotal() {
+              return this.price * this.quantity
+            },
+          }
+          this.items.unshift(newProduct)
         }
-      })
-    },
-    async setKodeTransaction() {
-      appService.getKodeTransaction().then(response => {
-        const { data } = response
-        this.kodeTransaction = data.kode
+        this.makeToast(product.nama_produk, 'Berhasil ditambahkan ke keranjang')
       })
     },
     async saveTransaction() {
@@ -1204,32 +1118,112 @@ export default {
         date_transaction: this.currentDate(),
         customer_id: this.selectedCustomer,
         cashier_id: this.selectedCashier,
-        kode_transaction: this.kodeTransaction,
+        kode_transaction: this.transactionCode,
         discount: this.inputDiscount,
         shipping: this.inputOngkir,
         tax: this.inputTax,
         pay_amount: this.grandTotal,
-        payment_type: this.selectedMetode,
+        payment_type: this.selectedPaymentMethod,
         items: products,
       }
-      console.log(param)
       if (this.formSaveTransactionValidate()) {
         appService.updatePayTransaction(param).then(response => {
-          console.log(response)
           const { data } = response.data
           if (data.message) {
             this.makeToast('Transaksi Gagal Disimpan', data.message[0])
           } else {
-            this.makeToast('Transaksi Berhasil Disimpan', 'Silahkan cek transaksi pembayaran di daftar penjualan')
-            this.setKodeTransaction()
+            this.makeToast('Transaksi Berhasil Disimpan', 'Silahkan cek di daftar penjualan')
+            this.setTransactionCode()
             this.resetSaveTransaction()
           }
         }).catch(err => {
           console.log(err)
-          this.makeToast('Transaksi Gagal Disimpan', 'Silahkan lengkapi form pembayaran terlebih dahulu')
+          this.makeToast('Transaksi Gagal Disimpan', 'Silahkan lengkapi form terlebih dahulu')
         })
         this.$bvModal.hide('paymentModal')
       }
+    },
+    async addToAntrian() {
+      if (this.items.length) {
+        if (this.addToAntrianValidate()) {
+          const products = []
+          this.items.forEach(item => {
+            products.push({
+              qty: item.quantity,
+              notes: this.note,
+              id_product: item.id_produk,
+            })
+          })
+          const param = {
+            date_transaction: this.currentDate(),
+            customer_id: this.selectedCustomer,
+            cashier_id: this.selectedCashier,
+            kode_transaction: this.transactionCode,
+            discount: this.inputDiscount,
+            shipping: this.inputOngkir,
+            tax: this.inputTax,
+            items: products,
+          }
+          console.log(param)
+          appService.addAntrian(param).then(response => {
+            const { data } = response.data
+            if (data.message) {
+              this.makeToast('Antrian Gagal Ditambahkan', data.message[0])
+            } else {
+              this.makeToast('Antrian Berhasil Ditambahkan', 'Silahkan cek di daftar antrian')
+              this.setTransactionCode()
+              this.selectedCustomer = null
+              this.items = []
+            }
+          }).catch(err => {
+            console.log(err)
+            this.makeToast('Antrian Gagal Ditambahkan', 'Silahkan lengkapi form terlebih dahulu')
+          })
+        }
+      } else {
+        this.makeToast('Tambah Antrian', 'Silahkan isi keranjang belanja terlebih dahulu')
+      }
+    },
+    resetButton() {
+      this.selectedCustomer = null
+      this.selectedCashier = null
+      this.noReference = null
+      this.items = []
+    },
+    resetAddNewCustomer() {
+      this.customerBaru = {
+        nama_customer: '',
+        telp_customer: '',
+        no_identitas: '',
+        alamat: '',
+        no_references: '',
+      }
+      this.selectedCustomer = null
+    },
+    resetSaveTransaction() {
+      this.selectedCustomer = null
+      this.noReference = null
+      this.inputDiscount = 0
+      this.inputTax = 0
+      this.selectedPaymentMethod = null
+      this.inputOngkir = 0
+      this.inputPaid = 0
+      this.note = ''
+    },
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    },
+    removeItem(index) {
+      this.items.splice(index, 1)
+      this.trTrimHeight(this.$refs.row[0].offsetHeight)
+    },
+    makeToast(title, content) {
+      this.$bvToast.toast(content, {
+        title,
+        variant: 'danger',
+        toaster: 'b-toaster-bottom-right',
+      })
     },
     currentDate() {
       const d = new Date()
@@ -1238,72 +1232,86 @@ export default {
       const day = d.getDate().toString().padStart(2, '0')
       return [year, month, day].join('-')
     },
-    formAddCustomerValidate() {
+    handlePaymentModal() {
+      if (!this.items.length) {
+        this.makeToast('Simpan Transaksi', 'Silahkan isi keranjang belanja terlebih dahulu')
+      } else {
+        this.$bvModal.show('paymentModal')
+      }
+    },
+    formAddNewCustomerValidate() {
       const title = 'Customer Baru'
-      const content = 'tidak boleh kosong'
-      if (this.customerBaru.nama_customer.trim().length === 0) {
-        this.makeToast(title, `Nama customer ${content}`)
+      if (!this.customerBaru.nama_customer.length) {
+        this.makeToast(title, 'Nama customer tidak boleh kosong')
         return false
       }
-      if (this.customerBaru.no_references.trim().length === 0) {
-        this.makeToast(title, `Nomor referensi ${content}`)
-        return false
-      }
-      if (this.customerBaru.telp_customer.trim().length === 0) {
-        this.makeToast(title, `Nomor handphone ${content}`)
+      if (!this.customerBaru.telp_customer.length) {
+        this.makeToast(title, 'No. handphone tidak boleh kosong')
         return false
       }
       if (this.customerBaru.telp_customer.charAt(0) !== '0') {
-        this.makeToast(title, 'Nomor handphone harus dimulai angka 0')
-        return false
-      }
-      if (this.customerBaru.no_identitas.trim().length === 0) {
-        this.makeToast(title, `Nomor identitas/KTP ${content}`)
-        return false
-      }
-      if (this.customerBaru.alamat.trim().length === 0) {
-        this.makeToast(title, `Alamat ${content}`)
+        this.makeToast(title, 'No. handphone harus dimulai angka 0')
         return false
       }
       return true
     },
     formSaveTransactionValidate() {
       const title = 'Simpan Transaksi'
-      if (!this.items.length) {
-        this.makeToast(title, 'Keranjang belanja masih kosong')
-        this.$bvModal.hide('paymentModal')
-        return false
-      }
       if (!this.selectedCashier) {
         this.makeToast(title, 'Silahkan pilih kasir terlebih dahulu')
         this.$bvModal.hide('paymentModal')
         return false
       }
-      if (this.selectedCustomer === '0') {
+      if (!this.selectedCustomer) {
         this.makeToast(title, 'Silahkan pilih customer terlebih dahulu')
         return false
       }
-      if (!this.selectedMetode) {
+      if (!this.selectedPaymentMethod) {
         this.makeToast(title, 'Silahkan pilih tipe pembayaran terlebih dahulu')
         return false
       }
       return true
     },
+    addToAntrianValidate() {
+      const title = 'Tambah Antrian'
+      if (!this.selectedCustomer) {
+        this.makeToast(title, 'Silahkan pilih customer terlebih dahulu')
+        return false
+      }
+      if (!this.selectedCashier) {
+        this.makeToast(title, 'Silahkan pilih kasir terlebih dahulu')
+        return false
+      }
+      return true
+    },
+    repeateAgain() {
+      this.items.push({
+        id: this.nextTodoId += this.nextTodoId,
+      })
+      this.$nextTick(() => {
+        this.trAddHeight(this.$refs.row[0].offsetHeight)
+      })
+    },
+    initTrHeight() {
+      this.trSetHeight(null)
+      this.$nextTick(() => {
+        this.trSetHeight(this.$refs.form.scrollHeight)
+      })
+    },
   },
   setup() {
     const { handleCartActionClick } = useEcommerceUi()
-    function addToAntrian() {
+    function addToAntri() {
       if (this.items.length) {
         handleCartActionClick(this.items)
+        this.makeToast('Antrian Berhasil Ditambahkan', 'Silahkan cek di daftar antrian')
         this.resetButton()
-        this.makeToast('Daftar Belanja', 'Berhasil ditambahkan ke daftar antrian')
       } else {
-        this.makeToast('Keranjang Masih Kosong', 'Silahkan isi keranjang belanja terlebih dahulu')
+        this.makeToast('Antrian Gagal Ditambahkan', 'Silahkan isi keranjang belanja terlebih dahulu')
       }
     }
     return {
-      // handleCartActionClick,
-      addToAntrian,
+      addToAntri,
     }
   },
 }

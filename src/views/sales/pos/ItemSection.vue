@@ -1,88 +1,80 @@
 <template>
   <div style="height: inherit">
-
     <!-- ECommerce Header -->
     <section id="ecommerce-header">
-      <div class="row">
-        <div class="col-sm-12">
+      <b-row>
+        <b-col>
           <div class="ecommerce-header-items">
             <div class="result-toggler">
-              <feather-icon
-                icon="MenuIcon"
-                class="d-block d-lg-none"
-                size="21"
-                @click="mqShallShowLeftSidebar = true"
-              />
+              <!-- Filter Information -->
               <small class="search-results">
-                <!-- {{ totalProduct }} results found -->
-                Menampilkan <strong>{{ totalProduct }}</strong> produk. Dengan Kategori dari <strong>{{ selectedCategory.name }}</strong>, SubKategori dari <strong>{{ selectedSubCategory.name }}</strong> dan Brand / Merk dari <strong>{{ selectedBrand.name }}</strong>.
+                Menampilkan <strong>{{ totalProduct }}</strong> produk. Dengan Kategori dari <strong>{{ selectedCategory.name }}</strong>, Sub Kategori dari <strong>{{ selectedSubCategory.name }}</strong> dan Brand / Merk dari <strong>{{ selectedBrand.name }}</strong>.
               </small>
             </div>
             <div class="view-options d-flex mt-1">
-
               <!-- Sort Button -->
               <b-dropdown
-                v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 text="Urutkan"
-                right
                 variant="outline-danger"
               >
                 <b-dropdown-item
-                  v-for="sortType in sortTypes"
-                  :key="sortType.value"
-                  @click="sortByPrice(sortType)"
+                  v-for="sortItem in sortList"
+                  :key="sortItem.value"
+                  @click="sortByPrice(sortItem)"
                 >
-                  {{ sortType.text }}
+                  {{ sortItem.text }}
                 </b-dropdown-item>
               </b-dropdown>
               <!-- Filter Button -->
+              <!-- Kategori -->
               <b-dropdown
-                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 text="Kategori"
-                right
-                variant="outline-primary"
+                variant="outline-danger"
                 style="margin-left: 5px;"
               >
                 <b-dropdown-item
-                  v-for="category in categories"
-                  :key="category.id"
-                  @click="getCategoryValue(category)"
+                  v-for="categoryItem in categoryList"
+                  :key="categoryItem.id"
+                  @click="getCategory(categoryItem)"
                 >
-                  {{ category.name }}
+                  {{ categoryItem.name }}
                 </b-dropdown-item>
               </b-dropdown>
+              <!-- Sub Kategori -->
               <b-dropdown
-                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 text="Sub Kategori"
-                right
-                variant="outline-primary"
+                variant="outline-danger"
                 style="margin-left: 5px;"
               >
                 <b-dropdown-item
-                  v-for="subCategory in subCategories"
-                  :key="subCategory.id"
-                  @click="getSubCategoryValue(subCategory)"
+                  v-for="subCategoryItem in subCategoryList"
+                  :key="subCategoryItem.id"
+                  @click="getSubCategory(subCategoryItem)"
                 >
-                  {{ subCategory.name }}
+                  {{ subCategoryItem.name }}
                 </b-dropdown-item>
               </b-dropdown>
+              <!-- Brand -->
               <b-dropdown
-                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 text="Brand"
-                right
                 variant="outline-primary"
                 style="margin-left: 5px;"
               >
                 <b-dropdown-item
-                  v-for="brand in brands"
-                  :key="brand.id"
-                  @click="setBrand(brand)"
+                  v-for="brandItem in brandList"
+                  :key="brandItem.id"
+                  @click="getBrand(brandItem)"
                 >
-                  {{ brand.name }}
+                  {{ brandItem.name }}
                 </b-dropdown-item>
               </b-dropdown>
+              <!-- Antrian -->
               <b-button
-                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 variant="secondary-outline"
               >
                 <feather-icon
@@ -94,21 +86,19 @@
               </b-button>
             </div>
           </div>
-        </div>
-      </div>
+        </b-col>
+      </b-row>
     </section>
-
     <!-- Overlay -->
     <div class="body-content-overlay" />
-
     <!-- Searchbar -->
     <div class="ecommerce-searchbar mt-1">
       <b-row>
-        <b-col cols="12">
+        <b-col>
           <b-input-group class="input-group-merge">
             <b-form-input
-              v-model="searchProduct"
-              placeholder="Search Product"
+              v-model="searchKeyword"
+              placeholder="Cari Produk"
               class="search-product"
               @input="getAllProducts"
             />
@@ -122,39 +112,31 @@
         </b-col>
       </b-row>
     </div>
-
     <!-- Products -->
-    <section
-      style="margin-top: 10px;"
-      class="match-height"
-    >
+    <section class="mt-1 match-height">
       <b-row>
         <b-col
           v-for="product in productList"
           :key="product.id_produk"
           xl="4"
-          md="12"
-          sm="12"
+          sm="6"
           class="ecommerce-card"
           no-body
         >
           <!-- Product Details -->
-          <!-- <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }"> -->
           <b-link @click="addProductToCart(product)">
             <mini-product-card
               :product="product"
-              :item-click="handleCartActionClick"
               color="danger"
             />
           </b-link>
         </b-col>
       </b-row>
     </section>
-
     <!-- Pagination -->
     <section>
       <b-row>
-        <b-col cols="12">
+        <b-col>
           <b-pagination
             v-model="currentPage"
             :total-rows="totalProduct"
@@ -182,14 +164,14 @@
       </b-row>
     </section>
     <!-- Modal Section -->
-    <!-- Table Antrian -->
+    <!-- Antrian Table -->
     <b-modal
       id="listAntrian"
       centered
       size="xl"
       hide-footer
     >
-      <!-- search input -->
+      <!-- Search Input -->
       <div class="custom-search d-flex">
         <b-form-group>
           <div class="d-flex align-items-center">
@@ -210,15 +192,15 @@
           </div>
         </b-form-group>
       </div><br>
-
-      <!-- table -->
+      <!-- Table -->
       <vue-good-table
         :columns="columns"
         :rows="rows"
         :rtl="direction"
         :search-options="{
           enabled: true,
-          externalQuery: searchTerm }"
+          externalQuery: searchTerm
+        }"
         :select-options="{
           enabled: true,
           selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
@@ -243,7 +225,6 @@
               {{ props.row.status }}
             </b-badge>
           </span>
-
           <!-- Column: Action -->
           <span v-else-if="props.column.field === 'action'">
             <span>
@@ -263,14 +244,12 @@
               </b-button>
             </span>
           </span>
-
           <!-- Column: Common -->
           <span v-else>
             {{ props.formattedRow[props.column.field] }}
           </span>
         </template>
-
-        <!-- pagination -->
+        <!-- Pagination -->
         <template
           slot="pagination-bottom"
           slot-scope="props"
@@ -319,7 +298,7 @@
         </template>
       </vue-good-table>
     </b-modal>
-    <!-- End of Table Antrian -->
+    <!-- End of Antrian Table -->
   </div>
 </template>
 
@@ -331,12 +310,10 @@ import { VueGoodTable } from 'vue-good-table'
 import Ripple from 'vue-ripple-directive'
 import { watch } from '@vue/composition-api'
 import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
-// import ShopLeftFilterSidebar from './ECommerceShopLeftFilterSidebar.vue'
 import MiniProductCard from '@core/components/item-cards/MiniProductCard.vue'
 import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from '@/@fake-db/data/Pos/dummyFilter'
 import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 import store from '@/store/index'
-// import antrianModule from '@/views/sales/pos/antrianModule'
 import ApiService from '@/connection/apiService'
 import { useEcommerceUi } from './ActionHandling'
 import { parentComponent } from './PageContent.vue'
@@ -349,27 +326,16 @@ export default {
     'b-modal': VBModal,
   },
   components: {
-    // BSV
     BDropdown,
     BDropdownItem,
-    // BFormRadioGroup,
-    // BFormRadio,
     BRow,
     BCol,
     BInputGroup,
     BInputGroupAppend,
     BFormInput,
     BButton,
-    // BCard,
-    // BCardBody,
     BLink,
-    // BImg,
-    // BCardText,
-    // BButton,
     BPagination,
-
-    // SFC
-    // ShopLeftFilterSidebar,
     MiniProductCard,
     FeatherIcon,
     BModal,
@@ -379,31 +345,39 @@ export default {
   },
   data() {
     return {
-      sortTypes: [
+      // Filter List
+      sortList: [
         { text: 'Harga Terendah', value: 'price-asc' },
         { text: 'Harga Tertinggi', value: 'price-desc' },
       ],
-      selectedSortType: null,
-      categories: [],
+      categoryList: [{
+        id: null,
+        name: 'Semua Kategori',
+      }],
+      subCategoryList: [{
+        id: null,
+        name: 'Semua Sub Kategori',
+      }],
+      brandList: [{
+        id: null,
+        name: 'Semua Brand / Merek',
+      }],
+      productList: [],
+      // Selected Item
+      selectedSort: '',
       selectedCategory: {
         id: null,
         name: 'Semua Kategori',
       },
-      subCategories: [{
-        id: null,
-        name: 'Semua Sub Kategori',
-      }],
       selectedSubCategory: {
         id: null,
         name: 'Semua Sub Kategori',
       },
-      brands: [],
       selectedBrand: {
         id: null,
         name: 'Semua Brand / Merek',
       },
-      searchProduct: '',
-      productList: [],
+      searchKeyword: '',
       totalProduct: 0,
       currentPage: 1,
       perPage: 6,
@@ -447,7 +421,6 @@ export default {
           field: 'action',
         },
       ],
-      // rows: [],
       searchTerm: '',
       status: [{
         1: 'Pending',
@@ -467,7 +440,6 @@ export default {
         Done : 'light-success',
         /* eslint-enable key-spacing */
       }
-
       return status => statusColor[status]
     },
     direction() {
@@ -484,6 +456,7 @@ export default {
   mounted() {
     this.getAllCategories()
     this.getAllBrands()
+    this.getAllAntrian()
     this.getAllProducts()
   },
   created() {
@@ -491,40 +464,12 @@ export default {
       .then(res => { this.rows = res.data })
   },
   methods: {
-    async sortByPrice(param) {
-      this.selectedSortType = param.value
-      this.getAllProducts()
-    },
-    async getCategoryValue(param) {
-      this.selectedCategory.id = param.id
-      this.selectedCategory.name = param.name
-      this.selectedSubCategory = {
-        id: null,
-        name: 'Semua Sub Kategori',
-      }
-      await this.getSubCategoryByCategory(param)
-      this.getAllProducts()
-    },
-    getSubCategoryValue(param) {
-      this.selectedSubCategory.id = param.id
-      this.selectedSubCategory.name = param.name
-      this.getAllProducts()
-    },
-    setBrand(param) {
-      this.selectedBrand.id = param.id
-      this.selectedBrand.name = param.name
-      this.getAllProducts()
-    },
     async getAllCategories() {
       appService.getCategoryList().then(response => {
         const { data } = response.data
         if (data) {
-          this.categories.push({
-            id: null,
-            name: 'Semua Kategori',
-          })
           data.forEach(item => {
-            this.categories.push({
+            this.categoryList.push({
               id: item.id,
               name: item.nama_category,
             })
@@ -532,20 +477,20 @@ export default {
         }
       })
     },
-    async getSubCategoryByCategory(category) {
+    async getAllSubCategoriesByCategory({ id }) {
       const param = {
-        id_category: category.id,
+        id_category: id,
       }
       appService.getSubcategoryList(param).then(response => {
-        this.subCategories = [{
-          id: null,
-          name: 'Semua Sub-Kategori',
-        }]
         const { data } = response.data
         if (data) {
+          this.subCategoryList.push({
+            id: null,
+            name: 'Semua Sub Kategori',
+          })
           if (param.id_category) {
             data.forEach(item => {
-              this.subCategories.push({
+              this.subCategoryList.push({
                 id: item.id,
                 name: item.nama_category,
               })
@@ -558,12 +503,8 @@ export default {
       appService.getBrandList().then(response => {
         const { data } = response.data
         if (data) {
-          this.brands.push({
-            id: null,
-            name: 'Semua Brand / Merek',
-          })
           data.forEach(item => {
-            this.brands.push({
+            this.brandList.push({
               id: item.id,
               name: item.nama_brand,
             })
@@ -571,20 +512,56 @@ export default {
         }
       })
     },
+    async sortByPrice({ value }) {
+      this.selectedSort = value
+      this.getAllProducts()
+    },
+    async getCategory(param) {
+      this.subCategoryList = []
+      this.selectedCategory = {
+        id: param.id,
+        name: param.name,
+      }
+      this.selectedSubCategory = {
+        id: null,
+        name: 'Semua Sub Kategori',
+      }
+      await this.getAllSubCategoriesByCategory(this.selectedCategory)
+      this.getAllProducts()
+    },
+    async getSubCategory(param) {
+      this.selectedSubCategory = {
+        id: param.id,
+        name: param.name,
+      }
+      this.getAllProducts()
+    },
+    async getBrand(param) {
+      this.selectedBrand = {
+        id: param.id,
+        name: param.name,
+      }
+      this.getAllProducts()
+    },
+    async getAllAntrian() {
+      appService.getAntrian().then(response => {
+        console.log(response)
+      })
+    },
     async getAllProducts() {
       const param = {
-        q: this.searchProduct,
+        q: this.searchKeyword,
       }
-      if (this.selectedCategory.id !== null) {
+      param.sortBy = this.selectedSort
+      if (this.selectedCategory.id) {
         param.kategori = this.selectedCategory.id
       }
-      if (this.selectedSubCategory.id !== null) {
+      if (this.selectedSubCategory.id) {
         param.subkategori = this.selectedSubCategory.id
       }
-      if (this.selectedBrand.id !== null) {
+      if (this.selectedBrand.id) {
         param.brand = this.selectedBrand.id
       }
-      param.sortBy = this.selectedSortType
       appService.getProductTokoList(param).then(response => {
         const { data } = response.data
         this.totalProduct = data.length
@@ -594,9 +571,9 @@ export default {
             const product = {
               id_produk: item.id_produk,
               kode_produk: item.kode_produk,
-              image: item.img_produk ? item.img_produk : '/img/06.95d1c509.jpg',
+              img_produk: item.img_produk ? item.img_produk : '/img/06.95d1c509.jpg',
               price: item.price,
-              name: item.nama_produk,
+              nama_produk: item.nama_produk,
             }
             this.productList.push(product)
           })
@@ -650,23 +627,16 @@ export default {
     })
 
     return {
-      // useShopFiltersSortingAndPagination
       filters,
       filterOptions,
       sortBy,
       sortByOptions,
-
-      // useShopUi
       itemView,
       itemViewOptions,
       totalProducts,
       toggleProductInWishlist,
       handleCartActionClick,
-
-      // useShopRemoteData
       products,
-
-      // mqShallShowLeftSidebar
       mqShallShowLeftSidebar,
     }
   },
