@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading-grow v-if="isLoading" />
     <b-row align-h="center">
       <b-col
         cols="12"
@@ -557,6 +558,7 @@
         <!-- End Action Button Section -->
       </b-col>
     </b-row>
+    <alert-token />
   </div>
 </template>
 
@@ -567,6 +569,9 @@ import {
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
 // import someStyle from '@/assets/scss/print/landscape.css'
 
 const appService = new ApiService()
@@ -584,6 +589,8 @@ export default {
     // BInputGroup,
     BCard,
     BImg,
+    LoadingGrow,
+    AlertToken,
     // someStyle,
   },
   directives: {
@@ -593,6 +600,7 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
+      isLoading: false,
       dataPenjualan: {
         id: null,
         noPemb: null,
@@ -672,48 +680,65 @@ export default {
   },
   methods: {
     async getDetailTransaction(paramid) {
+      this.isLoading = true
       console.log(paramid)
       this.uuId = paramid
       this.items = []
       appService.getDetailTransaction(this.uuId).then(response => {
         const { data } = response
-        if (data.data) {
-          console.log(data.data)
-          const mPenjualan = data.data
-          this.dataPenjualan.id = mPenjualan.id
-          this.dataPenjualan.date = mPenjualan.date
-          this.dataPenjualan.saleCode = mPenjualan.kode_transaksi
-          this.dataPenjualan.ref = mPenjualan.no_referensi
-          this.dataPenjualan.biller = mPenjualan.cashier.name
-          this.dataPenjualan.customer = mPenjualan.customer.nama
-          this.dataPenjualan.subtotal = mPenjualan.sub_total
-          this.dataPenjualan.disc = mPenjualan.discount
-          this.dataPenjualan.ship = mPenjualan.shipping
-          this.dataPenjualan.tax = mPenjualan.tax
-          this.dataPenjualan.grandTotal = (mPenjualan.sub_total + mPenjualan.tax + mPenjualan.shipping) - mPenjualan.discount
-          // if (mPenjualan.payment_type === 1) {
-          //   this.dataPenjualan.typePayment = 'CASH'
-          // } else {
-          //   this.dataPenjualan.typePayment = 'KREDIT'
-          // }
-          // this.dataPenjualan.paymentStatus = 'PAID'
-          this.dataPenjualan.paymentStatus = mPenjualan.status
-          this.dataPenjualan.typePayment = mPenjualan.payment_type
-          this.dataPenjualan.telpToko = mPenjualan.toko.telp_toko
-          this.dataPenjualan.namaToko = mPenjualan.toko.nama_toko
-          this.dataPenjualan.alamatToko = mPenjualan.toko.alamat
-          this.dataPenjualan.logoToko = mPenjualan.toko.logo
-          const itemlist = data.data.detail
-          itemlist.forEach(item => {
-            this.items.push({
-              id: item.id_detail,
-              name: item.product.nama_produk,
-              uom: item.product.nama_uom,
-              quantity: item.qty,
-              price: item.price,
-              subtotal: (item.price * item.qty),
+        this.isLoading = false
+        if (data.result) {
+          if (data.data) {
+            console.log(data.data)
+            const mPenjualan = data.data
+            this.dataPenjualan.id = mPenjualan.id
+            this.dataPenjualan.date = mPenjualan.date
+            this.dataPenjualan.saleCode = mPenjualan.kode_transaksi
+            this.dataPenjualan.ref = mPenjualan.no_referensi
+            this.dataPenjualan.biller = mPenjualan.cashier.name
+            this.dataPenjualan.customer = mPenjualan.customer.nama
+            this.dataPenjualan.subtotal = mPenjualan.sub_total
+            this.dataPenjualan.disc = mPenjualan.discount
+            this.dataPenjualan.ship = mPenjualan.shipping
+            this.dataPenjualan.tax = mPenjualan.tax
+            this.dataPenjualan.grandTotal = (mPenjualan.sub_total + mPenjualan.tax + mPenjualan.shipping) - mPenjualan.discount
+            // if (mPenjualan.payment_type === 1) {
+            //   this.dataPenjualan.typePayment = 'CASH'
+            // } else {
+            //   this.dataPenjualan.typePayment = 'KREDIT'
+            // }
+            // this.dataPenjualan.paymentStatus = 'PAID'
+            this.dataPenjualan.paymentStatus = mPenjualan.status
+            this.dataPenjualan.typePayment = mPenjualan.payment_type
+            this.dataPenjualan.telpToko = mPenjualan.toko.telp_toko
+            this.dataPenjualan.namaToko = mPenjualan.toko.nama_toko
+            this.dataPenjualan.alamatToko = mPenjualan.toko.alamat
+            this.dataPenjualan.logoToko = mPenjualan.toko.logo
+            const itemlist = data.data.detail
+            itemlist.forEach(item => {
+              this.items.push({
+                id: item.id_detail,
+                name: item.product.nama_produk,
+                uom: item.product.nama_uom,
+                quantity: item.qty,
+                price: item.price,
+                subtotal: (item.price * item.qty),
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },

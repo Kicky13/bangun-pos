@@ -1,6 +1,6 @@
 <template>
   <b-card>
-
+    <loading-grow v-if="isLoading" />
     <div class="demo-inline-spacing">
 
       <!-- input search -->
@@ -145,6 +145,7 @@
 
     <!-- Modal Section -->
     <log-modal :transid="selectedTransId" />
+    <alert-token />
   </b-card>
 </template>
 
@@ -157,6 +158,9 @@ import { useRouter } from '@core/utils/utils'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
 import LogModal from './modals/LogModal.vue'
 
 const appService = new ApiService()
@@ -172,6 +176,8 @@ export default {
     BBadge,
     BCard,
     LogModal,
+    LoadingGrow,
+    AlertToken,
   },
   directives: {
     // 'b-modal': VBModal,
@@ -179,6 +185,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       customerID: this.id,
       selectedPembayaran: null,
       selectedStatus: null,
@@ -310,6 +317,7 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
   created() {
+    // console.log(localStorage.getItem('userData'))
     this.fetchListTransaksi()
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
   },
@@ -317,11 +325,51 @@ export default {
     getLogTrans(transid) {
       this.selectedTransId = transid
     },
+    // logStatus(logdata, logresult) {
+    //   if (logresult) {
+    //     if (logdata) {
+    //       return true
+    //     } else {
+    //       this.$toast({
+    //         component: ToastificationContent,
+    //         position: 'top-right',
+    //         props: {
+    //           title: 'Data Tidak Ditemukan',
+    //           icon: 'CoffeeIcon',
+    //           variant: 'danger',
+    //           text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+    //         },
+    //       })
+    //       // return false
+    //     }
+    //   } else {
+    //     this.$bvModal.show('tokenExpired')
+    //     // return false
+    //   }
+    // },
     fetchListTransaksi() {
+      this.isLoading = true
       appService.historyList({ id_customer: this.customerID }).then(response => {
         const datares = response.data.data
-        if (datares) {
-          datares.forEach(this.setRows)
+        const { data } = response
+        this.isLoading = false
+        if (data.result) {
+          if (datares) {
+            datares.forEach(this.setRows)
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       }).catch(err => {
         console.log(err)

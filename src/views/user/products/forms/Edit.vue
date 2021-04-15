@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading-grow v-if="isLoading" />
     <b-card>
       <b-form @submit.prevent>
         <b-row>
@@ -388,6 +389,7 @@
     <type-modal />
     <brand-modal />
     <units-modal />
+    <alert-token />
   </div>
 </template>
 
@@ -396,6 +398,8 @@ import {
   BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal, BFormDatalist, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
 import CategoryModal from './modals/CategoryModal.vue'
@@ -432,6 +436,8 @@ export default {
     BFormInvalidFeedback,
     // eslint-disable-next-line vue/no-unused-components
     ToastificationContent,
+    LoadingGrow,
+    AlertToken,
   },
   directives: {
     'b-modal': VBModal,
@@ -526,6 +532,7 @@ export default {
   data() {
     return {
       productimgurl: null,
+      isLoading: false,
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
       disableStdInput: true,
       matchedItem: [],
@@ -641,6 +648,7 @@ export default {
       //     variant: 'danger',
       //   },
       // })
+      this.isLoading = true
       if (this.formValidate()) {
         const param = new FormData()
         param.append('gambar_product', this.selectedFile)
@@ -659,6 +667,7 @@ export default {
         param.append('is_available', this.selectedStatus)
         appService.updateProduct(param).then(response => {
           const { data } = response
+          this.isLoading = false
           if (data.result) {
             this.$toast({
               component: ToastificationContent,
@@ -726,109 +735,195 @@ export default {
       }
     },
     async setListCategory() {
+      this.isLoading = true
       appService.getCategoryList().then(response => {
         const { data } = response
         this.categoryItems = []
+        this.isLoading = false
         this.categoryItems.push({
           value: null,
           text: 'Pilih salah satu kategori',
           disabled: true,
         })
-        if (data.data) {
-          const itemlist = data.data
-          itemlist.forEach(item => {
-            this.categoryItems.push({
-              value: item.id,
-              text: item.nama_category,
+        if (data.result) {
+          if (data.data) {
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.categoryItems.push({
+                value: item.id,
+                text: item.nama_category,
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
     async setListSubCategory() {
+      this.isLoading = true
       const param = {
         id_category: this.selectedCategory,
       }
       appService.getSubcategoryList(param).then(response => {
         const { data } = response
         this.subCategoryItems = []
+        this.isLoading = false
         this.subCategoryItems.push({
           value: null,
           text: 'Pilih salah satu Sub-Kategori',
           disabled: true,
         })
-        if (data.data) {
-          const itemlist = data.data
-          itemlist.forEach(item => {
-            this.subCategoryItems.push({
-              value: item.id,
-              text: item.nama_category,
+        if (data.result) {
+          if (data.data) {
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.subCategoryItems.push({
+                value: item.id,
+                text: item.nama_category,
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
     async setListBrand() {
+      this.isLoading = true
       appService.getBrandList().then(response => {
         const { data } = response
         this.brandItems = []
+        this.isLoading = false
         this.brandItems.push({
           value: null,
           text: 'Pilih salah satu Brand / Merek',
           disabled: true,
         })
-        if (data.data) {
-          const itemlist = data.data
-          itemlist.forEach(item => {
-            this.brandItems.push({
-              value: item.id,
-              text: item.nama_brand,
+        if (data.result) {
+          if (data.data) {
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.brandItems.push({
+                value: item.id,
+                text: item.nama_brand,
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
     async setListType() {
+      this.isLoading = true
       appService.getTypeList().then(response => {
         const { data } = response
         this.typeItems = []
+        this.isLoading = false
         this.typeItems.push({
           value: null,
           text: 'Pilih salah satu Tipe',
           disabled: true,
         })
-        if (data.data) {
-          const itemlist = data.data
-          itemlist.forEach(item => {
-            this.typeItems.push({
-              value: item.id,
-              text: item.nama_type,
+        if (data.result) {
+          if (data.data) {
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.typeItems.push({
+                value: item.id,
+                text: item.nama_type,
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
     async setListUOM() {
+      this.isLoading = true
       appService.getUomList().then(response => {
         const { data } = response
         this.unitItems = []
+        this.isLoading = false
         this.unitItems.push({
           value: null,
           text: 'Pilih salah satu Unit / UOM',
           disabled: true,
         })
-        if (data.data) {
-          const itemlist = data.data
-          itemlist.forEach(item => {
-            this.unitItems.push({
-              value: item.id,
-              text: item.nama_uom,
+        if (data.result) {
+          if (data.data) {
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.unitItems.push({
+                value: item.id,
+                text: item.nama_uom,
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
     async setListProductSIG() {
+      this.isLoading = true
       const param = {
         q: this.searchProductSIG,
       }
@@ -836,27 +931,43 @@ export default {
         const { data } = response
         this.listProdukSIG = []
         this.detailProdukSIG = []
-        if (data.data) {
-          const itemlist = data.data
-          itemlist.forEach(item => {
-            this.listProdukSIG.push(item.nama_produk)
-            this.detailProdukSIG.push({
-              id_produk: item.id_produk,
-              kode_produk: item.kode_produk,
-              nama_produk: item.nama_produk,
-              img_produk: item.img_produk,
-              id_category: item.id_category,
-              nama_category: item.nama_category,
-              id_subcategory: item.id_subcategory,
-              nama_subcategory: item.nama_subcategory,
-              id_brand: item.id_brand,
-              nama_brand: item.nama_brand,
-              id_type: item.id_type,
-              nama_type: item.nama_type,
-              id_uom: item.id_uom,
-              nama_uom: item.nama_uom,
+        this.isLoading = false
+        if (data.result) {
+          if (data.data) {
+            const itemlist = data.data
+            itemlist.forEach(item => {
+              this.listProdukSIG.push(item.nama_produk)
+              this.detailProdukSIG.push({
+                id_produk: item.id_produk,
+                kode_produk: item.kode_produk,
+                nama_produk: item.nama_produk,
+                img_produk: item.img_produk,
+                id_category: item.id_category,
+                nama_category: item.nama_category,
+                id_subcategory: item.id_subcategory,
+                nama_subcategory: item.nama_subcategory,
+                id_brand: item.id_brand,
+                nama_brand: item.nama_brand,
+                id_type: item.id_type,
+                nama_type: item.nama_type,
+                id_uom: item.id_uom,
+                nama_uom: item.nama_uom,
+              })
             })
-          })
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Data Tidak Ditemukan',
+                icon: 'CoffeeIcon',
+                variant: 'danger',
+                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+              },
+            })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
