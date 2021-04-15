@@ -52,7 +52,7 @@
 
 <script>
 import {
-  BRow, BCol, BImg, BLink,
+  BRow, BCol, BImg,
 } from 'bootstrap-vue'
 import { $themeConfig } from '@themeConfig'
 import { useRouter } from '@core/utils/utils'
@@ -64,8 +64,6 @@ export default {
     BRow,
     BCol,
     BImg,
-    BLink,
-
     RegisterWizard,
   },
   setup() {
