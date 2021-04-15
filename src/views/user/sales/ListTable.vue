@@ -49,6 +49,7 @@
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="danger"
           style="margin-top: -15px;"
+          @click="print"
         >
           Print
         </b-button>
@@ -57,6 +58,7 @@
 
     <!-- table -->
     <vue-good-table
+      id="printTable"
       :columns="columns"
       :rows="rows"
       :rtl="direction"
@@ -398,6 +400,23 @@ export default {
       }
       this.rows.push(res)
     },
+    print() {
+      this.$htmlToPaper('printTable', null, () => {
+        console.warn('done')
+      })
+    },
+    // printLandscape() {
+    //   const localOptions = {
+    //     styles: [
+    //       'https://cdn.jsdelivr.net/npm/vue-good-table@2.18.1/dist/vue-good-table.min.css',
+    //       'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+    //       'https://unpkg.com/kidlat-css/css/kidlat.css',
+    //     ],
+    //   }
+    //   this.$htmlToPaper('printTable', localOptions, () => {
+    //     console.warn('done')
+    //   })
+    // },
   },
 }
 </script>
