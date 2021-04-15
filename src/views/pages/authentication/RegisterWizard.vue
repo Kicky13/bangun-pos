@@ -1,7 +1,7 @@
 <template>
   <div>
     <form-wizard
-      color="#ea5455"
+      color="#b20838"
       :title="null"
       :subtitle="null"
       finish-button-text="Submit"

@@ -5,50 +5,42 @@
       class="content-header navbar-container align-items-center"
     >
       <div
-        class="navbar-header d-xl-block d-none"
+        class="navbar-header d-xl-block"
         style="max-height: 100px; max-width: 215px; margin-left: 15px; padding: 10px 0"
       >
         <ul class="nav navbar-nav">
           <li class="nav-item">
-            <b-link
-              class="navbar-brand"
-              to="/"
-            >
-              <span class="brand-logo">
-                <b-img
-                  :src="appLogoImage"
-                  alt="logo"
-                  fluid
-                />
-              </span>
-              <h2 class="brand-text mb-0">
-                {{ appName }}
-              </h2>
-            </b-link>
+            <span class="brand-logo">
+              <b-img
+                :src="appLogoImage"
+                alt="logo"
+                fluid
+              />
+            </span>
           </li>
         </ul>
       </div>
     </div>
-    <div style="margin-left: 20px; margin-right: 20px; margin-top: 50px;">
+    <div
+      style="color: #000000; background-color: #b20838; min-height: 100px;"
+      class="content-header navbar-container align-items-center"
+    >
       <div
-        style="color: #ea5455; background-color: #ea5455; min-height: 100px; padding: 10px 0"
-        class="content-header container align-items-center"
+        style="margin-left: 30px; margin-bottom: 20px;"
       >
-        <div
-          style="margin-left: 30px; margin-top: 20px; margin-bottom: 20px;"
-        >
-          <b-row>
-            <h3 style="color: white;">
-              Register
-            </h3>
-          </b-row>
-          <b-row>
-            <h5 style="color: white">
-              Lengkapi data dibawah ini untuk mengaktifkan akun anda
-            </h5>
-          </b-row>
-        </div>
+        <b-row>
+          <h3 style="color: white; margin-top:25px;">
+            Register
+          </h3>
+        </b-row>
+        <b-row>
+          <h5 style="color: white; margin-bottom: 25px;">
+            Lengkapi data dibawah ini untuk mengaktifkan akun anda
+          </h5>
+        </b-row>
       </div>
+    </div>
+    <div style="margin: 25px;">
       <b-row>
         <b-col cols="12">
           <register-wizard :form-data="formData" />
