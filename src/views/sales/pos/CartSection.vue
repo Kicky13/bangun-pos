@@ -1209,6 +1209,7 @@ export default {
       this.inputOngkir = 0
       this.inputPaid = 0
       this.note = ''
+      this.items = []
     },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
