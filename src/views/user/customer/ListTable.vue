@@ -586,6 +586,7 @@ export default {
         q: '',
         page: 1,
       }).then(response => {
+        this.rows = []
         const res = response.data
         this.isLoading = false
         if (res.result) {
@@ -684,7 +685,7 @@ export default {
       appService.updateCustomer(this.customerID, data).then(response => {
         console.log(response)
         this.clearForm()
-        this.refreshTable()
+        this.fetchCustomerList()
         this.editForm = false
       }).catch(err => {
         console.log(err)
@@ -701,7 +702,7 @@ export default {
       appService.addCustomer(data).then(response => {
         const res = response.data.data
         console.log(res)
-        this.refreshTable()
+        this.fetchCustomerList()
         this.clearForm()
         this.isLoading = false
       }).catch(err => {
@@ -730,7 +731,7 @@ export default {
     fetchDeleteCustomer(data) {
       appService.deleteCustomer(data.encodedID).then(response => {
         console.log(response)
-        this.refreshTable()
+        this.fetchCustomerList()
         this.$toast({
           component: ToastificationContent,
           position: 'top-right',
@@ -825,24 +826,25 @@ export default {
       }).then(response => {
         console.log(response)
         this.clearBayar()
-        this.isLoading = false
+        this.fetchCustomerList()
         this.$$bvModal.hide('listBayar')
-        this.refreshTable()
       }).catch(err => {
-        const errMsg = JSON.parse(err.request.response)
-        this.isLoading = false
-        const msg = errMsg.errors
-        if (msg.id_customer) {
-          this.$toast({
-            component: ToastificationContent,
-            position: 'top-right',
-            props: {
-              title: 'Error',
-              icon: 'AlertCircleIcon',
-              variant: 'danger',
-              text: msg.id_customer[0],
-            },
-          })
+        if (err.request) {
+          const errMsg = JSON.parse(err.request.response)
+          this.isLoading = false
+          const msg = errMsg.errors
+          if (msg.id_customer) {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Error',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+                text: msg.id_customer[0],
+              },
+            })
+          }
         }
       })
     },
