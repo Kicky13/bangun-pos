@@ -37,10 +37,10 @@
               <b-form-input
                 id="nama"
                 v-model="ownerName"
-                :state="ownerName.length > 0"
+                :state="ownerName.length > 2"
               />
               <b-form-invalid-feedback>
-                Nama Pemilik wajib diisi
+                Nama Pemilik Wajib Diisi
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -53,11 +53,11 @@
               <b-form-input
                 id="phone"
                 v-model="ownerNumber"
-                :state="ownerNumber.length > 10 && ownerNumber.charAt(0) === '0'"
+                :state="ownerNumber.length >= 10 && ownerNumber.length <= 12 && ownerNumber.charAt(0) === '0'"
                 type="number"
               />
               <b-form-invalid-feedback>
-                Telp Pemilik wajib diisi (Contoh Format : 081234567890)
+                Telp Pemilik Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan dan Diawali Angka 0 (Contoh Format : 081234567890)
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -70,10 +70,10 @@
                 id="identity"
                 v-model="identitas"
                 type="number"
-                :state="identitas.length > 0"
+                :state="identitas.length > 0 && identitas.length === 16"
               />
               <b-form-invalid-feedback>
-                Nomor Identitas Pemilik wajib diisi
+                Nomor Identitas Pemilik Wajib Diisi 16 Angka
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -86,10 +86,10 @@
                 id="address"
                 v-model="address"
                 rows="3"
-                :state="address.length > 0"
+                :state="address.length > 3"
               />
               <b-form-invalid-feedback>
-                Alamat Pemilik wajib diisi
+                Alamat Pemilik Wajib Diisi
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -157,7 +157,7 @@
                   <feather-icon
                     icon="XIcon"
                   />
-                  <span>Delete</span>
+                  <span>Hapus</span>
                 </b-button>
               </b-col>
               <b-col cols="12">
@@ -188,10 +188,10 @@
               <b-form-input
                 id="shopname"
                 v-model="shopName"
-                :state="shopName.length > 0"
+                :state="shopName.length > 3"
               />
               <b-form-invalid-feedback>
-                Nama Toko wajib diisi
+                Nama Toko Wajib Diisi
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -215,10 +215,10 @@
                 id="shopphone"
                 v-model="shopNumber"
                 type="number"
-                :state="shopNumber.length > 10 && shopNumber.charAt(0) === '0'"
+                :state="shopNumber.length >= 10 && shopNumber.length <= 12 && shopNumber.charAt(0) === '0'"
               />
               <b-form-invalid-feedback>
-                Telp Toko wajib diisi (Contoh Format : 081234567890)
+                Telp Toko Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan Diawali Angka 0 (Contoh Format : 081234567890)
               </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
@@ -229,10 +229,10 @@
                 id="shopaddress"
                 v-model="address"
                 rows="3"
-                :state="address.length > 0"
+                :state="address.length > 3"
               />
               <b-form-invalid-feedback>
-                Alamat Toko wajib diisi
+                Alamat Toko Wajib Diisi
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -351,7 +351,8 @@ export default {
     }
   },
   mounted() {
-    this.initTrHeight()
+    localStorage.removeItem('userData')
+    // this.initTrHeight()
     authService.setRegisterToken(this.formData.token)
     console.log(this.formData)
   },
@@ -371,6 +372,7 @@ export default {
         console.log(cashierID.length)
         if (cashierID.length > 0) {
           cashier.push(cashierID)
+          param.append('kasir[]', cashierID)
           this.cashier.push(cashierID)
         }
       })
@@ -379,11 +381,11 @@ export default {
         param.append('logo_toko', this.shopLogo)
         param.append('telp_toko', this.shopNumber)
         param.append('alamat', this.address)
-        param.append('nama_pemili', this.ownerName)
+        param.append('nama_pemilik', this.ownerName)
         param.append('no_identitas', this.identitas)
         param.append('telp_pemilik', this.ownerNumber)
         param.append('alamat_pemilik', this.address)
-        param.append('kasir', cashier)
+        // param.append('kasir', cashier)
         param.append('kode_toko', this.shopCode)
         authService.register(param).then(response => {
           const { data } = response
@@ -473,31 +475,31 @@ export default {
       const errMsg = []
 
       if (!this.ownerName && this.ownerName === '') {
-        errMsg.push('Nama Pemilik wajib diisi')
+        errMsg.push('Nama Pemilik Wajib Diisi')
       }
       if (!this.shopName && this.shopName === '') {
-        errMsg.push('Nama Toko wajib diisi')
+        errMsg.push('Nama Toko Wajib Diisi')
       }
       if (this.ownerNumber.length < 10) {
-        errMsg.push('Telp Pemilik wajib diisi minimal 10 karakter')
+        errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (this.shopNumber.length < 10) {
-        errMsg.push('Telp Toko wajib diisi minimal 10 karakter')
+        errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (!this.ownerNumber.charAt(0) === '0') {
-        errMsg.push('no Telp wajib diawali dengan 0')
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
       if (!this.shopNumber.charAt(0) === '0') {
-        errMsg.push('no Telp Toko wajib diawali dengan 0')
+        errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
       }
       if (!this.address && this.address === '') {
-        errMsg.push('Alamat wajib diisi')
+        errMsg.push('Alamat Wajib Diisi')
       }
       if (!this.identitas && this.identitas === '') {
-        errMsg.push('No Identitas wajib diisi')
+        errMsg.push('No Identitas Wajib Diisi')
       }
       if (this.cashier.length === 0) {
-        errMsg.push('Cashier minimal 1')
+        errMsg.push('tambahkan Cashier Minimal 1')
       }
 
       if (errMsg.length === 0) {
