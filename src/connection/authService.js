@@ -18,8 +18,8 @@ export default class AuthService {
         url: this.config.registerEndpoint,
         headers: {
           token: this.registerToken,
-          'content-type': 'application/json',
-          accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          accept: 'multipart/form-data',
         },
         data: param,
       })
