@@ -53,11 +53,11 @@
               <b-form-input
                 id="phone"
                 v-model="ownerNumber"
-                :state="ownerNumber.length > 5 && ownerNumber.charAt(0) === '0'"
+                :state="ownerNumber.length > 10 && ownerNumber.charAt(0) === '0'"
                 type="number"
               />
               <b-form-invalid-feedback>
-                Telp Pemilik wajib diisi
+                Telp Pemilik wajib diisi (Contoh Format : 081234567890)
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -215,10 +215,10 @@
                 id="shopphone"
                 v-model="shopNumber"
                 type="number"
-                :state="shopNumber.length > 5 && shopNumber.charAt(0) === '0'"
+                :state="shopNumber.length > 10 && shopNumber.charAt(0) === '0'"
               />
               <b-form-invalid-feedback>
-                Telp Toko wajib diisi
+                Telp Toko wajib diisi (Contoh Format : 081234567890)
               </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group
@@ -476,11 +476,11 @@ export default {
       if (!this.shopName && this.shopName === '') {
         errMsg.push('Nama Toko wajib diisi')
       }
-      if (this.ownerNumber.length > 5) {
-        errMsg.push('Telp Pemilik wajib diisi minimal 6 karakter')
+      if (this.ownerNumber.length < 10) {
+        errMsg.push('Telp Pemilik wajib diisi minimal 10 karakter')
       }
-      if (this.shopNumber.length > 5) {
-        errMsg.push('Telp Toko wajib diisi minimal 6 karakter')
+      if (this.shopNumber.length < 10) {
+        errMsg.push('Telp Toko wajib diisi minimal 10 karakter')
       }
       if (!this.ownerNumber.charAt(0) === '0') {
         errMsg.push('no Telp wajib diawali dengan 0')
