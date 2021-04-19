@@ -333,11 +333,11 @@
                     <b-form-input
                       id="phone"
                       v-model="customerBaru.telp_customer"
-                      :state="customerBaru.telp_customer.length > 0"
+                      :state="(customerBaru.telp_customer.length > 0) && (customerBaru.telp_customer.charAt(0) === '0')"
                       trim
                     />
                     <b-form-invalid-feedback>
-                      No. handphone tidak boleh kosong
+                      No. handphone tidak boleh kosong dan dimulai angka 0
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -766,8 +766,8 @@ import {
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { parentComponent } from './PageContent.vue'
-import { useEcommerceUi } from './ActionHandling'
 
 const appService = new ApiService()
 
@@ -1071,15 +1071,15 @@ export default {
         appService.addCustomer(newCustomer).then(response => {
           const { data } = response
           if (data.message) {
-            this.makeToast('Customer Baru Gagal Ditambahkan', data.message[0])
+            this.makeToast('Customer Gagal Ditambahkan', 'AlertCircleIcon', 'danger', data.message[0])
           } else {
-            this.makeToast('Customer Baru Berhasil Ditambahkan', 'Silahkan cek di daftar customer')
+            this.makeToast('Customer Berhasil Ditambahkan', 'CoffeeIcon', 'success', 'Silahkan cek di daftar customer')
             this.getAllCustomers()
             this.resetAddNewCustomer()
           }
         }).catch(err => {
           console.log(err)
-          this.makeToast('Customer Baru Gagal Ditambahkan', 'Silahkan lengkapi form terlebih dahulu')
+          this.makeToast('Customer Gagal Ditambahkan', 'AlertCircleIcon', 'danger', 'Silahkan lengkapi form terlebih dahulu')
         })
         this.$bvModal.hide('addCustomer')
       }
@@ -1102,7 +1102,7 @@ export default {
           }
           this.items.unshift(newProduct)
         }
-        this.makeToast(product.nama_produk, 'Berhasil ditambahkan ke keranjang')
+        this.makeToast(product.nama_produk, 'CoffeeIcon', 'success', 'Berhasil ditambahkan ke keranjang')
       })
     },
     async saveTransaction() {
@@ -1130,15 +1130,15 @@ export default {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
           if (data.message) {
-            this.makeToast('Transaksi Gagal Disimpan', data.message[0])
+            this.makeToast('Transaksi Gagal Disimpan', 'AlertCircleIcon', 'danger', data.message[0])
           } else {
-            this.makeToast('Transaksi Berhasil Disimpan', 'Silahkan cek di daftar penjualan')
+            this.makeToast('Transaksi Berhasil Disimpan', 'CoffeeIcon', 'success', 'Silahkan cek di daftar penjualan')
             this.setTransactionCode()
             this.resetSaveTransaction()
           }
         }).catch(err => {
           console.log(err)
-          this.makeToast('Transaksi Gagal Disimpan', 'Silahkan lengkapi form terlebih dahulu')
+          this.makeToast('Transaksi Gagal Disimpan', 'AlertCircleIcon', 'danger', 'Silahkan lengkapi form terlebih dahulu')
         })
         this.$bvModal.hide('paymentModal')
       }
@@ -1168,20 +1168,20 @@ export default {
           appService.addAntrian(param).then(response => {
             const { data } = response.data
             if (data.message) {
-              this.makeToast('Antrian Gagal Ditambahkan', data.message[0])
+              this.makeToast('Antrian Gagal Ditambahkan', 'AlertCircleIcon', 'danger', data.message[0])
             } else {
-              this.makeToast('Antrian Berhasil Ditambahkan', 'Silahkan cek di daftar antrian')
+              this.makeToast('Antrian Berhasil Ditambahkan', 'CoffeeIcon', 'success', 'Silahkan cek di daftar antrian')
               this.setTransactionCode()
               this.selectedCustomer = null
               this.items = []
             }
           }).catch(err => {
             console.log(err)
-            this.makeToast('Antrian Gagal Ditambahkan', 'Silahkan lengkapi form terlebih dahulu')
+            this.makeToast('Antrian Gagal Ditambahkan', 'AlertCircleIcon', 'danger', 'Silahkan lengkapi form terlebih dahulu')
           })
         }
       } else {
-        this.makeToast('Tambah Antrian', 'Silahkan isi keranjang belanja terlebih dahulu')
+        this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Silahkan isi keranjang terlebih dahulu')
       }
     },
     resetButton() {
@@ -1219,11 +1219,16 @@ export default {
       this.items.splice(index, 1)
       this.trTrimHeight(this.$refs.row[0].offsetHeight)
     },
-    makeToast(title, content) {
-      this.$bvToast.toast(content, {
-        title,
-        variant: 'danger',
-        toaster: 'b-toaster-bottom-right',
+    makeToast(title, icon, variant, text) {
+      this.$toast({
+        component: ToastificationContent,
+        position: 'top-right',
+        props: {
+          title,
+          icon,
+          variant,
+          text,
+        },
       })
     },
     currentDate() {
@@ -1235,52 +1240,53 @@ export default {
     },
     handlePaymentModal() {
       if (!this.items.length) {
-        this.makeToast('Simpan Transaksi', 'Silahkan isi keranjang belanja terlebih dahulu')
+        this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Silahkan isi keranjang terlebih dahulu')
       } else {
         this.$bvModal.show('paymentModal')
       }
     },
     formAddNewCustomerValidate() {
-      const title = 'Customer Baru'
+      const errMsg = []
+      const title = 'Tambah Customer'
       if (!this.customerBaru.nama_customer.length) {
-        this.makeToast(title, 'Nama customer tidak boleh kosong')
-        return false
+        errMsg.unshift('Nama customer tidak boleh kosong')
       }
       if (!this.customerBaru.telp_customer.length) {
-        this.makeToast(title, 'No. handphone tidak boleh kosong')
-        return false
+        errMsg.unshift('No. Handphone tidak boleh kosong')
       }
       if (this.customerBaru.telp_customer.charAt(0) !== '0') {
-        this.makeToast(title, 'No. handphone harus dimulai angka 0')
-        return false
+        errMsg.unshift('No. handphone harus dimulai angka 0')
       }
-      return true
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.makeToast(title, 'AlertCircleIcon', 'danger', msg)
+      })
+      return false
     },
     formSaveTransactionValidate() {
+      const errMsg = []
       const title = 'Simpan Transaksi'
       if (!this.selectedCashier) {
-        this.makeToast(title, 'Silahkan pilih kasir terlebih dahulu')
+        errMsg.unshift('Silahkan pilih kasir terlebih dahulu')
         this.$bvModal.hide('paymentModal')
-        return false
-      }
-      if (!this.selectedCustomer) {
-        this.makeToast(title, 'Silahkan pilih customer terlebih dahulu')
-        return false
       }
       if (!this.selectedPaymentMethod) {
-        this.makeToast(title, 'Silahkan pilih tipe pembayaran terlebih dahulu')
-        return false
+        errMsg.unshift('Silahkan pilih tipe pembayaran terlebih dahulu')
       }
-      return true
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.makeToast(title, 'AlertCircleIcon', 'danger', msg)
+      })
+      return false
     },
     addToAntrianValidate() {
       const title = 'Tambah Antrian'
-      if (!this.selectedCustomer) {
-        this.makeToast(title, 'Silahkan pilih customer terlebih dahulu')
-        return false
-      }
       if (!this.selectedCashier) {
-        this.makeToast(title, 'Silahkan pilih kasir terlebih dahulu')
+        this.makeToast(title, 'AlertCircleIcon', 'danger', 'Silahkan pilih kasir terlebih dahulu')
         return false
       }
       return true
@@ -1299,21 +1305,6 @@ export default {
         this.trSetHeight(this.$refs.form.scrollHeight)
       })
     },
-  },
-  setup() {
-    const { handleCartActionClick } = useEcommerceUi()
-    function addToAntri() {
-      if (this.items.length) {
-        handleCartActionClick(this.items)
-        this.makeToast('Antrian Berhasil Ditambahkan', 'Silahkan cek di daftar antrian')
-        this.resetButton()
-      } else {
-        this.makeToast('Antrian Gagal Ditambahkan', 'Silahkan isi keranjang belanja terlebih dahulu')
-      }
-    }
-    return {
-      addToAntri,
-    }
   },
 }
 </script>
