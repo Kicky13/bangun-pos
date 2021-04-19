@@ -99,6 +99,7 @@ export default {
     login() {
       if (this.role !== '') {
         const toko = this.setDataUser()
+        localStorage.removeItem('userData')
         localStorage.setItem('userData', JSON.stringify(toko))
         authService.setToken(this.token)
         const userAbility = authService.getAbility(this.role)

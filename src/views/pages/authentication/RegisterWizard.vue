@@ -363,6 +363,7 @@ export default {
   },
   methods: {
     async formSubmitted() {
+      const param = new FormData()
       const cashier = []
       const inputItems = this.items
       inputItems.forEach(item => {
@@ -374,21 +375,22 @@ export default {
         }
       })
       if (this.formValidate()) {
-        authService.register({
-          nama_toko: this.shopName,
-          telp_toko: this.shopNumber,
-          alamat: this.address,
-          nama_pemilik: this.ownerName,
-          no_identitas: this.identitas,
-          telp_pemilik: this.ownerNumber,
-          alamat_pemilik: this.address,
-          kasir: cashier,
-          kode_toko: this.shopCode,
-        }).then(response => {
+        param.append('nama_toko', this.shopName)
+        param.append('logo_toko', this.shopLogo)
+        param.append('telp_toko', this.shopNumber)
+        param.append('alamat', this.address)
+        param.append('nama_pemili', this.ownerName)
+        param.append('no_identitas', this.identitas)
+        param.append('telp_pemilik', this.ownerNumber)
+        param.append('alamat_pemilik', this.address)
+        param.append('kasir', cashier)
+        param.append('kode_toko', this.shopCode)
+        authService.register(param).then(response => {
           const { data } = response
           if (data.result) {
             const userData = authService.getDataToken(data.token)
             const toko = this.setDataUser(userData)
+            localStorage.removeItem('userData')
             localStorage.setItem('userData', JSON.stringify(toko))
             authService.setToken(data.token)
             console.log(data.token)
