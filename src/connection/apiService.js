@@ -234,4 +234,26 @@ export default class ApiService {
         url: this.urlCnf.loadAntrian + transaction,
       })
     }
+
+    getProfileUser() {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getProfile,
+      })
+    }
+
+    updateProfileUser(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.updateProfile,
+        data: param,
+      })
+    }
+
+    deleteCashier(uuid) {
+      return axios({
+        method: 'delete',
+        url: this.urlCnf.deleteCashier + uuid,
+      })
+    }
 }
