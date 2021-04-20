@@ -5,29 +5,28 @@
       color="#b20838"
       :title="null"
       :subtitle="null"
-      finish-button-text="Submit"
-      back-button-text="Previous"
+      finish-button-text="Simpan"
+      back-button-text="Sebelumnya"
+      next-button-text="Lanjut"
       class="steps-transparent mb-3"
       @on-complete="confirmSubmit"
     >
       <!-- tabs -->
       <tab-content
-        v-for="tabpanel in wizardTabs"
-        :key="tabpanel.id"
-        :title="tabpanel.title"
-        :icon="tabpanel.icon"
+        title="Data Pemilik"
+        icon="feather icon-user"
+        :before-change="validateFirstTab"
       >
-        <!-- UserData -->
-        <b-row v-if="tabpanel.code === 'userdata'">
+        <b-row>
           <b-col
             cols="12"
             class="mb-2"
           >
             <h5 class="mb-0">
-              {{ tabpanel.title }}
+              Data Pemilik
             </h5>
             <small class="text-muted">
-              {{ tabpanel.subtitle }}
+              Isi data diri anda sebagai pemilik toko
             </small>
           </b-col>
           <b-col md="6">
@@ -95,18 +94,118 @@
             </b-form-group>
           </b-col>
         </b-row>
-
-        <!-- Support Data -->
-        <b-row v-else-if="tabpanel.code === 'support'">
+      </tab-content>
+      <tab-content
+        title="Data Toko"
+        icon="feather icon-shopping-bag"
+        :before-change="validateSecondTab"
+      >
+        <b-row>
           <b-col
             cols="12"
             class="mb-2"
           >
             <h5 class="mb-0">
-              {{ tabpanel.title }}
+              Data Toko
             </h5>
             <small class="text-muted">
-              {{ tabpanel.subtitle }}
+              Lengkapi form dibawah ini dengan data toko anda
+            </small>
+          </b-col>
+          <b-col md="6">
+            <b-form-group
+              label="Nama Toko :"
+              label-for="shopname"
+            >
+              <b-form-input
+                id="shopname"
+                v-model="shopName"
+                :state="shopName.length > 3"
+              />
+              <b-form-invalid-feedback>
+                Nama Toko Wajib Diisi
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group
+              label="Logo Toko (* .PNG / .JPEG) :"
+              label-for="shoplogo"
+            >
+              <b-form-file
+                id="shoplogo"
+                accept="image/jpeg, image/png"
+                :state="logoSize <= 500000"
+                @change="saveImage"
+              />
+              <b-form-invalid-feedback>
+                Ukuran Maksimal 500kB dengan tipe .PNG / .JPEG
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group
+              label="Telp. Toko :"
+              label-for="shopphone"
+            >
+              <b-form-input
+                id="shopphone"
+                v-model="shopNumber"
+                type="number"
+                :state="shopNumber.length >= 10 && shopNumber.length <= 12 && shopNumber.charAt(0) === '0'"
+              />
+              <b-form-invalid-feedback>
+                Telp Toko Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan Diawali Angka 0 (Contoh Format : 081234567890)
+              </b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group
+              label="Alamat :"
+              label-for="shopaddress"
+            >
+              <b-form-textarea
+                id="shopaddress"
+                v-model="shopAddress"
+                rows="3"
+                :state="shopAddress.length > 3"
+              />
+              <b-form-invalid-feedback>
+                Alamat Toko Wajib Diisi
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Logo Preview :">
+              <b-img
+                v-if="imageURL"
+                v-bind="previewSetting"
+                :src="imageURL"
+                alt="Logo"
+              />
+              <b-img
+                v-else
+                v-bind="previewSetting"
+                :src="require('@/assets/images/slider/06.jpg')"
+                alt="Logo"
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </tab-content>
+      <tab-content
+        title="Data Pendukung"
+        icon="feather icon-briefcase"
+        :before-change="validateLastTab"
+      >
+        <b-row>
+          <b-col
+            cols="12"
+            class="mb-2"
+          >
+            <h5 class="mb-0">
+              Data Pendukung
+            </h5>
+            <small class="text-muted">
+              Lengkapi form dibawah ini untuk mempermudah transaksi anda
             </small>
           </b-col>
           <b-col md="12">
@@ -166,93 +265,6 @@
               </b-col>
             </b-row>
           </div>
-        </b-row>
-
-        <!-- Shop Data -->
-        <b-row v-else>
-          <b-col
-            cols="12"
-            class="mb-2"
-          >
-            <h5 class="mb-0">
-              {{ tabpanel.title }}
-            </h5>
-            <small class="text-muted">
-              {{ tabpanel.subtitle }}
-            </small>
-          </b-col>
-          <b-col md="6">
-            <b-form-group
-              label="Nama Toko :"
-              label-for="shopname"
-            >
-              <b-form-input
-                id="shopname"
-                v-model="shopName"
-                :state="shopName.length > 3"
-              />
-              <b-form-invalid-feedback>
-                Nama Toko Wajib Diisi
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-          <b-col md="6">
-            <b-form-group
-              label="Logo Toko :"
-              label-for="shoplogo"
-            >
-              <b-form-file
-                id="shoplogo"
-                @change="saveImage"
-              />
-            </b-form-group>
-          </b-col>
-          <b-col md="6">
-            <b-form-group
-              label="Telp. Toko :"
-              label-for="shopphone"
-            >
-              <b-form-input
-                id="shopphone"
-                v-model="shopNumber"
-                type="number"
-                :state="shopNumber.length >= 10 && shopNumber.length <= 12 && shopNumber.charAt(0) === '0'"
-              />
-              <b-form-invalid-feedback>
-                Telp Toko Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan Diawali Angka 0 (Contoh Format : 081234567890)
-              </b-form-invalid-feedback>
-            </b-form-group>
-            <b-form-group
-              label="Alamat :"
-              label-for="shopaddress"
-            >
-              <b-form-textarea
-                id="shopaddress"
-                v-model="shopAddress"
-                rows="3"
-                :state="shopAddress.length > 3"
-              />
-              <b-form-invalid-feedback>
-                Alamat Toko Wajib Diisi
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-          <b-col md="6">
-            <b-form-group label="Logo Preview :">
-              <b-img
-                v-if="imageURL"
-                v-bind="previewSetting"
-                :src="imageURL"
-                alt="Logo"
-              />
-              <b-img
-                v-else
-                v-bind="previewSetting"
-                :src="require('@/assets/images/slider/06.jpg')"
-                alt="Logo"
-              />
-            </b-form-group>
-          </b-col>
         </b-row>
       </tab-content>
     </form-wizard>
@@ -363,6 +375,7 @@ export default {
       address: '',
       identitas: '',
       shopCode: '',
+      logoSize: 0,
       shopLogo: null,
       token: '',
       imageURL: null,
@@ -404,6 +417,87 @@ export default {
     window.removeEventListener('resize', this.initTrHeight)
   },
   methods: {
+    validateFirstTab() {
+      const errMsg = []
+      if (!this.ownerName && this.ownerName === '') {
+        errMsg.push('Nama Pemilik Wajib Diisi')
+      }
+      if (this.ownerNumber.length < 10) {
+        errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+      }
+      if (!this.ownerNumber.charAt(0) === '0') {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
+      }
+      if (!this.address && this.address === '') {
+        errMsg.push('Alamat Wajib Diisi')
+      }
+      if (!this.identitas && this.identitas === '') {
+        errMsg.push('No Identitas Wajib Diisi')
+      }
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      return false
+    },
+    validateSecondTab() {
+      const errMsg = []
+      if (!this.shopName && this.shopName === '') {
+        errMsg.push('Nama Toko Wajib Diisi')
+      }
+      if (this.shopNumber.length < 10) {
+        errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+      }
+      if (!this.shopNumber.charAt(0) === '0') {
+        errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
+      }
+      if (!this.address && this.address === '') {
+        errMsg.push('Alamat Wajib Diisi')
+      }
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      return false
+    },
+    validateLastTab() {
+      const errMsg = []
+      if (this.cashier.length === 0) {
+        errMsg.push('tambahkan Cashier Minimal 1')
+      }
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      return false
+    },
     fetchProfile() {
       this.cashierList = []
       this.isLoading = true
@@ -562,6 +656,7 @@ export default {
     },
     saveImage(e) {
       const logo = e.target.files[0]
+      this.logoSize = logo.size
       this.shopLogo = logo
       this.imageURL = URL.createObjectURL(logo)
     },
