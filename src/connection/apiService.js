@@ -213,28 +213,6 @@ export default class ApiService {
       })
     }
 
-    addAntrian(param) {
-      return axios({
-        method: 'post',
-        url: this.urlCnf.addAntrianData,
-        data: param,
-      })
-    }
-
-    getListAntrian() {
-      return axios({
-        method: 'get',
-        url: this.urlCnf.listAntrian,
-      })
-    }
-
-    getLoadAntrian(transaction) {
-      return axios({
-        method: 'get',
-        url: this.urlCnf.loadAntrian + transaction,
-      })
-    }
-
     getProfileUser() {
       return axios({
         method: 'post',
@@ -254,6 +232,35 @@ export default class ApiService {
       return axios({
         method: 'delete',
         url: this.urlCnf.deleteCashier + uuid,
+      })
+    }
+
+    getAntrian(uuid) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.antrianData + uuid,
+      })
+    }
+
+    addAntrian(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.addAntrianData,
+        data: param,
+      })
+    }
+
+    getListAntrian() {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.listAntrian,
+      })
+    }
+
+    getLoadAntrian(transaction) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.loadAntrian + transaction,
       })
     }
 }

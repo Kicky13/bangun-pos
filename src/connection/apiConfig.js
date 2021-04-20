@@ -20,6 +20,7 @@ export default {
   detailTransaction: 'user/transaction/',
 
   // Antrian
+  antrianData: 'user/transaction/load/',
   addAntrianData: 'user/transaction/queue',
   listAntrian: 'user/transaction/queue/list',
   loadAntrian: 'user/transaction/load/',
@@ -49,4 +50,8 @@ export default {
   // History
   transactHistory: 'history',
   logTransaction: 'user/historypayment',
+  // Profile
+  getProfile: 'toko/show',
+  updateProfile: 'toko/update',
+  deleteCashier: 'user/cashier/',
 }
