@@ -48,4 +48,9 @@ export default {
   // History
   transactHistory: 'history',
   logTransaction: 'user/historypayment',
+
+  // Profile
+  getProfile: 'toko/show',
+  updateProfile: 'toko/update',
+  deleteCashier: 'user/cashier/',
 }
