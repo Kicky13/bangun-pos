@@ -225,7 +225,7 @@
                     <b-form-input
                       id="sellprice"
                       v-model="productPrice"
-                      :state="productPrice.length > 0 && productPrice.charAt(0) != '0'"
+                      :state="productPrice > 0"
                       type="number"
                       name="sellprice"
                     />
@@ -281,15 +281,19 @@
                   sm="12"
                 >
                   <b-form-group
-                    label="Lampirkan Gambar Produk"
+                    label="Lampirkan Gambar Produk (* .PNG / .JPEG Maks 500KB) :"
                     label-for="attachment"
                   >
                     <b-form-file
                       id="attachment"
                       name="attachment"
                       accept="image/jpeg, image/png"
+                      :state="logoSize <= 500000"
                       @change="onFileChange"
                     />
+                    <b-form-invalid-feedback>
+                      Ukuran Maksimal 500kB dengan tipe .PNG / .JPEG
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col
@@ -457,8 +461,8 @@ export default {
       default: '',
     },
     editprice: {
-      type: String,
-      default: '',
+      type: Number,
+      default: 0,
     },
     editimage: {
       type: String,
@@ -531,6 +535,7 @@ export default {
   },
   data() {
     return {
+      logoSize: 0,
       productimgurl: null,
       isLoading: false,
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
@@ -541,7 +546,7 @@ export default {
       productId: '',
       productCode: '',
       productName: '',
-      productPrice: '',
+      productPrice: 0,
       productNote: '',
       selectedCategory: null,
       selectedStatus: null,
@@ -621,8 +626,28 @@ export default {
   methods: {
     onFileChange(e) {
       const file = e.target.files[0]
-      this.selectedFile = file
-      this.productimgurl = URL.createObjectURL(file)
+      if (file) {
+        this.logoSize = file.size
+        if (file.size < 500000) {
+          this.selectedFile = file
+          this.productimgurl = URL.createObjectURL(file)
+        } else {
+          this.selectedFile = null
+          this.productimgurl = null
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: 'Ukuran File Tidak Boleh Melebihi 500KB',
+              icon: 'AlertCircleIcon',
+              variant: 'danger',
+            },
+          })
+        }
+      } else {
+        this.selectedFile = null
+        this.productimgurl = null
+        this.logoSize = 0
+      }
     },
     async filldata() {
       this.priceId = this.editidprice
@@ -681,7 +706,7 @@ export default {
             this.productimgurl = null
             this.productCode = ''
             this.productName = ''
-            this.productPrice = ''
+            this.productPrice = 0
             this.productNote = ''
             this.selectedCategory = null
             this.selectedStatus = null
@@ -973,7 +998,9 @@ export default {
     },
     formValidate() {
       const errMsg = []
-
+      if (this.productPrice < 1) {
+        errMsg.push('Harga Produk Wajib Diisi Dengan Benar')
+      }
       if (!this.productCode && this.productCode === '') {
         errMsg.push('Kode Produk Wajib Diisi')
       }
@@ -993,7 +1020,7 @@ export default {
         errMsg.push('Tipe Produk Wajib Diisi')
       }
       if (!this.productPrice && this.productPrice === '') {
-        errMsg.push('Harga Produk Wajib Diisi')
+        errMsg.push('Harga Produk Wajib Diisi Dengan Benar')
       }
       if (!this.selectedStatus && this.selectedStatus === null) {
         errMsg.push('Status Wajib Diisi')
