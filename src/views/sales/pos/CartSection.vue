@@ -32,7 +32,12 @@
                     list="customer-list"
                   />
                   <datalist id="customer-list">
-                    <option v-for="cl in customerList" :key="cl.text">{{cl.text}}</option>
+                    <option
+                      v-for="cl in customerList"
+                      :key="cl.text"
+                    >
+                      {{ cl.text }}
+                    </option>
                   </datalist>
                 </b-form-group>
               </b-col>
@@ -660,7 +665,12 @@
                       list="customer-list"
                     />
                     <datalist id="customer-list">
-                      <option v-for="cl in customerList" :key="cl.text">{{cl.text}}</option>
+                      <option
+                        v-for="cl in customerList"
+                        :key="cl.text"
+                      >
+                        {{ cl.text }}
+                      </option>
                     </datalist>
                   </b-form-group>
                 </b-col>
@@ -1255,6 +1265,7 @@ export default {
             } else {
               this.makeToast('Antrian Berhasil Ditambahkan', 'CoffeeIcon', 'success', 'Silahkan cek di daftar antrian')
               this.setTransactionCode()
+              parentComponent.$emit('updateAntrian', data)
               this.selectedCustomer = null
               this.items = []
             }
@@ -1356,6 +1367,10 @@ export default {
     formSaveTransactionValidate() {
       if (!this.selectedPaymentMethod) {
         this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Silahkan pilih tipe pembayaran terlebih dahulu')
+        return false
+      }
+      if (this.selectedCustomer === null && this.selectedPaymentMethod === 2) {
+        this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Walk-in customer tidak diizinkan berhutang')
         return false
       }
       return true

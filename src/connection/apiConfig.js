@@ -20,8 +20,9 @@ export default {
   detailTransaction: 'user/transaction/',
 
   // Antrian
-  antrianData: 'user/transaction/load/',
   addAntrianData: 'user/transaction/queue',
+  listAntrian: 'user/transaction/queue/list',
+  loadAntrian: 'user/transaction/load/',
 
   // List
   category: 'category',

@@ -213,18 +213,25 @@ export default class ApiService {
       })
     }
 
-    getAntrian(uuid) {
-      return axios({
-        method: 'get',
-        url: this.urlCnf.antrianData + uuid,
-      })
-    }
-
     addAntrian(param) {
       return axios({
         method: 'post',
         url: this.urlCnf.addAntrianData,
         data: param,
+      })
+    }
+
+    getListAntrian() {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.listAntrian,
+      })
+    }
+
+    getLoadAntrian(transaction) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.loadAntrian + transaction,
       })
     }
 }
