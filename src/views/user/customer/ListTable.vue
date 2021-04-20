@@ -749,10 +749,10 @@ export default {
     formValidate() {
       const errMsg = []
 
-      if (this.customerName.length === 0) {
+      if (this.customerName.length < 3) {
         errMsg.push('customerName')
       }
-      if (this.customerPhone.length === 0) {
+      if (this.customerPhone.length < 10 && this.customerPhone.length > 12) {
         errMsg.push('customerPhone')
       }
       if (!this.customerPhone.charAt(0) === '0') {
@@ -785,6 +785,9 @@ export default {
       }
       if (this.paymentID === 0) {
         errMsg.push('PayID')
+      }
+      if (this.paySum > this.remainingDebt) {
+        this.paySum = this.remainingDebt
       }
 
       if (errMsg.length === 0) {

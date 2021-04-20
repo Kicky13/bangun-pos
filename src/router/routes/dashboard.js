@@ -17,4 +17,13 @@ export default [
     },
     component: () => import('@/views/dashboard/ecommerce/Ecommerce.vue'),
   },
+  {
+    path: '/admin/dashboard',
+    name: 'dashboard-admin',
+    meta: {
+      action: 'read',
+      resource: 'Dashboard',
+    },
+    component: () => import('@/views/dashboard/admin/Dashboard.vue'),
+  },
 ]

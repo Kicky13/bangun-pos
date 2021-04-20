@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading-grow v-if="isLoading" />
     <form-wizard
       color="#b20838"
       :title="null"
@@ -10,23 +11,24 @@
       @on-complete="formSubmitted"
     >
       <!-- tabs -->
+
+      <!-- Ownerdata -->
       <tab-content
-        v-for="tabpanel in wizardTabs"
-        :key="tabpanel.id"
-        :title="tabpanel.title"
-        :icon="tabpanel.icon"
+        key="1"
+        title="Data Pemilik"
+        icon="feather icon-user"
+        :before-change="validationOwner"
       >
-        <!-- UserData -->
-        <b-row v-if="tabpanel.code === 'userdata'">
+        <b-row>
           <b-col
             cols="12"
             class="mb-2"
           >
             <h5 class="mb-0">
-              {{ tabpanel.title }}
+              Data Pemilik
             </h5>
             <small class="text-muted">
-              {{ tabpanel.subtitle }}
+              Isi Data diri anda sebagai pemilik toko
             </small>
           </b-col>
           <b-col md="6">
@@ -94,90 +96,25 @@
             </b-form-group>
           </b-col>
         </b-row>
+      </tab-content>
 
-        <!-- Support Data -->
-        <b-row v-else-if="tabpanel.code === 'support'">
+      <!-- ShopData -->
+      <tab-content
+        key="2"
+        title="Data Toko"
+        icon="feather icon-shopping-bag"
+        :before-change="validationShop"
+      >
+        <b-row>
           <b-col
             cols="12"
             class="mb-2"
           >
             <h5 class="mb-0">
-              {{ tabpanel.title }}
+              Data Toko
             </h5>
             <small class="text-muted">
-              {{ tabpanel.subtitle }}
-            </small>
-          </b-col>
-          <b-col md="12">
-            <h3>Data Kasir</h3>
-            <div>
-              <b-button
-                variant="primary"
-                class="btn-icon"
-                style="margin-bottom: 10px;"
-                @click="repeateAgain"
-              >
-                <feather-icon icon="PlusIcon" />
-                <span>Tambahkan Kasir</span>
-              </b-button>
-            </div>
-          </b-col>
-          <div style="margin-left: 10px;">
-            <b-row
-              v-for="(item, index) in items"
-              :id="item.id"
-              :key="item.id"
-              ref="row"
-            >
-
-              <!-- Item Name -->
-              <b-col md="8">
-                <b-form-group
-                  label="Kasir"
-                  label-for="cashier"
-                >
-                  <b-form-input
-                    id="cashier"
-                    v-model="item.namecash"
-                    type="text"
-                  />
-                </b-form-group>
-              </b-col>
-
-              <!-- Remove Button -->
-              <b-col
-                md="4"
-              >
-                <b-button
-                  v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                  variant="outline-danger"
-                  class="btn-icon mt-0 mt-md-2"
-                  @click="removeItem(index)"
-                >
-                  <feather-icon
-                    icon="XIcon"
-                  />
-                  <span>Hapus</span>
-                </b-button>
-              </b-col>
-              <b-col cols="12">
-                <hr>
-              </b-col>
-            </b-row>
-          </div>
-        </b-row>
-
-        <!-- Shop Data -->
-        <b-row v-else>
-          <b-col
-            cols="12"
-            class="mb-2"
-          >
-            <h5 class="mb-0">
-              {{ tabpanel.title }}
-            </h5>
-            <small class="text-muted">
-              {{ tabpanel.subtitle }}
+              Lengkapi form dibawah ini dengan data toko anda
             </small>
           </b-col>
           <b-col md="6">
@@ -255,6 +192,84 @@
         </b-row>
       </tab-content>
 
+      <!-- Support Data -->
+      <tab-content
+        key="3"
+        title="Data Pendukung"
+        icon="feather icon-briefcase"
+      >
+        <b-row>
+          <b-col
+            cols="12"
+            class="mb-2"
+          >
+            <h5 class="mb-0">
+              Data Pendukung
+            </h5>
+            <small class="text-muted">
+              Lengkapi form dibawah ini untuk mempermudah anda bertransaksi
+            </small>
+          </b-col>
+          <b-col md="12">
+            <h3>Data Kasir</h3>
+            <div>
+              <b-button
+                variant="primary"
+                class="btn-icon"
+                style="margin-bottom: 10px;"
+                @click="repeateAgain"
+              >
+                <feather-icon icon="PlusIcon" />
+                <span>Tambahkan Kasir</span>
+              </b-button>
+            </div>
+          </b-col>
+          <div style="margin-left: 10px;">
+            <b-row
+              v-for="(item, index) in items"
+              :id="item.id"
+              :key="item.id"
+              ref="row"
+            >
+
+              <!-- Item Name -->
+              <b-col md="8">
+                <b-form-group
+                  label="Kasir"
+                  label-for="cashier"
+                >
+                  <b-form-input
+                    id="cashier"
+                    v-model="item.namecash"
+                    type="text"
+                  />
+                </b-form-group>
+              </b-col>
+
+              <!-- Remove Button -->
+              <b-col
+                md="4"
+              >
+                <b-button
+                  v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+                  variant="outline-danger"
+                  class="btn-icon mt-0 mt-md-2"
+                  @click="removeItem(index)"
+                >
+                  <feather-icon
+                    icon="XIcon"
+                  />
+                  <span>Hapus</span>
+                </b-button>
+              </b-col>
+              <b-col cols="12">
+                <hr>
+              </b-col>
+            </b-row>
+          </div>
+        </b-row>
+      </tab-content>
+
     </form-wizard>
 
   </div>
@@ -271,6 +286,7 @@ import Ripple from 'vue-ripple-directive'
 import { heightTransition } from '@core/mixins/ui/transition'
 import authService from '@/connection/connection'
 import { getHomeRouteForLoggedInUser } from '@/auth/utils'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
 
 export default {
   directives: {
@@ -290,6 +306,7 @@ export default {
     BFormInvalidFeedback,
     // eslint-disable-next-line vue/no-unused-components
     ToastificationContent,
+    LoadingGrow,
   },
   mixins: [heightTransition],
   props: {
@@ -301,6 +318,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       items: [{
         id: 1,
         namecash: '',
@@ -364,6 +382,7 @@ export default {
   },
   methods: {
     async formSubmitted() {
+      this.isLoading = true
       const param = new FormData()
       const cashier = []
       const inputItems = this.items
@@ -414,6 +433,7 @@ export default {
               })
               .catch(error => {
                 console.log(error)
+                this.isLoading = false
               })
           } else {
             this.$toast({
@@ -454,6 +474,7 @@ export default {
       const logo = e.target.files[0]
       this.shopLogo = logo
       this.imageURL = URL.createObjectURL(logo)
+      console.log(logo)
     },
     setDataUser(data) {
       const userAbility = authService.getAbility(data.role)
@@ -471,16 +492,102 @@ export default {
       }
       return userData
     },
+    validationOwner() {
+      const errMsg = []
+
+      if (this.ownerName.length < 3) {
+        errMsg.push('Nama Pemilik Wajib Diisi minimal 3 karakter')
+      }
+      if (this.ownerNumber.charAt(0) !== '0') {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
+      }
+      if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
+        errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+      }
+      if (this.identitas.length !== 16) {
+        errMsg.push('No Identitas Wajib Diisi nomor 16 karakter')
+      }
+      if (!this.address && this.address === '') {
+        errMsg.push('Alamat Wajib Diisi')
+      }
+
+      if (errMsg.length > 0) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: 'Lengkapi terlebih dahulu form sebelum melanjutkan',
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      }
+      return new Promise((resolve, reject) => {
+        if (errMsg.length === 0) {
+          console.log(errMsg)
+          resolve(true)
+        } else {
+          reject()
+        }
+      })
+    },
+    validationShop() {
+      const errMsg = []
+
+      if (!this.shopName && this.shopName === '') {
+        errMsg.push('Nama Toko Wajib Diisi')
+      }
+      if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
+        errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+      }
+      if (!this.shopNumber.charAt(0) === '0') {
+        errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
+      }
+      if (!this.address && this.address === '') {
+        errMsg.push('Alamat Wajib Diisi')
+      }
+      if (this.shopLogo) {
+        const { name, size } = this.shopLogo
+        const fileExt = name.split('.').pop()
+
+        if (fileExt !== 'jpg' && fileExt !== 'png') {
+          errMsg.push('Logo harus berekstensi jpg atau png')
+        }
+        if (size > 5000000) {
+          errMsg.push('Ukuran maksimal file 5mb')
+        }
+      }
+
+      console.log(errMsg)
+
+      if (errMsg.length > 0) {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: 'Lengkapi terlebih dahulu form sebelum melanjutkan',
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      }
+
+      return new Promise((resolve, reject) => {
+        if (errMsg.length === 0) {
+          resolve(true)
+        } else {
+          reject()
+        }
+      })
+    },
     formValidate() {
       const errMsg = []
 
-      if (!this.ownerName && this.ownerName === '') {
-        errMsg.push('Nama Pemilik Wajib Diisi')
+      if (!this.ownerName.length > 3) {
+        errMsg.push('Nama Pemilik Wajib Diisi minimal 3 karakter')
       }
       if (!this.shopName && this.shopName === '') {
         errMsg.push('Nama Toko Wajib Diisi')
       }
-      if (this.ownerNumber.length < 10) {
+      if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
         errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (this.shopNumber.length < 10) {
@@ -495,8 +602,8 @@ export default {
       if (!this.address && this.address === '') {
         errMsg.push('Alamat Wajib Diisi')
       }
-      if (!this.identitas && this.identitas === '') {
-        errMsg.push('No Identitas Wajib Diisi')
+      if (!this.identitas.length === 16) {
+        errMsg.push('No Identitas Wajib Diisi nomor 16 karakter')
       }
       if (this.cashier.length === 0) {
         errMsg.push('tambahkan Cashier Minimal 1')
