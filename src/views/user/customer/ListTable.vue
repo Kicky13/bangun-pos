@@ -22,19 +22,6 @@
           </div>
         </b-form-group>
       </div>
-      <div style="float:left;width: 200px !important; margin-left:10px;">
-        <b-form-group
-          label="Status"
-          label-for="status"
-          label-cols-md="4"
-        >
-          <b-form-select
-            id="status"
-            v-model="selectedStatus"
-            :options="statusItems"
-          />
-        </b-form-group>
-      </div>
       <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
@@ -538,18 +525,26 @@ export default {
         {
           label: 'Nilai Total Trans.',
           field: 'totalTrans',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Total Hutang',
           field: 'totalHutang',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Hutang Dibayar',
           field: 'sudahBayar',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Sisa Hutang',
           field: 'sisaHutang',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Action',
@@ -579,6 +574,11 @@ export default {
     this.fetchCustomerList()
   },
   methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      return `Rp. ${formatedval}`
+    },
     fetchCustomerList() {
       this.isLoading = true
       appService.getCustomer({
