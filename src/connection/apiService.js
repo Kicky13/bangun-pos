@@ -213,6 +213,27 @@ export default class ApiService {
       })
     }
 
+    getProfileUser() {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getProfile,
+      })
+    }
+
+    updateProfileUser() {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.updateProfile,
+      })
+    }
+
+    deleteCashier(uuid) {
+      return axios({
+        method: 'delete',
+        url: this.urlCnf.deleteCashier + uuid,
+      })
+    }
+
     getAntrian(uuid) {
       return axios({
         method: 'get',

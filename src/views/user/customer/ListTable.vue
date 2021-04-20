@@ -287,15 +287,15 @@
       size="sm"
       hide-header
       hide-header-close
-      ok-title="Yes"
-      cancel-title="No"
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
       ok-variant="danger"
       cancel-variant="secondary"
       @ok="fetchPayDebt"
       @cancel="handleCancelPay"
     >
       <div class="d-block text-center">
-        <h3>Proceed ?</h3>
+        <h3>Apakah Anda Sudah Yakin ?</h3>
       </div>
     </b-modal>
     <!-- <End of pay debt /> -->
@@ -392,15 +392,15 @@
       size="sm"
       hide-header
       hide-header-close
-      ok-title="Yes"
-      cancel-title="No"
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
       ok-variant="danger"
       cancel-variant="secondary"
       @ok="handleSubmit"
       @cancel="handleCancel"
     >
       <div class="d-block text-center">
-        <h3>Proceed ?</h3>
+        <h3>Apakah Anda Sudah Yakin ?</h3>
       </div>
     </b-modal>
     <alert-token />

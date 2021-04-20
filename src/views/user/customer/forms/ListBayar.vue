@@ -379,7 +379,7 @@ export default {
       const res = {
         transId: data.id,
         saleCode: data.kode_transaksi,
-        customer: data.customer.nama,
+        customer: data.customer.nama ?? '-',
         refCode: data.no_references ?? '-',
         subTotal: data.sub_total,
         diskon: data.discount,
