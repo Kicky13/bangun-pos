@@ -15,20 +15,26 @@
       fluid
       class="card-img-top"
       :src="product.img_produk"
+      :title="`${product.nama_produk}`"
     />
     <!-- </b-link> -->
     <div class="truncate text-center">
-      <h5 class="mb-25 font-weight-bolder">
+      <div v-if="product.nama_produk.length<=15">
+        <small class="text-dark">
+          [{{ product.kode_produk }}]
+        </small>
+        <h5>{{ product.nama_produk }}</h5>
+      </div>
+      <div v-else>
+        <small class="text-dark">
+          [{{ product.kode_produk }}]
+        </small>
+        <h5>{{ product.nama_produk.substring(0,15) + "..." }}</h5>
+      </div>
+      <hr style="margin: 7px 0;">
+      <span class="font-italic text-dark">
         Rp. {{ formatPrice(product.price) }} / PCS
-      </h5>
-      <span
-        v-if="product.nama_produk.length<=15"
-        style="color: black;"
-      >{{ product.id_produk }}-{{ product.nama_produk }}</span>
-      <span
-        v-else
-        style="color: black;"
-      >{{ product.id_produk }}-{{ product.nama_produk.substring(0,15)+"..." }}</span>
+      </span>
     </div>
   </b-card>
 </template>
