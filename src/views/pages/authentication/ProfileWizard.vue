@@ -129,7 +129,7 @@
           </b-col>
           <b-col md="6">
             <b-form-group
-              label="Logo Toko (* .PNG / .JPEG) :"
+              label="Logo Toko (* .PNG / .JPEG Maks 500KB) :"
               label-for="shoplogo"
             >
               <b-form-file
@@ -354,6 +354,7 @@ export default {
   data() {
     return {
       deletedCashier: null,
+      removeIndex: 0,
       isLoading: false,
       items: [{
         id: 1,
@@ -379,6 +380,7 @@ export default {
       shopLogo: null,
       token: '',
       imageURL: null,
+      defaultImageURL: null,
       cashierList: [],
       selectedContry: 'select_value',
       selectedLanguage: 'nothing_selected',
@@ -419,20 +421,20 @@ export default {
   methods: {
     validateFirstTab() {
       const errMsg = []
-      if (!this.ownerName && this.ownerName === '') {
-        errMsg.push('Nama Pemilik Wajib Diisi')
+      if ((!this.ownerName && this.ownerName === '') || this.ownerName.length < 3) {
+        errMsg.push('Nama Pemilik Wajib Diisi, Minimal 3 Karakter')
       }
-      if (this.ownerNumber.length < 10) {
+      if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
         errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (!this.ownerNumber.charAt(0) === '0') {
         errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
-      if (!this.address && this.address === '') {
-        errMsg.push('Alamat Wajib Diisi')
+      if ((!this.address && this.address === '') || this.address.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
       }
-      if (!this.identitas && this.identitas === '') {
-        errMsg.push('No Identitas Wajib Diisi')
+      if ((!this.identitas && this.identitas === '') || this.identitas.length !== 16) {
+        errMsg.push('No Identitas Wajib Diisi 16 Digits Angka')
       }
       if (errMsg.length === 0) {
         return true
@@ -451,17 +453,20 @@ export default {
     },
     validateSecondTab() {
       const errMsg = []
-      if (!this.shopName && this.shopName === '') {
-        errMsg.push('Nama Toko Wajib Diisi')
+      if ((!this.shopName && this.shopName === '') || this.shopName.length < 3) {
+        errMsg.push('Nama Toko Wajib Diisi, Minimal 3 Karakter')
       }
-      if (this.shopNumber.length < 10) {
+      if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
         errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (!this.shopNumber.charAt(0) === '0') {
         errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
       }
-      if (!this.address && this.address === '') {
-        errMsg.push('Alamat Wajib Diisi')
+      if ((!this.shopAddress && this.shopAddress === '') || this.ownerName.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
+      }
+      if (this.logoSize > 500000) {
+        errMsg.push('Ukuran Logo Tidak Boleh Melebihi 500KB')
       }
       if (errMsg.length === 0) {
         return true
@@ -480,9 +485,6 @@ export default {
     },
     validateLastTab() {
       const errMsg = []
-      if (this.cashier.length === 0) {
-        errMsg.push('tambahkan Cashier Minimal 1')
-      }
       if (errMsg.length === 0) {
         return true
       }
@@ -498,7 +500,7 @@ export default {
       })
       return false
     },
-    fetchProfile() {
+    async fetchProfile() {
       this.cashierList = []
       this.isLoading = true
       appService.getProfileUser().then(response => {
@@ -518,6 +520,7 @@ export default {
           // this.shopLogo = res.logo_toko
           // this.token = res.kode_toko
           this.imageURL = res.logo_toko ?? null
+          this.defaultImageURL = res.logo_toko ?? null
           const itemlist = res.kasir
           itemlist.forEach(item => {
             this.cashierList.push({
@@ -539,13 +542,15 @@ export default {
       this.isLoading = true
       const param = new FormData()
       const cashier = []
-      const inputItems = this.items
+      const inputItems = this.cashierList
       inputItems.forEach(item => {
-        const cashierID = item.namecash
-        console.log(cashierID.length)
+        const cashierID = item.name
+        // console.log(cashierID.length)
         if (cashierID.length > 0) {
           cashier.push(cashierID)
           param.append('kasir[]', cashierID)
+          param.append('status[]', item.status)
+          param.append('id_kasir[]', item.uuid)
           this.cashier.push(cashierID)
         }
       })
@@ -553,14 +558,14 @@ export default {
         param.append('nama_toko', this.shopName)
         param.append('logo_toko', this.shopLogo)
         param.append('telp_toko', this.shopNumber)
-        param.append('alamat', this.address)
+        param.append('alamat_toko', this.shopAddress)
         param.append('nama_pemilik', this.ownerName)
         param.append('no_identitas', this.identitas)
         param.append('telp_pemilik', this.ownerNumber)
-        param.append('alamat_pemilik', this.shopAddress)
+        param.append('alamat_pemilik', this.address)
         // param.append('kasir', cashier)
         param.append('kode_toko', this.shopCode)
-        authService.updateProfileUser(param).then(response => {
+        appService.updateProfileUser(param).then(response => {
           const { data } = response
           this.isLoading = false
           if (data.result) {
@@ -572,6 +577,7 @@ export default {
                 variant: 'success',
               },
             })
+            this.fetchProfile()
           } else {
             this.$toast({
               component: ToastificationContent,
@@ -590,7 +596,7 @@ export default {
     },
     repeateAgain() {
       this.cashierList.push({
-        id: null,
+        id: 0,
         name: '',
         uuid: null,
         status: 'insert',
@@ -600,11 +606,13 @@ export default {
       // })
     },
     removeItem(index, item) {
+      // console.log(index)
       // this.items.splice(index, 1)
-      if (item.id === null) {
+      if (item.id === 0) {
         this.cashierList.splice(index, 1)
       } else {
-        console.log(item)
+        // console.log(item)
+        this.removeIndex = index
         this.confirmDelete(item)
       }
       // this.trTrimHeight(this.$refs.row[0].offsetHeight)
@@ -624,7 +632,7 @@ export default {
     },
     async deleteCashier() {
       this.isLoading = true
-      authService.deleteCashier(this.deleteCashier).then(response => {
+      appService.deleteCashier(this.deleteCashier).then(response => {
         const { data } = response
         this.isLoading = false
         if (data.result) {
@@ -636,6 +644,7 @@ export default {
               variant: 'success',
             },
           })
+          this.cashierList.splice(this.removeIndex, 1)
         } else {
           this.$toast({
             component: ToastificationContent,
@@ -656,9 +665,29 @@ export default {
     },
     saveImage(e) {
       const logo = e.target.files[0]
-      this.logoSize = logo.size
-      this.shopLogo = logo
-      this.imageURL = URL.createObjectURL(logo)
+      if (logo) {
+        this.logoSize = logo.size
+        // console.log(this.logoSize)
+        if (logo.size < 500000) {
+          this.shopLogo = logo
+          this.imageURL = URL.createObjectURL(logo)
+        } else {
+          this.shopLogo = null
+          this.imageURL = null
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: 'Ukuran Logo Tidak Boleh Melebihi 500KB',
+              icon: 'AlertCircleIcon',
+              variant: 'danger',
+            },
+          })
+        }
+      } else {
+        this.shopLogo = null
+        this.imageURL = this.defaultImageURL
+        this.logoSize = 0
+      }
     },
     setDataUser(data) {
       const userAbility = authService.getAbility(data.role)
@@ -678,35 +707,39 @@ export default {
     },
     formValidate() {
       const errMsg = []
-
-      if (!this.ownerName && this.ownerName === '') {
-        errMsg.push('Nama Pemilik Wajib Diisi')
+      if ((!this.ownerName && this.ownerName === '') || this.ownerName.length < 3) {
+        errMsg.push('Nama Pemilik Wajib Diisi, Minimal 3 Karakter')
       }
-      if (!this.shopName && this.shopName === '') {
-        errMsg.push('Nama Toko Wajib Diisi')
-      }
-      if (this.ownerNumber.length < 10) {
+      if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
         errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
-      }
-      if (this.shopNumber.length < 10) {
-        errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (!this.ownerNumber.charAt(0) === '0') {
         errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
+      if ((!this.address && this.address === '') || this.address.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
+      }
+      if ((!this.identitas && this.identitas === '') || this.identitas.length !== 16) {
+        errMsg.push('No Identitas Wajib Diisi 16 Digits Angka')
+      }
+      if ((!this.shopName && this.shopName === '') || this.shopName.length < 3) {
+        errMsg.push('Nama Toko Wajib Diisi, Minimal 3 Karakter')
+      }
+      if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
+        errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+      }
       if (!this.shopNumber.charAt(0) === '0') {
         errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
       }
-      if (!this.address && this.address === '') {
-        errMsg.push('Alamat Wajib Diisi')
+      if ((!this.shopAddress && this.shopAddress === '') || this.ownerName.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
       }
-      if (!this.identitas && this.identitas === '') {
-        errMsg.push('No Identitas Wajib Diisi')
+      if (this.logoSize > 500000) {
+        errMsg.push('Ukuran Logo Tidak Boleh Melebihi 500KB')
       }
       if (this.cashier.length === 0) {
-        errMsg.push('tambahkan Cashier Minimal 1')
+        errMsg.push('Tambahkan Cashier Minimal 1')
       }
-
       if (errMsg.length === 0) {
         return true
       }

@@ -220,10 +220,11 @@ export default class ApiService {
       })
     }
 
-    updateProfileUser() {
+    updateProfileUser(param) {
       return axios({
         method: 'post',
         url: this.urlCnf.updateProfile,
+        data: param,
       })
     }
 
