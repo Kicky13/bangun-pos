@@ -279,18 +279,26 @@ export default {
         {
           label: 'Sub Total',
           field: 'subtotal',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Diskon',
           field: 'disc',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Ongkos Kirim',
           field: 'ship',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Pajak',
           field: 'tax',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Type Pembayaran',
@@ -350,9 +358,11 @@ export default {
     this.fetchSalesList()
   },
   methods: {
-    // advanceSearch(val) {
-    //   this.searchTerm = val
-    // },
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      return `Rp. ${formatedval}`
+    },
     fetchSalesList() {
       this.isLoading = true
       appService.getSales({
@@ -390,9 +400,9 @@ export default {
         id: data.uuid,
         date: data.date_transaction,
         saleCode: data.kode_transaksi,
-        ref: data.no_references,
+        ref: data.no_references ?? '-',
         biller: data.kasir.nama,
-        customer: data.customer.nama_customer,
+        customer: data.nama_customer ?? '-',
         subtotal: data.sub_total,
         disc: data.discount,
         ship: data.shipping,

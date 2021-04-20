@@ -115,6 +115,24 @@ export default [
     },
   },
   {
+    path: '/myprofile',
+    name: 'user-profile',
+    component: () => import('@/views/pages/authentication/Profile.vue'),
+    meta: {
+      // pageTitle: 'Customer',
+      resource: 'CustomerUser',
+      action: 'manage',
+      redTitle: 'Profile Toko Kamu',
+      redSubs: 'Lengkapi Profile Tokomu Untuk Melengkapi Data Transaksi',
+      // breadcrumb: [
+      //   {
+      //     text: 'Customer',
+      //     active: true,
+      //   },
+      // ],
+    },
+  },
+  {
     path: '/mycustomer/history/',
     name: 'user-customer-list-trans',
     component: () => import('@/views/user/customer/forms/ListBayar.vue'),

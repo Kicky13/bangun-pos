@@ -21,7 +21,7 @@ const router = new VueRouter({
     return { x: 0, y: 0 }
   },
   routes: [
-    { path: '/', redirect: { name: 'dashboard-ecommerce', meta: { action: 'read', resource: 'Dashboard' } } },
+    { path: '/', redirect: { name: 'dashboard-admin', meta: { action: 'read', resource: 'Dashboard' } } },
     ...products,
     ...purchases,
     ...sales,

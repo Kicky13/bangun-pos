@@ -22,19 +22,6 @@
           </div>
         </b-form-group>
       </div>
-      <div style="float:left;width: 200px !important; margin-left:10px;">
-        <b-form-group
-          label="Status"
-          label-for="status"
-          label-cols-md="4"
-        >
-          <b-form-select
-            id="status"
-            v-model="selectedStatus"
-            :options="statusItems"
-          />
-        </b-form-group>
-      </div>
       <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
@@ -287,15 +274,15 @@
       size="sm"
       hide-header
       hide-header-close
-      ok-title="Yes"
-      cancel-title="No"
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
       ok-variant="danger"
       cancel-variant="secondary"
       @ok="fetchPayDebt"
       @cancel="handleCancelPay"
     >
       <div class="d-block text-center">
-        <h3>Proceed ?</h3>
+        <h3>Apakah Anda Sudah Yakin ?</h3>
       </div>
     </b-modal>
     <!-- <End of pay debt /> -->
@@ -392,15 +379,15 @@
       size="sm"
       hide-header
       hide-header-close
-      ok-title="Yes"
-      cancel-title="No"
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
       ok-variant="danger"
       cancel-variant="secondary"
       @ok="handleSubmit"
       @cancel="handleCancel"
     >
       <div class="d-block text-center">
-        <h3>Proceed ?</h3>
+        <h3>Apakah Anda Sudah Yakin ?</h3>
       </div>
     </b-modal>
     <alert-token />
@@ -538,18 +525,26 @@ export default {
         {
           label: 'Nilai Total Trans.',
           field: 'totalTrans',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Total Hutang',
           field: 'totalHutang',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Hutang Dibayar',
           field: 'sudahBayar',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Sisa Hutang',
           field: 'sisaHutang',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Action',
@@ -579,6 +574,11 @@ export default {
     this.fetchCustomerList()
   },
   methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      return `Rp. ${formatedval}`
+    },
     fetchCustomerList() {
       this.isLoading = true
       appService.getCustomer({
@@ -749,10 +749,10 @@ export default {
     formValidate() {
       const errMsg = []
 
-      if (this.customerName.length === 0) {
+      if (this.customerName.length < 3) {
         errMsg.push('customerName')
       }
-      if (this.customerPhone.length === 0) {
+      if (this.customerPhone.length < 10 && this.customerPhone.length > 12) {
         errMsg.push('customerPhone')
       }
       if (!this.customerPhone.charAt(0) === '0') {
@@ -785,6 +785,9 @@ export default {
       }
       if (this.paymentID === 0) {
         errMsg.push('PayID')
+      }
+      if (this.paySum > this.remainingDebt) {
+        this.paySum = this.remainingDebt
       }
 
       if (errMsg.length === 0) {

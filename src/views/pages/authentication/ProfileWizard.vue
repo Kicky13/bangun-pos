@@ -5,19 +5,17 @@
       color="#b20838"
       :title="null"
       :subtitle="null"
-      finish-button-text="Submit"
-      back-button-text="Previous"
+      finish-button-text="Simpan"
+      back-button-text="Sebelumnya"
+      next-button-text="Lanjut"
       class="steps-transparent mb-3"
-      @on-complete="formSubmitted"
+      @on-complete="confirmSubmit"
     >
       <!-- tabs -->
-
-      <!-- Ownerdata -->
       <tab-content
-        key="1"
         title="Data Pemilik"
         icon="feather icon-user"
-        :before-change="validationOwner"
+        :before-change="validateFirstTab"
       >
         <b-row>
           <b-col
@@ -28,7 +26,7 @@
               Data Pemilik
             </h5>
             <small class="text-muted">
-              Isi Data diri anda sebagai pemilik toko
+              Isi data diri anda sebagai pemilik toko
             </small>
           </b-col>
           <b-col md="6">
@@ -97,13 +95,10 @@
           </b-col>
         </b-row>
       </tab-content>
-
-      <!-- ShopData -->
       <tab-content
-        key="2"
         title="Data Toko"
         icon="feather icon-shopping-bag"
-        :before-change="validationShop"
+        :before-change="validateSecondTab"
       >
         <b-row>
           <b-col
@@ -134,13 +129,18 @@
           </b-col>
           <b-col md="6">
             <b-form-group
-              label="Logo Toko :"
+              label="Logo Toko (* .PNG / .JPEG Maks 500KB) :"
               label-for="shoplogo"
             >
               <b-form-file
                 id="shoplogo"
+                accept="image/jpeg, image/png"
+                :state="logoSize <= 500000"
                 @change="saveImage"
               />
+              <b-form-invalid-feedback>
+                Ukuran Maksimal 500kB dengan tipe .PNG / .JPEG
+              </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
           <b-col md="6">
@@ -164,9 +164,9 @@
             >
               <b-form-textarea
                 id="shopaddress"
-                v-model="address"
+                v-model="shopAddress"
                 rows="3"
-                :state="address.length > 3"
+                :state="shopAddress.length > 3"
               />
               <b-form-invalid-feedback>
                 Alamat Toko Wajib Diisi
@@ -191,12 +191,10 @@
           </b-col>
         </b-row>
       </tab-content>
-
-      <!-- Support Data -->
       <tab-content
-        key="3"
         title="Data Pendukung"
         icon="feather icon-briefcase"
+        :before-change="validateLastTab"
       >
         <b-row>
           <b-col
@@ -207,7 +205,7 @@
               Data Pendukung
             </h5>
             <small class="text-muted">
-              Lengkapi form dibawah ini untuk mempermudah anda bertransaksi
+              Lengkapi form dibawah ini untuk mempermudah transaksi anda
             </small>
           </b-col>
           <b-col md="12">
@@ -226,9 +224,9 @@
           </b-col>
           <div style="margin-left: 10px;">
             <b-row
-              v-for="(item, index) in items"
-              :id="item.id"
-              :key="item.id"
+              v-for="(item, index) in cashierList"
+              :id="item.uuid"
+              :key="item.uuid"
               ref="row"
             >
 
@@ -240,7 +238,7 @@
                 >
                   <b-form-input
                     id="cashier"
-                    v-model="item.namecash"
+                    v-model="item.name"
                     type="text"
                   />
                 </b-form-group>
@@ -254,7 +252,7 @@
                   v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                   variant="outline-danger"
                   class="btn-icon mt-0 mt-md-2"
-                  @click="removeItem(index)"
+                  @click="removeItem(index, item)"
                 >
                   <feather-icon
                     icon="XIcon"
@@ -269,9 +267,42 @@
           </div>
         </b-row>
       </tab-content>
-
     </form-wizard>
-
+    <b-modal
+      id="askDelete"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="deleteCashier"
+      @cancel="handleCancelDelete"
+    >
+      <div class="d-block text-center">
+        <h3>Apakah Anda Sudah Yakin ?</h3>
+      </div>
+    </b-modal>
+    <b-modal
+      id="askSubmit"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="formSubmitted"
+      @cancel="handleCancelSubmit"
+    >
+      <div class="d-block text-center">
+        <h3>Apakah Anda Sudah Yakin ?</h3>
+      </div>
+    </b-modal>
+    <alert-token />
   </div>
 </template>
 
@@ -283,10 +314,13 @@ import {
   BRow, BCol, BFormGroup, BFormTextarea, BFormInput, BButton, BImg, BFormFile, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
+import ApiService from '@/connection/apiService'
 import { heightTransition } from '@core/mixins/ui/transition'
 import authService from '@/connection/connection'
-import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
+
+const appService = new ApiService()
 
 export default {
   directives: {
@@ -307,6 +341,7 @@ export default {
     // eslint-disable-next-line vue/no-unused-components
     ToastificationContent,
     LoadingGrow,
+    AlertToken,
   },
   mixins: [heightTransition],
   props: {
@@ -318,6 +353,8 @@ export default {
   },
   data() {
     return {
+      deletedCashier: null,
+      removeIndex: 0,
       isLoading: false,
       items: [{
         id: 1,
@@ -331,16 +368,20 @@ export default {
         width: 230,
         height: 210,
       },
-      ownerName: this.formData.nama_pemilik ?? '',
-      ownerNumber: this.formData.telp_pemilik ?? '',
-      shopName: this.formData.nama_toko ?? '',
-      shopNumber: this.formData.telp_toko ?? '',
-      address: this.formData.alamat ?? '',
-      identitas: this.formData.no_identitas ?? '',
-      shopCode: this.formData.kode_toko ?? '',
+      ownerName: '',
+      ownerNumber: '',
+      shopName: '',
+      shopNumber: '',
+      shopAddress: '',
+      address: '',
+      identitas: '',
+      shopCode: '',
+      logoSize: 0,
       shopLogo: null,
-      token: this.formData.token,
+      token: '',
       imageURL: null,
+      defaultImageURL: null,
+      cashierList: [],
       selectedContry: 'select_value',
       selectedLanguage: 'nothing_selected',
       wizardTabs: [
@@ -369,29 +410,147 @@ export default {
     }
   },
   mounted() {
-    localStorage.removeItem('userData')
-    // this.initTrHeight()
-    authService.setRegisterToken(this.formData.token)
-    console.log(this.formData)
   },
   created() {
+    this.fetchProfile()
     window.addEventListener('resize', this.initTrHeight)
   },
   destroyed() {
     window.removeEventListener('resize', this.initTrHeight)
   },
   methods: {
+    validateFirstTab() {
+      const errMsg = []
+      if ((!this.ownerName && this.ownerName === '') || this.ownerName.length < 3) {
+        errMsg.push('Nama Pemilik Wajib Diisi, Minimal 3 Karakter')
+      }
+      if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
+        errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+      }
+      if (!this.ownerNumber.charAt(0) === '0') {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
+      }
+      if ((!this.address && this.address === '') || this.address.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
+      }
+      if ((!this.identitas && this.identitas === '') || this.identitas.length !== 16) {
+        errMsg.push('No Identitas Wajib Diisi 16 Digits Angka')
+      }
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      return false
+    },
+    validateSecondTab() {
+      const errMsg = []
+      if ((!this.shopName && this.shopName === '') || this.shopName.length < 3) {
+        errMsg.push('Nama Toko Wajib Diisi, Minimal 3 Karakter')
+      }
+      if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
+        errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+      }
+      if (!this.shopNumber.charAt(0) === '0') {
+        errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
+      }
+      if ((!this.shopAddress && this.shopAddress === '') || this.ownerName.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
+      }
+      if (this.logoSize > 500000) {
+        errMsg.push('Ukuran Logo Tidak Boleh Melebihi 500KB')
+      }
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      return false
+    },
+    validateLastTab() {
+      const errMsg = []
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      return false
+    },
+    async fetchProfile() {
+      this.cashierList = []
+      this.isLoading = true
+      appService.getProfileUser().then(response => {
+        const { data } = response
+        const res = response.data.data
+        this.isLoading = false
+        if (data.result) {
+          // console.log(res)
+          this.ownerName = res.nama_pemilik ?? ''
+          this.ownerNumber = res.telp_pemilik ?? ''
+          this.identitas = res.no_identitas ?? ''
+          this.address = res.alamat ?? ''
+          this.shopName = res.nama_toko ?? ''
+          this.shopNumber = res.telp_toko ?? ''
+          this.shopAddress = res.alamat_pemilik ?? ''
+          this.shopCode = res.kode_toko ?? ''
+          // this.shopLogo = res.logo_toko
+          // this.token = res.kode_toko
+          this.imageURL = res.logo_toko ?? null
+          this.defaultImageURL = res.logo_toko ?? null
+          const itemlist = res.kasir
+          itemlist.forEach(item => {
+            this.cashierList.push({
+              id: item.id,
+              name: item.name,
+              uuid: item.uuid,
+              status: 'update',
+            })
+          })
+        } else {
+          this.$bvModal.show('tokenExpired')
+        }
+      }).catch(err => {
+        console.log(err)
+        this.isLoading = false
+      })
+    },
     async formSubmitted() {
       this.isLoading = true
       const param = new FormData()
       const cashier = []
-      const inputItems = this.items
+      const inputItems = this.cashierList
       inputItems.forEach(item => {
-        const cashierID = item.namecash
-        console.log(cashierID.length)
+        const cashierID = item.name
+        // console.log(cashierID.length)
         if (cashierID.length > 0) {
           cashier.push(cashierID)
           param.append('kasir[]', cashierID)
+          param.append('status[]', item.status)
+          param.append('id_kasir[]', item.uuid)
           this.cashier.push(cashierID)
         }
       })
@@ -399,47 +558,31 @@ export default {
         param.append('nama_toko', this.shopName)
         param.append('logo_toko', this.shopLogo)
         param.append('telp_toko', this.shopNumber)
-        param.append('alamat', this.address)
+        param.append('alamat_toko', this.shopAddress)
         param.append('nama_pemilik', this.ownerName)
         param.append('no_identitas', this.identitas)
         param.append('telp_pemilik', this.ownerNumber)
         param.append('alamat_pemilik', this.address)
         // param.append('kasir', cashier)
         param.append('kode_toko', this.shopCode)
-        authService.register(param).then(response => {
+        appService.updateProfileUser(param).then(response => {
           const { data } = response
+          this.isLoading = false
           if (data.result) {
-            const userData = authService.getDataToken(data.token)
-            const toko = this.setDataUser(userData)
-            localStorage.removeItem('userData')
-            localStorage.setItem('userData', JSON.stringify(toko))
-            authService.setToken(data.token)
-            console.log(data.token)
-            const userAbility = authService.getAbility(userData.role)
-            this.$ability.update(userAbility)
-
-            this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
-              .then(() => {
-                this.$toast({
-                  component: ToastificationContent,
-                  position: 'top-right',
-                  props: {
-                    title: `Welcome ${toko.fullName || toko.username}`,
-                    icon: 'CoffeeIcon',
-                    variant: 'success',
-                    text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
-                  },
-                })
-              })
-              .catch(error => {
-                console.log(error)
-                this.isLoading = false
-              })
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: data.message,
+                icon: 'CoffeeIcon',
+                variant: 'success',
+              },
+            })
+            this.fetchProfile()
           } else {
             this.$toast({
               component: ToastificationContent,
               props: {
-                title: data.status,
+                title: data.message,
                 icon: 'AlertCircleIcon',
                 variant: 'danger',
               },
@@ -447,22 +590,72 @@ export default {
           }
         })
       } else {
+        this.isLoading = false
         console.log(this.formErr)
       }
     },
     repeateAgain() {
-      this.items.push({
-        id: this.nextTodoId += this.nextTodoId,
-        namecash: '',
+      this.cashierList.push({
+        id: 0,
+        name: '',
+        uuid: null,
+        status: 'insert',
       })
-
-      this.$nextTick(() => {
-        this.trAddHeight(this.$refs.row[0].offsetHeight)
-      })
+      // this.$nextTick(() => {
+      //   this.trAddHeight(this.$refs.row[0].offsetHeight)
+      // })
     },
-    removeItem(index) {
-      this.items.splice(index, 1)
-      this.trTrimHeight(this.$refs.row[0].offsetHeight)
+    removeItem(index, item) {
+      // console.log(index)
+      // this.items.splice(index, 1)
+      if (item.id === 0) {
+        this.cashierList.splice(index, 1)
+      } else {
+        // console.log(item)
+        this.removeIndex = index
+        this.confirmDelete(item)
+      }
+      // this.trTrimHeight(this.$refs.row[0].offsetHeight)
+    },
+    handleCancelDelete() {
+      this.deleteCashier = null
+    },
+    handleCancelSubmit() {
+      console.log('Batal Submit')
+    },
+    confirmSubmit() {
+      this.$bvModal.show('askSubmit')
+    },
+    confirmDelete(param) {
+      this.deleteCashier = param.uuid
+      this.$bvModal.show('askDelete')
+    },
+    async deleteCashier() {
+      this.isLoading = true
+      appService.deleteCashier(this.deleteCashier).then(response => {
+        const { data } = response
+        this.isLoading = false
+        if (data.result) {
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: data.message,
+              icon: 'CoffeeIcon',
+              variant: 'success',
+            },
+          })
+          this.cashierList.splice(this.removeIndex, 1)
+        } else {
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: data.message,
+              icon: 'AlertCircleIcon',
+              variant: 'danger',
+            },
+          })
+        }
+      })
     },
     initTrHeight() {
       this.trSetHeight(null)
@@ -472,9 +665,29 @@ export default {
     },
     saveImage(e) {
       const logo = e.target.files[0]
-      this.shopLogo = logo
-      this.imageURL = URL.createObjectURL(logo)
-      console.log(logo)
+      if (logo) {
+        this.logoSize = logo.size
+        // console.log(this.logoSize)
+        if (logo.size < 500000) {
+          this.shopLogo = logo
+          this.imageURL = URL.createObjectURL(logo)
+        } else {
+          this.shopLogo = null
+          this.imageURL = null
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: 'Ukuran Logo Tidak Boleh Melebihi 500KB',
+              icon: 'AlertCircleIcon',
+              variant: 'danger',
+            },
+          })
+        }
+      } else {
+        this.shopLogo = null
+        this.imageURL = this.defaultImageURL
+        this.logoSize = 0
+      }
     },
     setDataUser(data) {
       const userAbility = authService.getAbility(data.role)
@@ -492,49 +705,25 @@ export default {
       }
       return userData
     },
-    validationOwner() {
+    formValidate() {
       const errMsg = []
-
-      if (this.ownerName.length < 3) {
-        errMsg.push('Nama Pemilik Wajib Diisi minimal 3 karakter')
-      }
-      if (this.ownerNumber.charAt(0) !== '0') {
-        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
+      if ((!this.ownerName && this.ownerName === '') || this.ownerName.length < 3) {
+        errMsg.push('Nama Pemilik Wajib Diisi, Minimal 3 Karakter')
       }
       if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
         errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
-      if (this.identitas.length !== 16) {
-        errMsg.push('No Identitas Wajib Diisi nomor 16 karakter')
+      if (!this.ownerNumber.charAt(0) === '0') {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
-      if (!this.address && this.address === '') {
-        errMsg.push('Alamat Wajib Diisi')
+      if ((!this.address && this.address === '') || this.address.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
       }
-
-      if (errMsg.length > 0) {
-        this.$toast({
-          component: ToastificationContent,
-          props: {
-            title: 'Lengkapi terlebih dahulu form sebelum melanjutkan',
-            icon: 'AlertCircleIcon',
-            variant: 'danger',
-          },
-        })
+      if ((!this.identitas && this.identitas === '') || this.identitas.length !== 16) {
+        errMsg.push('No Identitas Wajib Diisi 16 Digits Angka')
       }
-      return new Promise((resolve, reject) => {
-        if (errMsg.length === 0) {
-          console.log(errMsg)
-          resolve(true)
-        } else {
-          reject()
-        }
-      })
-    },
-    validationShop() {
-      const errMsg = []
-
-      if (!this.shopName && this.shopName === '') {
-        errMsg.push('Nama Toko Wajib Diisi')
+      if ((!this.shopName && this.shopName === '') || this.shopName.length < 3) {
+        errMsg.push('Nama Toko Wajib Diisi, Minimal 3 Karakter')
       }
       if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
         errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
@@ -542,73 +731,15 @@ export default {
       if (!this.shopNumber.charAt(0) === '0') {
         errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
       }
-      if (!this.address && this.address === '') {
-        errMsg.push('Alamat Wajib Diisi')
+      if ((!this.shopAddress && this.shopAddress === '') || this.ownerName.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
       }
-      if (this.shopLogo) {
-        const { name, size } = this.shopLogo
-        const fileExt = name.split('.').pop()
-
-        if (fileExt !== 'jpg' && fileExt !== 'png') {
-          errMsg.push('Logo harus berekstensi jpg atau png')
-        }
-        if (size > 5000000) {
-          errMsg.push('Ukuran maksimal file 5mb')
-        }
-      }
-
-      console.log(errMsg)
-
-      if (errMsg.length > 0) {
-        this.$toast({
-          component: ToastificationContent,
-          props: {
-            title: 'Lengkapi terlebih dahulu form sebelum melanjutkan',
-            icon: 'AlertCircleIcon',
-            variant: 'danger',
-          },
-        })
-      }
-
-      return new Promise((resolve, reject) => {
-        if (errMsg.length === 0) {
-          resolve(true)
-        } else {
-          reject()
-        }
-      })
-    },
-    formValidate() {
-      const errMsg = []
-
-      if (!this.ownerName.length > 3) {
-        errMsg.push('Nama Pemilik Wajib Diisi minimal 3 karakter')
-      }
-      if (!this.shopName && this.shopName === '') {
-        errMsg.push('Nama Toko Wajib Diisi')
-      }
-      if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
-        errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
-      }
-      if (this.shopNumber.length < 10) {
-        errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
-      }
-      if (!this.ownerNumber.charAt(0) === '0') {
-        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
-      }
-      if (!this.shopNumber.charAt(0) === '0') {
-        errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
-      }
-      if (!this.address && this.address === '') {
-        errMsg.push('Alamat Wajib Diisi')
-      }
-      if (!this.identitas.length === 16) {
-        errMsg.push('No Identitas Wajib Diisi nomor 16 karakter')
+      if (this.logoSize > 500000) {
+        errMsg.push('Ukuran Logo Tidak Boleh Melebihi 500KB')
       }
       if (this.cashier.length === 0) {
-        errMsg.push('tambahkan Cashier Minimal 1')
+        errMsg.push('Tambahkan Cashier Minimal 1')
       }
-
       if (errMsg.length === 0) {
         return true
       }
