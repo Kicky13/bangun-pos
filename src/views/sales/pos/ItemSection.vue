@@ -79,7 +79,7 @@
               >
                 <feather-icon
                   v-b-modal.listAntrian
-                  :badge="$store.state['app-ecommerce'].cartItemsCount"
+                  :badge="totalAntrian"
                   icon="ClockIcon"
                   size="30"
                 />
@@ -362,6 +362,8 @@ export default {
         id: null,
         name: 'Semua Brand / Merek',
       }],
+      listAntrian: [],
+      totalAntrian: 0,
       productList: [],
       // Selected Item
       selectedSort: '',
@@ -462,6 +464,10 @@ export default {
   created() {
     this.$http.get('/app-data/salesPending')
       .then(res => { this.rows = res.data })
+    parentComponent.$on('updateAntrian', data => {
+      console.log(data)
+      this.getAllAntrian()
+    })
   },
   methods: {
     async getAllCategories() {
@@ -544,10 +550,32 @@ export default {
       this.getAllProducts()
     },
     async getAllAntrian() {
-      appService.getAntrian().then(response => {
-        console.log(response)
+      appService.getListAntrian().then(response => {
+        const { data } = response.data
+        console.log(data)
+        this.totalAntrian = data.length
+        if (data) {
+          data.forEach(antrian => {
+            this.listAntrian.push({
+              kode_transaksi: antrian.kode_transaksi,
+              nama_customer: antrian.nama_customer,
+              no_reference: antrian.no_reference,
+              subtotal: '',
+              discount: '',
+              tax: '',
+              shipping: '',
+              status: '',
+            })
+          })
+        }
+        console.log(this.listAntrian)
       })
     },
+    /* async loadAntrian(transaction) {
+      appService.getLoadAntrian(transaction).then(response => {
+        console.log(response)
+      })
+    }, */
     async getAllProducts() {
       const param = {
         q: this.searchKeyword,
