@@ -238,21 +238,35 @@ export default {
         {
           label: 'Sub. Total',
           field: 'subTotal',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Diskon',
           field: 'diskon',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Pajak',
           field: 'pajak',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Ongkir',
           field: 'ongkir',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
-          label: 'Type Pembayaran',
+          label: 'Grand Total',
+          field: 'grandtotal',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
+        },
+        {
+          label: 'Pembayaran',
           field: 'typeBayar',
           sortable: false,
           filterOptions: {
@@ -322,6 +336,11 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
   },
   methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      return `Rp. ${formatedval}`
+    },
     getLogTrans(transid) {
       this.selectedTransId = transid
     },
@@ -381,10 +400,11 @@ export default {
         saleCode: data.kode_transaksi,
         customer: data.customer.nama ?? '-',
         refCode: data.no_references ?? '-',
-        subTotal: data.sub_total,
-        diskon: data.discount,
-        pajak: data.pajak,
-        ongkir: data.ongkir,
+        subTotal: parseInt(data.sub_total, 10),
+        diskon: parseInt(data.discount, 10),
+        pajak: parseInt(data.pajak, 10),
+        ongkir: parseInt(data.ongkir, 10),
+        grandtotal: (parseInt(data.sub_total, 10) + parseInt(data.pajak, 10) + parseInt(data.ongkir, 10)) - parseInt(data.discount, 10),
         typeBayar: data.type_pembayaran,
         status: data.status,
       }

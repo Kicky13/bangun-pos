@@ -68,6 +68,10 @@
         enabled: true,
         perPage:pageLength
       }"
+      :sort-options="{
+        enabled: true,
+        initialSortBy: {field: 'date', type: 'desc'}
+      }"
     >
       <template
         slot="table-row"
@@ -301,7 +305,13 @@ export default {
           formatFn: this.formatPrice,
         },
         {
-          label: 'Type Pembayaran',
+          label: 'Grand Total',
+          field: 'grandtotal',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
+        },
+        {
+          label: 'Pembayaran',
           field: 'typePayment',
           sortable: false,
           filterOptions: {
@@ -403,10 +413,11 @@ export default {
         ref: data.no_references ?? '-',
         biller: data.kasir.nama,
         customer: data.nama_customer ?? '-',
-        subtotal: data.sub_total,
-        disc: data.discount,
-        ship: data.shipping,
-        tax: data.tax,
+        subtotal: parseInt(data.sub_total, 10),
+        disc: parseInt(data.discount, 10),
+        ship: parseInt(data.shipping, 10),
+        tax: parseInt(data.tax, 10),
+        grandtotal: (parseInt(data.sub_total, 10) + parseInt(data.tax, 10) + parseInt(data.shipping, 10)) - parseInt(data.discount, 10),
         typePayment: data.payment_type_str,
         paymentStatus: data.status,
       }
