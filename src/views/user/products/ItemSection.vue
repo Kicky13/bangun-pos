@@ -238,10 +238,10 @@ export default {
       this.setListProductToko()
     },
     formatPrice(value) {
-      console.log(value)
+      // console.log(value)
       const val = (value / 1).toFixed(2).replace('.', ',')
-      console.log(val)
-      console.log(val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))
+      // console.log(val)
+      // console.log(val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     async setCategory(param) {

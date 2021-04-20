@@ -358,14 +358,8 @@ export default {
     this.fetchSalesList()
   },
   methods: {
-    // advanceSearch(val) {
-    //   this.searchTerm = val
-    // },
     formatPrice(value) {
-      // console.log(value)
       const val = (value / 1).toFixed(2).replace('.', ',')
-      // console.log(val)
-      // console.log(val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
       return `Rp. ${formatedval}`
     },
