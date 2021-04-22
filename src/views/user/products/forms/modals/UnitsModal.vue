@@ -14,7 +14,7 @@
   >
     <b-form>
       <b-row>
-        <b-col
+        <!-- <b-col
           lg="6"
           md="6"
           sm="12"
@@ -30,7 +30,7 @@
               :disabled="true"
             />
           </b-form-group>
-        </b-col>
+        </b-col> -->
         <b-col
           lg="6"
           md="6"
