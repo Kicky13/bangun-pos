@@ -126,7 +126,7 @@
                               v-b-modal.cartProductEdit
                               icon="EditIcon"
                               style="color: #b20838; margin-top: -8px;"
-                              @click="passingPrice"
+                              @click="initialData = item"
                             />
                           </span>
                         </b-col>
@@ -162,7 +162,7 @@
                             class="p-0"
                           >
                             <b-form-input
-                              v-model="item.quantity"
+                              v-model.number="item.quantity"
                               class="text-center"
                               @keypress="isNumberKey"
                             />
@@ -463,9 +463,7 @@
             id="cartProductEdit"
             centered
             size="lg"
-            ok-title="Simpan"
-            cancel-title="Tutup"
-            ok-variant="danger"
+            hide-footer
           >
             <b-form>
               <!-- <b-row>
@@ -569,7 +567,7 @@
                       <b-form-input
                         id="hargaJualAwal"
                         style="text-align: right;"
-                        value="00"
+                        :value="initialData.price"
                         disabled
                       />
                     </b-input-group>
@@ -588,12 +586,42 @@
                     />
                   </b-form-group> -->
                   <b-form-group
-                    label="Harga Jual Akhir :"
-                    label-for="hargaJualAkhir"
+                    label="Ubah Harga Jual :"
+                    label-for="ubahHargaJual"
                     style="font-weight: bold"
                   >
-                    <b-form-input id="hargaJualAkhir" />
+                    <b-input-group
+                      prepend="Rp."
+                      append=".00"
+                      class="input-group-merge"
+                    >
+                      <b-form-input
+                        id="hargaJualAkhir"
+                        v-model.number="tempPrice"
+                        style="text-align: right"
+                        @keypress="isNumberKey"
+                      />
+                    </b-input-group>
                   </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col
+                  cols="12"
+                  class="text-right"
+                >
+                  <b-button
+                    class="mr-1"
+                    @click="$bvModal.hide('cartProductEdit')"
+                  >
+                    Tutup
+                  </b-button>
+                  <b-button
+                    variant="danger"
+                    @click="submitNewPrice"
+                  >
+                    Simpan
+                  </b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -688,7 +716,7 @@
                     >
                       <b-form-input
                         id="discount"
-                        v-model="inputDiscount"
+                        v-model.number="inputDiscount"
                         style="text-align: right;"
                         @keypress="discountLength"
                       />
@@ -723,7 +751,7 @@
                     >
                       <b-form-input
                         id="tax"
-                        v-model="inputTax"
+                        v-model.number="inputTax"
                         style="text-align: right;"
                         @keypress="isNumberKey"
                       />
@@ -757,7 +785,7 @@
                     >
                       <b-form-input
                         id="ongkir"
-                        v-model="inputOngkir"
+                        v-model.number="inputOngkir"
                         style="text-align: right;"
                         @keypress="isNumberKey"
                       />
@@ -774,7 +802,7 @@
                   >
                     <div class="alert-body text-center">
                       <h3>
-                        <strong>Grand Total : {{ grandTotal }}</strong>
+                        <strong>Grand Total : Rp. {{ formatPrice(grandTotal) }}</strong>
                       </h3>
                     </div>
                   </b-alert>
@@ -793,7 +821,7 @@
                     >
                       <b-form-input
                         id="paid"
-                        v-model="inputPaid"
+                        v-model.number="inputPaid"
                         style="text-align: right"
                         :disabled="inputPaidValue()"
                         @keypress="isNumberKey"
@@ -1061,6 +1089,8 @@ export default {
       }],
       opacityValue: 0.5,
       cursorValue: 'auto !important',
+      initialData: {},
+      tempPrice: 0,
     }
   },
   computed: {
@@ -1085,10 +1115,10 @@ export default {
       return false
     },
     grandTotal() {
-      return Number(this.totalSubtotal) - Number(this.inputDiscount) + Number(this.inputTax) + Number(this.inputOngkir)
+      return this.totalSubtotal - this.inputDiscount + this.inputTax + this.inputOngkir
     },
     kembalian() {
-      return this.inputPaid > 0 ? Number(this.inputPaid) - Number(this.grandTotal) : 0
+      return this.inputPaid > 0 ? this.inputPaid - this.grandTotal : 0
     },
   },
   mounted() {
@@ -1218,6 +1248,7 @@ export default {
         payment_type: this.selectedPaymentMethod,
         items: products,
       }
+      console.log(param)
       if (this.formSaveTransactionValidate()) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
@@ -1382,9 +1413,6 @@ export default {
       }
       return true
     },
-    passingPrice() {
-      console.log('Hello, World!')
-    },
     isNumberKey(event) {
       const charCode = (event.which) ? event.which : event.keyCode
       if ((charCode > 31 && (charCode < 48 || charCode > 57))) {
@@ -1420,6 +1448,19 @@ export default {
         return true
       }
       return false
+    },
+    submitNewPrice() {
+      let temp = {}
+      this.items.map(item => {
+        if (item.kode_produk === this.initialData.kode_produk) {
+          temp = item
+          temp.price = this.tempPrice
+          this.makeToast(item.nama_produk, 'CoffeeIcon', 'success', 'Harga jual berhasil diubah')
+          this.tempPrice = 0
+        }
+        return true
+      })
+      this.$bvModal.hide('cartProductEdit')
     },
     repeateAgain() {
       this.items.push({
