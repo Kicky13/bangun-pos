@@ -272,6 +272,7 @@
                 v-model="paySum"
                 :state="paySum > 0"
                 placeholder="nominal"
+                type="number"
               />
             </b-form-group>
             <b-form-invalid-feedback>
@@ -349,7 +350,7 @@
               <b-form-input
                 id="phone"
                 v-model="customerPhone"
-                :state="customerPhone.length > 0 && customerPhone.charAt(0) === '0'"
+                :state="customerPhone.length >= 10 && customerPhone.length <= 12 && customerPhone.charAt(0) === '0'"
                 type="number"
               />
               <b-form-invalid-feedback>
@@ -456,8 +457,8 @@ export default {
       selectedType: 1,
       customerName: '',
       customerPhone: 0,
-      jagobangunRef: 0,
-      identityNumber: 0,
+      jagobangunRef: null,
+      identityNumber: null,
       customerAddress: '',
       selectedPembayaran: null,
       selectedStatus: null,
@@ -604,9 +605,9 @@ export default {
     },
     clearForm() {
       this.customerName = ''
-      this.customerPhone = ''
-      this.jagobangunRef = ''
-      this.identityNumber = ''
+      this.customerPhone = 0
+      this.jagobangunRef = null
+      this.identityNumber = null
       this.customerAddress = ''
     },
     setForm(data) {
@@ -700,10 +701,27 @@ export default {
         no_references: this.jagobangunRef,
       }
       appService.addCustomer(data).then(response => {
-        const res = response.data.data
+        const res = response.data
         console.log(res)
-        this.fetchCustomerList()
-        this.clearForm()
+        if (res.result) {
+          this.fetchCustomerList()
+          this.clearForm()
+        } else {
+          const errMsg = res.message
+
+          errMsg.forEach(msg => {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Error',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+                text: msg,
+              },
+            })
+          })
+        }
         this.isLoading = false
       }).catch(err => {
         console.log(err)

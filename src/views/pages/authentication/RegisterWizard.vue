@@ -552,8 +552,8 @@ export default {
         if (fileExt !== 'jpg' && fileExt !== 'png') {
           errMsg.push('Logo harus berekstensi jpg atau png')
         }
-        if (size > 5000000) {
-          errMsg.push('Ukuran maksimal file 5mb')
+        if (size > 1000000) {
+          errMsg.push('Ukuran maksimal file 1mb')
         }
       }
 
