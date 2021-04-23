@@ -50,10 +50,7 @@ export default {
   // History
   transactHistory: 'history',
   logTransaction: 'user/historypayment',
-<<<<<<< HEAD
-=======
 
->>>>>>> eab18bb4eb010f7938a527455362fcd36708ed65
   // Profile
   getProfile: 'toko/show',
   updateProfile: 'toko/update',
