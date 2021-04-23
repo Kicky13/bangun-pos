@@ -718,7 +718,8 @@
                         id="discount"
                         v-model.number="inputDiscount"
                         style="text-align: right;"
-                        @keypress="discountLength"
+                        @keypress="isNumberKey($event, discountStop)"
+                        @input="discountLength"
                       />
                     </b-input-group>
                   </b-form-group>
@@ -1091,6 +1092,7 @@ export default {
       cursorValue: 'auto !important',
       initialData: {},
       tempPrice: 0,
+      discountStop: false,
     }
   },
   computed: {
@@ -1413,11 +1415,14 @@ export default {
       }
       return true
     },
-    isNumberKey(event) {
+    isNumberKey(event, disc = false) {
       const charCode = (event.which) ? event.which : event.keyCode
       if ((charCode > 31 && (charCode < 48 || charCode > 57))) {
         event.preventDefault()
         return false
+      }
+      if (disc) {
+        event.preventDefault()
       }
       return true
     },
@@ -1436,9 +1441,12 @@ export default {
       return true
     },
     discountLength(event) {
-      this.isNumberKey(event)
-      if (this.inputDiscount >= this.grandTotal) {
-        event.preventDefault()
+      const discount = event
+      if (discount >= this.grandTotal) {
+        this.discountStop = true
+        this.inputDiscount = this.totalSubtotal + this.inputTax + this.inputOngkir
+      } else {
+        this.discountStop = false
       }
       return true
     },
