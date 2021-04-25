@@ -1,694 +1,288 @@
 <template>
   <div>
-    <b-row align-h="center">
-      <b-col
-        cols="12"
-        lg="4"
+    <!-- Action Button Section -->
+    <div>
+      <b-row>
+        <b-col
+          cols="12"
+          md="2"
+        />
+        <b-col
+          cols="12"
+          md="2"
+        >
+          <b-button
+            v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+            class="mb-1"
+            block
+            @click="printLandscape"
+          >
+            Cetak
+          </b-button>
+        </b-col>
+        <b-col
+          cols="12"
+          md="2"
+        >
+          <b-button
+            v-ripple.400="'rgba(40, 199, 111, 0.15)'"
+            class="mb-1"
+            block
+            :to="{name: 'customer-history-trans'}"
+          >
+            Kembali
+          </b-button>
+        </b-col>
+      </b-row>
+    </div>
+    <!-- End Action Button Section -->
+    <b-card id="printTable">
+      <!-- table -->
+      <vue-good-table
+        :columns="columns"
+        :rows="rows"
+        :rtl="direction"
+        :select-options="{ enabled: false }"
+        :search-options="{
+          enabled: false,
+          externalQuery: searchTerm }"
+        :pagination-options="{
+          enabled: false,
+          perPage:pageLength
+        }"
       >
-        <b-card id="printReceipt">
-          <!-- Customer Form Section -->
-          <div>
-            <table width="100%">
-              <tbody>
-                <tr>
-                  <td colspan="2">
-                    <b-img
-                      :src="require('@/assets/images/logo/POSRetailBlack.png')"
-                      alt="Logo POS Retail"
-                      style="margin-bottom : 20px; width: 100%"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td width="40%">
-                    Kode Penjualan
-                  </td>
-                  <td width="60%">
-                    : {{ dataPenjualan.saleCode }}
-                  </td>
-                </tr>
-                <tr>
-                  <td width="40%">
-                    Customer
-                  </td>
-                  <td width="60%">
-                    : {{ dataPenjualan.customer }}
-                  </td>
-                </tr>
-                <tr>
-                  <td width="40%">
-                    No referensi
-                  </td>
-                  <td width="60%">
-                    : {{ dataPenjualan.biller }}
-                  </td>
-                </tr>
-                <tr>
-                  <td width="40%">
-                    Kasir
-                  </td>
-                  <td width="60%">
-                    : {{ dataPenjualan.ref }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <hr>
-          </div>
-          <!-- End Customer Form Section -->
+        <template
+          slot="table-row"
+          slot-scope="props"
+        >
+          <!-- Column: Status -->
+          <span v-if="props.column.field === 'status'">
+            <b-badge :variant="paymentVariant(props.row.status)">
+              {{ props.row.status }}
+            </b-badge>
+          </span>
+          <span v-else>
+            {{ props.formattedRow[props.column.field] }}
+          </span>
 
-          <!-- Cart Section -->
-          <div>
-            <table width="100%">
-              <thead style="text-align: center;">
-                <th width="30%">
-                  Barang
-                </th>
-                <th width="25%">
-                  Harga
-                </th>
-                <th width="15%">
-                  Jum.
-                </th>
-                <th width="30%">
-                  Sub Total
-                </th>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(item) in items"
-                  :id="item.id"
-                  :key="item.id"
-                  ref="row"
-                >
-                  <td style="text-align: left;">
-                    {{ item.name }} (<b>{{ item.uom }}</b>)
-                  </td>
-                  <td style="text-align: right;">
-                    Rp. {{ formatPrice(item.price) }}
-                  </td>
-                  <td style="text-align: center;">
-                    {{ item.quantity }}
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice((item.price * item.quantity)) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    Jumlah Barang :
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>4 (4)</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Sub Total :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Diskon :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Pajak :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Ongkos Kirim :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Grand Total :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Tipe Pembayaran :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>{{ dataPenjualan.typePayment }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    No. Pembayaran :
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    xxxx-xxx-xx-x
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Bayar :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Kembalian :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <hr>
-          <div>
-            <table width="100%">
-              <tbody style="text-align: center;">
-                <tr>
-                  <td width="50%">
-                    Telp : 082173288382
-                  </td>
-                  <td width="50%">
-                    Cetak : 2021-01-01
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <h1>UD. Kekar Jaya Beton</h1>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    Rt. 001/ Rw. 004 Dsn. Kebonsari Ds. Palangan Kec. Karangbinangun
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <hr>
-          </div>
-          <!-- End Cart Section -->
-        </b-card>
-      </b-col>
-      <b-col
-        cols="12"
-        lg="8"
-      >
-        <b-card id="printMe">
-          <!-- Customer Form Section -->
-          <div>
-            <table width="100%">
-              <tbody>
-                <tr>
-                  <td
-                    rowspan="4"
-                    width="30%"
-                  >
-                    <b-img
-                      :src="require('@/assets/images/logo/POSRetailBlack.png')"
-                      fluid
-                      alt="Logo POS Retail"
-                      style="margin-bottom : 20px; padding: 10px;"
-                    />
-                  </td>
-                  <td
-                    rowspan="4"
-                    width="20%"
-                  />
-                  <td width="25%">
-                    Kode Penjualan
-                  </td>
-                  <td width="25%">
-                    : {{ dataPenjualan.saleCode }}
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Customer
-                  </td>
-                  <td>
-                    : {{ dataPenjualan.customer }}
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    No referensi
-                  </td>
-                  <td>
-                    : {{ dataPenjualan.biller }}
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Kasir
-                  </td>
-                  <td>
-                    : {{ dataPenjualan.ref }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <hr>
-          </div>
-          <div>
-            <table width="100%">
-              <thead style="text-align: center;">
-                <th width="30%">
-                  Barang
-                </th>
-                <th width="25%">
-                  Harga
-                </th>
-                <th width="15%">
-                  Jum.
-                </th>
-                <th width="30%">
-                  Sub Total
-                </th>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(item) in items"
-                  :id="item.id"
-                  :key="item.id"
-                  ref="row"
-                >
-                  <td style="text-align: left;">
-                    {{ item.name }} (<b>{{ item.uom }}</b>)
-                  </td>
-                  <td style="text-align: right;">
-                    Rp. {{ formatPrice(item.price) }}
-                  </td>
-                  <td style="text-align: center;">
-                    {{ item.quantity }}
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice((item.price * item.quantity)) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    Jumlah Barang :
-                  </td>
-                  <td style="text-align: right;">
-                    <b>4 (4)</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    <b>Sub Total :</b>
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    <b>Diskon :</b>
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    <b>Pajak :</b>
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    <b>Ongkos Kirim :</b>
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    <b>Grand Total :</b>
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    <b>Tipe Pembayaran :</b>
-                  </td>
-                  <td style="text-align: right;">
-                    <b>{{ dataPenjualan.typePayment }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    No. Pembayaran :
-                  </td>
-                  <td style="text-align: right;">
-                    xxxx-xxxx-xx-xx
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    <b>Bayar :</b>
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    <b>Kembalian :</b>
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <hr>
-          <div>
-            <table width="100%">
-              <tbody style="text-align: center;">
-                <tr>
-                  <td width="50%">
-                    Telp : 082173288382
-                  </td>
-                  <td width="50%">
-                    Cetak : 2021-01-01
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <h1>UD. Kekar Jaya Beton</h1>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    Rt. 001/ Rw. 004 Dsn. Kebonsari Ds. Palangan Kec. Karangbinangun
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <hr>
-          </div>
-        </b-card>
-        <!-- Action Button Section -->
-        <div>
-          <b-row>
-            <b-col
-              cols="12"
-              md="3"
-            />
-            <b-col
-              cols="12"
-              md="3"
-            >
-              <b-button
-                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                class="mb-1"
-                block
-                @click="print"
-              >
-                Cetak
-              </b-button>
-            </b-col>
-            <b-col
-              cols="12"
-              md="3"
-            >
-              <b-button
-                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                class="mb-1"
-                block
-                @click="printLandscape"
-              >
-                Cetak Invoice
-              </b-button>
-            </b-col>
-            <b-col
-              cols="12"
-              md="3"
-            >
-              <b-button
-                v-ripple.400="'rgba(40, 199, 111, 0.15)'"
-                class="mb-1"
-                block
-                :to="{name: 'user-sale'}"
-              >
-                Kembali
-              </b-button>
-            </b-col>
-          </b-row>
-        </div>
-        <!-- End Action Button Section -->
-      </b-col>
-    </b-row>
+        </template>
+      </vue-good-table>
+    </b-card>
   </div>
 </template>
 
 <script>
 import {
-  BRow, BCol, BCard, BButton, VBModal, BImg, // BForm, BFormGroup, BFormInput, BAlert, BFormSelect, BInputGroup,
+  BBadge, BCard, BButton, BRow, BCol, // BPagination, BFormGroup, BFormInput, BFormSelect,
 } from 'bootstrap-vue'
-import { heightTransition } from '@core/mixins/ui/transition'
+import { VueGoodTable } from 'vue-good-table'
+import { useRouter } from '@core/utils/utils'
+import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
-// import someStyle from '@/assets/scss/print/landscape.css'
+// import LogModal from './modals/LogModal.vue'
 
 const appService = new ApiService()
 
 export default {
   components: {
-    BRow,
-    BCol,
-    // BForm,
+    BButton,
+    // BPagination,
     // BFormGroup,
     // BFormInput,
-    BButton,
-    // BAlert,
     // BFormSelect,
-    // BInputGroup,
+    VueGoodTable,
+    BBadge,
     BCard,
-    BImg,
-    // someStyle,
+    // LogModal,
+    BRow,
+    BCol,
   },
   directives: {
+    // 'b-modal': VBModal,
     Ripple,
-    'b-modal': VBModal,
   },
-  mixins: [heightTransition],
   data() {
     return {
-      dataPenjualan: {
-        id: '53922ae4305e48aa941999a0362b45b5',
-        date: '2020-11-18',
-        saleCode: 'TB001/2021/00000000001',
-        ref: 'jago-022129',
-        biller: 'Kasir 01',
-        saleStatus: 'Draft',
-        customer: 'Munib',
-        subtotal: '1000000',
-        disc: '25000',
-        ship: '50000',
-        tax: '0',
-        typePayment: 'KREDIT',
-        paymentStatus: 'LUNAS',
-      },
-      uuId: '53922ae4305e48aa941999a0362b45b5',
-      // eslint-disable-next-line global-require
-      logoImg: require('@/assets/images/logo/POSRetailBlack.png'),
-      items: [{
-        id: 20200001909,
-        name: 'Google - Google Home - White/Slate fabric',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 10,
-        price: 34,
-        subtotal: 340,
-      }, {
-        id: 20200001910,
-        name: 'Apple Watch Series 4 GPS',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 2,
-        price: 22,
-        subtotal: 44,
-      }, {
-        id: 20200001911,
-        name: 'Apple Macbook Air Latest Version',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 3,
-        price: 110,
-        subtotal: 330,
-      }, {
-        id: 20200001912,
-        name: 'Beats Headphone',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 21,
-        price: 12,
-        subtotal: 252,
-      }],
+      customerID: this.id,
+      selectedPembayaran: null,
+      selectedStatus: null,
+      selectedTransId: null,
+      pembayaranItems: [
+        {
+          value: null,
+          text: 'Semua',
+          // disabled: true,
+        },
+        {
+          value: 'CASH',
+          text: 'CASH',
+        },
+        {
+          value: 'Kredit / Hutang',
+          text: 'KREDIT',
+        },
+      ],
+      statusItems: [
+        {
+          value: null,
+          text: 'Semua',
+          // disabled: true,
+        },
+        {
+          value: 'Lunas',
+          text: 'Lunas',
+        },
+        {
+          value: 'Belum Lunas',
+          text: 'Belum Lunas',
+        },
+      ],
+      pageLength: 10,
+      dir: false,
+      columns: [
+        {
+          label: 'Kode Penjualan',
+          field: 'saleCode',
+        },
+        {
+          label: 'Customer',
+          field: 'customer',
+        },
+        {
+          label: 'Ref. Code',
+          field: 'refCode',
+        },
+        {
+          label: 'Sub. Total',
+          field: 'subTotal',
+        },
+        {
+          label: 'Diskon',
+          field: 'diskon',
+        },
+        {
+          label: 'Pajak',
+          field: 'pajak',
+        },
+        {
+          label: 'Ongkir',
+          field: 'ongkir',
+        },
+        {
+          label: 'Type Pembayaran',
+          field: 'typeBayar',
+          sortable: false,
+          filterOptions: {
+            enabled: false,
+            filterDropdownItems: ['CASH', 'KREDIT'],
+          },
+        },
+        {
+          label: 'Status',
+          field: 'status',
+          sortable: false,
+          filterOptions: {
+            enabled: false,
+            filterDropdownItems: ['PAID', 'UNPAID'],
+          },
+        },
+        // {
+        //   label: 'Action',
+        //   field: 'action',
+        //   sortable: false,
+        // },
+      ],
+      rows: [],
+      searchTerm: '',
     }
   },
-  mounted() {
-    // console.log(this.$route.params.id)
-    this.getDetailTransaction(this.$route.params.id)
+  setup() {
+    const { route } = useRouter()
+    const { id } = route.value.params
+
+    return {
+      id,
+    }
   },
-  created() {
-    window.addEventListener('resize', this.initTrHeight)
-    this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
-    // this.$http.get('/app-data/transDetail')
-    //   .then(res => {
-    //     this.dataPenjualan = res.data.find(data => data.id === parseInt(this.$route.params.id, 10))
-    //   })
+  computed: {
+    salesVariant() {
+      const statusColor = {
+        Draft: 'light-primary',
+        Completed: 'light-secondary',
+      }
+      return status => statusColor[status]
+    },
+    paymentVariant() {
+      const statusColor = {
+        PAID: 'light-secondary',
+        UNPAID: 'light-primary',
+      }
+      return status => statusColor[status]
+    },
+    direction() {
+      if (store.state.appConfig.isRTL) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.dir = true
+        return this.dir
+      }
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.dir = false
+      return this.dir
+    },
   },
   destroyed() {
     window.removeEventListener('resize', this.initTrHeight)
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
+  created() {
+    window.addEventListener('resize', this.initTrHeight)
+    this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
+    this.fetchListTransaksi()
+  },
   methods: {
-    async getDetailTransaction(paramid) {
-      console.log(paramid)
-      this.uuId = paramid
-      appService.getDetailTransaction(this.uuId).then(response => {
-        const { data } = response
-        if (data.data) {
-          console.log(data.data)
+    getLogTrans(transid) {
+      this.selectedTransId = transid
+    },
+    fetchListTransaksi() {
+      appService.historyList({ id_customer: this.customerID }).then(response => {
+        const datares = response.data.data
+        if (datares) {
+          datares.forEach(this.setRows)
         }
+      }).catch(err => {
+        console.log(err)
       })
     },
-    logoUrl() {
-      return this.logoImg
+    setRows(data) {
+      const res = {
+        transId: data.id,
+        saleCode: data.kode_transaksi,
+        customer: data.customer.nama,
+        refCode: data.no_references ?? '-',
+        subTotal: data.sub_total,
+        diskon: data.discount,
+        pajak: data.pajak,
+        ongkir: data.ongkir,
+        typeBayar: data.type_pembayaran,
+        status: data.status,
+      }
+      this.rows.push(res)
     },
-    formatPrice(value) {
-      const val = (value / 1).toFixed(2).replace('.', ',')
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-    },
-    print() {
-      this.$htmlToPaper('printReceipt', null, () => {
-        console.warn('done')
-      })
-    },
+    // print() {
+    //   this.$htmlToPaper('printTable', null, () => {
+    //     console.warn('done')
+    //   })
+    // },
     printLandscape() {
       const localOptions = {
         styles: [
+          'https://cdn.jsdelivr.net/npm/vue-good-table@2.18.1/dist/vue-good-table.min.css',
           'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
           'https://unpkg.com/kidlat-css/css/kidlat.css',
         ],
       }
-      this.$htmlToPaper('printMe', localOptions, () => {
+      this.$htmlToPaper('printTable', localOptions, () => {
         console.warn('done')
       })
     },
@@ -696,9 +290,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.repeater-form {
-  overflow: hidden;
-  transition: .35s height;
+<style lang="scss">
+  @import "../node_modules/vue-good-table/src/styles/style.scss";
+.vgt-table {
+  font-size: 12px !important;
 }
 </style>

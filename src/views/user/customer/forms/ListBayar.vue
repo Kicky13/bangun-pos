@@ -31,7 +31,7 @@
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="danger"
           style="margin-top: -15px;"
-          @click="print"
+          :to="{name: 'customer-history-trans-print'}"
         >
           Print
         </b-button>
@@ -40,7 +40,6 @@
 
     <!-- table -->
     <vue-good-table
-      id="printTable"
       :columns="columns"
       :rows="rows"
       :rtl="direction"
@@ -219,6 +218,11 @@ export default {
       dir: false,
       columns: [
         {
+          label: 'Encoded ID',
+          field: 'encodedID',
+          hidden: true,
+        },
+        {
           label: 'Kode Penjualan',
           field: 'saleCode',
         },
@@ -331,6 +335,7 @@ export default {
     },
     setRows(data) {
       const res = {
+        encodedID: '6fcb7bfa47ac480ebd9cb0a568a6bf4a',
         transId: data.id,
         saleCode: data.kode_transaksi,
         customer: data.customer.nama,
@@ -344,11 +349,11 @@ export default {
       }
       this.rows.push(res)
     },
-    print() {
-      this.$htmlToPaper('printTable', null, () => {
-        console.warn('done')
-      })
-    },
+    // print() {
+    //   this.$htmlToPaper('printTable', null, () => {
+    //     console.warn('done')
+    //   })
+    // },
     // printLandscape() {
     //   const localOptions = {
     //     styles: [
