@@ -195,7 +195,7 @@
       <!-- Table -->
       <vue-good-table
         :columns="columns"
-        :rows="rows"
+        :rows="listAntrian"
         :rtl="direction"
         :search-options="{
           enabled: true,
@@ -388,31 +388,31 @@ export default {
       columns: [
         {
           label: 'Kode Penjualan',
-          field: 'kodePenjualan',
+          field: 'kode_transaksi',
         },
         {
           label: 'Customer',
-          field: 'customer',
+          field: 'nama_customer',
         },
         {
           label: 'Ref. Code',
-          field: 'refCode',
+          field: 'no_references',
         },
         {
           label: 'Sub. Total',
-          field: 'subTotal',
+          field: 'sub_total',
         },
         {
           label: 'Diskon',
-          field: 'diskon',
+          field: 'discount',
         },
         {
           label: 'Pajak',
-          field: 'pajak',
+          field: 'tax',
         },
         {
           label: 'Ongkir',
-          field: 'ongkir',
+          field: 'shipping',
         },
         {
           label: 'Status',
@@ -552,30 +552,32 @@ export default {
     async getAllAntrian() {
       appService.getListAntrian().then(response => {
         const { data } = response.data
-        console.log(data)
         this.totalAntrian = data.length
+        this.listAntrian = []
         if (data) {
           data.forEach(antrian => {
-            this.listAntrian.push({
-              kode_transaksi: antrian.kode_transaksi,
-              nama_customer: antrian.nama_customer,
-              no_reference: antrian.no_reference,
-              subtotal: '',
-              discount: '',
-              tax: '',
-              shipping: '',
-              status: '',
-            })
+            this.loadAntrian(antrian)
           })
         }
-        console.log(this.listAntrian)
       })
     },
-    /* async loadAntrian(transaction) {
-      appService.getLoadAntrian(transaction).then(response => {
-        console.log(response)
+    async loadAntrian(dataAntrian) {
+      appService.getLoadAntrian(dataAntrian.uuid).then(response => {
+        const { data } = response.data
+        if (data) {
+          this.listAntrian.push({
+            kode_transaksi: dataAntrian.kode_transaksi,
+            nama_customer: dataAntrian.nama_customer || 'Walk-in Customer',
+            no_references: dataAntrian.no_references || '-',
+            sub_total: data.sub_total,
+            discount: data.discount,
+            tax: data.tax,
+            shipping: data.shipping,
+            status: data.status,
+          })
+        }
       })
-    }, */
+    },
     async getAllProducts() {
       const param = {
         q: this.searchKeyword,
