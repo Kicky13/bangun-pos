@@ -335,7 +335,6 @@ export default {
     },
     setRows(data) {
       const res = {
-        encodedID: '6fcb7bfa47ac480ebd9cb0a568a6bf4a',
         transId: data.id,
         saleCode: data.kode_transaksi,
         customer: data.customer.nama,
@@ -349,23 +348,6 @@ export default {
       }
       this.rows.push(res)
     },
-    // print() {
-    //   this.$htmlToPaper('printTable', null, () => {
-    //     console.warn('done')
-    //   })
-    // },
-    // printLandscape() {
-    //   const localOptions = {
-    //     styles: [
-    //       'https://cdn.jsdelivr.net/npm/vue-good-table@2.18.1/dist/vue-good-table.min.css',
-    //       'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
-    //       'https://unpkg.com/kidlat-css/css/kidlat.css',
-    //     ],
-    //   }
-    //   this.$htmlToPaper('printTable', localOptions, () => {
-    //     console.warn('done')
-    //   })
-    // },
   },
 }
 </script>

@@ -36,6 +36,24 @@ export default [
     },
   },
   {
+    path: '/mysale/print',
+    name: 'user-sale-print',
+    component: () => import('@/views/user/sales/Print.vue'),
+    meta: {
+      // pageTitle: 'Penjualan',
+      resource: 'SalesUser',
+      action: 'manage',
+      redTitle: 'Data Penjualan',
+      redSubs: 'Catatan Penjualan Barang-Barang di Toko Kamu.',
+      // breadcrumb: [
+      //   {
+      //     text: 'Sales',
+      //     active: true,
+      //   },
+      // ],
+    },
+  },
+  {
     path: '/myproduct',
     name: 'user-product',
     component: () => import('@/views/user/products/KatalogProduk.vue'),
