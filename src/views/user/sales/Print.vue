@@ -28,7 +28,7 @@
             v-ripple.400="'rgba(40, 199, 111, 0.15)'"
             class="mb-1"
             block
-            :to="{name: 'customer-history-trans'}"
+            :to="{name: 'user-sale'}"
           >
             Kembali
           </b-button>
@@ -37,8 +37,11 @@
     </div>
     <!-- End Action Button Section -->
     <b-card id="printTable">
+      <loading-grow v-if="isLoading" />
+
       <!-- table -->
       <vue-good-table
+        id="printTable"
         :columns="columns"
         :rows="rows"
         :rtl="direction"
@@ -55,123 +58,139 @@
           slot="table-row"
           slot-scope="props"
         >
+
           <!-- Column: Status -->
-          <span v-if="props.column.field === 'status'">
-            <b-badge :variant="paymentVariant(props.row.status)">
-              {{ props.row.status }}
+
+          <span v-if="props.column.field === 'paymentStatus'">
+            <b-badge :variant="paymentVariant(props.row.paymentStatus)">
+              {{ props.row.paymentStatus }}
             </b-badge>
           </span>
+
+          <span v-else-if="props.column.field === 'saleStatus'">
+            <b-badge :variant="salesVariant(props.row.saleStatus)">
+              {{ props.row.saleStatus }}
+            </b-badge>
+          </span>
+
+          <!-- Column: Common -->
           <span v-else>
             {{ props.formattedRow[props.column.field] }}
           </span>
-
         </template>
       </vue-good-table>
+
     </b-card>
   </div>
 </template>
 
 <script>
 import {
-  BBadge, BCard, BButton, BRow, BCol, // BPagination, BFormGroup, BFormInput, BFormSelect,
+  BBadge, BCard, BButton, BRow, BCol, // BPagination, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
-import { useRouter } from '@core/utils/utils'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
-// import LogModal from './modals/LogModal.vue'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
 
 const appService = new ApiService()
 
 export default {
   components: {
     BButton,
+    VueGoodTable,
     // BPagination,
     // BFormGroup,
     // BFormInput,
     // BFormSelect,
-    VueGoodTable,
+    // BDropdown,
+    // BDropdownItem,
     BBadge,
     BCard,
-    // LogModal,
+    LoadingGrow,
     BRow,
     BCol,
   },
   directives: {
-    // 'b-modal': VBModal,
     Ripple,
   },
   data() {
     return {
-      customerID: this.id,
       selectedPembayaran: null,
       selectedStatus: null,
-      selectedTransId: null,
+      isLoading: false,
+      pageLength: 10,
+      dir: false,
       pembayaranItems: [
         {
           value: null,
-          text: 'Semua',
-          // disabled: true,
+          text: 'Semua Pembayaran',
         },
         {
           value: 'CASH',
           text: 'CASH',
         },
         {
-          value: 'Kredit / Hutang',
+          value: 'KREDIT',
           text: 'KREDIT',
         },
       ],
       statusItems: [
         {
           value: null,
-          text: 'Semua',
-          // disabled: true,
+          text: 'Semua Status',
         },
         {
-          value: 'Lunas',
-          text: 'Lunas',
+          value: 'LUNAS',
+          text: 'LUNAS',
         },
         {
-          value: 'Belum Lunas',
-          text: 'Belum Lunas',
+          value: 'UTANG',
+          text: 'UTANG',
         },
       ],
-      pageLength: 10,
-      dir: false,
       columns: [
         {
           label: 'Kode Penjualan',
           field: 'saleCode',
         },
         {
+          label: 'Tanggal',
+          field: 'date',
+        },
+        {
           label: 'Customer',
           field: 'customer',
         },
         {
-          label: 'Ref. Code',
-          field: 'refCode',
+          label: 'Kode Referensi',
+          field: 'ref',
         },
         {
-          label: 'Sub. Total',
-          field: 'subTotal',
+          label: 'Kasir',
+          field: 'biller',
+        },
+        {
+          label: 'Sub Total',
+          field: 'subtotal',
         },
         {
           label: 'Diskon',
-          field: 'diskon',
+          field: 'disc',
+        },
+        {
+          label: 'Ongkos Kirim',
+          field: 'ship',
         },
         {
           label: 'Pajak',
-          field: 'pajak',
-        },
-        {
-          label: 'Ongkir',
-          field: 'ongkir',
+          field: 'tax',
         },
         {
           label: 'Type Pembayaran',
-          field: 'typeBayar',
+          field: 'typePayment',
           sortable: false,
           filterOptions: {
             enabled: false,
@@ -180,36 +199,23 @@ export default {
         },
         {
           label: 'Status',
-          field: 'status',
+          field: 'paymentStatus',
           sortable: false,
           filterOptions: {
             enabled: false,
             filterDropdownItems: ['PAID', 'UNPAID'],
           },
         },
-        // {
-        //   label: 'Action',
-        //   field: 'action',
-        //   sortable: false,
-        // },
       ],
       rows: [],
       searchTerm: '',
     }
   },
-  setup() {
-    const { route } = useRouter()
-    const { id } = route.value.params
-
-    return {
-      id,
-    }
-  },
   computed: {
     salesVariant() {
       const statusColor = {
-        Draft: 'light-primary',
-        Completed: 'light-secondary',
+        CASH: 'light-primary',
+        KREDIT: 'light-secondary',
       }
       return status => statusColor[status]
     },
@@ -238,42 +244,59 @@ export default {
   created() {
     window.addEventListener('resize', this.initTrHeight)
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
-    this.fetchListTransaksi()
+    this.fetchSalesList()
   },
   methods: {
-    getLogTrans(transid) {
-      this.selectedTransId = transid
-    },
-    fetchListTransaksi() {
-      appService.historyList({ id_customer: this.customerID }).then(response => {
-        const datares = response.data.data
-        if (datares) {
-          datares.forEach(this.setRows)
+    // advanceSearch(val) {
+    //   this.searchTerm = val
+    // },
+    fetchSalesList() {
+      this.isLoading = true
+      appService.getSales({
+        limit: 10,
+        page: 1,
+      }).then(response => {
+        const res = response.data.data
+        this.isLoading = false
+        if (res.length > 0) {
+          // console.log(res)
+          res.forEach(this.setupRows)
+        } else {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Data Not Found',
+              icon: 'CoffeeIcon',
+              variant: 'danger',
+              text: 'Data empty on server, using dummy data now',
+            },
+          })
+          // this.$http.get('/app-data/salesUser')
+          //   .then(resData => { this.rows = resData.data })
         }
       }).catch(err => {
         console.log(err)
+        this.isLoading = false
       })
     },
-    setRows(data) {
+    setupRows(data) {
       const res = {
-        transId: data.id,
+        id: data.uuid,
+        date: data.date_transaction,
         saleCode: data.kode_transaksi,
-        customer: data.customer.nama,
-        refCode: data.no_references ?? '-',
-        subTotal: data.sub_total,
-        diskon: data.discount,
-        pajak: data.pajak,
-        ongkir: data.ongkir,
-        typeBayar: data.type_pembayaran,
-        status: data.status,
+        ref: data.no_references,
+        biller: data.kasir.nama,
+        customer: data.customer.nama_customer,
+        subtotal: data.sub_total,
+        disc: data.discount,
+        ship: data.shipping,
+        tax: data.tax,
+        typePayment: data.payment_type_str,
+        paymentStatus: data.status,
       }
       this.rows.push(res)
     },
-    // print() {
-    //   this.$htmlToPaper('printTable', null, () => {
-    //     console.warn('done')
-    //   })
-    // },
     printLandscape() {
       const localOptions = {
         styles: [
@@ -291,7 +314,8 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../node_modules/vue-good-table/src/styles/style.scss";
+@import "../node_modules/vue-good-table/src/styles/style.scss";
+
 .vgt-table {
   font-size: 12px !important;
 }

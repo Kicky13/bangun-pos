@@ -31,6 +31,7 @@
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="danger"
           style="margin-top: -15px;"
+          :to="{name: 'customer-history-trans-print'}"
         >
           Print
         </b-button>
@@ -223,6 +224,11 @@ export default {
       pageLength: 10,
       dir: false,
       columns: [
+        {
+          label: 'Encoded ID',
+          field: 'encodedID',
+          hidden: true,
+        },
         {
           label: 'Kode Penjualan',
           field: 'saleCode',

@@ -49,6 +49,7 @@
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="danger"
           style="margin-top: -15px;"
+          :to="{name: 'user-sale-print'}"
         >
           Print
         </b-button>
@@ -57,6 +58,7 @@
 
     <!-- table -->
     <vue-good-table
+      id="printTable"
       :columns="columns"
       :rows="rows"
       :rtl="direction"
