@@ -120,7 +120,7 @@
               <b-form-input
                 id="shopname"
                 v-model="shopName"
-                :state="shopName.length > 3"
+                :state="shopName.length > 2"
               />
               <b-form-invalid-feedback>
                 Nama Toko Wajib Diisi
@@ -427,7 +427,9 @@ export default {
       if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
         errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
-      if (!this.ownerNumber.charAt(0) === '0') {
+      if (this.ownerNumber.charAt(0) === '0') {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      } else {
         errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
       if ((!this.address && this.address === '') || this.address.length < 3) {
@@ -459,8 +461,10 @@ export default {
       if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
         errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
-      if (!this.shopNumber.charAt(0) === '0') {
-        errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
+      if (this.shopNumber.charAt(0) === '0') {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      } else {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
       if ((!this.shopAddress && this.shopAddress === '') || this.ownerName.length < 3) {
         errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
@@ -556,7 +560,10 @@ export default {
       })
       if (this.formValidate()) {
         param.append('nama_toko', this.shopName)
-        param.append('logo_toko', this.shopLogo)
+        // param.append('logo_toko', this.shopLogo)
+        if (this.shopLogo !== null) {
+          param.append('logo_toko', this.shopLogo)
+        }
         param.append('telp_toko', this.shopNumber)
         param.append('alamat_toko', this.shopAddress)
         param.append('nama_pemilik', this.ownerName)
@@ -713,7 +720,9 @@ export default {
       if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
         errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
-      if (!this.ownerNumber.charAt(0) === '0') {
+      if (this.ownerNumber.charAt(0) === '0') {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      } else {
         errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
       if ((!this.address && this.address === '') || this.address.length < 3) {
@@ -728,8 +737,10 @@ export default {
       if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
         errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
-      if (!this.shopNumber.charAt(0) === '0') {
-        errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
+      if (this.shopNumber.charAt(0) === '0') {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      } else {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
       if ((!this.shopAddress && this.shopAddress === '') || this.ownerName.length < 3) {
         errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')

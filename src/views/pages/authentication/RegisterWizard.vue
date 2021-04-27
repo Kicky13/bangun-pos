@@ -5,8 +5,9 @@
       color="#b20838"
       :title="null"
       :subtitle="null"
-      finish-button-text="Submit"
-      back-button-text="Previous"
+      finish-button-text="Simpan"
+      back-button-text="Sebelumnya"
+      next-button-text="Lanjut"
       class="steps-transparent mb-3"
       @on-complete="formSubmitted"
     >
@@ -125,7 +126,7 @@
               <b-form-input
                 id="shopname"
                 v-model="shopName"
-                :state="shopName.length > 3"
+                :state="shopName.length > 2"
               />
               <b-form-invalid-feedback>
                 Nama Toko Wajib Diisi
@@ -134,13 +135,18 @@
           </b-col>
           <b-col md="6">
             <b-form-group
-              label="Logo Toko :"
+              label="Logo Toko (* .PNG / .JPEG Maks 500KB) :"
               label-for="shoplogo"
             >
               <b-form-file
                 id="shoplogo"
+                accept="image/jpeg, image/png"
+                :state="logoSize <= 500000"
                 @change="saveImage"
               />
+              <b-form-invalid-feedback>
+                Ukuran Maksimal 500kB dengan tipe .PNG / .JPEG
+              </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
           <b-col md="6">
@@ -164,9 +170,9 @@
             >
               <b-form-textarea
                 id="shopaddress"
-                v-model="address"
+                v-model="shopAddress"
                 rows="3"
-                :state="address.length > 3"
+                :state="shopAddress.length > 3"
               />
               <b-form-invalid-feedback>
                 Alamat Toko Wajib Diisi
@@ -335,10 +341,12 @@ export default {
       ownerNumber: this.formData.telp_pemilik ?? '',
       shopName: this.formData.nama_toko ?? '',
       shopNumber: this.formData.telp_toko ?? '',
+      shopAddress: this.formData.alamat ?? '',
       address: this.formData.alamat ?? '',
       identitas: this.formData.no_identitas ?? '',
       shopCode: this.formData.kode_toko ?? '',
       shopLogo: null,
+      logoSize: 0,
       token: this.formData.token,
       imageURL: null,
       selectedContry: 'select_value',
@@ -397,7 +405,9 @@ export default {
       })
       if (this.formValidate()) {
         param.append('nama_toko', this.shopName)
-        param.append('logo_toko', this.shopLogo)
+        if (this.shopLogo !== null) {
+          param.append('logo_toko', this.shopLogo)
+        }
         param.append('telp_toko', this.shopNumber)
         param.append('alamat', this.address)
         param.append('nama_pemilik', this.ownerName)
@@ -417,7 +427,7 @@ export default {
             console.log(data.token)
             const userAbility = authService.getAbility(userData.role)
             this.$ability.update(userAbility)
-
+            this.isLoading = false
             this.$router.replace(getHomeRouteForLoggedInUser(userData.role))
               .then(() => {
                 this.$toast({
@@ -447,6 +457,7 @@ export default {
           }
         })
       } else {
+        this.isLoading = false
         console.log(this.formErr)
       }
     },
@@ -472,9 +483,32 @@ export default {
     },
     saveImage(e) {
       const logo = e.target.files[0]
-      this.shopLogo = logo
-      this.imageURL = URL.createObjectURL(logo)
-      console.log(logo)
+      if (logo) {
+        this.logoSize = logo.size
+        // console.log(this.logoSize)
+        if (logo.size < 500000) {
+          this.shopLogo = logo
+          this.imageURL = URL.createObjectURL(logo)
+        } else {
+          this.shopLogo = null
+          this.imageURL = null
+          this.$toast({
+            component: ToastificationContent,
+            props: {
+              title: 'Ukuran Logo Tidak Boleh Melebihi 500KB',
+              icon: 'AlertCircleIcon',
+              variant: 'danger',
+            },
+          })
+        }
+      } else {
+        this.shopLogo = null
+        this.imageURL = null
+        this.logoSize = 0
+      }
+      // this.shopLogo = logo
+      // this.imageURL = URL.createObjectURL(logo)
+      // console.log(logo)
     },
     setDataUser(data) {
       const userAbility = authService.getAbility(data.role)
@@ -494,121 +528,147 @@ export default {
     },
     validationOwner() {
       const errMsg = []
-
-      if (this.ownerName.length < 3) {
-        errMsg.push('Nama Pemilik Wajib Diisi minimal 3 karakter')
-      }
-      if (this.ownerNumber.charAt(0) !== '0') {
-        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
+      if ((!this.ownerName && this.ownerName === '') || this.ownerName.length < 3) {
+        errMsg.push('Nama Pemilik Wajib Diisi, Minimal 3 Karakter')
       }
       if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
         errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
-      if (this.identitas.length !== 16) {
-        errMsg.push('No Identitas Wajib Diisi nomor 16 karakter')
+      if (this.ownerNumber.charAt(0) === '0') {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      } else {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
-      if (!this.address && this.address === '') {
-        errMsg.push('Alamat Wajib Diisi')
+      if ((!this.address && this.address === '') || this.address.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
       }
-
-      if (errMsg.length > 0) {
+      if ((!this.identitas && this.identitas === '') || this.identitas.length !== 16) {
+        errMsg.push('No Identitas Wajib Diisi 16 Digits Angka')
+      }
+      // if (errMsg.length > 0) {
+      //   this.$toast({
+      //     component: ToastificationContent,
+      //     props: {
+      //       title: 'Lengkapi terlebih dahulu form sebelum melanjutkan',
+      //       icon: 'AlertCircleIcon',
+      //       variant: 'danger',
+      //     },
+      //   })
+      // }
+      if (errMsg.length === 0) {
+        return true
+      }
+      errMsg.forEach(msg => {
         this.$toast({
           component: ToastificationContent,
           props: {
-            title: 'Lengkapi terlebih dahulu form sebelum melanjutkan',
+            title: msg,
             icon: 'AlertCircleIcon',
             variant: 'danger',
           },
         })
-      }
-      return new Promise((resolve, reject) => {
-        if (errMsg.length === 0) {
-          console.log(errMsg)
-          resolve(true)
-        } else {
-          reject()
-        }
       })
+      return false
+      // return new Promise((resolve, reject) => {
+      //   if (errMsg.length === 0) {
+      //     // console.log(errMsg)
+      //     resolve(true)
+      //   } else {
+      //     reject()
+      //   }
+      // })
     },
     validationShop() {
       const errMsg = []
-
-      if (!this.shopName && this.shopName === '') {
-        errMsg.push('Nama Toko Wajib Diisi')
+      if ((!this.shopName && this.shopName === '') || this.shopName.length < 3) {
+        errMsg.push('Nama Toko Wajib Diisi, Minimal 3 Karakter')
+      }
+      if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
+        console.log('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+      }
+      if (this.shopNumber.charAt(0) === '0') {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      } else {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
+      }
+      if ((!this.shopAddress && this.shopAddress === '') || this.ownerName.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
+      }
+      if (this.logoSize > 500000) {
+        errMsg.push('Ukuran Logo Tidak Boleh Melebihi 500KB')
+      }
+      console.log(errMsg)
+      if (errMsg.length === 0) {
+        return true
+      }
+      // if (errMsg.length > 0) {
+      //   this.$toast({
+      //     component: ToastificationContent,
+      //     props: {
+      //       title: 'Lengkapi terlebih dahulu form sebelum melanjutkan',
+      //       icon: 'AlertCircleIcon',
+      //       variant: 'danger',
+      //     },
+      //   })
+      // }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      return false
+      // return new Promise((resolve, reject) => {
+      //   if (errMsg.length === 0) {
+      //     resolve(true)
+      //   } else {
+      //     reject()
+      //   }
+      // })
+    },
+    formValidate() {
+      const errMsg = []
+      if ((!this.ownerName && this.ownerName === '') || this.ownerName.length < 3) {
+        errMsg.push('Nama Pemilik Wajib Diisi, Minimal 3 Karakter')
+      }
+      if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
+        errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+      }
+      if (this.ownerNumber.charAt(0) === '0') {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      } else {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
+      }
+      if ((!this.address && this.address === '') || this.address.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
+      }
+      if ((!this.identitas && this.identitas === '') || this.identitas.length !== 16) {
+        errMsg.push('No Identitas Wajib Diisi 16 Digits Angka')
+      }
+      if ((!this.shopName && this.shopName === '') || this.shopName.length < 3) {
+        errMsg.push('Nama Toko Wajib Diisi, Minimal 3 Karakter')
       }
       if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
         errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
-      if (!this.shopNumber.charAt(0) === '0') {
-        errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
-      }
-      if (!this.address && this.address === '') {
-        errMsg.push('Alamat Wajib Diisi')
-      }
-      if (this.shopLogo) {
-        const { name, size } = this.shopLogo
-        const fileExt = name.split('.').pop()
-
-        if (fileExt !== 'jpg' && fileExt !== 'png') {
-          errMsg.push('Logo harus berekstensi jpg atau png')
-        }
-        if (size > 1000000) {
-          errMsg.push('Ukuran maksimal file 1mb')
-        }
-      }
-
-      console.log(errMsg)
-
-      if (errMsg.length > 0) {
-        this.$toast({
-          component: ToastificationContent,
-          props: {
-            title: 'Lengkapi terlebih dahulu form sebelum melanjutkan',
-            icon: 'AlertCircleIcon',
-            variant: 'danger',
-          },
-        })
-      }
-
-      return new Promise((resolve, reject) => {
-        if (errMsg.length === 0) {
-          resolve(true)
-        } else {
-          reject()
-        }
-      })
-    },
-    formValidate() {
-      const errMsg = []
-
-      if (!this.ownerName.length > 3) {
-        errMsg.push('Nama Pemilik Wajib Diisi minimal 3 karakter')
-      }
-      if (!this.shopName && this.shopName === '') {
-        errMsg.push('Nama Toko Wajib Diisi')
-      }
-      if (this.ownerNumber.length < 10 || this.ownerNumber.length > 12) {
-        errMsg.push('Telp Pemilik Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
-      }
-      if (this.shopNumber.length < 10) {
-        errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
-      }
-      if (!this.ownerNumber.charAt(0) === '0') {
+      if (this.shopNumber.charAt(0) === '0') {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      } else {
         errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
-      if (!this.shopNumber.charAt(0) === '0') {
-        errMsg.push('No Telp Toko Wajib Diawali Dengan Angka 0')
+      if ((!this.shopAddress && this.shopAddress === '') || this.ownerName.length < 3) {
+        errMsg.push('Alamat Wajib Diisi, Minimal 3 Karakter')
       }
-      if (!this.address && this.address === '') {
-        errMsg.push('Alamat Wajib Diisi')
-      }
-      if (!this.identitas.length === 16) {
-        errMsg.push('No Identitas Wajib Diisi nomor 16 karakter')
+      if (this.logoSize > 500000) {
+        errMsg.push('Ukuran Logo Tidak Boleh Melebihi 500KB')
       }
       if (this.cashier.length === 0) {
-        errMsg.push('tambahkan Cashier Minimal 1')
+        errMsg.push('Tambahkan Cashier Minimal 1')
       }
-
       if (errMsg.length === 0) {
         return true
       }
