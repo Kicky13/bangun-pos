@@ -263,4 +263,8 @@ export default class ApiService {
         url: this.urlCnf.loadAntrian + transaction,
       })
     }
+
+    deleteQueue(param) {
+      return axios.delete(`${this.urlCnf.addAntrianData}/${param}`)
+    }
 }
