@@ -34,7 +34,7 @@
       <user-menu v-if="userdata.role === 'user'" />
       <!-- <dark-Toggler class="d-none d-lg-block" /> -->
       <!-- <search-bar /> -->
-      <user-dropdown />
+      <user-dropdown :roles="userdata.role" />
     </b-navbar-nav>
   </div>
 </template>

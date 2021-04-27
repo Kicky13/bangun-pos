@@ -103,7 +103,7 @@
 
 <script>
 import {
-  BModal, VBModal, BRow, BCol, BFormGroup, BFormInput, BFormTextarea, BFormSelect, BFormInvalidFeedback,
+  BModal, VBModal, BRow, BCol, BForm, BFormGroup, BFormInput, BFormTextarea, BFormSelect, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 // import vSelect from 'vue-select'
 // import store from '@/store/index'
@@ -115,6 +115,7 @@ import ToastificationContent from '@core/components/toastification/Toastificatio
 export default {
   components: {
     BModal,
+    BForm,
     BFormTextarea,
     BRow,
     BCol,
@@ -127,6 +128,12 @@ export default {
   directives: {
     'b-modal': VBModal,
     Ripple,
+  },
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -145,8 +152,17 @@ export default {
       ],
     }
   },
+  watch: {
+    list: {
+      immediate: true,
+      handler() {
+        this.categoryItems = this.list
+      },
+    },
+  },
   mounted() {
-    this.setListCategory()
+    // this.setListCategory()
+    this.categoryItems = this.list
   },
   methods: {
     async saveData(e) {
