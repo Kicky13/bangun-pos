@@ -26,8 +26,8 @@
                       name="kode"
                       placeholder="Masukkan kode atau scan barcode pada kemasan produk"
                       :disabled="disableStdInput"
-                      :state="productCode.length > 0"
-                      type="text"
+                      :state="productCode.length > 0 && productCode !== '-'"
+                      @keyup="formatProductCode"
                     />
                     <b-form-invalid-feedback>
                       Kode Produk Wajib Diisi
@@ -624,6 +624,11 @@ export default {
     this.filldata()
   },
   methods: {
+    formatProductCode() {
+      // console.log(this.productCode)
+      this.productCode = this.productCode.replace(/[^0-9-]/g, '')
+      // console.log(this.productCode)
+    },
     onFileChange(e) {
       const file = e.target.files[0]
       if (file) {
