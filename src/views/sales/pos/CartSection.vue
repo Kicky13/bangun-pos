@@ -150,7 +150,7 @@
                               block
                               variant="outline-secondary"
                               class="btn-icon"
-                              :disabled="item.quantity === 1"
+                              :disabled="item.quantity <= 0"
                               @click="item.quantity--"
                             >
                               -
@@ -164,7 +164,7 @@
                             <b-form-input
                               v-model.number="item.quantity"
                               class="text-center"
-                              @keypress="isNumberKey"
+                              @keypress="inputQuantity"
                             />
                           </b-col>
                           <b-col
@@ -1473,6 +1473,13 @@ export default {
         return true
       })
       this.$bvModal.hide('cartProductEdit')
+    },
+    inputQuantity(event) {
+      this.isNumberKey(event)
+      const quantityValue = Number(event.target.value)
+      if (quantityValue === 99999) {
+        event.preventDefault()
+      }
     },
     repeateAgain() {
       this.items.push({
