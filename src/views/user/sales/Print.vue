@@ -287,7 +287,7 @@ export default {
         saleCode: data.kode_transaksi,
         ref: data.no_references,
         biller: data.kasir.nama,
-        customer: data.customer.nama_customer,
+        customer: data.nama_customer,
         subtotal: data.sub_total,
         disc: data.discount,
         ship: data.shipping,
