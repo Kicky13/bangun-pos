@@ -1406,6 +1406,10 @@ export default {
         this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Walk-in customer tidak diizinkan berhutang')
         return false
       }
+      if (this.kembalian < 0) {
+        this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Total pembayaran kurang')
+        return false
+      }
       return true
     },
     addToAntrianValidate() {

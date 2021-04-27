@@ -239,6 +239,7 @@
                 v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 size="sm"
                 variant="outline-danger"
+                @click="deleteAntrian(props.row.uuid)"
               >
                 Hapus
               </b-button>
@@ -315,6 +316,7 @@ import { useShopFiltersSortingAndPagination, useShopUi, useShopRemoteData } from
 import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 import store from '@/store/index'
 import ApiService from '@/connection/apiService'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { useEcommerceUi } from './ActionHandling'
 import { parentComponent } from './PageContent.vue'
 
@@ -566,6 +568,7 @@ export default {
         const { data } = response.data
         if (data) {
           this.listAntrian.push({
+            uuid: dataAntrian.uuid,
             kode_transaksi: dataAntrian.kode_transaksi,
             nama_customer: dataAntrian.nama_customer || 'Walk-in Customer',
             no_references: dataAntrian.no_references || '-',
@@ -617,6 +620,25 @@ export default {
     },
     addProductToCart(product) {
       parentComponent.$emit('addProductToCart', product)
+    },
+    deleteAntrian(id) {
+      const deleteConfirm = window.confirm('Apakah anda yakin?')
+      if (deleteConfirm) {
+        appService.deleteQueue(id).then(response => {
+          console.log(response)
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Hapus Antrian',
+              icon: 'CoffeeIcon',
+              variant: 'success',
+              text: 'Antrian berhasil dihapus',
+            },
+          })
+          this.getAllAntrian()
+        })
+      }
     },
   },
   setup() {
