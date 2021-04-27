@@ -247,6 +247,7 @@
                       id="unit"
                       v-model="selectedUnit"
                       name="unit"
+                      :disabled="disableStdUOMInput"
                       :options="unitItems"
                       :state="selectedUnit != null"
                     />
@@ -468,6 +469,10 @@ export default {
       type: String,
       default: '',
     },
+    editflag: {
+      type: Number,
+      default: 0,
+    },
     editidproduk: {
       type: Number,
       default: 0,
@@ -540,6 +545,7 @@ export default {
       isLoading: false,
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
       disableStdInput: true,
+      disableStdUOMInput: false,
       matchedItem: [],
       searchProductSIG: '',
       priceId: '',
@@ -668,6 +674,11 @@ export default {
       this.selectedUnit = this.editiduom
       this.selectedType = this.editidtype
       this.selectedSubCategory = this.editidsubcategory
+      if (this.editflag === 1) {
+        this.disableStdUOMInput = true
+      } else {
+        this.disableStdUOMInput = false
+      }
     },
     async formSubmitted() {
       // this.$toast({

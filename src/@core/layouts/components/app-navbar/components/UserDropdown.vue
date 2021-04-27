@@ -33,6 +33,7 @@
       </b-avatar>
     </template>
     <b-dropdown-item
+      v-if="roles === 'user'"
       :to="{ name: 'user-profile'}"
       link-class="d-flex align-items-center"
     >
@@ -43,8 +44,21 @@
       />
       <span>Profile</span>
     </b-dropdown-item>
-    <b-dropdown-divider />
+    <b-dropdown-divider v-if="roles === 'user'" />
     <b-dropdown-item
+      v-if="roles === 'user'"
+      link-class="d-flex align-items-center"
+      @click="toAksesToko"
+    >
+      <feather-icon
+        size="16"
+        icon="LogOutIcon"
+        class="mr-50"
+      />
+      <span>Logout</span>
+    </b-dropdown-item>
+    <b-dropdown-item
+      v-if="roles === 'admin'"
       link-class="d-flex align-items-center"
       @click="logout"
     >
@@ -54,7 +68,8 @@
         class="mr-50"
       />
       <span>Logout</span>
-    </b-dropdown-item></b-nav-item-dropdown>
+    </b-dropdown-item>
+  </b-nav-item-dropdown>
 </template>
 
 <script>
@@ -72,6 +87,12 @@ export default {
     BDropdownDivider,
     BAvatar,
   },
+  props: {
+    roles: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       userData: JSON.parse(localStorage.getItem('userData')),
@@ -79,6 +100,21 @@ export default {
     }
   },
   methods: {
+    toAksesToko() {
+      // Remove userData from localStorage
+      // ? You just removed token from localStorage. If you like, you can also make API call to backend to blacklist used token
+      localStorage.removeItem(useJwt.jwtConfig.storageTokenKeyName)
+      localStorage.removeItem(useJwt.jwtConfig.storageRefreshTokenKeyName)
+
+      // Remove userData from localStorage
+      localStorage.removeItem('userData')
+
+      // Reset ability
+      this.$ability.update(initialAbility)
+
+      // Redirect to login page
+      window.location = 'https://qa.aksestoko.id/home/main'
+    },
     logout() {
       // Remove userData from localStorage
       // ? You just removed token from localStorage. If you like, you can also make API call to backend to blacklist used token

@@ -262,6 +262,7 @@
                       id="unit"
                       v-model="selectedUnit"
                       name="unit"
+                      :disabled="disableStdInput"
                       :options="unitItems"
                       :state="selectedUnit != null"
                     />
@@ -404,7 +405,7 @@
       </b-form>
     </b-card>
     <category-modal />
-    <sub-category-modal />
+    <sub-category-modal :list="categoryItems" />
     <type-modal />
     <brand-modal />
     <units-modal />
@@ -645,6 +646,7 @@ export default {
       })
       console.log(this.matchedItem)
       if (this.matchedItem.length === 0) {
+        this.productCode = ''
         this.disableStdInput = false
         this.selectedCategory = null
         this.selectedStatus = null

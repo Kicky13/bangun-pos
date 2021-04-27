@@ -77,7 +77,7 @@
 
 <script>
 import {
-  BModal, VBModal, BRow, BCol, BFormGroup, BFormInput, BFormTextarea, BFormInvalidFeedback,
+  BModal, VBModal, BRow, BCol, BForm, BFormGroup, BFormInput, BFormTextarea, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 // import vSelect from 'vue-select'
 // import store from '@/store/index'
@@ -89,6 +89,7 @@ import ToastificationContent from '@core/components/toastification/Toastificatio
 export default {
   components: {
     BModal,
+    BForm,
     BFormTextarea,
     BRow,
     BCol,
