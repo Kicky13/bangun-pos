@@ -61,4 +61,5 @@ export default {
   // ===============================================================
   // Master Data :
   getCustomerList: 'admin/customer',
+  getTokoList: 'admin/tokobangunan',
 }
