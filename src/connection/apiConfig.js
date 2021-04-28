@@ -43,6 +43,10 @@ export default {
   graphData: 'dashboard',
   getGoalOverviewData: 'dashboard/sales',
   getTransactionsData: 'dashboard/product',
+  graphTokoBangunan: 'admin/dashboard/chartSalesToko',
+  graphProductSales: 'admin/dashboard/chartSalesProduct',
+  graphBestSeller: 'admin/dashboard/chartSalesProductQty',
+  graphProductGrossing: 'admin/dashboard/chartGrossProduct',
 
   // Debt
   payDebt: 'user/debt',
