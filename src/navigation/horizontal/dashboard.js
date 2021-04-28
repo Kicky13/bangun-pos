@@ -2,7 +2,7 @@ export default [
   {
     header: 'Dashboards',
     icon: 'HomeIcon',
-    route: 'dashboard-ecommerce',
+    route: 'dashboard-admin',
     resource: 'Dashboard',
     action: 'read',
   },
