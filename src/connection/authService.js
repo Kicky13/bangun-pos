@@ -67,7 +67,7 @@ export default class AuthService {
     getDataToken(token) {
       const responseData = jwt.verify(token, this.config.appKey)
       const { data } = responseData
-      console.log(data)
+      // console.log(data)
       return data
     }
 

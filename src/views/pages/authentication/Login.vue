@@ -247,7 +247,7 @@ export default {
           password: this.password,
         }).then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
             const toko = this.setDataUser(res.data)
             const { role } = res.data
             localStorage.removeItem('userData')
