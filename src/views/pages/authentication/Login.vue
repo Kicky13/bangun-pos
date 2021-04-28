@@ -247,10 +247,13 @@ export default {
           password: this.password,
         }).then(res => {
           if (res.data) {
+            console.log(res.data)
             const toko = this.setDataUser(res.data)
             const { role } = res.data
             localStorage.removeItem('userData')
+            localStorage.removeItem('clientCode')
             localStorage.setItem('userData', JSON.stringify(toko))
+            localStorage.setItem('clientCode', '66b3bb986761565ddfc122e3bc460a95')
             authService.setToken(res.data.token)
             const userAbility = authService.getAbility(role)
             this.$ability.update(userAbility)

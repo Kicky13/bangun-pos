@@ -309,10 +309,10 @@
               <b-form-input
                 id="customerName"
                 v-model="customerName"
-                :state="customerName.length > 0"
+                :state="customerName.length > 2"
               />
               <b-form-invalid-feedback>
-                Nama Customer wajib diisi
+                Nama Customer Wajib Diisi Minimal 3 Karakter
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -324,7 +324,11 @@
               <b-form-input
                 id="reference"
                 v-model="jagobangunRef"
+                type="number"
               />
+              <!-- <b-form-invalid-feedback>
+                Nomor Referensi Wajib Diisi 16 Angka
+              </b-form-invalid-feedback> -->
             </b-form-group>
           </b-col>
         </b-row>
@@ -341,7 +345,7 @@
                 type="number"
               />
               <b-form-invalid-feedback>
-                Telepon Customer wajib diisi dengan benar
+                Telepon Customer Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan dan Diawali Angka 0 (Contoh Format : 081234567890)
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -355,6 +359,9 @@
                 v-model="identityNumber"
                 type="number"
               />
+              <!-- <b-form-invalid-feedback>
+                Nomor Identitas Customer Wajib Diisi 16 Angka
+              </b-form-invalid-feedback> -->
             </b-form-group>
           </b-col>
         </b-row>
@@ -369,6 +376,9 @@
                 v-model="customerAddress"
                 rows="4"
               />
+              <!-- <b-form-invalid-feedback>
+                Nama Customer Wajib Diisi Minimal 3 Karakter
+              </b-form-invalid-feedback> -->
             </b-form-group>
           </b-col>
         </b-row>
@@ -444,8 +454,8 @@ export default {
       selectedType: 1,
       customerName: '',
       customerPhone: 0,
-      jagobangunRef: null,
-      identityNumber: null,
+      jagobangunRef: '',
+      identityNumber: '',
       customerAddress: '',
       selectedPembayaran: null,
       selectedStatus: null,
@@ -575,6 +585,11 @@ export default {
     this.fetchCustomerList()
   },
   methods: {
+    formatRefCode() {
+      // console.log(this.productCode)
+      this.jagobangunRef = this.jagobangunRef.replace(/[^0-9-]/g, '')
+      // console.log(this.productCode)
+    },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
@@ -606,8 +621,8 @@ export default {
     clearForm() {
       this.customerName = ''
       this.customerPhone = 0
-      this.jagobangunRef = null
-      this.identityNumber = null
+      this.jagobangunRef = ''
+      this.identityNumber = ''
       this.customerAddress = ''
     },
     setForm(data) {

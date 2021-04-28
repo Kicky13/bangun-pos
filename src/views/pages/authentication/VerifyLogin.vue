@@ -59,6 +59,7 @@ export default {
     const { token } = route.value.params
     const { role, toko } = authService.getDataToken(token)
     console.log(toko)
+    console.log(role)
     return {
       token,
       role,
@@ -100,7 +101,9 @@ export default {
       if (this.role !== '') {
         const toko = this.setDataUser()
         localStorage.removeItem('userData')
+        localStorage.removeItem('clientCode')
         localStorage.setItem('userData', JSON.stringify(toko))
+        localStorage.setItem('clientCode', '6513b68e72e8a1c9e272685fec161522')
         authService.setToken(this.token)
         const userAbility = authService.getAbility(this.role)
         this.$ability.update(userAbility)
