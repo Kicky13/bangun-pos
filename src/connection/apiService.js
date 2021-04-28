@@ -268,6 +268,36 @@ export default class ApiService {
       return axios.delete(`${this.urlCnf.addAntrianData}/${param}`)
     }
 
+    getChartSalesToko(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.graphTokoBangunan,
+        data: param,
+      })
+    }
+
+    getChartSalesProduct(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.graphProductSales,
+        data: param,
+      })
+    }
+
+    getChartBestSeller() {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.graphBestSeller,
+      })
+    }
+
+    getChartGrossProduct() {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.graphProductGrossing,
+      })
+    }
+
     // Admin View
     getCustomerList(param) {
       return axios({

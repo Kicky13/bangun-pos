@@ -622,6 +622,7 @@ export default {
       parentComponent.$emit('addProductToCart', product)
     },
     deleteAntrian(id) {
+      // eslint-disable-next-line no-alert
       const deleteConfirm = window.confirm('Apakah anda yakin?')
       if (deleteConfirm) {
         appService.deleteQueue(id).then(response => {
