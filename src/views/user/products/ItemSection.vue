@@ -494,6 +494,7 @@ export default {
                 nama_uom: item.nama_uom,
                 id_price: item.id_price,
                 is_available: item.is_available,
+                flag: item.flag,
               })
             })
           } else {

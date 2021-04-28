@@ -55,4 +55,11 @@ export default {
   getProfile: 'toko/show',
   updateProfile: 'toko/update',
   deleteCashier: 'user/cashier/',
+
+  // ===============================================================
+  // Admin View :
+  // ===============================================================
+  // Master Data :
+  getCustomerList: 'admin/customer',
+  getTokoList: 'admin/tokobangunan',
 }

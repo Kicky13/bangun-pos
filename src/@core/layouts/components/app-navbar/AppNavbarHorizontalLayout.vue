@@ -33,8 +33,8 @@
       <home-bar v-if="userdata.role === 'user'" />
       <user-menu v-if="userdata.role === 'user'" />
       <!-- <dark-Toggler class="d-none d-lg-block" /> -->
-      <search-bar />
-      <user-dropdown />
+      <!-- <search-bar /> -->
+      <user-dropdown :roles="userdata.role" />
     </b-navbar-nav>
   </div>
 </template>
@@ -46,7 +46,7 @@ import {
 // import Bookmarks from './components/Bookmarks.vue'
 import UserMenu from './components/UserMenu.vue'
 // import DarkToggler from './components/DarkToggler.vue'
-import SearchBar from './components/SearchBar.vue'
+// import SearchBar from './components/SearchBar.vue'
 import HomeBar from './components/Home.vue'
 import UserDropdown from './components/UserDropdown.vue'
 
@@ -59,7 +59,7 @@ export default {
     BNavbarNav,
     // Bookmarks,
     // DarkToggler,
-    SearchBar,
+    // SearchBar,
     HomeBar,
     UserDropdown,
     UserMenu,

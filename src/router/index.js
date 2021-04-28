@@ -4,13 +4,10 @@ import VueRouter from 'vue-router'
 // Routes
 import { canNavigate } from '@/libs/acl/routeProtection'
 import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser } from '@/auth/utils'
-import products from './routes/products'
-import sales from './routes/sales'
-import purchases from './routes/purchases'
 import dashboard from './routes/dashboard'
 import pages from './routes/pages'
-import master from './routes/master'
 import usermenu from './routes/usermenu'
+import adminmenu from './routes/adminmenu'
 
 Vue.use(VueRouter)
 
@@ -22,11 +19,8 @@ const router = new VueRouter({
   },
   routes: [
     { path: '/', redirect: { name: 'dashboard-admin', meta: { action: 'read', resource: 'Dashboard' } } },
-    ...products,
-    ...purchases,
-    ...sales,
+    ...adminmenu,
     ...dashboard,
-    ...master,
     ...pages,
     ...usermenu,
     {
@@ -37,22 +31,36 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, _, next) => {
-  const isLoggedIn = isUserLoggedIn()
+  const currRoute = router.currentRoute
+  // alert(to)
+  // console.log(to)
+  if (to.name !== null) {
+    if (to.name !== 'auto-login-verify') {
+      const isLoggedIn = isUserLoggedIn()
+      console.log(currRoute)
 
-  if (!canNavigate(to)) {
-    // Redirect to login if not logged in
-    if (!isLoggedIn) return next({ name: 'auth-login' })
+      if (!canNavigate(to)) {
+        // Redirect to login if not logged in
+        if (!isLoggedIn) return next({ name: 'auth-login' })
 
-    // If logged in => not authorized
-    return next({ name: 'misc-not-authorized' })
+        // If logged in => not authorized
+        return next({ name: 'misc-not-authorized' })
+      }
+
+      // Redirect if logged in
+      if (to.meta.redirectIfLoggedIn && isLoggedIn) {
+        const userData = getUserData()
+        next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
+      }
+    } else {
+      localStorage.removeItem('userData')
+      localStorage.removeItem('clientCode')
+      // alert(to.name)
+    }
+    // alert(to.name)
+    return next()
   }
-
-  // Redirect if logged in
-  if (to.meta.redirectIfLoggedIn && isLoggedIn) {
-    const userData = getUserData()
-    next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
-  }
-
+  // alert('Unidentified Visitor')
   return next()
 })
 

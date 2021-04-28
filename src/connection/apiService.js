@@ -141,7 +141,7 @@ export default class ApiService {
 
     updateCustomer(param, formData) {
       return axios({
-        method: 'post',
+        method: 'put',
         url: `${this.urlCnf.customer}/${param}`,
         data: formData,
       })
@@ -261,6 +261,27 @@ export default class ApiService {
       return axios({
         method: 'get',
         url: this.urlCnf.loadAntrian + transaction,
+      })
+    }
+
+    deleteQueue(param) {
+      return axios.delete(`${this.urlCnf.addAntrianData}/${param}`)
+    }
+
+    // Admin View
+    getCustomerList(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.getCustomerList,
+        params: param,
+      })
+    }
+
+    getTokoList(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.getTokoList,
+        params: param,
       })
     }
 }

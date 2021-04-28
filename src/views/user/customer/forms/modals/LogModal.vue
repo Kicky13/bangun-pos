@@ -189,6 +189,8 @@ export default {
         {
           label: 'Jumlah Bayar',
           field: 'jumlahBayar',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
           label: 'Type Pembayaran',
@@ -248,6 +250,11 @@ export default {
   mounted() {
   },
   methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      return `Rp. ${formatedval}`
+    },
     async getLogTransaction(uuid) {
       appService.getLogTransaction({
         kode_transaksi: uuid,
@@ -264,7 +271,7 @@ export default {
     },
     setRows(data) {
       const res = {
-        logId: data.id,
+        logId: data.payment.uuid,
         jumlahBayar: data.amount,
         tipeBayar: data.payment_type,
         // refCode: data.no_references ?? '-',

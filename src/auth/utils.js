@@ -25,3 +25,11 @@ export const getHomeRouteForLoggedInUser = userRole => {
   if (userRole === 'user') return { name: 'user-dashboard' }
   return { name: 'auth-login' }
 }
+export const getHomeRouteForUser = userRole => {
+  if (userRole === 'user') return { name: 'user-dashboard' }
+  return { name: 'auth-login' }
+}
+export const getHomeRouteForAdmin = userRole => {
+  if (userRole === 'admin') return '/'
+  return { name: 'auth-login' }
+}

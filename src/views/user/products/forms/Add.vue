@@ -26,8 +26,8 @@
                       name="kode"
                       placeholder="Masukkan kode atau scan barcode pada kemasan produk"
                       :disabled="disableStdInput"
-                      :state="productCode.length > 0"
-                      type="number"
+                      :state="productCode.length > 0 && productCode !== '-'"
+                      @keyup="formatProductCode"
                     />
                     <b-form-invalid-feedback>
                       Kode Produk Wajib Diisi
@@ -262,6 +262,7 @@
                       id="unit"
                       v-model="selectedUnit"
                       name="unit"
+                      :disabled="disableStdInput"
                       :options="unitItems"
                       :state="selectedUnit != null"
                     />
@@ -404,7 +405,7 @@
       </b-form>
     </b-card>
     <category-modal />
-    <sub-category-modal />
+    <sub-category-modal :list="categoryItems" />
     <type-modal />
     <brand-modal />
     <units-modal />
@@ -550,6 +551,11 @@ export default {
     this.setListUOM()
   },
   methods: {
+    formatProductCode() {
+      // console.log(this.productCode)
+      this.productCode = this.productCode.replace(/[^0-9-]/g, '')
+      // console.log(this.productCode)
+    },
     onFileChange(e) {
       const file = e.target.files[0]
       if (file) {
@@ -576,9 +582,8 @@ export default {
       }
     },
     async formSubmitted() {
-      this.isLoading = true
       if (this.formValidate()) {
-        // console.log('a')
+        this.isLoading = true
         const param = new FormData()
         param.append('gambar_product', this.selectedFile)
         param.append('id_category', this.selectedCategory)
@@ -639,7 +644,9 @@ export default {
           this.matchedItem = item
         }
       })
+      console.log(this.matchedItem)
       if (this.matchedItem.length === 0) {
+        this.productCode = ''
         this.disableStdInput = false
         this.selectedCategory = null
         this.selectedStatus = null

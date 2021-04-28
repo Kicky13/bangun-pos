@@ -1,6 +1,6 @@
 export default [
   {
-    header: 'Master Bangunan',
+    header: 'Master Data',
     icon: 'DatabaseIcon',
     resource: 'Master',
     action: 'read',
@@ -15,14 +15,14 @@ export default [
       {
         title: 'Customer',
         route: 'customer-master',
-        icon: 'ServerIcon',
+        icon: 'UsersIcon',
         resource: 'Master',
         action: 'manage',
       },
       {
-        title: 'Price List',
+        title: 'Harga Produk',
         route: 'price-master',
-        icon: 'PlusCircleIcon',
+        icon: 'DollarSignIcon',
         resource: 'Master',
         action: 'manage',
       },

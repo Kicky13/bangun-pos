@@ -149,6 +149,7 @@ export default {
             allinProgress: data.totalUnpaid,
           }
         } else {
+          localStorage.removeItem('userData')
           this.$bvModal.show('tokenExpired')
         }
       })
@@ -204,6 +205,7 @@ export default {
             })
           })
         } else {
+          localStorage.removeItem('userData')
           this.$bvModal.show('tokenExpired')
         }
       })
