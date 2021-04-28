@@ -5,7 +5,7 @@ export default [
     name: 'price-master',
     component: () => import('@/views/master/price/List.vue'),
     meta: {
-      pageTitle: 'Price List',
+      pageTitle: 'Harga Produk',
       resource: 'Master',
       action: 'manage',
       breadcrumb: [
@@ -13,7 +13,7 @@ export default [
           text: 'Master Data',
         },
         {
-          text: 'Price List',
+          text: 'Harga Produk',
           active: true,
         },
       ],
@@ -43,7 +43,7 @@ export default [
     name: 'customer-master',
     component: () => import('@/views/master/customer/List.vue'),
     meta: {
-      pageTitle: 'Price List',
+      pageTitle: 'Customer Toko',
       resource: 'Master',
       action: 'manage',
       breadcrumb: [
@@ -51,7 +51,7 @@ export default [
           text: 'Master Data',
         },
         {
-          text: 'Price List',
+          text: 'Customer Toko',
           active: true,
         },
       ],

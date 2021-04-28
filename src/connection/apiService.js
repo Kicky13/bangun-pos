@@ -297,4 +297,21 @@ export default class ApiService {
         url: this.urlCnf.graphProductGrossing,
       })
     }
+
+    // Admin View
+    getCustomerList(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.getCustomerList,
+        params: param,
+      })
+    }
+
+    getTokoList(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.getTokoList,
+        params: param,
+      })
+    }
 }

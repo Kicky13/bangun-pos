@@ -1,24 +1,24 @@
 export default [
   {
-    header: 'Sales',
-    icon: 'DollarSignIcon',
+    header: 'Transaksi',
+    icon: 'FileTextIcon',
     resource: 'Sales',
     action: 'read',
     children: [
       {
-        title: 'Sales List',
+        title: 'Data Transaksi',
         route: 'list-sale',
-        icon: 'ServerIcon',
+        icon: 'FileTextIcon',
         resource: 'Sales',
         action: 'manage',
       },
-      {
-        title: 'Reporting',
-        route: 'report-sale',
-        icon: 'BookOpenIcon',
-        resource: 'Sales',
-        action: 'manage',
-      },
+      // {
+      //   title: 'Reporting',
+      //   route: 'report-sale',
+      //   icon: 'BookOpenIcon',
+      //   resource: 'Sales',
+      //   action: 'manage',
+      // },
       // {
       //   title: 'Giftcard List',
       //   route: 'giftcard-sale',
