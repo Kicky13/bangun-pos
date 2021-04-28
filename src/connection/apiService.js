@@ -276,4 +276,12 @@ export default class ApiService {
         params: param,
       })
     }
+
+    getTokoList(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.getTokoList,
+        params: param,
+      })
+    }
 }

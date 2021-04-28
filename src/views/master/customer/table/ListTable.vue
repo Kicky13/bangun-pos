@@ -23,6 +23,34 @@
         </b-form-group>
       </div>
       <div style="float:left; !important; margin-left:10px;">
+        <b-form-group>
+          <b-form-input
+            id="customer"
+            v-model="selectedToko"
+            placeholder="Semua Toko Bangunan"
+            list="tb-list"
+          />
+          <datalist id="tb-list">
+            <option
+              v-for="cl in tokoBangunanList"
+              :key="cl.text"
+            >
+              {{ cl.text }}
+            </option>
+          </datalist>
+        </b-form-group>
+      </div>
+      <!-- <div style="float:left; !important; margin-left:10px;">
+        <vue-select
+          class="vue-select"
+          name="select3"
+          :options="options3"
+          :model.sync="result3"
+          :searchable="true"
+          language="zh-CN"
+        />
+      </div> -->
+      <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="secondary"
@@ -59,7 +87,7 @@
               size="sm"
               :variant="paymentVariant(props.row.statusCust)"
             >
-            {{ props.row.statusCust }}
+              {{ props.row.statusCust }}
             </b-button>
           </span>
         </span>
@@ -167,9 +195,11 @@ import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+// import vueSelect from 'vue-select'
 // import AlertToken from '@core/components/expired-token/AlertToken.vue'
 // import AddCustomer from './forms/modals/Add.vue'
 // import { codeBasic } from './search'
+// import 'vue-select/dist/vue-select.css'
 
 const appService = new ApiService()
 
@@ -190,6 +220,7 @@ export default {
     // BForm,
     // BFormInvalidFeedback,
     LoadingGrow,
+    // vueSelect,
     // AlertToken,
   },
   directives: {
@@ -213,6 +244,8 @@ export default {
       selectedStatus: null,
       isLoading: false,
       editForm: false,
+      tokoBangunanList: [],
+      selectedToko: '',
       typeItem: [
         // {
         //   value: null,
@@ -331,6 +364,32 @@ export default {
       searchTerm: '',
       selected: 'Cash',
       option: ['Cash', 'Kredit'],
+      // options3: [{
+      //   label: 'group1',
+      //   options: [{
+      //     text: 'name1',
+      //     value: 'value1',
+      //   }, {
+      //     text: 'name2',
+      //     value: 'value2',
+      //   }, {
+      //     text: 'name3',
+      //     value: 'value3',
+      //   }],
+      // }, {
+      //   label: 'group2',
+      //   options: [{
+      //     text: 'name4',
+      //     value: 'value4',
+      //   }, {
+      //     text: 'name5',
+      //     value: 'value5',
+      //   }, {
+      //     text: 'name6',
+      //     value: 'value6',
+      //   }],
+      // }],
+      // result3: '',
     }
   },
   computed: {
@@ -352,8 +411,22 @@ export default {
       return this.dir
     },
   },
-  watch: {},
+  watch: {
+    searchTerm: {
+      immediate: true,
+      handler() {
+        this.fetchCustomerList()
+      },
+    },
+    selectedToko: {
+      immediate: true,
+      handler() {
+        this.fetchCustomerList()
+      },
+    },
+  },
   created() {
+    this.getAllToko()
     this.fetchCustomerList()
   },
   methods: {
@@ -367,12 +440,31 @@ export default {
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
       return `Rp. ${formatedval}`
     },
+    async getAllToko() {
+      appService.getTokoList().then(response => {
+        const { data } = response.data
+        console.log(data)
+        this.tokoBangunanList = []
+        this.tokoBangunanList.push({
+          value: '',
+          text: 'Semua Toko Bangunan',
+        })
+        if (data) {
+          data.forEach(item => {
+            this.tokoBangunanList.push({
+              value: item.id_toko,
+              text: item.nama_toko,
+            })
+          })
+        }
+      })
+    },
     fetchCustomerList() {
       this.isLoading = true
       appService.getCustomerList({
         // limit: 50,
-        q: '',
-        // page: 1,
+        q: this.searchTerm,
+        id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
       }).then(response => {
         this.rows = []
         const res = response.data
@@ -496,7 +588,7 @@ export default {
       }
       appService.addCustomer(data).then(response => {
         const res = response.data
-        console.log(res)
+        // console.log(res)
         if (res.result) {
           this.fetchCustomerList()
           this.clearForm()
