@@ -267,4 +267,13 @@ export default class ApiService {
     deleteQueue(param) {
       return axios.delete(`${this.urlCnf.addAntrianData}/${param}`)
     }
+
+    // Admin View
+    getCustomerList(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.getCustomerList,
+        params: param,
+      })
+    }
 }
