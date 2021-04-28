@@ -32,26 +32,35 @@ const router = new VueRouter({
 
 router.beforeEach((to, _, next) => {
   const currRoute = router.currentRoute
+  // alert(to)
+  // console.log(to)
+  if (to.name !== null) {
+    if (to.name !== 'auto-login-verify') {
+      const isLoggedIn = isUserLoggedIn()
+      console.log(currRoute)
 
-  if (currRoute.name !== 'auto-login-verify') {
-    const isLoggedIn = isUserLoggedIn()
-    console.log(currRoute)
+      if (!canNavigate(to)) {
+        // Redirect to login if not logged in
+        if (!isLoggedIn) return next({ name: 'auth-login' })
 
-    if (!canNavigate(to)) {
-      // Redirect to login if not logged in
-      if (!isLoggedIn) return next({ name: 'auth-login' })
+        // If logged in => not authorized
+        return next({ name: 'misc-not-authorized' })
+      }
 
-      // If logged in => not authorized
-      return next({ name: 'misc-not-authorized' })
+      // Redirect if logged in
+      if (to.meta.redirectIfLoggedIn && isLoggedIn) {
+        const userData = getUserData()
+        next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
+      }
+    } else {
+      localStorage.removeItem('userData')
+      localStorage.removeItem('clientCode')
+      // alert(to.name)
     }
-
-    // Redirect if logged in
-    if (to.meta.redirectIfLoggedIn && isLoggedIn) {
-      const userData = getUserData()
-      next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
-    }
+    // alert(to.name)
+    return next()
   }
-
+  // alert('Unidentified Visitor')
   return next()
 })
 

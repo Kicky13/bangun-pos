@@ -108,6 +108,7 @@ export default {
 
       // Remove userData from localStorage
       localStorage.removeItem('userData')
+      localStorage.removeItem('clientCode')
 
       // Reset ability
       this.$ability.update(initialAbility)
@@ -123,6 +124,7 @@ export default {
 
       // Remove userData from localStorage
       localStorage.removeItem('userData')
+      localStorage.removeItem('clientCode')
 
       // Reset ability
       this.$ability.update(initialAbility)

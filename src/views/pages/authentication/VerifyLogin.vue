@@ -58,8 +58,10 @@ export default {
     const { route } = useRouter()
     const { token } = route.value.params
     const { role, toko } = authService.getDataToken(token)
-    // console.log(toko)
-    // console.log(role)
+    console.log(toko)
+    console.log(token)
+    console.log(route)
+    console.log(role)
     return {
       token,
       role,
