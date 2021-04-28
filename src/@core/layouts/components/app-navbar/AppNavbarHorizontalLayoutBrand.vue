@@ -3,8 +3,25 @@
     <ul class="nav navbar-nav">
       <li class="nav-item">
         <b-link
+          v-if="userdata.role === 'user'"
           class="navbar-brand"
           to="/mydashboard"
+        >
+          <span class="brand-logo">
+            <b-img
+              :src="appLogoImage"
+              alt="logo"
+              fluid-grow
+            />
+          </span>
+          <h2 class="brand-text mb-0">
+            {{ appName }}
+          </h2>
+        </b-link>
+        <b-link
+          v-if="userdata.role === 'admin'"
+          class="navbar-brand"
+          to="/"
         >
           <span class="brand-logo">
             <b-img
@@ -37,6 +54,11 @@ export default {
     return {
       appName,
       appLogoImage,
+    }
+  },
+  data() {
+    return {
+      userdata: JSON.parse(localStorage.getItem('userData')),
     }
   },
 }
