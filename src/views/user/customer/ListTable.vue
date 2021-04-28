@@ -447,6 +447,7 @@ export default {
   },
   data() {
     return {
+      custUuid: '',
       customerCode: '',
       remainingDebt: 0,
       paymentID: '',
@@ -626,6 +627,7 @@ export default {
       this.customerAddress = ''
     },
     setForm(data) {
+      this.custUuid = data.encodedID
       this.customerID = data.custCode
       this.customerName = data.customer
       this.customerPhone = data.nohp
@@ -698,7 +700,7 @@ export default {
         alamat: this.customerAddress,
         no_references: this.jagobangunRef,
       }
-      appService.updateCustomer(this.customerID, data).then(response => {
+      appService.updateCustomer(this.custUuid, data).then(response => {
         console.log(response)
         this.clearForm()
         this.fetchCustomerList()
