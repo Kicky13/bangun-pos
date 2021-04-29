@@ -150,6 +150,7 @@ export default {
           }
         } else {
           localStorage.removeItem('userData')
+          localStorage.removeItem('clientCode')
           this.$bvModal.show('tokenExpired')
         }
       })

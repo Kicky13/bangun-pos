@@ -30,6 +30,8 @@ export default {
   },
   methods: {
     gotoAksesToko() {
+      localStorage.removeItem('userData')
+      localStorage.removeItem('clientCode')
       appService.toAksesToko()
     },
   },
