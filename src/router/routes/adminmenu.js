@@ -64,7 +64,7 @@ export default [
     component: () => import('@/views/products/category/Category.vue'),
     meta: {
       pageTitle: 'Ketegori',
-      resource: 'Pengaturan Produk',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {
@@ -83,7 +83,7 @@ export default [
     component: () => import('@/views/products/brand/Brand.vue'),
     meta: {
       pageTitle: 'Merek',
-      resource: 'Pengaturan Produk',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {
@@ -98,11 +98,11 @@ export default [
   },
   {
     path: '/product/type',
-    name: 'brand-product',
+    name: 'type-product',
     component: () => import('@/views/products/type/Type.vue'),
     meta: {
       pageTitle: 'Tipe Produk',
-      resource: 'Pengaturan Produk',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {
@@ -117,11 +117,11 @@ export default [
   },
   {
     path: '/product/uom',
-    name: 'brand-product',
+    name: 'uom-product',
     component: () => import('@/views/products/uom/Uom.vue'),
     meta: {
       pageTitle: 'Satuan / UOM',
-      resource: 'Pengaturan Produk',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {
@@ -140,7 +140,7 @@ export default [
     component: () => import('@/views/products/liststd/List.vue'),
     meta: {
       pageTitle: 'Produk Standard',
-      resource: 'Pengaturan Produk',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {
@@ -163,7 +163,7 @@ export default [
       action: 'manage',
       breadcrumb: [
         {
-          text: 'Pengaturan Produk',
+          text: 'ProductSettings',
         },
         {
           text: 'Produk User',
@@ -178,7 +178,7 @@ export default [
     component: () => import('@/views/products/forms/Add.vue'),
     meta: {
       pageTitle: 'Tambah Produk',
-      resource: 'Pengaturan Produk',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {
@@ -197,7 +197,7 @@ export default [
     component: () => import('@/views/products/forms/Import.vue'),
     meta: {
       pageTitle: 'Upload Produk',
-      resource: 'Pengaturan Produk',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {

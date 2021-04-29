@@ -58,6 +58,10 @@ export default {
       subject: 'Master',
     },
     {
+      action: 'manage',
+      subject: 'ProductSettings',
+    },
+    {
       action: 'read',
       subject: 'Auth',
     },
