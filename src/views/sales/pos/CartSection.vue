@@ -150,7 +150,7 @@
                               block
                               variant="outline-secondary"
                               class="btn-icon"
-                              :disabled="item.quantity <= 0"
+                              :disabled="item.quantity <= 1"
                               @click="item.quantity--"
                             >
                               -
@@ -164,7 +164,9 @@
                             <b-form-input
                               v-model.number="item.quantity"
                               class="text-center"
-                              @keypress="inputQuantity"
+                              autocomplete="off"
+                              @keypress="isNumberKey($event, item.stopinput())"
+                              @input="inputQuantity($event, item.kode_produk)"
                             />
                           </b-col>
                           <b-col
@@ -177,6 +179,7 @@
                               block
                               variant="outline-secondary"
                               class="btn-icon"
+                              :disabled="item.quantity >= 99999"
                               @click="item.quantity++"
                             >
                               +
@@ -1211,7 +1214,11 @@ export default {
       parentComponent.$on('addProductToCart', product => {
         const isInCart = this.items.find(item => item.id_produk === product.id_produk)
         if (isInCart) {
-          isInCart.quantity += 1
+          if (isInCart.quantity === 99999) {
+            this.makeToast(isInCart.nama_produk, 'AlertCircleIcon', 'danger', 'Item yang ditambah melebihi batas')
+          } else {
+            isInCart.quantity += 1
+          }
         } else {
           const newProduct = {
             id_produk: product.id_produk,
@@ -1222,10 +1229,16 @@ export default {
             subtotal() {
               return this.price * this.quantity
             },
+            stopinput() {
+              if (this.quantity >= 99999) {
+                return true
+              }
+              return false
+            },
           }
           this.items.unshift(newProduct)
+          this.makeToast(product.nama_produk, 'CoffeeIcon', 'success', 'Berhasil ditambahkan ke keranjang')
         }
-        this.makeToast(product.nama_produk, 'CoffeeIcon', 'success', 'Berhasil ditambahkan ke keranjang')
       })
     },
     async saveTransaction() {
@@ -1419,13 +1432,13 @@ export default {
       }
       return true
     },
-    isNumberKey(event, disc = false) {
+    isNumberKey(event, stop = false) {
       const charCode = (event.which) ? event.which : event.keyCode
       if ((charCode > 31 && (charCode < 48 || charCode > 57))) {
         event.preventDefault()
         return false
       }
-      if (disc) {
+      if (stop) {
         event.preventDefault()
       }
       return true
@@ -1474,11 +1487,23 @@ export default {
       })
       this.$bvModal.hide('cartProductEdit')
     },
-    inputQuantity(event) {
-      this.isNumberKey(event)
-      const quantityValue = Number(event.target.value)
-      if (quantityValue === 99999) {
-        event.preventDefault()
+    inputQuantity(quantity, kode) {
+      let temp = {}
+      if (quantity >= 99999) {
+        this.items.forEach(item => {
+          if (item.kode_produk === kode) {
+            temp = item
+            temp.quantity = 99999
+          }
+        })
+      }
+      if (quantity === '0') {
+        this.items.forEach(item => {
+          if (item.kode_produk === kode) {
+            temp = item
+            temp.quantity = 1
+          }
+        })
       }
     },
     repeateAgain() {
