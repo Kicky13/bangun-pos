@@ -135,7 +135,7 @@
               <b-form-file
                 id="shoplogo"
                 accept="image/jpeg, image/png"
-                :state="logoSize <= 500000"
+                :state="logoSize <= 500000 && allowedTipeFile === 1"
                 @change="saveImage"
               />
               <b-form-invalid-feedback>
@@ -377,6 +377,7 @@ export default {
       identitas: '',
       shopCode: '',
       logoSize: 0,
+      allowedTipeFile: 1,
       shopLogo: null,
       token: '',
       imageURL: null,
@@ -471,6 +472,9 @@ export default {
       }
       if (this.logoSize > 500000) {
         errMsg.push('Ukuran Logo Tidak Boleh Melebihi 500KB')
+      }
+      if (this.allowedTipeFile === 0) {
+        errMsg.push('Harus Menggunkan File Dengan Tipe .PNG / .JPEG')
       }
       if (errMsg.length === 0) {
         return true
@@ -672,23 +676,40 @@ export default {
     },
     saveImage(e) {
       const logo = e.target.files[0]
+      // console.log(logo)
       if (logo) {
         this.logoSize = logo.size
         // console.log(this.logoSize)
-        if (logo.size < 500000) {
+        if (logo.size <= 500000 && ((logo.type).toLowerCase() === 'image/png' || (logo.type).toLowerCase() === 'image/jpeg' || (logo.type).toLowerCase() === 'image/jpg')) {
+          this.allowedTipeFile = 1
           this.shopLogo = logo
           this.imageURL = URL.createObjectURL(logo)
         } else {
           this.shopLogo = null
           this.imageURL = null
-          this.$toast({
-            component: ToastificationContent,
-            props: {
-              title: 'Ukuran Logo Tidak Boleh Melebihi 500KB',
-              icon: 'AlertCircleIcon',
-              variant: 'danger',
-            },
-          })
+          if (logo.size > 500000) {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Ukuran Logo Tidak Boleh Melebihi 500KB',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+              },
+            })
+          }
+          if ((logo.type).toLowerCase() === 'image/png' || (logo.type).toLowerCase() === 'image/jpeg' || (logo.type).toLowerCase() === 'image/jpg') {
+            console.log(logo.type)
+          } else {
+            this.allowedTipeFile = 0
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Harus Menggunkan File Dengan Tipe .PNG / .JPEG',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+              },
+            })
+          }
         }
       } else {
         this.shopLogo = null
@@ -747,6 +768,9 @@ export default {
       }
       if (this.logoSize > 500000) {
         errMsg.push('Ukuran Logo Tidak Boleh Melebihi 500KB')
+      }
+      if (this.allowedTipeFile === 0) {
+        errMsg.push('Harus Menggunkan File Dengan Tipe .PNG / .JPEG')
       }
       if (this.cashier.length === 0) {
         errMsg.push('Tambahkan Cashier Minimal 1')
