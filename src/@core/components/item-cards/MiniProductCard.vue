@@ -33,7 +33,7 @@
       </div>
       <hr style="margin: 7px 0;">
       <span class="font-italic text-dark">
-        Rp. {{ formatPrice(product.price) }} / PCS
+        Rp. {{ formatPrice(product.price) }} / {{ product.nama_uom }}
       </span>
     </div>
   </b-card>

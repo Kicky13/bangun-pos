@@ -3,7 +3,7 @@ export default [
     header: 'Transaksi',
     icon: 'FileTextIcon',
     resource: 'Sales',
-    action: 'read',
+    action: 'manage',
     children: [
       {
         title: 'Data Transaksi',
