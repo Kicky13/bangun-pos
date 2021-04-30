@@ -18,21 +18,6 @@
           </b-form-group>
         </b-col>
         <b-col
-          lg="3"
-          md="3"
-          sm="12"
-        >
-          <v-select
-            v-model="selectItemV"
-            dir="ltr"
-            :options="itemsOptions"
-            label="text"
-            :clearable="false"
-            class="mb-2 item-selector-title"
-            placeholder="Pilih Toko Bangunan"
-          />
-        </b-col>
-        <b-col
           lg="1"
           md="1"
           sm="12"
@@ -41,7 +26,19 @@
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="secondary"
           >
-            Print
+            Cetak
+          </b-button>
+        </b-col><b-col
+          lg="1"
+          md="1"
+          sm="12"
+        >
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="primary"
+            @click="tambahData"
+          >
+            Tambah
           </b-button>
         </b-col>
       </b-row>
@@ -82,29 +79,20 @@
         <span v-if="props.column.field === 'action'">
           <span>
             <b-button
-              v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-              size="sm"
-              variant="outline-secondary"
-              :to="{ name: 'customer-history-trans', params: { id: props.formattedRow.encodedID } }"
-            >
-              List Trans.
-            </b-button>
-            <b-button
-              v-if="props.row.sisaHutang > 0"
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
-              @click="pembayaran(props.formattedRow)"
+              @click="ubahData(props.formattedRow)"
             >
-              Bayar
+              Ubah
             </b-button>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
-              @click="editData(props.formattedRow)"
+              @click="hapusData(props.formattedRow)"
             >
-              Edit
+              Hapus
             </b-button>
           </span>
         </span>
@@ -163,18 +151,110 @@
         </div>
       </template>
     </vue-good-table>
+
+    <!-- Add Customer -->
+    <b-modal
+      id="FormData"
+      centered
+      size="lg"
+      title="Form Kategori"
+      ok-title="Simpan"
+      cancel-title="Tutup"
+      ok-variant="danger"
+      @ok="handleOk"
+    >
+      <b-form>
+        <b-row>
+          <b-col
+            lg="12"
+            md="12"
+            sm="12"
+          >
+            <b-form-group
+              label="Nama Kategori :"
+              label-for="dataName"
+            >
+              <b-form-input
+                id="dataName"
+                v-model="inpName"
+                :state="inpName.length > 0"
+                name="dataName"
+              />
+              <b-form-invalid-feedback>
+                Nama Kategori wajib diisi
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col
+            lg="12"
+            md="12"
+            sm="12"
+          >
+            <b-form-group
+              label="Keterangan :"
+              label-for="dataNotes"
+            >
+              <b-form-textarea
+                id="dataNotes"
+                v-model="inpNotes"
+                name="dataNotes"
+                rows="4"
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </b-form>
+    </b-modal>
+    <b-modal
+      id="askSubmit"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="handleSubmit"
+      @cancel="handleCancel"
+    >
+      <div class="d-block text-center">
+        <h3>Apakah Anda Sudah Yakin ?</h3>
+      </div>
+    </b-modal>
+    <b-modal
+      id="askDelete"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="handleDelete"
+      @cancel="handleCancelDelete"
+    >
+      <div class="d-block text-center">
+        <h3>Apakah Anda Sudah Yakin ?</h3>
+      </div>
+    </b-modal>
+    <!-- End of Customer Add -->
+
   </b-card>
 </template>
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BRow, BCol,
+  BButton, BPagination, BForm, BFormGroup, BFormInput, BFormSelect, BCard, BRow, BCol, BFormTextarea, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
-import vSelect from 'vue-select'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
 
 const appService = new ApiService()
@@ -182,15 +262,17 @@ const appService = new ApiService()
 export default {
   components: {
     BButton,
+    BForm,
     VueGoodTable,
     BPagination,
     BFormGroup,
     BFormInput,
     BFormSelect,
+    BFormTextarea,
+    BFormInvalidFeedback,
     BCard,
     BRow,
     BCol,
-    vSelect,
     LoadingGrow,
   },
   directives: {
@@ -198,171 +280,37 @@ export default {
   },
   data() {
     return {
-      custUuid: '',
-      customerCode: '',
-      remainingDebt: 0,
-      paymentID: '',
-      paySum: 0,
-      selectedType: 1,
-      customerName: '',
-      customerPhone: 0,
-      jagobangunRef: '',
-      identityNumber: '',
-      customerAddress: '',
-      selectedPembayaran: null,
-      selectedStatus: null,
+      inpId: '',
+      inpCode: '',
+      inpName: '',
+      inpNotes: '',
       isLoading: false,
       editForm: false,
+      deleteData: [],
       tokoBangunanList: [],
       selectedToko: '',
-      selectItemV: [{
-        value: '',
-        text: 'Semua Toko Bangunan',
-      }],
-      itemsOptions: [
-        {
-          itemTitle: 'App Design',
-          cost: 24,
-          qty: 1,
-          description: 'Designed UI kit & app pages.',
-        },
-        {
-          itemTitle: 'App Customization',
-          cost: 26,
-          qty: 1,
-          description: 'Customization & Bug Fixes.',
-        },
-        {
-          itemTitle: 'ABC Template',
-          cost: 28,
-          qty: 1,
-          description: 'Bootstrap 4 admin template.',
-        },
-        {
-          itemTitle: 'App Development',
-          cost: 32,
-          qty: 1,
-          description: 'Native App Development.',
-        },
-      ],
-      typeItem: [
-        // {
-        //   value: null,
-        //   text: 'Select Pembayaran',
-        //   disabled: true,
-        // },
-        {
-          value: 1,
-          text: 'Cash',
-        },
-        // {
-        //   value: 2,
-        //   text: 'Transfer',
-        // },
-        // {
-        //   value: 3,
-        //   text: 'Gopay',
-        // },
-      ],
-      statusItems: [
-        {
-          value: null,
-          text: 'Semua',
-        },
-        {
-          value: 'Lunas',
-          text: 'Lunas',
-        },
-        {
-          value: 'Belum Lunas',
-          text: 'Belum Lunas',
-        },
-      ],
       pageLength: 10,
       dir: false,
       columns: [
         {
-          label: 'Kode Customer',
-          field: 'custCode',
-        },
-        {
-          label: 'Encoded ID',
+          label: 'ID',
           field: 'encodedID',
-          hidden: true,
         },
         {
-          label: 'ID Customer',
-          field: 'customerID',
-          hidden: true,
+          label: 'Kode',
+          field: 'code',
         },
         {
-          label: 'Alamat Customer',
-          field: 'address',
-          hidden: true,
+          label: 'Nama',
+          field: 'name',
         },
         {
-          label: 'No Identitas',
-          field: 'identitas',
-          hidden: true,
+          label: 'Action',
+          field: 'action',
         },
-        {
-          label: 'Customer',
-          field: 'customer',
-        },
-        {
-          label: 'No. Handphone',
-          field: 'nohp',
-        },
-        {
-          label: 'Toko Bangunan',
-          field: 'shopName',
-        },
-        {
-          label: 'Jumlah Trans.',
-          field: 'jumTrans',
-        },
-        {
-          label: 'Nilai Total Trans.',
-          field: 'totalTrans',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Total Hutang',
-          field: 'totalHutang',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Hutang Dibayar',
-          field: 'sudahBayar',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Sisa Hutang',
-          field: 'sisaHutang',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Status',
-          field: 'stCustomer',
-          sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['TERMINATED', 'ACTIVE'],
-          },
-        },
-        // {
-        //   label: 'Action',
-        //   field: 'action',
-        // },
       ],
       rows: [],
       searchTerm: '',
-      selected: 'Cash',
-      option: ['Cash', 'Kredit'],
     }
   },
   computed: {
@@ -384,23 +332,9 @@ export default {
       return this.dir
     },
   },
-  watch: {
-    searchTerm: {
-      immediate: true,
-      handler() {
-        this.fetchCustomerList()
-      },
-    },
-    selectItemV: {
-      immediate: true,
-      handler() {
-        this.fetchCustomerList()
-      },
-    },
-  },
+  watch: {},
   created() {
-    this.getAllToko()
-    this.fetchCustomerList()
+    this.fetchDataList()
   },
   methods: {
     formatPrice(value) {
@@ -408,51 +342,16 @@ export default {
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
       return `Rp. ${formatedval}`
     },
-    async getAllToko() {
-      appService.getTokoList().then(response => {
-        const { data } = response.data
-        console.log(data)
-        this.tokoBangunanList = []
-        this.itemsOptions = []
-        this.tokoBangunanList.push({
-          value: '',
-          text: 'Semua Toko Bangunan',
-        })
-        if (data) {
-          data.forEach(item => {
-            this.tokoBangunanList.push({
-              value: item.id_toko,
-              text: item.nama_toko,
-            })
-          })
-        }
-        this.itemsOptions = this.tokoBangunanList
-      })
-    },
-    fetchCustomerList() {
+    fetchDataList() {
       this.isLoading = true
-      appService.getCustomerList({
-        // limit: 50,
-        q: this.searchTerm,
-        // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
-        id_toko: this.selectItemV.value,
-      }).then(response => {
+      appService.getAdminCategory().then(response => {
         this.rows = []
         const res = response.data
-        // console.log(res)
         this.isLoading = false
         const resdata = res.data
         if (resdata) {
           resdata.forEach(this.setupRows)
         }
-        // if (res.result) {
-        //   const resdata = res.data
-        //   if (resdata) {
-        //     resdata.forEach(this.setupRows)
-        //   }
-        // } else {
-        //   // this.$bvModal.show('tokenExpired')
-        // }
       }).catch(err => {
         console.log(err)
         this.isLoading = false
@@ -460,26 +359,164 @@ export default {
     },
     setupRows(data) {
       const res = {
-        encodedID: data.uuid,
-        custCode: data.kode_customer,
-        customerID: data.id,
-        customer: data.nama,
-        shopName: `${data.toko.kode_toko} - ${data.toko.nama_toko}`,
-        nohp: data.telp_customer,
-        address: data.alamat,
-        identitas: data.no_identitas,
-        statusCust: data.status,
-        jumTrans: data.total_transaction,
-        totalTrans: data.sum_transaction,
-        totalHutang: data.paid_debt + data.remaining_debt,
-        sudahBayar: data.paid_debt,
-        sisaHutang: data.remaining_debt,
+        encodedID: data.id,
+        code: data.kode_category,
+        name: (data.nama_category).toUpperCase(),
       }
       this.rows.push(res)
     },
     refreshTable() {
       this.rows = []
-      this.fetchCustomerList()
+      this.fetchDataList()
+    },
+    clearForm() {
+      this.inpId = ''
+      this.inpCode = ''
+      this.inpName = ''
+      this.inpNotes = ''
+    },
+    tambahData() {
+      this.clearForm()
+      this.editForm = false
+      this.$bvModal.show('FormData')
+    },
+    ubahData(propsData) {
+      this.clearForm()
+      this.setForm(propsData)
+      this.editForm = true
+      this.$bvModal.show('FormData')
+    },
+    setForm(data) {
+      console.log(data)
+      this.inpId = data.encodedID
+      this.inpCode = data.code
+      this.inpName = data.name
+      this.inpNotes = ''
+    },
+    handleOk(okBtn) {
+      if (this.formValidate()) {
+        this.$bvModal.show('askSubmit')
+      } else {
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Form Tidak Lengkap',
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+            text: 'Mohon Untuk Melengkapi Form Sebelum Menyimpan Data',
+          },
+        })
+        okBtn.preventDefault()
+      }
+    },
+    handleCancel() {
+      this.$bvModal.show('FormData')
+    },
+    handleCancelDelete() {
+      this.deleteData = []
+    },
+    handleSubmit() {
+      // console.log('OK')
+      this.isLoading = true
+      if (this.editForm) {
+        this.fetchUpdateCustomer()
+      } else {
+        this.fetchDataInsert()
+      }
+    },
+    fetchUpdateCustomer() {
+      const data = {
+        kode_category: this.inpCode,
+        nama_category: this.inpName,
+        note_category: this.inpNotes,
+      }
+      appService.updateAdminCategory(this.inpId, data).then(response => {
+        console.log(response)
+        this.clearForm()
+        this.fetchDataList()
+        this.editForm = false
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    fetchDataInsert() {
+      const data = {
+        kode_category: this.inpCode,
+        nama_category: this.inpName,
+        note_category: this.inpNotes,
+      }
+      appService.addAdminCategory(data).then(response => {
+        const res = response.data
+        console.log(res)
+        if (res.result) {
+          this.fetchDataList()
+          this.clearForm()
+        } else {
+          const errMsg = res.message
+          errMsg.forEach(msg => {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Error',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+                text: msg,
+              },
+            })
+          })
+        }
+        this.isLoading = false
+      }).catch(err => {
+        console.log(err)
+        this.isLoading = false
+      })
+    },
+    hapusData(propsData) {
+      console.log(propsData)
+      this.deleteData = propsData
+      console.log(this.deleteData)
+      this.$bvModal.show('askDelete')
+    },
+    handleDelete() {
+      console.log(this.deleteData)
+      appService.deleteAdminCategory(this.deleteData.encodedID).then(response => {
+        console.log(response)
+        this.fetchDataList()
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Berhasil Dihapus',
+            icon: 'CoffeIcon',
+            variant: 'success',
+            text: 'Customer Berhasil Dihapus',
+          },
+        })
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    formValidate() {
+      const errMsg = []
+      if (this.inpName.length === 0) {
+        errMsg.push('Nama Kategori Wajib Diisi')
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      if (errMsg.length === 0) {
+        return true
+      }
+      return false
     },
   },
 }

@@ -66,4 +66,8 @@ export default {
   // Master Data :
   getCustomerList: 'admin/customer',
   getTokoList: 'admin/tokobangunan',
+  getAdminCategory: 'admin/category/listCategory',
+  addAdminCategory: 'admin/category/store',
+  updateAdminCategory: 'admin/category/update/',
+  deleteAdminCategory: 'admin/category/delete/',
 }
