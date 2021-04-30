@@ -232,6 +232,7 @@
                 v-ripple.400="'rgba(186, 191, 199, 0.15)'"
                 size="sm"
                 variant="outline-secondary"
+                @click="lanjutAntrian(props.row.uuid)"
               >
                 Lanjut
               </b-button>
@@ -590,6 +591,7 @@ export default {
             kode_transaksi: dataAntrian.kode_transaksi,
             nama_customer: dataAntrian.nama_customer || 'Walk-in Customer',
             no_references: dataAntrian.no_references || '-',
+            id_kasir: dataAntrian.id_kasir,
             sub_total: data.sub_total,
             discount: data.discount,
             tax: data.tax,
@@ -664,6 +666,11 @@ export default {
           this.getAllAntrian()
         })
       }
+    },
+    lanjutAntrian(id) {
+      const lanjutData = this.listAntrian.find(antrian => antrian.uuid === id)
+      parentComponent.$emit('dataAntrian', lanjutData)
+      this.$bvModal.hide('listAntrian')
     },
   },
   setup() {

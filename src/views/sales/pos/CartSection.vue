@@ -1135,6 +1135,7 @@ export default {
   created() {
     window.addEventListener('resize', this.initTrHeight)
     this.addProductToList()
+    this.getAntrianData()
   },
   destroyed() {
     window.removeEventListener('resize', this.initTrHeight)
@@ -1173,11 +1174,13 @@ export default {
         const { data } = response.data
         if (data) {
           this.cashierList.push({
+            id: null,
             value: null,
             text: 'Pilih Kasir',
           })
           data.forEach(item => {
             this.cashierList.push({
+              id: item.id,
               value: item.uuid,
               text: item.name,
             })
@@ -1237,7 +1240,7 @@ export default {
             },
           }
           this.items.unshift(newProduct)
-          this.makeToast(product.nama_produk, 'CoffeeIcon', 'success', 'Berhasil ditambahkan ke keranjang')
+          this.makeToast(product.nama_produk, 'CoffeeIcon', 'success', 'Berhasil ditambahkan')
         }
       })
     },
@@ -1411,6 +1414,10 @@ export default {
       return false
     },
     formSaveTransactionValidate() {
+      if (!this.quantityValidate()) {
+        this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Quantity item masih kosong')
+        return false
+      }
       if (!this.selectedPaymentMethod) {
         this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Silahkan pilih tipe pembayaran terlebih dahulu')
         return false
@@ -1428,6 +1435,10 @@ export default {
     addToAntrianValidate() {
       if (!this.selectedCashier) {
         this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Silahkan pilih kasir terlebih dahulu')
+        return false
+      }
+      if (!this.quantityValidate()) {
+        this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Quantity item masih kosong')
         return false
       }
       return true
@@ -1505,6 +1516,38 @@ export default {
           }
         })
       }
+    },
+    getAntrianData() {
+      parentComponent.$on('dataAntrian', dataAntrian => {
+        this.selectedCustomer = this.customerList.find(customer => customer.text === dataAntrian.nama_customer).text
+        this.selectedCashier = this.cashierList.find(cashier => cashier.id === dataAntrian.id_kasir).value
+        appService.getDetailTransaction(dataAntrian.uuid).then(response => {
+          const { data } = response
+          console.log(data)
+          const itemsInCart = data.data.detail
+          itemsInCart.forEach(item => {
+            this.items.push({
+              id_produk: item.product.id_produk,
+              kode_produk: item.product.kode_produk,
+              price: item.price,
+              nama_produk: item.product.nama_produk,
+              quantity: item.qty,
+              subtotal() {
+                return this.price * this.quantity
+              },
+              stopinput() {
+                if (this.quantity >= 99999) {
+                  return true
+                }
+                return false
+              },
+            })
+          })
+        })
+      })
+    },
+    quantityValidate() {
+      return this.items.find(item => item.quantity > 0)
     },
     repeateAgain() {
       this.items.push({
