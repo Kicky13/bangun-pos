@@ -314,4 +314,35 @@ export default class ApiService {
         params: param,
       })
     }
+
+    getAdminCategory(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getAdminCategory,
+        params: param,
+      })
+    }
+
+    addAdminCategory(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.addAdminCategory,
+        data: param,
+      })
+    }
+
+    updateAdminCategory(id, param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.updateAdminCategory + id,
+        data: param,
+      })
+    }
+
+    deleteAdminCategory(id) {
+      return axios({
+        method: 'delete',
+        url: this.urlCnf.deleteAdminCategory + id,
+      })
+    }
 }
