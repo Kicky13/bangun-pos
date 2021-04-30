@@ -300,6 +300,7 @@
       </vue-good-table>
     </b-modal>
     <!-- End of Antrian Table -->
+    <alert-token />
   </div>
 </template>
 
@@ -317,6 +318,7 @@ import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 import store from '@/store/index'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
 import { useEcommerceUi } from './ActionHandling'
 import { parentComponent } from './PageContent.vue'
 
@@ -344,6 +346,7 @@ export default {
     VueGoodTable,
     BFormSelect,
     BBadge,
+    AlertToken,
   },
   data() {
     return {
@@ -474,14 +477,19 @@ export default {
   methods: {
     async getAllCategories() {
       appService.getCategoryList().then(response => {
-        const { data } = response.data
-        if (data) {
-          data.forEach(item => {
-            this.categoryList.push({
-              id: item.id,
-              name: item.nama_category,
+        const { result } = response.data
+        if (result) {
+          const { data } = response.data
+          if (data) {
+            data.forEach(item => {
+              this.categoryList.push({
+                id: item.id,
+                name: (item.nama_category).toUpperCase(),
+              })
             })
-          })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -490,33 +498,43 @@ export default {
         id_category: id,
       }
       appService.getSubcategoryList(param).then(response => {
-        const { data } = response.data
-        if (data) {
-          this.subCategoryList.push({
-            id: null,
-            name: 'Semua Sub Kategori',
-          })
-          if (param.id_category) {
-            data.forEach(item => {
-              this.subCategoryList.push({
-                id: item.id,
-                name: item.nama_category,
-              })
+        const { result } = response.data
+        if (result) {
+          const { data } = response.data
+          if (data) {
+            this.subCategoryList.push({
+              id: null,
+              name: 'Semua Sub Kategori',
             })
+            if (param.id_category) {
+              data.forEach(item => {
+                this.subCategoryList.push({
+                  id: item.id,
+                  name: (item.nama_category).toUpperCase(),
+                })
+              })
+            }
           }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
     async getAllBrands() {
       appService.getBrandList().then(response => {
-        const { data } = response.data
-        if (data) {
-          data.forEach(item => {
-            this.brandList.push({
-              id: item.id,
-              name: item.nama_brand,
+        const { result } = response.data
+        if (result) {
+          const { data } = response.data
+          if (data) {
+            data.forEach(item => {
+              this.brandList.push({
+                id: item.id,
+                name: (item.nama_brand).toUpperCase(),
+              })
             })
-          })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -528,7 +546,7 @@ export default {
       this.subCategoryList = []
       this.selectedCategory = {
         id: param.id,
-        name: param.name,
+        name: (param.name).toUpperCase(),
       }
       this.selectedSubCategory = {
         id: null,
@@ -540,14 +558,14 @@ export default {
     async getSubCategory(param) {
       this.selectedSubCategory = {
         id: param.id,
-        name: param.name,
+        name: (param.name).toUpperCase(),
       }
       this.getAllProducts()
     },
     async getBrand(param) {
       this.selectedBrand = {
         id: param.id,
-        name: param.name,
+        name: (param.name).toUpperCase(),
       }
       this.getAllProducts()
     },
@@ -596,21 +614,27 @@ export default {
         param.brand = this.selectedBrand.id
       }
       appService.getProductTokoList(param).then(response => {
-        const { data } = response.data
-        this.totalProduct = data.length
-        this.productList = []
-        if (data) {
-          data.forEach(item => {
-            const product = {
-              id_produk: item.id_produk,
-              kode_produk: item.kode_produk,
-              img_produk: item.img_produk ? item.img_produk : '/img/06.95d1c509.jpg',
-              price: item.price,
-              nama_produk: item.nama_produk,
-            }
-            this.productList.push(product)
-          })
-          this.productList = this.productList.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage)
+        const { result } = response.data
+        if (result) {
+          const { data } = response.data
+          this.totalProduct = data.length
+          this.productList = []
+          if (data) {
+            data.forEach(item => {
+              const product = {
+                id_produk: item.id_produk,
+                kode_produk: item.kode_produk,
+                img_produk: item.img_produk ? item.img_produk : '/img/06.95d1c509.jpg',
+                price: item.price,
+                nama_produk: item.nama_produk,
+                nama_uom: (item.nama_uom).toUpperCase(),
+              }
+              this.productList.push(product)
+            })
+            this.productList = this.productList.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage)
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },

@@ -710,7 +710,7 @@ export default {
             itemlist.forEach(item => {
               this.categoryItems.push({
                 value: item.id,
-                text: item.nama_category,
+                text: (item.nama_category).toUpperCase(),
               })
             })
           } else {
@@ -750,7 +750,7 @@ export default {
             itemlist.forEach(item => {
               this.subCategoryItems.push({
                 value: item.id,
-                text: item.nama_category,
+                text: (item.nama_category).toUpperCase(),
               })
             })
           } else {
@@ -787,7 +787,7 @@ export default {
             itemlist.forEach(item => {
               this.brandItems.push({
                 value: item.id,
-                text: item.nama_brand,
+                text: (item.nama_brand).toUpperCase(),
               })
             })
           } else {
@@ -824,7 +824,7 @@ export default {
             itemlist.forEach(item => {
               this.typeItems.push({
                 value: item.id,
-                text: item.nama_type,
+                text: (item.nama_type).toUpperCase(),
               })
             })
           } else {
@@ -861,7 +861,7 @@ export default {
             itemlist.forEach(item => {
               this.unitItems.push({
                 value: item.id,
-                text: item.nama_uom,
+                text: (item.nama_uom).toUpperCase(),
               })
             })
           } else {

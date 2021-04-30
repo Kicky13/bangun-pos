@@ -286,7 +286,7 @@ export default {
             itemlist.forEach(item => {
               this.sortByCategoryOptions.push({
                 value: item.id,
-                text: item.nama_category,
+                text: (item.nama_category).toUpperCase(),
               })
             })
           } else {
@@ -323,7 +323,7 @@ export default {
             itemlist.forEach(item => {
               this.sortBySubCategoryOptions.push({
                 value: item.id,
-                text: item.nama_category,
+                text: (item.nama_category).toUpperCase(),
               })
             })
           } else {
@@ -357,7 +357,7 @@ export default {
             itemlist.forEach(item => {
               this.sortByBrandOptions.push({
                 value: item.id,
-                text: item.nama_brand,
+                text: (item.nama_brand).toUpperCase(),
               })
             })
           } else {
@@ -392,7 +392,7 @@ export default {
             itemlist.forEach(item => {
               this.typeItems.push({
                 value: item.id,
-                text: item.nama_type,
+                text: (item.nama_type).toUpperCase(),
               })
             })
           } else {
@@ -427,7 +427,7 @@ export default {
             itemlist.forEach(item => {
               this.unitItems.push({
                 value: item.id,
-                text: item.nama_uom,
+                text: (item.nama_uom).toUpperCase(),
               })
             })
           } else {
@@ -475,7 +475,7 @@ export default {
               this.productStoreList.push({
                 id: item.kode_produk,
                 name: item.nama_produk,
-                qty: item.nama_uom,
+                qty: (item.nama_uom).toUpperCase(),
                 price: item.price,
                 image: item.img_produk,
                 id_produk: item.id_produk,
@@ -483,15 +483,15 @@ export default {
                 nama_produk: item.nama_produk,
                 img_produk: item.img_produk,
                 id_category: item.id_category,
-                nama_category: item.nama_category,
+                nama_category: (item.nama_category).toUpperCase(),
                 id_subcategory: item.id_subcategory,
-                nama_subcategory: item.nama_subcategory,
+                nama_subcategory: (item.nama_subcategory).toUpperCase(),
                 id_brand: item.id_brand,
-                nama_brand: item.nama_brand,
+                nama_brand: (item.nama_brand).toUpperCase(),
                 id_type: item.id_type,
-                nama_type: item.nama_type,
+                nama_type: (item.nama_type).toUpperCase(),
                 id_uom: item.id_uom,
-                nama_uom: item.nama_uom,
+                nama_uom: (item.nama_uom).toUpperCase(),
                 id_price: item.id_price,
                 is_available: item.is_available,
                 flag: item.flag,
