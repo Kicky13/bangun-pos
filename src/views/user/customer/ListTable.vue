@@ -748,6 +748,7 @@ export default {
     handleDelete() {
       this.isLoading = true
       const { selectedRows } = this.$refs.dataCustomer
+      // console.log(selectedRows)
       if (selectedRows.length > 0) {
         selectedRows.forEach(this.fetchDeleteCustomer)
         this.isLoading = false

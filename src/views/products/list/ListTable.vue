@@ -219,50 +219,12 @@ export default {
         value: '',
         text: 'Semua Toko Bangunan',
       }],
-      itemsOptions: [
-        {
-          itemTitle: 'App Design',
-          cost: 24,
-          qty: 1,
-          description: 'Designed UI kit & app pages.',
-        },
-        {
-          itemTitle: 'App Customization',
-          cost: 26,
-          qty: 1,
-          description: 'Customization & Bug Fixes.',
-        },
-        {
-          itemTitle: 'ABC Template',
-          cost: 28,
-          qty: 1,
-          description: 'Bootstrap 4 admin template.',
-        },
-        {
-          itemTitle: 'App Development',
-          cost: 32,
-          qty: 1,
-          description: 'Native App Development.',
-        },
-      ],
+      itemsOptions: [],
       typeItem: [
-        // {
-        //   value: null,
-        //   text: 'Select Pembayaran',
-        //   disabled: true,
-        // },
         {
           value: 1,
           text: 'Cash',
         },
-        // {
-        //   value: 2,
-        //   text: 'Transfer',
-        // },
-        // {
-        //   value: 3,
-        //   text: 'Gopay',
-        // },
       ],
       statusItems: [
         {
@@ -282,66 +244,44 @@ export default {
       dir: false,
       columns: [
         {
-          label: 'Kode Customer',
+          label: 'Kode Produk',
           field: 'custCode',
         },
         {
-          label: 'Encoded ID',
-          field: 'encodedID',
-          hidden: true,
-        },
-        {
-          label: 'ID Customer',
+          label: 'Nama Produk',
           field: 'customerID',
-          hidden: true,
         },
         {
-          label: 'Alamat Customer',
+          label: 'Keterangan',
           field: 'address',
-          hidden: true,
         },
         {
-          label: 'No Identitas',
+          label: 'Ketegori',
           field: 'identitas',
-          hidden: true,
         },
         {
-          label: 'Customer',
+          label: 'Sub-Kategori',
           field: 'customer',
         },
         {
-          label: 'No. Handphone',
+          label: 'Merek',
           field: 'nohp',
         },
         {
-          label: 'Toko Bangunan',
+          label: 'Tipe',
           field: 'shopName',
         },
         {
-          label: 'Jumlah Trans.',
+          label: 'Satuan / UOM',
           field: 'jumTrans',
         },
         {
-          label: 'Nilai Total Trans.',
+          label: 'Toko / Penjual',
+          field: 'jumTrans',
+        },
+        {
+          label: 'Harga Jual',
           field: 'totalTrans',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Total Hutang',
-          field: 'totalHutang',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Hutang Dibayar',
-          field: 'sudahBayar',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Sisa Hutang',
-          field: 'sisaHutang',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
@@ -349,15 +289,11 @@ export default {
           label: 'Status',
           field: 'stCustomer',
           sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['TERMINATED', 'ACTIVE'],
-          },
+          // filterOptions: {
+          //   enabled: true,
+          //   filterDropdownItems: ['TERMINATED', 'ACTIVE'],
+          // },
         },
-        // {
-        //   label: 'Action',
-        //   field: 'action',
-        // },
       ],
       rows: [],
       searchTerm: '',

@@ -345,4 +345,152 @@ export default class ApiService {
         url: this.urlCnf.deleteAdminCategory + id,
       })
     }
+
+    getAdminPriceList(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.getAdminPriceList,
+        params: param,
+      })
+    }
+
+    getAdminSalesList(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.getAdminSalesList,
+        params: param,
+      })
+    }
+
+    getAdminTokoList(param) {
+      return axios({
+        method: 'get',
+        url: this.urlCnf.getAdminTokoList,
+        params: param,
+      })
+    }
+
+    getAdminBrand(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getAdminBrand,
+        params: param,
+      })
+    }
+
+    addAdminBrand(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.addAdminBrand,
+        data: param,
+      })
+    }
+
+    updateAdminBrand(id, param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.updateAdminBrand + id,
+        data: param,
+      })
+    }
+
+    deleteAdminBrand(id) {
+      return axios({
+        method: 'delete',
+        url: this.urlCnf.deleteAdminBrand + id,
+      })
+    }
+
+    getAdminType(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getAdminType,
+        params: param,
+      })
+    }
+
+    addAdminType(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.addAdminType,
+        data: param,
+      })
+    }
+
+    updateAdminType(id, param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.updateAdminType + id,
+        data: param,
+      })
+    }
+
+    deleteAdminType(id) {
+      return axios({
+        method: 'delete',
+        url: this.urlCnf.deleteAdminType + id,
+      })
+    }
+
+    getAdminUom(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getAdminUom,
+        params: param,
+      })
+    }
+
+    addAdminUom(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.addAdminUom,
+        data: param,
+      })
+    }
+
+    updateAdminUom(id, param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.updateAdminUom + id,
+        data: param,
+      })
+    }
+
+    deleteAdminUom(id) {
+      return axios({
+        method: 'delete',
+        url: this.urlCnf.deleteAdminUom + id,
+      })
+    }
+
+    getAdminSubCategory(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getAdminSubCategory,
+        params: param,
+      })
+    }
+
+    addAdminSubCategory(param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.addAdminSubCategory,
+        data: param,
+      })
+    }
+
+    updateAdminSubCategory(id, param) {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.updateAdminSubCategory + id,
+        data: param,
+      })
+    }
+
+    deleteAdminSubCategory(id) {
+      return axios({
+        method: 'delete',
+        url: this.urlCnf.deleteAdminSubCategory + id,
+      })
+    }
 }

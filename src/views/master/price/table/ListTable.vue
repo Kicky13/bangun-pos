@@ -349,10 +349,10 @@ export default {
           label: 'Status',
           field: 'stCustomer',
           sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['TERMINATED', 'ACTIVE'],
-          },
+          // filterOptions: {
+          //   enabled: true,
+          //   filterDropdownItems: ['TERMINATED', 'ACTIVE'],
+          // },
         },
         // {
         //   label: 'Action',
@@ -431,7 +431,7 @@ export default {
     },
     fetchCustomerList() {
       this.isLoading = true
-      appService.getCustomerList({
+      appService.getAdminPriceList({
         // limit: 50,
         q: this.searchTerm,
         // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
