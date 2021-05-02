@@ -66,14 +66,26 @@
         slot="table-row"
         slot-scope="props"
       >
-        <span v-if="props.column.field === 'stCustomer'">
+        <span v-if="props.column.field === 'sTransStatus'">
           <span>
             <b-button
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
-              :variant="paymentVariant(props.row.statusCust)"
+              :variant="statusVariant(props.row.transStatus)"
             >
-              {{ props.row.statusCust }}
+              {{ props.row.transStatus }}
+            </b-button>
+          </span>
+        </span>
+
+        <span v-if="props.column.field === 'sTransType'">
+          <span>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
+              :variant="paymentVariant(props.row.transType)"
+            >
+              {{ props.row.transType }}
             </b-button>
           </span>
         </span>
@@ -282,82 +294,67 @@ export default {
       dir: false,
       columns: [
         {
-          label: 'Kode Customer',
-          field: 'custCode',
+          label: 'Kode Transaksi',
+          field: 'transCode',
         },
         {
-          label: 'Encoded ID',
-          field: 'encodedID',
-          hidden: true,
-        },
-        {
-          label: 'ID Customer',
-          field: 'customerID',
-          hidden: true,
-        },
-        {
-          label: 'Alamat Customer',
-          field: 'address',
-          hidden: true,
-        },
-        {
-          label: 'No Identitas',
-          field: 'identitas',
-          hidden: true,
+          label: 'Tanggal',
+          field: 'tglTrans',
         },
         {
           label: 'Customer',
           field: 'customer',
         },
         {
-          label: 'No. Handphone',
-          field: 'nohp',
+          label: 'Kasir',
+          field: 'cashier',
         },
         {
-          label: 'Toko Bangunan',
-          field: 'shopName',
-        },
-        {
-          label: 'Jumlah Trans.',
-          field: 'jumTrans',
-        },
-        {
-          label: 'Nilai Total Trans.',
-          field: 'totalTrans',
+          label: 'Sub Total',
+          field: 'subTotalTrans',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
-          label: 'Total Hutang',
-          field: 'totalHutang',
+          label: 'Diskon',
+          field: 'discountTrans',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
-          label: 'Hutang Dibayar',
-          field: 'sudahBayar',
+          label: 'Ongkir',
+          field: 'ongkirTrans',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
-          label: 'Sisa Hutang',
-          field: 'sisaHutang',
+          label: 'Pajak',
+          field: 'pajakTrans',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
+        },
+        {
+          label: 'No. Referensi',
+          field: 'refNumber',
+        },
+        {
+          label: 'Pembayaran',
+          field: 'sTransType',
+          sortable: false,
+          // filterOptions: {
+          //   enabled: true,
+          //   filterDropdownItems: ['CASH', 'KREDIT'],
+          // },
         },
         {
           label: 'Status',
-          field: 'stCustomer',
+          field: 'sTransStatus',
           sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['TERMINATED', 'ACTIVE'],
-          },
+          // filterOptions: {
+          //   enabled: true,
+          //   filterDropdownItems: ['PAID', 'UNPAID'],
+          // },
         },
-        // {
-        //   label: 'Action',
-        //   field: 'action',
-        // },
       ],
       rows: [],
       searchTerm: '',
@@ -368,8 +365,15 @@ export default {
   computed: {
     paymentVariant() {
       const statusColor = {
-        ACTIVE: 'outline-secondary',
-        TERMINATED: 'outline-danger',
+        CASH: 'outline-secondary',
+        KREDIT: 'outline-danger',
+      }
+      return status => statusColor[status]
+    },
+    statusVariant() {
+      const statusColor = {
+        PAID: 'outline-secondary',
+        UNPAID: 'outline-danger',
       }
       return status => statusColor[status]
     },
@@ -431,7 +435,7 @@ export default {
     },
     fetchCustomerList() {
       this.isLoading = true
-      appService.getCustomerList({
+      appService.getAdminSalesList({
         // limit: 50,
         q: this.searchTerm,
         // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
@@ -461,19 +465,17 @@ export default {
     setupRows(data) {
       const res = {
         encodedID: data.uuid,
-        custCode: data.kode_customer,
-        customerID: data.id,
-        customer: data.nama,
-        shopName: `${data.toko.kode_toko} - ${data.toko.nama_toko}`,
-        nohp: data.telp_customer,
-        address: data.alamat,
-        identitas: data.no_identitas,
-        statusCust: data.status,
-        jumTrans: data.total_transaction,
-        totalTrans: data.sum_transaction,
-        totalHutang: data.paid_debt + data.remaining_debt,
-        sudahBayar: data.paid_debt,
-        sisaHutang: data.remaining_debt,
+        transCode: data.kode_transaksi,
+        customer: data.nama_customer,
+        cashier: data.kasir.nama,
+        refNumber: data.no_references,
+        transStatus: data.status,
+        transType: data.payment_type_str,
+        subTotalTrans: data.sub_total,
+        discountTrans: data.discount,
+        ongkirTrans: data.shipping,
+        pajakTrans: data.tax,
+        tglTrans: data.date_transaction,
       }
       this.rows.push(res)
     },

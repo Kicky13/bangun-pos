@@ -307,20 +307,37 @@ export default {
       dir: false,
       columns: [
         {
-          label: 'ID',
-          field: 'encodedID',
-        },
-        {
-          label: 'Kode',
-          field: 'code',
-        },
-        {
-          label: 'Nama',
+          label: 'Kode Produk',
           field: 'name',
         },
         {
-          label: 'Action',
-          field: 'action',
+          label: 'Nama Produk',
+          field: 'name',
+        },
+        {
+          label: 'Gambar Produk',
+          field: 'name',
+          sortable: false,
+        },
+        {
+          label: 'Ketegori',
+          field: 'name',
+        },
+        {
+          label: 'Sub-Kategori',
+          field: 'name',
+        },
+        {
+          label: 'Merek',
+          field: 'name',
+        },
+        {
+          label: 'Tipe',
+          field: 'name',
+        },
+        {
+          label: 'Satuan / UOM',
+          field: 'name',
         },
       ],
       rows: [],

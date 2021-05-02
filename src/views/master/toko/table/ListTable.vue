@@ -18,21 +18,6 @@
           </b-form-group>
         </b-col>
         <b-col
-          lg="3"
-          md="3"
-          sm="12"
-        >
-          <v-select
-            v-model="selectItemV"
-            dir="ltr"
-            :options="itemsOptions"
-            label="text"
-            :clearable="false"
-            class="mb-2 item-selector-title"
-            placeholder="Pilih Toko Bangunan"
-          />
-        </b-col>
-        <b-col
           lg="1"
           md="1"
           sm="12"
@@ -171,7 +156,7 @@ import {
   BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BRow, BCol,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
-import vSelect from 'vue-select'
+// import vSelect from 'vue-select'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
@@ -190,7 +175,7 @@ export default {
     BCard,
     BRow,
     BCol,
-    vSelect,
+    // vSelect,
     LoadingGrow,
   },
   directives: {
@@ -282,77 +267,40 @@ export default {
       dir: false,
       columns: [
         {
-          label: 'Kode Customer',
-          field: 'custCode',
-        },
-        {
-          label: 'Encoded ID',
+          label: 'Kode Toko',
           field: 'encodedID',
-          hidden: true,
         },
         {
-          label: 'ID Customer',
-          field: 'customerID',
-          hidden: true,
-        },
-        {
-          label: 'Alamat Customer',
-          field: 'address',
-          hidden: true,
-        },
-        {
-          label: 'No Identitas',
-          field: 'identitas',
-          hidden: true,
-        },
-        {
-          label: 'Customer',
-          field: 'customer',
-        },
-        {
-          label: 'No. Handphone',
-          field: 'nohp',
-        },
-        {
-          label: 'Toko Bangunan',
+          label: 'Nama Toko',
           field: 'shopName',
         },
         {
-          label: 'Jumlah Trans.',
+          label: 'Telp. Toko',
+          field: 'shopNumber',
+        },
+        {
+          label: 'Alamat Toko',
+          field: 'shopAddress',
+        },
+        {
+          label: 'Jum. Transaksi',
           field: 'jumTrans',
         },
         {
-          label: 'Nilai Total Trans.',
-          field: 'totalTrans',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
+          label: 'Jum. Produk',
+          field: 'jumProduk',
         },
         {
-          label: 'Total Hutang',
-          field: 'totalHutang',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
+          label: 'Jum. Customer',
+          field: 'jumCust',
         },
         {
-          label: 'Hutang Dibayar',
-          field: 'sudahBayar',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
+          label: 'Nama Pemilik',
+          field: 'ownerName',
         },
         {
-          label: 'Sisa Hutang',
-          field: 'sisaHutang',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Status',
-          field: 'stCustomer',
-          sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['TERMINATED', 'ACTIVE'],
-          },
+          label: 'Telp. Pemilik',
+          field: 'ownerNumber',
         },
         // {
         //   label: 'Action',
@@ -399,7 +347,7 @@ export default {
     },
   },
   created() {
-    this.getAllToko()
+    // this.getAllToko()
     this.fetchCustomerList()
   },
   methods: {
@@ -431,7 +379,7 @@ export default {
     },
     fetchCustomerList() {
       this.isLoading = true
-      appService.getCustomerList({
+      appService.getAdminTokoList({
         // limit: 50,
         q: this.searchTerm,
         // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
@@ -460,20 +408,18 @@ export default {
     },
     setupRows(data) {
       const res = {
-        encodedID: data.uuid,
-        custCode: data.kode_customer,
-        customerID: data.id,
-        customer: data.nama,
-        shopName: `${data.toko.kode_toko} - ${data.toko.nama_toko}`,
-        nohp: data.telp_customer,
-        address: data.alamat,
-        identitas: data.no_identitas,
-        statusCust: data.status,
-        jumTrans: data.total_transaction,
-        totalTrans: data.sum_transaction,
-        totalHutang: data.paid_debt + data.remaining_debt,
-        sudahBayar: data.paid_debt,
-        sisaHutang: data.remaining_debt,
+        encodedID: data.kode_toko,
+        ownerName: data.nama_pemilik,
+        ownerAddress: data.alamat_pemilik,
+        ownerNumber: data.telp_pemilik,
+        ownerIdentity: data.no_identitas,
+        shopName: data.nama_toko,
+        shopAddress: data.alamat,
+        shopNumber: data.telp_toko,
+        shopLogo: null,
+        jumTrans: data.qty_trans,
+        jumCust: data.tot_product,
+        jumProduk: data.tot_product,
       }
       this.rows.push(res)
     },

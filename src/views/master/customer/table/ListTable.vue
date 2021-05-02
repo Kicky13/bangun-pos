@@ -349,10 +349,10 @@ export default {
           label: 'Status',
           field: 'stCustomer',
           sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['TERMINATED', 'ACTIVE'],
-          },
+          // filterOptions: {
+          //   enabled: true,
+          //   filterDropdownItems: ['TERMINATED', 'ACTIVE'],
+          // },
         },
         // {
         //   label: 'Action',
