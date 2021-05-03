@@ -427,11 +427,12 @@ export default {
     },
     fetchUpdateCustomer() {
       const data = {
+        id_category: this.inpId,
         kode_category: this.inpCode,
         nama_category: this.inpName,
         note_category: this.inpNotes,
       }
-      appService.updateAdminCategory(this.inpId, data).then(response => {
+      appService.addAdminCategory(data).then(response => {
         console.log(response)
         this.clearForm()
         this.fetchDataList()
