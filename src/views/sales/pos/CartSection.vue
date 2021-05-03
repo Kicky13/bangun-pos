@@ -220,7 +220,6 @@
                     >
                       <b-button
                         v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-                        v-b-tooltip.hover
                         variant="outline-danger"
                         class="btn-icon mt-0 mt-md-2"
                         title="Hapus"
@@ -1096,6 +1095,7 @@ export default {
       initialData: {},
       tempPrice: 0,
       discountStop: false,
+      checkId: {},
     }
   },
   computed: {
@@ -1259,6 +1259,7 @@ export default {
         customer_id: this.selectedCustomer ? this.customerList.find(list => list.text === this.selectedCustomer).value : null,
         cashier_id: this.selectedCashier,
         kode_transaction: this.transactionCode,
+        transaction_id: this.checkId.id_transaction || null,
         discount: this.inputDiscount,
         shipping: this.inputOngkir,
         tax: this.inputTax,
@@ -1266,7 +1267,8 @@ export default {
         payment_type: this.selectedPaymentMethod,
         items: products,
       }
-      console.log(param)
+      parentComponent.$emit('deleteAntrian', param.transaction_id)
+      this.checkId = {}
       if (this.formSaveTransactionValidate()) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
@@ -1306,7 +1308,6 @@ export default {
             tax: this.inputTax,
             items: products,
           }
-          console.log(param)
           appService.addAntrian(param).then(response => {
             const { data } = response.data
             if (data.message) {
@@ -1521,9 +1522,11 @@ export default {
       parentComponent.$on('dataAntrian', dataAntrian => {
         this.selectedCustomer = this.customerList.find(customer => customer.text === dataAntrian.nama_customer).text
         this.selectedCashier = this.cashierList.find(cashier => cashier.id === dataAntrian.id_kasir).value
+        this.checkId.id_transaction = dataAntrian.id_transaction
+        this.checkId.uuid = dataAntrian.uuid
         appService.getDetailTransaction(dataAntrian.uuid).then(response => {
           const { data } = response
-          console.log(data)
+          this.items = []
           const itemsInCart = data.data.detail
           itemsInCart.forEach(item => {
             this.items.push({

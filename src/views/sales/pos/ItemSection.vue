@@ -173,24 +173,22 @@
     >
       <!-- Search Input -->
       <div class="custom-search d-flex">
-        <b-form-group>
-          <div class="d-flex align-items-center">
-            <b-input-group class="input-group-merge">
-              <b-form-input
-                v-model="searchTerm"
-                placeholder="Search"
-                type="text"
-                class="d-inline-block"
+        <div class="d-flex align-items-center">
+          <b-input-group class="input-group-merge">
+            <b-form-input
+              v-model="searchTerm"
+              placeholder="Search"
+              type="text"
+              class="d-inline-block"
+            />
+            <b-input-group-append is-text>
+              <feather-icon
+                icon="SearchIcon"
+                class="text-muted"
               />
-              <b-input-group-append is-text>
-                <feather-icon
-                  icon="SearchIcon"
-                  class="text-muted"
-                />
-              </b-input-group-append>
-            </b-input-group>
-          </div>
-        </b-form-group>
+            </b-input-group-append>
+          </b-input-group>
+        </div>
       </div><br>
       <!-- Table -->
       <vue-good-table
@@ -471,6 +469,11 @@ export default {
       console.log(data)
       this.getAllAntrian()
     })
+    parentComponent.$on('deleteAntrian', data => {
+      const index = this.listAntrian.findIndex(antrian => antrian.id_transaction === data)
+      this.listAntrian.splice(index, 1)
+      this.totalAntrian = this.listAntrian.length
+    })
   },
   methods: {
     async getAllCategories() {
@@ -555,7 +558,6 @@ export default {
     async getAllAntrian() {
       appService.getListAntrian().then(response => {
         const { data } = response.data
-        this.totalAntrian = data.length
         this.listAntrian = []
         if (data) {
           data.forEach(antrian => {
@@ -570,6 +572,7 @@ export default {
         if (data) {
           this.listAntrian.push({
             uuid: dataAntrian.uuid,
+            id_transaction: dataAntrian.id_transaction,
             kode_transaksi: dataAntrian.kode_transaksi,
             nama_customer: dataAntrian.nama_customer || 'Walk-in Customer',
             no_references: dataAntrian.no_references || '-',
@@ -581,6 +584,7 @@ export default {
             status: data.status,
           })
         }
+        this.totalAntrian = this.listAntrian.length
       })
     },
     async getAllProducts() {
