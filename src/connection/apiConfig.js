@@ -93,4 +93,10 @@ export default {
   deleteAdminSubCategory: 'admin/subcategory/delete/',
   getAdminProductSIGList: 'admin/product/listProductSIG',
   getAdminProductNonSIGPriceList: 'admin/product/listProductNonSIG',
+  getSubCategoryListAdmin: 'admin/subcategory/listSubCategory',
+  getBrandListAdmin: 'admin/brand/listBrand',
+  getTypeListAdmin: 'admin/type/listType',
+  getUomListAdmin: 'admin/uom/listUom',
+  saveProductAdmin: 'admin/product/store',
+  deleteProductAdmin: 'admin/product/delete/',
 }

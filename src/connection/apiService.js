@@ -510,6 +510,35 @@ export default class ApiService {
     })
   }
 
+  getSubCategoryListAdmin(param) {
+    return axios({
+      method: 'post',
+      url: this.urlCnf.getSubCategoryListAdmin,
+      data: param,
+    })
+  }
+
+  getBrandListAdmin() {
+    return axios({
+      method: 'post',
+      url: this.urlCnf.getBrandListAdmin,
+    })
+  }
+
+  getTypeListAdmin() {
+    return axios({
+      method: 'post',
+      url: this.urlCnf.getTypeListAdmin,
+    })
+  }
+
+  getUomListAdmin() {
+    return axios({
+      method: 'post',
+      url: this.urlCnf.getUomListAdmin,
+    })
+  }
+
   getAdminProductSIGList(param) {
     return axios({
       method: 'post',
@@ -523,6 +552,25 @@ export default class ApiService {
       method: 'post',
       url: this.urlCnf.getAdminProductNonSIGPriceList,
       data: param,
+    })
+  }
+
+  saveProductAdmin(param) {
+    return axios({
+      method: 'post',
+      url: this.urlCnf.saveProductAdmin,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        accept: 'multipart/form-data',
+      },
+      data: param,
+    })
+  }
+
+  deleteProductAdmin(uuid) {
+    return axios({
+      method: 'delete',
+      url: this.urlCnf.deleteProductAdmin + uuid,
     })
   }
 }
