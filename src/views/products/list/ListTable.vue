@@ -245,55 +245,42 @@ export default {
       columns: [
         {
           label: 'Kode Produk',
-          field: 'custCode',
+          field: 'kodeproduk',
         },
         {
           label: 'Nama Produk',
-          field: 'customerID',
+          field: 'namaproduk',
         },
         {
-          label: 'Keterangan',
-          field: 'address',
-        },
-        {
-          label: 'Ketegori',
-          field: 'identitas',
+          label: 'Kategori',
+          field: 'namacategory',
         },
         {
           label: 'Sub-Kategori',
-          field: 'customer',
+          field: 'namasubcategory',
         },
         {
-          label: 'Merek',
-          field: 'nohp',
+          label: 'Brand / Merek',
+          field: 'namabrand',
         },
         {
-          label: 'Tipe',
-          field: 'shopName',
+          label: 'Tipe Produk',
+          field: 'namatype',
         },
         {
           label: 'Satuan / UOM',
-          field: 'jumTrans',
+          field: 'namauom',
         },
         {
-          label: 'Toko / Penjual',
-          field: 'jumTrans',
+          label: 'Toko',
+          field: 'namatoko',
         },
-        {
-          label: 'Harga Jual',
-          field: 'totalTrans',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Status',
-          field: 'stCustomer',
-          sortable: false,
-          // filterOptions: {
-          //   enabled: true,
-          //   filterDropdownItems: ['TERMINATED', 'ACTIVE'],
-          // },
-        },
+        // {
+        //   label: 'Harga Jual',
+        //   field: 'price',
+        //   tdClass: 'text-right',
+        //   formatFn: this.formatPrice,
+        // },
       ],
       rows: [],
       searchTerm: '',
@@ -367,11 +354,11 @@ export default {
     },
     fetchCustomerList() {
       this.isLoading = true
-      appService.getCustomerList({
+      appService.getAdminProductNonSIGPriceList({
         // limit: 50,
         q: this.searchTerm,
         // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
-        id_toko: this.selectItemV.value,
+        id_toko: this.selectItemV.value ? this.selectItemV.value : null,
       }).then(response => {
         this.rows = []
         const res = response.data
@@ -396,20 +383,17 @@ export default {
     },
     setupRows(data) {
       const res = {
-        encodedID: data.uuid,
-        custCode: data.kode_customer,
-        customerID: data.id,
-        customer: data.nama,
-        shopName: `${data.toko.kode_toko} - ${data.toko.nama_toko}`,
-        nohp: data.telp_customer,
-        address: data.alamat,
-        identitas: data.no_identitas,
-        statusCust: data.status,
-        jumTrans: data.total_transaction,
-        totalTrans: data.sum_transaction,
-        totalHutang: data.paid_debt + data.remaining_debt,
-        sudahBayar: data.paid_debt,
-        sisaHutang: data.remaining_debt,
+        flag: data.flag,
+        imgproduk: data.img_produk,
+        isavailable: data.is_available,
+        kodeproduk: data.kode_produk,
+        namabrand: data.nama_brand,
+        namacategory: data.nama_category,
+        namaproduk: data.nama_produk,
+        namasubcategory: data.nama_subcategory,
+        namatoko: data.nama_toko,
+        namatype: data.nama_type,
+        namauom: data.nama_uom,
       }
       this.rows.push(res)
     },
