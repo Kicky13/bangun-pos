@@ -10,8 +10,7 @@
       border:none;
       max-width:90%;
       height: 175px;
-      margin-top: 0.5rem;
-      object-fit: cover;"
+      margin-top: 0.5rem;"
       fluid
       class="card-img-top"
       :src="product.img_produk"
@@ -54,13 +53,13 @@ export default {
   },
   props: {
     product: {
-      type: Array,
+      type: Object,
       required: true,
     },
-    itemClick: {
-      type: Function,
-      required: true,
-    },
+    // itemClick: {
+    //   type: Function,
+    //   required: true,
+    // },
     color: {
       type: String,
       default: 'primary',
