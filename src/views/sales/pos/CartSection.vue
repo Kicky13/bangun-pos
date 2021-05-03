@@ -150,7 +150,7 @@
                               block
                               variant="outline-secondary"
                               class="btn-icon"
-                              :disabled="item.quantity <= 0"
+                              :disabled="item.quantity <= 1"
                               @click="item.quantity--"
                             >
                               -
@@ -164,7 +164,9 @@
                             <b-form-input
                               v-model.number="item.quantity"
                               class="text-center"
-                              @keypress="inputQuantity"
+                              autocomplete="off"
+                              @keypress="isNumberKey($event, item.stopinput())"
+                              @input="inputQuantity($event, item.kode_produk)"
                             />
                           </b-col>
                           <b-col
@@ -177,6 +179,7 @@
                               block
                               variant="outline-secondary"
                               class="btn-icon"
+                              :disabled="item.quantity >= 99999"
                               @click="item.quantity++"
                             >
                               +
@@ -1132,6 +1135,7 @@ export default {
   created() {
     window.addEventListener('resize', this.initTrHeight)
     this.addProductToList()
+    this.getAntrianData()
   },
   destroyed() {
     window.removeEventListener('resize', this.initTrHeight)
@@ -1170,11 +1174,13 @@ export default {
         const { data } = response.data
         if (data) {
           this.cashierList.push({
+            id: null,
             value: null,
             text: 'Pilih Kasir',
           })
           data.forEach(item => {
             this.cashierList.push({
+              id: item.id,
               value: item.uuid,
               text: item.name,
             })
@@ -1211,7 +1217,11 @@ export default {
       parentComponent.$on('addProductToCart', product => {
         const isInCart = this.items.find(item => item.id_produk === product.id_produk)
         if (isInCart) {
-          isInCart.quantity += 1
+          if (isInCart.quantity === 99999) {
+            this.makeToast(isInCart.nama_produk, 'AlertCircleIcon', 'danger', 'Item yang ditambah melebihi batas')
+          } else {
+            isInCart.quantity += 1
+          }
         } else {
           const newProduct = {
             id_produk: product.id_produk,
@@ -1222,10 +1232,16 @@ export default {
             subtotal() {
               return this.price * this.quantity
             },
+            stopinput() {
+              if (this.quantity >= 99999) {
+                return true
+              }
+              return false
+            },
           }
           this.items.unshift(newProduct)
+          this.makeToast(product.nama_produk, 'CoffeeIcon', 'success', 'Berhasil ditambahkan')
         }
-        this.makeToast(product.nama_produk, 'CoffeeIcon', 'success', 'Berhasil ditambahkan ke keranjang')
       })
     },
     async saveTransaction() {
@@ -1398,6 +1414,10 @@ export default {
       return false
     },
     formSaveTransactionValidate() {
+      if (!this.quantityValidate()) {
+        this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Quantity item masih kosong')
+        return false
+      }
       if (!this.selectedPaymentMethod) {
         this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Silahkan pilih tipe pembayaran terlebih dahulu')
         return false
@@ -1417,15 +1437,19 @@ export default {
         this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Silahkan pilih kasir terlebih dahulu')
         return false
       }
+      if (!this.quantityValidate()) {
+        this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Quantity item masih kosong')
+        return false
+      }
       return true
     },
-    isNumberKey(event, disc = false) {
+    isNumberKey(event, stop = false) {
       const charCode = (event.which) ? event.which : event.keyCode
       if ((charCode > 31 && (charCode < 48 || charCode > 57))) {
         event.preventDefault()
         return false
       }
-      if (disc) {
+      if (stop) {
         event.preventDefault()
       }
       return true
@@ -1474,12 +1498,56 @@ export default {
       })
       this.$bvModal.hide('cartProductEdit')
     },
-    inputQuantity(event) {
-      this.isNumberKey(event)
-      const quantityValue = Number(event.target.value)
-      if (quantityValue === 99999) {
-        event.preventDefault()
+    inputQuantity(quantity, kode) {
+      let temp = {}
+      if (quantity >= 99999) {
+        this.items.forEach(item => {
+          if (item.kode_produk === kode) {
+            temp = item
+            temp.quantity = 99999
+          }
+        })
       }
+      if (quantity === '0') {
+        this.items.forEach(item => {
+          if (item.kode_produk === kode) {
+            temp = item
+            temp.quantity = 1
+          }
+        })
+      }
+    },
+    getAntrianData() {
+      parentComponent.$on('dataAntrian', dataAntrian => {
+        this.selectedCustomer = this.customerList.find(customer => customer.text === dataAntrian.nama_customer).text
+        this.selectedCashier = this.cashierList.find(cashier => cashier.id === dataAntrian.id_kasir).value
+        appService.getDetailTransaction(dataAntrian.uuid).then(response => {
+          const { data } = response
+          console.log(data)
+          const itemsInCart = data.data.detail
+          itemsInCart.forEach(item => {
+            this.items.push({
+              id_produk: item.product.id_produk,
+              kode_produk: item.product.kode_produk,
+              price: item.price,
+              nama_produk: item.product.nama_produk,
+              quantity: item.qty,
+              subtotal() {
+                return this.price * this.quantity
+              },
+              stopinput() {
+                if (this.quantity >= 99999) {
+                  return true
+                }
+                return false
+              },
+            })
+          })
+        })
+      })
+    },
+    quantityValidate() {
+      return this.items.find(item => item.quantity > 0)
     },
     repeateAgain() {
       this.items.push({

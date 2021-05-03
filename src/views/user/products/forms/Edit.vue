@@ -289,7 +289,7 @@
                       id="attachment"
                       name="attachment"
                       accept="image/jpeg, image/png"
-                      :state="logoSize <= 500000"
+                      :state="logoSize <= 500000 && allowedTipeFile === 1"
                       @change="onFileChange"
                     />
                     <b-form-invalid-feedback>
@@ -541,6 +541,7 @@ export default {
   data() {
     return {
       logoSize: 0,
+      allowedTipeFile: 1,
       productimgurl: null,
       isLoading: false,
       menuHidden: this.$store.state.appConfig.layout.menu.hidden,
@@ -639,20 +640,34 @@ export default {
       const file = e.target.files[0]
       if (file) {
         this.logoSize = file.size
-        if (file.size < 500000) {
+        if (file.size <= 500000 && ((file.type).toLowerCase() === 'image/png' || (file.type).toLowerCase() === 'image/jpeg' || (file.type).toLowerCase() === 'image/jpg')) {
+          this.allowedTipeFile = 1
           this.selectedFile = file
           this.productimgurl = URL.createObjectURL(file)
         } else {
           this.selectedFile = null
           this.productimgurl = null
-          this.$toast({
-            component: ToastificationContent,
-            props: {
-              title: 'Ukuran File Tidak Boleh Melebihi 500KB',
-              icon: 'AlertCircleIcon',
-              variant: 'danger',
-            },
-          })
+          if (file.size > 500000) {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Ukuran File Tidak Boleh Melebihi 500KB',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+              },
+            })
+          }
+          if ((file.type).toLowerCase() !== 'image/png' || (file.type).toLowerCase() !== 'image/jpeg' || (file.type).toLowerCase() !== 'image/jpg') {
+            this.allowedTipeFile = 0
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Harus Menggunkan File Dengan Tipe .PNG / .JPEG',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+              },
+            })
+          }
         }
       } else {
         this.selectedFile = null
@@ -792,7 +807,7 @@ export default {
             itemlist.forEach(item => {
               this.categoryItems.push({
                 value: item.id,
-                text: item.nama_category,
+                text: (item.nama_category).toUpperCase(),
               })
             })
           } else {
@@ -832,7 +847,7 @@ export default {
             itemlist.forEach(item => {
               this.subCategoryItems.push({
                 value: item.id,
-                text: item.nama_category,
+                text: (item.nama_category).toUpperCase(),
               })
             })
           } else {
@@ -869,7 +884,7 @@ export default {
             itemlist.forEach(item => {
               this.brandItems.push({
                 value: item.id,
-                text: item.nama_brand,
+                text: (item.nama_brand).toUpperCase(),
               })
             })
           } else {
@@ -906,7 +921,7 @@ export default {
             itemlist.forEach(item => {
               this.typeItems.push({
                 value: item.id,
-                text: item.nama_type,
+                text: (item.nama_type).toUpperCase(),
               })
             })
           } else {
@@ -943,7 +958,7 @@ export default {
             itemlist.forEach(item => {
               this.unitItems.push({
                 value: item.id,
-                text: item.nama_uom,
+                text: (item.nama_uom).toUpperCase(),
               })
             })
           } else {
@@ -1041,7 +1056,12 @@ export default {
       if (!this.selectedStatus && this.selectedStatus === null) {
         errMsg.push('Status Wajib Diisi')
       }
-
+      if (this.logoSize > 500000) {
+        errMsg.push('Ukuran Logo Tidak Boleh Melebihi 500KB')
+      }
+      if (this.allowedTipeFile === 0) {
+        errMsg.push('Harus Menggunkan File Dengan Tipe .PNG / .JPEG')
+      }
       if (errMsg.length === 0) {
         return true
       }

@@ -217,7 +217,7 @@ export default [
     component: () => import('@/views/sales/list/List.vue'),
     meta: {
       pageTitle: 'Data Transaksi',
-      resource: 'Transaksi',
+      resource: 'Sales',
       action: 'manage',
       breadcrumb: [
         {

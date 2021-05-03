@@ -1,44 +1,52 @@
 <template>
-  <b-card-code>
-
-    <div class="demo-inline-spacing">
-      <b-button
-        v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-        variant="primary"
-      >
-        Add Category
-      </b-button>
-      <b-button
-        v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-        variant="dark"
-      >
-        Print
-      </b-button>
-      <b-button
-        v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-        variant="danger"
-      >
-        Delete
-      </b-button>
+  <b-card>
+    <loading-grow v-if="isLoading" />
+    <div>
+      <b-row>
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
+          <b-form-group>
+            <b-form-input
+              v-model="searchTerm"
+              placeholder="Masukkan Kata Pencarian..."
+              type="text"
+              class="d-inline-block"
+            />
+          </b-form-group>
+        </b-col>
+        <b-col
+          lg="1"
+          md="1"
+          sm="12"
+        >
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="secondary"
+          >
+            Cetak
+          </b-button>
+        </b-col><b-col
+          lg="1"
+          md="1"
+          sm="12"
+        >
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="primary"
+            @click="tambahData"
+          >
+            Tambah
+          </b-button>
+        </b-col>
+      </b-row>
     </div>
-
-    <!-- input search -->
-    <div class="custom-search d-flex justify-content-end">
-      <b-form-group>
-        <div class="d-flex align-items-center">
-          <label class="mr-1">Search</label>
-          <b-form-input
-            v-model="searchTerm"
-            placeholder="Search"
-            type="text"
-            class="d-inline-block"
-          />
-        </div>
-      </b-form-group>
-    </div>
-
+    <div class="demo-inline-spacing" />
     <!-- table -->
     <vue-good-table
+      ref="dataCustomer"
       :columns="columns"
       :rows="rows"
       :rtl="direction"
@@ -50,48 +58,42 @@
         perPage:pageLength
       }"
     >
+
       <template
         slot="table-row"
         slot-scope="props"
       >
-
-        <!-- Column: Status -->
-        <span v-if="props.column.field === 'status'">
-          <b-badge :variant="statusVariant(props.row.status)">
-            {{ props.row.status }}
-          </b-badge>
+        <span v-if="props.column.field === 'stCustomer'">
+          <span>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
+              :variant="paymentVariant(props.row.statusCust)"
+            >
+              {{ props.row.statusCust }}
+            </b-button>
+          </span>
         </span>
 
         <!-- Column: Action -->
-        <span v-else-if="props.column.field === 'action'">
+        <span v-if="props.column.field === 'action'">
           <span>
-            <b-dropdown
-              variant="link"
-              toggle-class="text-decoration-none"
-              no-caret
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
+              variant="outline-danger"
+              @click="ubahData(props.formattedRow)"
             >
-              <template v-slot:button-content>
-                <feather-icon
-                  icon="MoreVerticalIcon"
-                  size="16"
-                  class="text-body align-middle mr-25"
-                />
-              </template>
-              <b-dropdown-item>
-                <feather-icon
-                  icon="Edit2Icon"
-                  class="mr-50"
-                />
-                <span>Edit</span>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <feather-icon
-                  icon="TrashIcon"
-                  class="mr-50"
-                />
-                <span>Delete</span>
-              </b-dropdown-item>
-            </b-dropdown>
+              Ubah
+            </b-button>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
+              variant="outline-danger"
+              @click="hapusData(props.formattedRow)"
+            >
+              Hapus
+            </b-button>
           </span>
         </span>
 
@@ -113,7 +115,7 @@
             </span>
             <b-form-select
               v-model="pageLength"
-              :options="['3','5','10']"
+              :options="['3','5','10','25','50','100']"
               class="mx-1"
               @input="(value)=>props.perPageChanged({currentPerPage:value})"
             />
@@ -150,59 +152,157 @@
       </template>
     </vue-good-table>
 
-    <template #code>
-      {{ codeBasic }}
-    </template>
-  </b-card-code>
+    <!-- Add Customer -->
+    <b-modal
+      id="FormData"
+      centered
+      size="lg"
+      title="Form Brand / Merek"
+      ok-title="Simpan"
+      cancel-title="Tutup"
+      ok-variant="danger"
+      @ok="handleOk"
+    >
+      <b-form>
+        <b-row>
+          <b-col
+            lg="12"
+            md="12"
+            sm="12"
+          >
+            <b-form-group
+              label="Nama Brand / Merek :"
+              label-for="dataName"
+            >
+              <b-form-input
+                id="dataName"
+                v-model="inpName"
+                :state="inpName.length > 0"
+                name="dataName"
+              />
+              <b-form-invalid-feedback>
+                Nama Brand wajib diisi
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col
+            lg="12"
+            md="12"
+            sm="12"
+          >
+            <b-form-group
+              label="Keterangan :"
+              label-for="dataNotes"
+            >
+              <b-form-textarea
+                id="dataNotes"
+                v-model="inpNotes"
+                name="dataNotes"
+                rows="4"
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </b-form>
+    </b-modal>
+    <b-modal
+      id="askSubmit"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="handleSubmit"
+      @cancel="handleCancel"
+    >
+      <div class="d-block text-center">
+        <h3>Apakah Anda Sudah Yakin ?</h3>
+      </div>
+    </b-modal>
+    <b-modal
+      id="askDelete"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="handleDelete"
+      @cancel="handleCancelDelete"
+    >
+      <div class="d-block text-center">
+        <h3>Apakah Anda Sudah Yakin ?</h3>
+      </div>
+    </b-modal>
+    <!-- End of Customer Add -->
+
+  </b-card>
 </template>
 
 <script>
-import BCardCode from '@core/components/b-card-code/BCardCode.vue'
 import {
-  BButton, BBadge, BPagination, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem,
+  BButton, BPagination, BForm, BFormGroup, BFormInput, BFormSelect, BCard, BRow, BCol, BFormTextarea, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
-import { codeBasic } from './searchCode'
+import Ripple from 'vue-ripple-directive'
+import ApiService from '@/connection/apiService'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+
+const appService = new ApiService()
 
 export default {
   components: {
     BButton,
-    BCardCode,
+    BForm,
     VueGoodTable,
-    BBadge,
     BPagination,
     BFormGroup,
     BFormInput,
     BFormSelect,
-    BDropdown,
-    BDropdownItem,
+    BFormTextarea,
+    BFormInvalidFeedback,
+    BCard,
+    BRow,
+    BCol,
+    LoadingGrow,
+  },
+  directives: {
+    Ripple,
   },
   data() {
     return {
+      inpId: '',
+      inpCode: '',
+      inpName: '',
+      inpNotes: '',
+      isLoading: false,
+      editForm: false,
+      deleteData: [],
+      tokoBangunanList: [],
+      selectedToko: '',
       pageLength: 10,
       dir: false,
-      codeBasic,
       columns: [
         {
-          label: 'Code',
-          field: 'codeCat',
+          label: 'ID',
+          field: 'encodedID',
         },
         {
-          label: 'Image',
-          field: 'categoryImage',
+          label: 'Kode',
+          field: 'code',
         },
         {
-          label: 'Category Name',
-          field: 'categoryName',
-        },
-        {
-          label: 'Parent Category',
-          field: 'categoryParent',
-        },
-        {
-          label: 'Status',
-          field: 'status',
+          label: 'Nama',
+          field: 'name',
         },
         {
           label: 'Action',
@@ -214,14 +314,11 @@ export default {
     }
   },
   computed: {
-    statusVariant() {
+    paymentVariant() {
       const statusColor = {
-        /* eslint-disable key-spacing */
-        Nonactive   : 'light-danger',
-        Active      : 'light-success',
-        /* eslint-enable key-spacing */
+        ACTIVE: 'outline-secondary',
+        TERMINATED: 'outline-danger',
       }
-
       return status => statusColor[status]
     },
     direction() {
@@ -235,9 +332,212 @@ export default {
       return this.dir
     },
   },
+  watch: {},
   created() {
-    this.$http.get('/app-data/category')
-      .then(res => { this.rows = res.data })
+    this.fetchDataList()
+  },
+  methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      return `Rp. ${formatedval}`
+    },
+    fetchDataList() {
+      this.isLoading = true
+      appService.getAdminBrand().then(response => {
+        this.rows = []
+        const res = response.data
+        this.isLoading = false
+        const resdata = res.data
+        if (resdata) {
+          resdata.forEach(this.setupRows)
+        }
+      }).catch(err => {
+        console.log(err)
+        this.isLoading = false
+      })
+    },
+    setupRows(data) {
+      const res = {
+        encodedID: data.id,
+        code: data.kode_brand,
+        name: (data.nama_brand).toUpperCase(),
+      }
+      this.rows.push(res)
+    },
+    refreshTable() {
+      this.rows = []
+      this.fetchDataList()
+    },
+    clearForm() {
+      this.inpId = ''
+      this.inpCode = ''
+      this.inpName = ''
+      this.inpNotes = ''
+    },
+    tambahData() {
+      this.clearForm()
+      this.editForm = false
+      this.$bvModal.show('FormData')
+    },
+    ubahData(propsData) {
+      this.clearForm()
+      this.setForm(propsData)
+      this.editForm = true
+      this.$bvModal.show('FormData')
+    },
+    setForm(data) {
+      console.log(data)
+      this.inpId = data.encodedID
+      this.inpCode = data.code
+      this.inpName = data.name
+      this.inpNotes = ''
+    },
+    handleOk(okBtn) {
+      if (this.formValidate()) {
+        this.$bvModal.show('askSubmit')
+      } else {
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Form Tidak Lengkap',
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+            text: 'Mohon Untuk Melengkapi Form Sebelum Menyimpan Data',
+          },
+        })
+        okBtn.preventDefault()
+      }
+    },
+    handleCancel() {
+      this.$bvModal.show('FormData')
+    },
+    handleCancelDelete() {
+      this.deleteData = []
+    },
+    handleSubmit() {
+      // console.log('OK')
+      this.isLoading = true
+      if (this.editForm) {
+        this.fetchUpdateCustomer()
+      } else {
+        this.fetchDataInsert()
+      }
+    },
+    fetchUpdateCustomer() {
+      const data = {
+        kode_brand: this.inpCode,
+        nama_brand: this.inpName,
+        note_brand: this.inpNotes,
+      }
+      appService.updateAdminBrand(this.inpId, data).then(response => {
+        console.log(response)
+        this.clearForm()
+        this.fetchDataList()
+        this.editForm = false
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    fetchDataInsert() {
+      const data = {
+        kode_brand: this.inpCode,
+        nama_brand: this.inpName,
+        note_brand: this.inpNotes,
+      }
+      appService.addAdminBrand(data).then(response => {
+        const res = response.data
+        console.log(res)
+        if (res.result) {
+          this.fetchDataList()
+          this.clearForm()
+        } else {
+          const errMsg = res.message
+          errMsg.forEach(msg => {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Error',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+                text: msg,
+              },
+            })
+          })
+        }
+        this.isLoading = false
+      }).catch(err => {
+        console.log(err)
+        this.isLoading = false
+      })
+    },
+    hapusData(propsData) {
+      console.log(propsData)
+      this.deleteData = propsData
+      console.log(this.deleteData)
+      this.$bvModal.show('askDelete')
+    },
+    handleDelete() {
+      console.log(this.deleteData)
+      appService.deleteAdminBrand(this.deleteData.encodedID).then(response => {
+        console.log(response)
+        this.fetchDataList()
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Berhasil Dihapus',
+            icon: 'CoffeIcon',
+            variant: 'success',
+            text: 'Customer Berhasil Dihapus',
+          },
+        })
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    formValidate() {
+      const errMsg = []
+      if (this.inpName.length === 0) {
+        errMsg.push('Nama Kategori Wajib Diisi')
+      }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
+      if (errMsg.length === 0) {
+        return true
+      }
+      return false
+    },
   },
 }
 </script>
+
+<style lang="scss">
+@import '@core/scss/vue/libs/vue-select.scss';
+</style>
+
+<style lang="scss" scoped>
+.vgt-table {
+  font-size: 12px !important;
+}
+.v-select {
+  &.item-selector-title,
+  &.payment-selector {
+    background-color: #fff;
+
+    .dark-layout & {
+      background-color: unset;
+    }
+  }
+}
+</style>

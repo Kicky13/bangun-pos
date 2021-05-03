@@ -1,66 +1,37 @@
 <template>
   <b-card>
     <loading-grow v-if="isLoading" />
-    <div class="demo-inline-spacing">
-
-      <!-- input search -->
-      <div
-        class="d-flex justify-content-end"
-        style="float:left;"
-      >
-        <b-form-group>
-          <div
-            class="d-flex align-items-center"
-            style="width: 500px !important;"
-          >
+    <div>
+      <b-row>
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
+          <b-form-group>
             <b-form-input
               v-model="searchTerm"
-              placeholder="Search Here..."
+              placeholder="Masukkan Kata Pencarian..."
               type="text"
               class="d-inline-block"
             />
-          </div>
-        </b-form-group>
-      </div>
-      <div style="float:left; !important; margin-left:10px;">
-        <b-form-group>
-          <b-form-input
-            id="customer"
-            v-model="selectedToko"
-            placeholder="Semua Toko Bangunan"
-            list="tb-list"
-          />
-          <datalist id="tb-list">
-            <option
-              v-for="cl in tokoBangunanList"
-              :key="cl.text"
-            >
-              {{ cl.text }}
-            </option>
-          </datalist>
-        </b-form-group>
-      </div>
-      <!-- <div style="float:left; !important; margin-left:10px;">
-        <vue-select
-          class="vue-select"
-          name="select3"
-          :options="options3"
-          :model.sync="result3"
-          :searchable="true"
-          language="zh-CN"
-        />
-      </div> -->
-      <div style="float:left; !important; margin-left:10px;">
-        <b-button
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="secondary"
-          style="margin-top: -15px;"
+          </b-form-group>
+        </b-col>
+        <b-col
+          lg="1"
+          md="1"
+          sm="12"
         >
-          Print
-        </b-button>
-      </div>
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="secondary"
+          >
+            Print
+          </b-button>
+        </b-col>
+      </b-row>
     </div>
-
+    <div class="demo-inline-spacing" />
     <!-- table -->
     <vue-good-table
       ref="dataCustomer"
@@ -91,11 +62,6 @@
             </b-button>
           </span>
         </span>
-        <!-- <span v-if="props.column.field === 'statusCust'">
-          <b-badge :variant="paymentVariant(props.row.statusCust)">
-            {{ props.row.statusCust }}
-          </b-badge>
-        </span> -->
 
         <!-- Column: Action -->
         <span v-if="props.column.field === 'action'">
@@ -187,19 +153,14 @@
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BRow, BCol,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
+// import vSelect from 'vue-select'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
-// import vueSelect from 'vue-select'
-// import AlertToken from '@core/components/expired-token/AlertToken.vue'
-// import AddCustomer from './forms/modals/Add.vue'
-// import { codeBasic } from './search'
-// import 'vue-select/dist/vue-select.css'
 
 const appService = new ApiService()
 
@@ -212,19 +173,12 @@ export default {
     BFormInput,
     BFormSelect,
     BCard,
-    // AddCustomer,
-    // BModal,
-    // BRow,
-    // BCol,
-    // BFormTextarea,
-    // BForm,
-    // BFormInvalidFeedback,
+    BRow,
+    BCol,
+    // vSelect,
     LoadingGrow,
-    // vueSelect,
-    // AlertToken,
   },
   directives: {
-    // 'b-modal': VBModal,
     Ripple,
   },
   data() {
@@ -246,6 +200,36 @@ export default {
       editForm: false,
       tokoBangunanList: [],
       selectedToko: '',
+      selectItemV: [{
+        value: '',
+        text: 'Semua Toko Bangunan',
+      }],
+      itemsOptions: [
+        {
+          itemTitle: 'App Design',
+          cost: 24,
+          qty: 1,
+          description: 'Designed UI kit & app pages.',
+        },
+        {
+          itemTitle: 'App Customization',
+          cost: 26,
+          qty: 1,
+          description: 'Customization & Bug Fixes.',
+        },
+        {
+          itemTitle: 'ABC Template',
+          cost: 28,
+          qty: 1,
+          description: 'Bootstrap 4 admin template.',
+        },
+        {
+          itemTitle: 'App Development',
+          cost: 32,
+          qty: 1,
+          description: 'Native App Development.',
+        },
+      ],
       typeItem: [
         // {
         //   value: null,
@@ -283,77 +267,40 @@ export default {
       dir: false,
       columns: [
         {
-          label: 'Kode Customer',
-          field: 'custCode',
-        },
-        {
-          label: 'Encoded ID',
+          label: 'Kode Toko',
           field: 'encodedID',
-          hidden: true,
         },
         {
-          label: 'ID Customer',
-          field: 'customerID',
-          hidden: true,
-        },
-        {
-          label: 'Alamat Customer',
-          field: 'address',
-          hidden: true,
-        },
-        {
-          label: 'No Identitas',
-          field: 'identitas',
-          hidden: true,
-        },
-        {
-          label: 'Customer',
-          field: 'customer',
-        },
-        {
-          label: 'No. Handphone',
-          field: 'nohp',
-        },
-        {
-          label: 'Toko Bangunan',
+          label: 'Nama Toko',
           field: 'shopName',
         },
         {
-          label: 'Jumlah Trans.',
+          label: 'Telp. Toko',
+          field: 'shopNumber',
+        },
+        {
+          label: 'Alamat Toko',
+          field: 'shopAddress',
+        },
+        {
+          label: 'Jum. Transaksi',
           field: 'jumTrans',
         },
         {
-          label: 'Nilai Total Trans.',
-          field: 'totalTrans',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
+          label: 'Jum. Produk',
+          field: 'jumProduk',
         },
         {
-          label: 'Total Hutang',
-          field: 'totalHutang',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
+          label: 'Jum. Customer',
+          field: 'jumCust',
         },
         {
-          label: 'Hutang Dibayar',
-          field: 'sudahBayar',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
+          label: 'Nama Pemilik',
+          field: 'ownerName',
         },
         {
-          label: 'Sisa Hutang',
-          field: 'sisaHutang',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        },
-        {
-          label: 'Status',
-          field: 'stCustomer',
-          sortable: false,
-          filterOptions: {
-            enabled: true,
-            filterDropdownItems: ['TERMINATED', 'ACTIVE'],
-          },
+          label: 'Telp. Pemilik',
+          field: 'ownerNumber',
         },
         // {
         //   label: 'Action',
@@ -364,32 +311,6 @@ export default {
       searchTerm: '',
       selected: 'Cash',
       option: ['Cash', 'Kredit'],
-      // options3: [{
-      //   label: 'group1',
-      //   options: [{
-      //     text: 'name1',
-      //     value: 'value1',
-      //   }, {
-      //     text: 'name2',
-      //     value: 'value2',
-      //   }, {
-      //     text: 'name3',
-      //     value: 'value3',
-      //   }],
-      // }, {
-      //   label: 'group2',
-      //   options: [{
-      //     text: 'name4',
-      //     value: 'value4',
-      //   }, {
-      //     text: 'name5',
-      //     value: 'value5',
-      //   }, {
-      //     text: 'name6',
-      //     value: 'value6',
-      //   }],
-      // }],
-      // result3: '',
     }
   },
   computed: {
@@ -418,7 +339,7 @@ export default {
         this.fetchCustomerList()
       },
     },
-    selectedToko: {
+    selectItemV: {
       immediate: true,
       handler() {
         this.fetchCustomerList()
@@ -426,15 +347,10 @@ export default {
     },
   },
   created() {
-    this.getAllToko()
+    // this.getAllToko()
     this.fetchCustomerList()
   },
   methods: {
-    formatRefCode() {
-      // console.log(this.productCode)
-      this.jagobangunRef = this.jagobangunRef.replace(/[^0-9-]/g, '')
-      // console.log(this.productCode)
-    },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
@@ -445,6 +361,7 @@ export default {
         const { data } = response.data
         console.log(data)
         this.tokoBangunanList = []
+        this.itemsOptions = []
         this.tokoBangunanList.push({
           value: '',
           text: 'Semua Toko Bangunan',
@@ -457,14 +374,16 @@ export default {
             })
           })
         }
+        this.itemsOptions = this.tokoBangunanList
       })
     },
     fetchCustomerList() {
       this.isLoading = true
-      appService.getCustomerList({
+      appService.getAdminTokoList({
         // limit: 50,
         q: this.searchTerm,
-        id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
+        // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
+        id_toko: this.selectItemV.value,
       }).then(response => {
         this.rows = []
         const res = response.data
@@ -487,288 +406,22 @@ export default {
         this.isLoading = false
       })
     },
-    clearForm() {
-      this.customerName = ''
-      this.customerPhone = 0
-      this.jagobangunRef = ''
-      this.identityNumber = ''
-      this.customerAddress = ''
-    },
-    setForm(data) {
-      this.custUuid = data.encodedID
-      this.customerID = data.custCode
-      this.customerName = data.customer
-      this.customerPhone = data.nohp
-      this.jagobangunRef = ''
-      this.identityNumber = data.identitas
-      this.customerAddress = data.address
-    },
     setupRows(data) {
       const res = {
-        encodedID: data.uuid,
-        custCode: data.kode_customer,
-        customerID: data.id,
-        customer: data.nama,
-        shopName: `${data.toko.kode_toko} - ${data.toko.nama_toko}`,
-        nohp: data.telp_customer,
-        address: data.alamat,
-        identitas: data.no_identitas,
-        statusCust: data.status,
-        jumTrans: data.total_transaction,
-        totalTrans: data.sum_transaction,
-        totalHutang: data.paid_debt + data.remaining_debt,
-        sudahBayar: data.paid_debt,
-        sisaHutang: data.remaining_debt,
+        encodedID: data.kode_toko,
+        ownerName: data.nama_pemilik,
+        ownerAddress: data.alamat_pemilik,
+        ownerNumber: data.telp_pemilik,
+        ownerIdentity: data.no_identitas,
+        shopName: data.nama_toko,
+        shopAddress: data.alamat,
+        shopNumber: data.telp_toko,
+        shopLogo: null,
+        jumTrans: data.qty_trans,
+        jumCust: data.tot_product,
+        jumProduk: data.tot_product,
       }
       this.rows.push(res)
-    },
-    addCustomer() {
-      this.editForm = false
-      this.clearForm()
-      this.$bvModal.show('customerAdd')
-    },
-    editData(propsData) {
-      this.setForm(propsData)
-      this.editForm = true
-      this.$bvModal.show('customerAdd')
-    },
-    handleOk(okBtn) {
-      if (this.formValidate()) {
-        this.$bvModal.show('askSubmit')
-      } else {
-        this.$toast({
-          component: ToastificationContent,
-          position: 'top-right',
-          props: {
-            title: 'Form incomplete',
-            icon: 'AlertTriangleIcon',
-            variant: 'danger',
-            text: 'Please complete form before submit',
-          },
-        })
-        okBtn.preventDefault()
-      }
-    },
-    handleCancel() {
-      this.$bvModal.show('customerAdd')
-    },
-    handleSubmit() {
-      // console.log('OK')
-      this.isLoading = true
-      if (this.editForm) {
-        this.fetchUpdateCustomer()
-      } else {
-        this.fetchCustomerInsert()
-      }
-    },
-    fetchUpdateCustomer() {
-      const data = {
-        nama_customer: this.customerName,
-        telp_customer: this.customerPhone,
-        no_identitas: this.identityNumber,
-        alamat: this.customerAddress,
-        no_references: this.jagobangunRef,
-      }
-      appService.updateCustomer(this.custUuid, data).then(response => {
-        console.log(response)
-        this.clearForm()
-        this.fetchCustomerList()
-        this.editForm = false
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    fetchCustomerInsert() {
-      const data = {
-        nama_customer: this.customerName,
-        telp_customer: this.customerPhone,
-        no_identitas: this.identityNumber,
-        alamat: this.customerAddress,
-        no_references: this.jagobangunRef,
-      }
-      appService.addCustomer(data).then(response => {
-        const res = response.data
-        // console.log(res)
-        if (res.result) {
-          this.fetchCustomerList()
-          this.clearForm()
-        } else {
-          const errMsg = res.message
-
-          errMsg.forEach(msg => {
-            this.$toast({
-              component: ToastificationContent,
-              position: 'top-right',
-              props: {
-                title: 'Error',
-                icon: 'AlertCircleIcon',
-                variant: 'danger',
-                text: msg,
-              },
-            })
-          })
-        }
-        this.isLoading = false
-      }).catch(err => {
-        console.log(err)
-        this.isLoading = false
-      })
-    },
-    handleDelete() {
-      this.isLoading = true
-      const { selectedRows } = this.$refs.dataCustomer
-      if (selectedRows.length > 0) {
-        selectedRows.forEach(this.fetchDeleteCustomer)
-      } else {
-        this.$toast({
-          component: ToastificationContent,
-          position: 'top-right',
-          props: {
-            title: 'Error',
-            icon: 'CoffeIcon',
-            variant: 'danger',
-            text: 'Select 1 or more item to delete',
-          },
-        })
-      }
-    },
-    fetchDeleteCustomer(data) {
-      appService.deleteCustomer(data.encodedID).then(response => {
-        console.log(response)
-        this.fetchCustomerList()
-        this.$toast({
-          component: ToastificationContent,
-          position: 'top-right',
-          props: {
-            title: 'Deleted',
-            icon: 'CoffeIcon',
-            variant: 'success',
-            text: 'Item deleted',
-          },
-        })
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    formValidate() {
-      const errMsg = []
-
-      if (this.customerName.length < 3) {
-        errMsg.push('customerName')
-      }
-      if (this.customerPhone.length < 10 && this.customerPhone.length > 12) {
-        errMsg.push('customerPhone')
-      }
-      if (!this.customerPhone.charAt(0) === '0') {
-        errMsg.push('customerPhoneFormat')
-      }
-
-      if (errMsg.length === 0) {
-        return true
-      }
-      return false
-    },
-    pembayaran(propsData) {
-      this.setBayar(propsData)
-      this.$bvModal.show('listBayar')
-    },
-    validatePay() {
-      const errMsg = []
-
-      if (this.customerCode.length === 0) {
-        errMsg.push('CustomerCode')
-      }
-      if (this.customerName.length === 0) {
-        errMsg.push('CustomerName')
-      }
-      if (this.paySum === 0) {
-        errMsg.push('PayAmount')
-      }
-      if (this.selectedType === null) {
-        errMsg.push('SelectedType')
-      }
-      if (this.paymentID === 0) {
-        errMsg.push('PayID')
-      }
-      if (this.paySum > this.remainingDebt) {
-        this.paySum = this.remainingDebt
-      }
-
-      if (errMsg.length === 0) {
-        return true
-      }
-      return false
-    },
-    handleSubmitPay(okBtn) {
-      if (this.validatePay()) {
-        this.$bvModal.show('askPay')
-      } else {
-        this.$toast({
-          component: ToastificationContent,
-          position: 'top-right',
-          props: {
-            title: 'Error',
-            icon: 'AlertCircleIcon',
-            variant: 'danger',
-            text: 'Please complete form',
-          },
-        })
-        okBtn.preventDefault()
-      }
-    },
-    handleCancelPay() {
-      this.$bvModal.show('listBayar')
-    },
-    fetchPayDebt() {
-      this.isLoading = true
-      appService.payDebt({
-        id_customer: this.paymentID,
-        id_debt: this.paymentID,
-        pay_amount: this.paySum,
-        type_payment: this.selectedType,
-        tax: 0,
-        notes: 'test pay',
-        customer_code: this.customerCode,
-        cashback: 0,
-      }).then(response => {
-        console.log(response)
-        this.clearBayar()
-        this.fetchCustomerList()
-        this.$$bvModal.hide('listBayar')
-      }).catch(err => {
-        if (err.request) {
-          const errMsg = JSON.parse(err.request.response)
-          this.isLoading = false
-          const msg = errMsg.errors
-          if (msg.id_customer) {
-            this.$toast({
-              component: ToastificationContent,
-              position: 'top-right',
-              props: {
-                title: 'Error',
-                icon: 'AlertCircleIcon',
-                variant: 'danger',
-                text: msg.id_customer[0],
-              },
-            })
-          }
-        }
-      })
-    },
-    setBayar(data) {
-      this.customerCode = data.custCode
-      this.customerName = data.customer
-      this.remainingDebt = data.sisaHutang
-      this.paymentID = data.encodedID
-      this.paySum = 0
-    },
-    clearBayar() {
-      this.customerCode = ''
-      this.customerName = ''
-      this.paymentID = ''
-      this.remainingDebt = 0
-      this.paySum = 0
-      this.paymentID = 0
     },
     refreshTable() {
       this.rows = []
@@ -779,7 +432,21 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@core/scss/vue/libs/vue-select.scss';
+</style>
+
+<style lang="scss" scoped>
 .vgt-table {
   font-size: 12px !important;
+}
+.v-select {
+  &.item-selector-title,
+  &.payment-selector {
+    background-color: #fff;
+
+    .dark-layout & {
+      background-color: unset;
+    }
+  }
 }
 </style>

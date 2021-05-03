@@ -671,10 +671,10 @@ export default {
           component: ToastificationContent,
           position: 'top-right',
           props: {
-            title: 'Form incomplete',
+            title: 'Form Tidak Lengkap',
             icon: 'AlertTriangleIcon',
             variant: 'danger',
-            text: 'Please complete form before submit',
+            text: 'Mohon Untuk Melengkapi Form Sebelum Menyimpan Data',
           },
         })
         okBtn.preventDefault()
@@ -748,17 +748,20 @@ export default {
     handleDelete() {
       this.isLoading = true
       const { selectedRows } = this.$refs.dataCustomer
+      // console.log(selectedRows)
       if (selectedRows.length > 0) {
         selectedRows.forEach(this.fetchDeleteCustomer)
+        this.isLoading = false
       } else {
+        this.isLoading = false
         this.$toast({
           component: ToastificationContent,
           position: 'top-right',
           props: {
-            title: 'Error',
+            title: 'Peringatan',
             icon: 'CoffeIcon',
             variant: 'danger',
-            text: 'Select 1 or more item to delete',
+            text: 'Pilih 1 atau Lebih Data Customer Untuk DiHapus',
           },
         })
       }
@@ -771,10 +774,10 @@ export default {
           component: ToastificationContent,
           position: 'top-right',
           props: {
-            title: 'Deleted',
+            title: 'Berhasil Dihapus',
             icon: 'CoffeIcon',
             variant: 'success',
-            text: 'Item deleted',
+            text: 'Customer Berhasil Dihapus',
           },
         })
       }).catch(err => {
@@ -783,17 +786,26 @@ export default {
     },
     formValidate() {
       const errMsg = []
-
       if (this.customerName.length < 3) {
-        errMsg.push('customerName')
+        errMsg.push('Nama Customer Wajib Diisi, Minimal 3 Karakter')
       }
-      if (this.customerPhone.length < 10 && this.customerPhone.length > 12) {
-        errMsg.push('customerPhone')
+      console.log(this.customerPhone.length)
+      if (this.customerPhone.length < 10 || this.customerPhone.length > 12) {
+        errMsg.push('Telp Customer Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (!this.customerPhone.charAt(0) === '0') {
-        errMsg.push('customerPhoneFormat')
+        errMsg.push('No Telp Customer Wajib Diawali Dengan Angka 0')
       }
-
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
       if (errMsg.length === 0) {
         return true
       }
