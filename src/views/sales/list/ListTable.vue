@@ -355,6 +355,10 @@ export default {
           //   filterDropdownItems: ['PAID', 'UNPAID'],
           // },
         },
+        {
+          label: 'Toko',
+          field: 'toko',
+        },
       ],
       rows: [],
       searchTerm: '',
@@ -476,6 +480,7 @@ export default {
         ongkirTrans: data.shipping,
         pajakTrans: data.tax,
         tglTrans: data.date_transaction,
+        toko: data.toko.nama_toko,
       }
       this.rows.push(res)
     },
@@ -493,7 +498,7 @@ export default {
 
 <style lang="scss" scoped>
 .vgt-table {
-  font-size: 12px !important;
+  font-size: 10px !important;
 }
 .v-select {
   &.item-selector-title,

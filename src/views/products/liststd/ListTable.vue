@@ -308,36 +308,31 @@ export default {
       columns: [
         {
           label: 'Kode Produk',
-          field: 'name',
+          field: 'kodeproduk',
         },
         {
           label: 'Nama Produk',
-          field: 'name',
+          field: 'namaproduk',
         },
         {
-          label: 'Gambar Produk',
-          field: 'name',
-          sortable: false,
-        },
-        {
-          label: 'Ketegori',
-          field: 'name',
+          label: 'Kategori',
+          field: 'namacategory',
         },
         {
           label: 'Sub-Kategori',
-          field: 'name',
+          field: 'namasubcategory',
         },
         {
-          label: 'Merek',
-          field: 'name',
+          label: 'Brand / Merek',
+          field: 'namabrand',
         },
         {
-          label: 'Tipe',
-          field: 'name',
+          label: 'Tipe Produk',
+          field: 'namatype',
         },
         {
           label: 'Satuan / UOM',
-          field: 'name',
+          field: 'namauom',
         },
       ],
       rows: [],
@@ -375,7 +370,12 @@ export default {
     },
     fetchDataList() {
       this.isLoading = true
-      appService.getAdminCategory().then(response => {
+      appService.getAdminProductSIGList({
+        // limit: 50,
+        q: this.searchTerm,
+        // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
+        id_toko: null,
+      }).then(response => {
         this.rows = []
         const res = response.data
         this.isLoading = false
@@ -390,9 +390,16 @@ export default {
     },
     setupRows(data) {
       const res = {
-        encodedID: data.id,
-        code: data.kode_category,
-        name: (data.nama_category).toUpperCase(),
+        flag: data.flag,
+        imgproduk: data.img_produk,
+        isavailable: data.is_available,
+        kodeproduk: data.kode_produk,
+        namabrand: data.nama_brand,
+        namacategory: data.nama_category,
+        namaproduk: data.nama_produk,
+        namasubcategory: data.nama_subcategory,
+        namatype: data.nama_type,
+        namauom: data.nama_uom,
       }
       this.rows.push(res)
     },

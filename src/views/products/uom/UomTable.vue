@@ -427,11 +427,12 @@ export default {
     },
     fetchUpdateCustomer() {
       const data = {
+        id_uom: this.inpId,
         kode_uom: this.inpCode,
         nama_uom: this.inpName,
         note_uom: this.inpNotes,
       }
-      appService.updateAdminUom(this.inpId, data).then(response => {
+      appService.updateAdminUom(data).then(response => {
         console.log(response)
         this.clearForm()
         this.fetchDataList()

@@ -427,6 +427,7 @@ export default {
     },
     fetchUpdateCustomer() {
       const data = {
+        id_type: this.inpId,
         kode_type: this.inpCode,
         nama_type: this.inpName,
         note_type: this.inpNotes,

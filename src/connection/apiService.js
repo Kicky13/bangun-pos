@@ -350,9 +350,9 @@ export default class ApiService {
 
   getAdminPriceList(param) {
     return axios({
-      method: 'get',
+      method: 'post',
       url: this.urlCnf.getAdminPriceList,
-      params: param,
+      data: param,
     })
   }
 
@@ -507,6 +507,22 @@ export default class ApiService {
     return axios({
       method: 'post',
       url: this.urlCnf.getCategoryAdmin,
+    })
+  }
+
+  getAdminProductSIGList(param) {
+    return axios({
+      method: 'post',
+      url: this.urlCnf.getAdminProductSIGList,
+      data: param,
+    })
+  }
+
+  getAdminProductNonSIGPriceList(param) {
+    return axios({
+      method: 'post',
+      url: this.urlCnf.getAdminProductNonSIGPriceList,
+      data: param,
     })
   }
 }

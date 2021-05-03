@@ -72,7 +72,7 @@ export default {
   addAdminCategory: 'admin/category/store',
   updateAdminCategory: 'admin/category/update/',
   deleteAdminCategory: 'admin/category/delete/',
-  getAdminPriceList: 'admin/listProductPrice',
+  getAdminPriceList: 'admin/product/listProductPrice',
   getAdminSalesList: 'admin/transaction',
   getAdminTokoList: 'admin/tokobangunan',
   getAdminBrand: 'admin/brand/listBrand',
@@ -91,4 +91,6 @@ export default {
   addAdminSubCategory: 'admin/subcategory/store',
   updateAdminSubCategory: 'admin/subcategory/update/',
   deleteAdminSubCategory: 'admin/subcategory/delete/',
+  getAdminProductSIGList: 'admin/product/listProductSIG',
+  getAdminProductNonSIGPriceList: 'admin/product/listProductNonSIG',
 }
