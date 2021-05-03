@@ -298,6 +298,20 @@ export default class ApiService {
       })
     }
 
+    getChartFavouriteProduct() {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.graphFavouriteProduct,
+      })
+    }
+
+    getCategoryListAdmin() {
+      return axios({
+        method: 'post',
+        url: this.urlCnf.getCategoryAdmin,
+      })
+    }
+
     // Admin View
     getCustomerList(param) {
       return axios({

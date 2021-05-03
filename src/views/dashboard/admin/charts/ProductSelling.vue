@@ -8,6 +8,7 @@
           id="sortingdurasi"
           v-model="selectedKategori"
           :options="kategori"
+          @change="fetchGraphData"
         />
       </div>
       <!-- datepicker -->
@@ -110,7 +111,6 @@ export default {
               ticks: {
                 stepSize: 100,
                 min: 0,
-                max: 400,
                 fontColor: '#6e6b7b',
               },
             },
@@ -120,28 +120,34 @@ export default {
       kategori: [
         {
           value: null,
-          text: 'Kategori',
-        },
-        {
-          value: '1',
-          text: 'Kategori 1',
-        },
-        {
-          value: '2',
-          text: 'Kategori 2',
-        },
-        {
-          value: '3',
-          text: 'Kategori 3',
+          text: 'Semua Kategori',
         },
       ],
     }
   },
-  created() {},
+  created() {
+    this.fetchGetCategory()
+  },
   mounted() {
     this.fetchGraphData()
   },
   methods: {
+    fetchGetCategory() {
+      appService.getCategoryListAdmin().then(res => {
+        if (res.data.result) {
+          const resData = res.data.data
+          resData.forEach(x => {
+            const temp = {
+              value: x.id,
+              text: x.nama_category,
+            }
+            this.kategori.push(temp)
+          })
+        }
+      }).catch(err => {
+        console.error(err)
+      })
+    },
     fetchGraphData() {
       this.isLoading = true
       const kategori = this.selectedKategori ?? ''

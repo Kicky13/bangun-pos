@@ -115,9 +115,8 @@ export default {
                 zeroLineColor: 'rgba(200, 200, 200, 0.2)',
               },
               ticks: {
-                stepSize: 100,
+                stepSize: 5000,
                 min: 0,
-                max: 400,
                 fontColor: '#6e6b7b',
               },
             },

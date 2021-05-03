@@ -117,7 +117,6 @@ export default {
               ticks: {
                 stepSize: 100,
                 min: 0,
-                max: 400,
                 fontColor: '#6e6b7b',
               },
             },

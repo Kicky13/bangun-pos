@@ -47,6 +47,7 @@ export default {
   graphProductSales: 'admin/dashboard/chartSalesProduct',
   graphBestSeller: 'admin/dashboard/chartSalesProductQty',
   graphProductGrossing: 'admin/dashboard/chartGrossProduct',
+  graphFavouriteProduct: 'admin/dashboard/chartBrandProduct',
 
   // Debt
   payDebt: 'user/debt',
@@ -66,4 +67,5 @@ export default {
   // Master Data :
   getCustomerList: 'admin/customer',
   getTokoList: 'admin/tokobangunan',
+  getCategoryAdmin: 'admin/category/listCategory',
 }
