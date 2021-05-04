@@ -452,7 +452,7 @@ export default class ApiService {
 
   updateAdminUom(id, param) {
     return axios({
-      method: 'post',
+      method: 'put',
       url: this.urlCnf.updateAdminUom + id,
       data: param,
     })
