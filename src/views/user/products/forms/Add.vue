@@ -349,6 +349,7 @@
               thumbnail
               fluid
               alt="Image Produk"
+              style="min-width: 100%"
             />
             <b-img
               v-else
@@ -356,6 +357,7 @@
               thumbnail
               fluid
               alt="Image Produk"
+              style="min-width: 100%"
             />
           </b-col>
         </b-row>
