@@ -567,10 +567,10 @@ export default class ApiService {
     })
   }
 
-  updateProductAdmin(id, param) {
+  updateProductAdmin(param) {
     return axios({
-      method: 'put',
-      url: this.urlCnf.updateProductAdmin + id,
+      method: 'post',
+      url: this.urlCnf.updateProductAdmin,
       headers: {
         'Content-Type': 'multipart/form-data',
         accept: 'multipart/form-data',

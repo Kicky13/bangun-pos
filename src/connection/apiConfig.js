@@ -98,6 +98,6 @@ export default {
   getTypeListAdmin: 'admin/type/listType',
   getUomListAdmin: 'admin/uom/listUom',
   saveProductAdmin: 'admin/product/store',
-  updateProductAdmin: 'admin/product/update/',
+  updateProductAdmin: 'admin/product/update',
   deleteProductAdmin: 'admin/product/delete/',
 }
