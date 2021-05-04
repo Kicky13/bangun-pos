@@ -63,15 +63,72 @@ export default [
     name: 'category-product',
     component: () => import('@/views/products/category/Category.vue'),
     meta: {
-      pageTitle: 'Category',
-      resource: 'Product',
+      pageTitle: 'Ketegori',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {
-          text: 'Product',
+          text: 'Pengaturan Produk',
         },
         {
-          text: 'Category',
+          text: 'Ketegori',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/product/merk',
+    name: 'brand-product',
+    component: () => import('@/views/products/brand/Brand.vue'),
+    meta: {
+      pageTitle: 'Merek',
+      resource: 'ProductSettings',
+      action: 'manage',
+      breadcrumb: [
+        {
+          text: 'Pengaturan Produk',
+        },
+        {
+          text: 'Merek',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/product/type',
+    name: 'type-product',
+    component: () => import('@/views/products/type/Type.vue'),
+    meta: {
+      pageTitle: 'Tipe Produk',
+      resource: 'ProductSettings',
+      action: 'manage',
+      breadcrumb: [
+        {
+          text: 'Pengaturan Produk',
+        },
+        {
+          text: 'Tipe Produk',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/product/uom',
+    name: 'uom-product',
+    component: () => import('@/views/products/uom/Uom.vue'),
+    meta: {
+      pageTitle: 'Satuan / UOM',
+      resource: 'ProductSettings',
+      action: 'manage',
+      breadcrumb: [
+        {
+          text: 'Pengaturan Produk',
+        },
+        {
+          text: 'Satuan / UOM',
           active: true,
         },
       ],
@@ -79,15 +136,37 @@ export default [
   },
   {
     path: '/product',
+    name: 'list-std-product',
+    component: () => import('@/views/products/liststd/List.vue'),
+    meta: {
+      pageTitle: 'Produk Standard',
+      resource: 'ProductSettings',
+      action: 'manage',
+      breadcrumb: [
+        {
+          text: 'Pengaturan Produk',
+        },
+        {
+          text: 'Produk Standard',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/product/user',
     name: 'list-product',
     component: () => import('@/views/products/list/List.vue'),
     meta: {
-      pageTitle: 'Product List',
+      pageTitle: 'Produk User',
       resource: 'Product',
       action: 'manage',
       breadcrumb: [
         {
-          text: 'Product',
+          text: 'ProductSettings',
+        },
+        {
+          text: 'Produk User',
           active: true,
         },
       ],
@@ -98,15 +177,15 @@ export default [
     name: 'add-product',
     component: () => import('@/views/products/forms/Add.vue'),
     meta: {
-      pageTitle: 'Add Product',
-      resource: 'Product',
+      pageTitle: 'Tambah Produk',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {
-          text: 'Product',
+          text: 'Pengaturan Produk',
         },
         {
-          text: 'Add',
+          text: 'Tambah Produk',
           active: true,
         },
       ],
@@ -117,83 +196,15 @@ export default [
     name: 'import-product',
     component: () => import('@/views/products/forms/Import.vue'),
     meta: {
-      pageTitle: 'Import Product',
-      resource: 'Product',
+      pageTitle: 'Upload Produk',
+      resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
         {
-          text: 'Product',
+          text: 'Pengaturan Produk',
         },
         {
-          text: 'Import',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/product/stock',
-    name: 'stock-product',
-    component: () => import('@/views/products/stock/Stock.vue'),
-    meta: {
-      pageTitle: 'Stock Count',
-      resource: 'Product',
-      action: 'manage',
-      breadcrumb: [
-        {
-          text: 'Product',
-        },
-        {
-          text: 'Stock Count',
-          active: true,
-        },
-      ],
-    },
-  },
-  //   Purchases
-  {
-    path: '/purchase',
-    name: 'list-purchase',
-    component: () => import('@/views/purchases/list/List.vue'),
-    meta: {
-      pageTitle: 'Purchases',
-      breadcrumb: [
-        {
-          text: 'Purchases',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/purchase/add',
-    name: 'add-purchase',
-    component: () => import('@/views/purchases/forms/Add.vue'),
-    meta: {
-      pageTitle: 'Add Purchase',
-      breadcrumb: [
-        {
-          text: 'Purchases',
-        },
-        {
-          text: 'Add',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/purchase/import',
-    name: 'import-purchase',
-    component: () => import('@/views/purchases/forms/Import.vue'),
-    meta: {
-      pageTitle: 'Import Purchase',
-      breadcrumb: [
-        {
-          text: 'Purchases',
-        },
-        {
-          text: 'Import',
+          text: 'Upload Produk',
           active: true,
         },
       ],
@@ -205,12 +216,15 @@ export default [
     name: 'list-sale',
     component: () => import('@/views/sales/list/List.vue'),
     meta: {
-      pageTitle: 'Sales',
+      pageTitle: 'Data Transaksi',
       resource: 'Sales',
       action: 'manage',
       breadcrumb: [
         {
-          text: 'Sale',
+          text: 'Transaksi',
+        },
+        {
+          text: 'Data Transaksi',
           active: true,
         },
       ],
@@ -253,34 +267,6 @@ export default [
       //     active: true,
       //   },
       // ],
-    },
-  },
-  {
-    path: '/giftcard',
-    name: 'giftcard-sale',
-    component: () => import('@/views/sales/giftcard/Giftcard.vue'),
-    meta: {
-      pageTitle: 'GiftCard List',
-      breadcrumb: [
-        {
-          text: 'GiftCard',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/coupon',
-    name: 'coupon-sale',
-    component: () => import('@/views/sales/coupon/Coupon.vue'),
-    meta: {
-      pageTitle: 'Coupon',
-      breadcrumb: [
-        {
-          text: 'Coupon',
-          active: true,
-        },
-      ],
     },
   },
 ]

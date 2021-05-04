@@ -171,7 +171,7 @@
             sm="12"
           >
             <b-form-group
-              label="Nama Kategori :"
+              label="Nama Tipe Produk :"
               label-for="dataName"
             >
               <b-form-input
@@ -181,7 +181,7 @@
                 name="dataName"
               />
               <b-form-invalid-feedback>
-                Nama Kategori wajib diisi
+                Nama Tipe Produk wajib diisi
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -344,7 +344,7 @@ export default {
     },
     fetchDataList() {
       this.isLoading = true
-      appService.getAdminCategory().then(response => {
+      appService.getAdminType().then(response => {
         this.rows = []
         const res = response.data
         this.isLoading = false
@@ -360,8 +360,8 @@ export default {
     setupRows(data) {
       const res = {
         encodedID: data.id,
-        code: data.kode_category,
-        name: (data.nama_category).toUpperCase(),
+        code: data.kode_type,
+        name: (data.nama_type).toUpperCase(),
       }
       this.rows.push(res)
     },
@@ -427,12 +427,12 @@ export default {
     },
     fetchUpdateCustomer() {
       const data = {
-        // id_category: this.inpId,
-        kode_category: this.inpCode,
-        nama_category: this.inpName,
-        note_category: this.inpNotes,
+        id_type: this.inpId,
+        kode_type: this.inpCode,
+        nama_type: this.inpName,
+        note_type: this.inpNotes,
       }
-      appService.updateAdminCategory(this.inpId, data).then(response => {
+      appService.updateAdminType(this.inpId, data).then(response => {
         console.log(response)
         this.clearForm()
         this.fetchDataList()
@@ -443,11 +443,11 @@ export default {
     },
     fetchDataInsert() {
       const data = {
-        kode_category: this.inpCode,
-        nama_category: this.inpName,
-        note_category: this.inpNotes,
+        kode_type: this.inpCode,
+        nama_type: this.inpName,
+        note_type: this.inpNotes,
       }
-      appService.addAdminCategory(data).then(response => {
+      appService.addAdminType(data).then(response => {
         const res = response.data
         console.log(res)
         if (res.result) {
@@ -482,7 +482,7 @@ export default {
     },
     handleDelete() {
       console.log(this.deleteData)
-      appService.deleteAdminCategory(this.deleteData.encodedID).then(response => {
+      appService.deleteAdminType(this.deleteData.encodedID).then(response => {
         console.log(response)
         this.fetchDataList()
         this.$toast({

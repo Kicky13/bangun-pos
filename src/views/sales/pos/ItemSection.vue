@@ -173,24 +173,22 @@
     >
       <!-- Search Input -->
       <div class="custom-search d-flex">
-        <b-form-group>
-          <div class="d-flex align-items-center">
-            <b-input-group class="input-group-merge">
-              <b-form-input
-                v-model="searchTerm"
-                placeholder="Search"
-                type="text"
-                class="d-inline-block"
+        <div class="d-flex align-items-center">
+          <b-input-group class="input-group-merge">
+            <b-form-input
+              v-model="searchTerm"
+              placeholder="Search"
+              type="text"
+              class="d-inline-block"
+            />
+            <b-input-group-append is-text>
+              <feather-icon
+                icon="SearchIcon"
+                class="text-muted"
               />
-              <b-input-group-append is-text>
-                <feather-icon
-                  icon="SearchIcon"
-                  class="text-muted"
-                />
-              </b-input-group-append>
-            </b-input-group>
-          </div>
-        </b-form-group>
+            </b-input-group-append>
+          </b-input-group>
+        </div>
       </div><br>
       <!-- Table -->
       <vue-good-table
@@ -232,6 +230,7 @@
                 v-ripple.400="'rgba(186, 191, 199, 0.15)'"
                 size="sm"
                 variant="outline-secondary"
+                @click="lanjutAntrian(props.row.uuid)"
               >
                 Lanjut
               </b-button>
@@ -300,6 +299,7 @@
       </vue-good-table>
     </b-modal>
     <!-- End of Antrian Table -->
+    <alert-token />
   </div>
 </template>
 
@@ -317,6 +317,7 @@ import FeatherIcon from '@/@core/components/feather-icon/FeatherIcon.vue'
 import store from '@/store/index'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import AlertToken from '@core/components/expired-token/AlertToken.vue'
 import { useEcommerceUi } from './ActionHandling'
 import { parentComponent } from './PageContent.vue'
 
@@ -344,6 +345,7 @@ export default {
     VueGoodTable,
     BFormSelect,
     BBadge,
+    AlertToken,
   },
   data() {
     return {
@@ -470,18 +472,28 @@ export default {
       console.log(data)
       this.getAllAntrian()
     })
+    parentComponent.$on('deleteAntrian', data => {
+      const index = this.listAntrian.findIndex(antrian => antrian.id_transaction === data)
+      this.listAntrian.splice(index, 1)
+      this.totalAntrian = this.listAntrian.length
+    })
   },
   methods: {
     async getAllCategories() {
       appService.getCategoryList().then(response => {
-        const { data } = response.data
-        if (data) {
-          data.forEach(item => {
-            this.categoryList.push({
-              id: item.id,
-              name: item.nama_category,
+        const { result } = response.data
+        if (result) {
+          const { data } = response.data
+          if (data) {
+            data.forEach(item => {
+              this.categoryList.push({
+                id: item.id,
+                name: (item.nama_category).toUpperCase(),
+              })
             })
-          })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -490,33 +502,43 @@ export default {
         id_category: id,
       }
       appService.getSubcategoryList(param).then(response => {
-        const { data } = response.data
-        if (data) {
-          this.subCategoryList.push({
-            id: null,
-            name: 'Semua Sub Kategori',
-          })
-          if (param.id_category) {
-            data.forEach(item => {
-              this.subCategoryList.push({
-                id: item.id,
-                name: item.nama_category,
-              })
+        const { result } = response.data
+        if (result) {
+          const { data } = response.data
+          if (data) {
+            this.subCategoryList.push({
+              id: null,
+              name: 'Semua Sub Kategori',
             })
+            if (param.id_category) {
+              data.forEach(item => {
+                this.subCategoryList.push({
+                  id: item.id,
+                  name: (item.nama_category).toUpperCase(),
+                })
+              })
+            }
           }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
     async getAllBrands() {
       appService.getBrandList().then(response => {
-        const { data } = response.data
-        if (data) {
-          data.forEach(item => {
-            this.brandList.push({
-              id: item.id,
-              name: item.nama_brand,
+        const { result } = response.data
+        if (result) {
+          const { data } = response.data
+          if (data) {
+            data.forEach(item => {
+              this.brandList.push({
+                id: item.id,
+                name: (item.nama_brand).toUpperCase(),
+              })
             })
-          })
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -528,7 +550,7 @@ export default {
       this.subCategoryList = []
       this.selectedCategory = {
         id: param.id,
-        name: param.name,
+        name: (param.name).toUpperCase(),
       }
       this.selectedSubCategory = {
         id: null,
@@ -540,21 +562,20 @@ export default {
     async getSubCategory(param) {
       this.selectedSubCategory = {
         id: param.id,
-        name: param.name,
+        name: (param.name).toUpperCase(),
       }
       this.getAllProducts()
     },
     async getBrand(param) {
       this.selectedBrand = {
         id: param.id,
-        name: param.name,
+        name: (param.name).toUpperCase(),
       }
       this.getAllProducts()
     },
     async getAllAntrian() {
       appService.getListAntrian().then(response => {
         const { data } = response.data
-        this.totalAntrian = data.length
         this.listAntrian = []
         if (data) {
           data.forEach(antrian => {
@@ -569,9 +590,11 @@ export default {
         if (data) {
           this.listAntrian.push({
             uuid: dataAntrian.uuid,
+            id_transaction: dataAntrian.id_transaction,
             kode_transaksi: dataAntrian.kode_transaksi,
             nama_customer: dataAntrian.nama_customer || 'Walk-in Customer',
             no_references: dataAntrian.no_references || '-',
+            id_kasir: dataAntrian.id_kasir,
             sub_total: data.sub_total,
             discount: data.discount,
             tax: data.tax,
@@ -579,6 +602,7 @@ export default {
             status: data.status,
           })
         }
+        this.totalAntrian = this.listAntrian.length
       })
     },
     async getAllProducts() {
@@ -596,21 +620,27 @@ export default {
         param.brand = this.selectedBrand.id
       }
       appService.getProductTokoList(param).then(response => {
-        const { data } = response.data
-        this.totalProduct = data.length
-        this.productList = []
-        if (data) {
-          data.forEach(item => {
-            const product = {
-              id_produk: item.id_produk,
-              kode_produk: item.kode_produk,
-              img_produk: item.img_produk ? item.img_produk : '/img/06.95d1c509.jpg',
-              price: item.price,
-              nama_produk: item.nama_produk,
-            }
-            this.productList.push(product)
-          })
-          this.productList = this.productList.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage)
+        const { result } = response.data
+        if (result) {
+          const { data } = response.data
+          this.totalProduct = data.length
+          this.productList = []
+          if (data) {
+            data.forEach(item => {
+              const product = {
+                id_produk: item.id_produk,
+                kode_produk: item.kode_produk,
+                img_produk: item.img_produk ? item.img_produk : '/img/06.95d1c509.jpg',
+                price: item.price,
+                nama_produk: item.nama_produk,
+                nama_uom: (item.nama_uom).toUpperCase(),
+              }
+              this.productList.push(product)
+            })
+            this.productList = this.productList.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage)
+          }
+        } else {
+          this.$bvModal.show('tokenExpired')
         }
       })
     },
@@ -622,6 +652,7 @@ export default {
       parentComponent.$emit('addProductToCart', product)
     },
     deleteAntrian(id) {
+      // eslint-disable-next-line no-alert
       const deleteConfirm = window.confirm('Apakah anda yakin?')
       if (deleteConfirm) {
         appService.deleteQueue(id).then(response => {
@@ -639,6 +670,11 @@ export default {
           this.getAllAntrian()
         })
       }
+    },
+    lanjutAntrian(id) {
+      const lanjutData = this.listAntrian.find(antrian => antrian.uuid === id)
+      parentComponent.$emit('dataAntrian', lanjutData)
+      this.$bvModal.hide('listAntrian')
     },
   },
   setup() {

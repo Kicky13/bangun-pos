@@ -1,32 +1,55 @@
 <template>
-  <b-card-code>
-
-    <div class="demo-inline-spacing">
-      <b-button
-        v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-        variant="primary"
-      >
-        Import Sale
-      </b-button>
-    </div>
-
-    <!-- input search -->
-    <div class="custom-search d-flex justify-content-end">
-      <b-form-group>
-        <div class="d-flex align-items-center">
-          <label class="mr-1">Search</label>
-          <b-form-input
-            v-model="searchTerm"
-            placeholder="Search"
-            type="text"
-            class="d-inline-block"
+  <b-card>
+    <loading-grow v-if="isLoading" />
+    <div>
+      <b-row>
+        <b-col
+          lg="6"
+          md="6"
+          sm="12"
+        >
+          <b-form-group>
+            <b-form-input
+              v-model="searchTerm"
+              placeholder="Masukkan Kata Pencarian..."
+              type="text"
+              class="d-inline-block"
+            />
+          </b-form-group>
+        </b-col>
+        <b-col
+          lg="3"
+          md="3"
+          sm="12"
+        >
+          <v-select
+            v-model="selectItemV"
+            dir="ltr"
+            :options="itemsOptions"
+            label="text"
+            :clearable="false"
+            class="mb-2 item-selector-title"
+            placeholder="Pilih Toko Bangunan"
           />
-        </div>
-      </b-form-group>
+        </b-col>
+        <b-col
+          lg="1"
+          md="1"
+          sm="12"
+        >
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="secondary"
+          >
+            Print
+          </b-button>
+        </b-col>
+      </b-row>
     </div>
-
+    <div class="demo-inline-spacing" />
     <!-- table -->
     <vue-good-table
+      ref="dataCustomer"
       :columns="columns"
       :rows="rows"
       :rtl="direction"
@@ -38,55 +61,63 @@
         perPage:pageLength
       }"
     >
+
       <template
         slot="table-row"
         slot-scope="props"
       >
-
-        <!-- Column: Status -->
-
-        <span v-if="props.column.field === 'paymentStatus'">
-          <b-badge :variant="paymentVariant(props.row.paymentStatus)">
-            {{ props.row.paymentStatus }}
-          </b-badge>
+        <span v-if="props.column.field === 'sTransStatus'">
+          <span>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
+              :variant="statusVariant(props.row.transStatus)"
+            >
+              {{ props.row.transStatus }}
+            </b-button>
+          </span>
         </span>
 
-        <span v-else-if="props.column.field === 'saleStatus'">
-          <b-badge :variant="salesVariant(props.row.saleStatus)">
-            {{ props.row.saleStatus }}
-          </b-badge>
+        <span v-if="props.column.field === 'sTransType'">
+          <span>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
+              :variant="paymentVariant(props.row.transType)"
+            >
+              {{ props.row.transType }}
+            </b-button>
+          </span>
         </span>
 
         <!-- Column: Action -->
-        <span v-else-if="props.column.field === 'action'">
+        <span v-if="props.column.field === 'action'">
           <span>
-            <b-dropdown
-              variant="link"
-              toggle-class="text-decoration-none"
-              no-caret
+            <b-button
+              v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+              size="sm"
+              variant="outline-secondary"
+              :to="{ name: 'customer-history-trans', params: { id: props.formattedRow.encodedID } }"
             >
-              <template v-slot:button-content>
-                <feather-icon
-                  icon="MoreVerticalIcon"
-                  size="16"
-                  class="text-body align-middle mr-25"
-                />
-              </template>
-              <b-dropdown-item>
-                <feather-icon
-                  icon="Edit2Icon"
-                  class="mr-50"
-                />
-                <span>Edit</span>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <feather-icon
-                  icon="TrashIcon"
-                  class="mr-50"
-                />
-                <span>Delete</span>
-              </b-dropdown-item>
-            </b-dropdown>
+              List Trans.
+            </b-button>
+            <b-button
+              v-if="props.row.sisaHutang > 0"
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
+              variant="outline-danger"
+              @click="pembayaran(props.formattedRow)"
+            >
+              Bayar
+            </b-button>
+            <b-button
+              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+              size="sm"
+              variant="outline-danger"
+              @click="editData(props.formattedRow)"
+            >
+              Edit
+            </b-button>
           </span>
         </span>
 
@@ -108,7 +139,7 @@
             </span>
             <b-form-select
               v-model="pageLength"
-              :options="['3','5','10']"
+              :options="['3','5','10','25','50','100']"
               class="mx-1"
               @input="(value)=>props.perPageChanged({currentPerPage:value})"
             />
@@ -144,138 +175,209 @@
         </div>
       </template>
     </vue-good-table>
-
-  </b-card-code>
+  </b-card>
 </template>
 
 <script>
-import BCardCode from '@core/components/b-card-code/BCardCode.vue'
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem, BBadge,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BRow, BCol,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
+import vSelect from 'vue-select'
 import store from '@/store/index'
-// import { codeBasic } from './search'
+import Ripple from 'vue-ripple-directive'
+import ApiService from '@/connection/apiService'
+import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
+
+const appService = new ApiService()
 
 export default {
   components: {
     BButton,
-    BCardCode,
     VueGoodTable,
     BPagination,
     BFormGroup,
     BFormInput,
     BFormSelect,
-    BDropdown,
-    BDropdownItem,
-    BBadge,
+    BCard,
+    BRow,
+    BCol,
+    vSelect,
+    LoadingGrow,
+  },
+  directives: {
+    Ripple,
   },
   data() {
     return {
+      custUuid: '',
+      customerCode: '',
+      remainingDebt: 0,
+      paymentID: '',
+      paySum: 0,
+      selectedType: 1,
+      customerName: '',
+      customerPhone: 0,
+      jagobangunRef: '',
+      identityNumber: '',
+      customerAddress: '',
+      selectedPembayaran: null,
+      selectedStatus: null,
+      isLoading: false,
+      editForm: false,
+      tokoBangunanList: [],
+      selectedToko: '',
+      selectItemV: [{
+        value: '',
+        text: 'Semua Toko Bangunan',
+      }],
+      itemsOptions: [
+        {
+          itemTitle: 'App Design',
+          cost: 24,
+          qty: 1,
+          description: 'Designed UI kit & app pages.',
+        },
+        {
+          itemTitle: 'App Customization',
+          cost: 26,
+          qty: 1,
+          description: 'Customization & Bug Fixes.',
+        },
+        {
+          itemTitle: 'ABC Template',
+          cost: 28,
+          qty: 1,
+          description: 'Bootstrap 4 admin template.',
+        },
+        {
+          itemTitle: 'App Development',
+          cost: 32,
+          qty: 1,
+          description: 'Native App Development.',
+        },
+      ],
+      typeItem: [
+        // {
+        //   value: null,
+        //   text: 'Select Pembayaran',
+        //   disabled: true,
+        // },
+        {
+          value: 1,
+          text: 'Cash',
+        },
+        // {
+        //   value: 2,
+        //   text: 'Transfer',
+        // },
+        // {
+        //   value: 3,
+        //   text: 'Gopay',
+        // },
+      ],
+      statusItems: [
+        {
+          value: null,
+          text: 'Semua',
+        },
+        {
+          value: 'Lunas',
+          text: 'Lunas',
+        },
+        {
+          value: 'Belum Lunas',
+          text: 'Belum Lunas',
+        },
+      ],
       pageLength: 10,
       dir: false,
       columns: [
         {
-          label: 'ID',
-          field: 'id',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Sales ID',
-          },
+          label: 'Kode Transaksi',
+          field: 'transCode',
         },
         {
-          label: 'Date',
-          field: 'date',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Date',
-          },
-        },
-        {
-          label: 'Reference',
-          field: 'ref',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Reference',
-          },
-        },
-        {
-          label: 'Biller',
-          field: 'biller',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Biller',
-          },
+          label: 'Tanggal',
+          field: 'tglTrans',
         },
         {
           label: 'Customer',
           field: 'customer',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Customer',
-          },
         },
         {
-          label: 'Grand Total',
-          field: 'total',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Total',
-          },
+          label: 'Kasir',
+          field: 'cashier',
         },
         {
-          label: 'Sale Status',
-          field: 'saleStatus',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Status',
-          },
+          label: 'Sub Total',
+          field: 'subTotalTrans',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
-          label: 'Paid',
-          field: 'paid',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Paid',
-          },
+          label: 'Diskon',
+          field: 'discountTrans',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
-          label: 'Due',
-          field: 'due',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Due',
-          },
+          label: 'Ongkir',
+          field: 'ongkirTrans',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
-          label: 'Payment Status',
-          field: 'paymentStatus',
-          filterOptions: {
-            enabled: true,
-            placeholder: 'Search Status',
-          },
+          label: 'Pajak',
+          field: 'pajakTrans',
+          tdClass: 'text-right',
+          formatFn: this.formatPrice,
         },
         {
-          label: 'Action',
-          field: 'action',
+          label: 'No. Referensi',
+          field: 'refNumber',
+        },
+        {
+          label: 'Pembayaran',
+          field: 'sTransType',
+          sortable: false,
+          // filterOptions: {
+          //   enabled: true,
+          //   filterDropdownItems: ['CASH', 'KREDIT'],
+          // },
+        },
+        {
+          label: 'Status',
+          field: 'sTransStatus',
+          sortable: false,
+          // filterOptions: {
+          //   enabled: true,
+          //   filterDropdownItems: ['PAID', 'UNPAID'],
+          // },
+        },
+        {
+          label: 'Toko',
+          field: 'toko',
         },
       ],
       rows: [],
       searchTerm: '',
+      selected: 'Cash',
+      option: ['Cash', 'Kredit'],
     }
   },
   computed: {
-    salesVariant() {
+    paymentVariant() {
       const statusColor = {
-        Draft: 'light-primary',
-        Completed: 'light-secondary',
+        CASH: 'outline-secondary',
+        KREDIT: 'outline-danger',
       }
       return status => statusColor[status]
     },
-    paymentVariant() {
+    statusVariant() {
       const statusColor = {
-        Paid: 'light-secondary',
-        Due: 'light-primary',
+        PAID: 'outline-secondary',
+        UNPAID: 'outline-danger',
       }
       return status => statusColor[status]
     },
@@ -290,9 +392,122 @@ export default {
       return this.dir
     },
   },
+  watch: {
+    searchTerm: {
+      immediate: true,
+      handler() {
+        this.fetchCustomerList()
+      },
+    },
+    selectItemV: {
+      immediate: true,
+      handler() {
+        this.fetchCustomerList()
+      },
+    },
+  },
   created() {
-    this.$http.get('/app-data/sales')
-      .then(res => { this.rows = res.data })
+    this.getAllToko()
+    this.fetchCustomerList()
+  },
+  methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      return `Rp. ${formatedval}`
+    },
+    async getAllToko() {
+      appService.getTokoList().then(response => {
+        const { data } = response.data
+        console.log(data)
+        this.tokoBangunanList = []
+        this.itemsOptions = []
+        this.tokoBangunanList.push({
+          value: '',
+          text: 'Semua Toko Bangunan',
+        })
+        if (data) {
+          data.forEach(item => {
+            this.tokoBangunanList.push({
+              value: item.id_toko,
+              text: item.nama_toko,
+            })
+          })
+        }
+        this.itemsOptions = this.tokoBangunanList
+      })
+    },
+    fetchCustomerList() {
+      this.isLoading = true
+      appService.getAdminSalesList({
+        // limit: 50,
+        q: this.searchTerm,
+        // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
+        id_toko: this.selectItemV.value,
+      }).then(response => {
+        this.rows = []
+        const res = response.data
+        // console.log(res)
+        this.isLoading = false
+        const resdata = res.data
+        if (resdata) {
+          resdata.forEach(this.setupRows)
+        }
+        // if (res.result) {
+        //   const resdata = res.data
+        //   if (resdata) {
+        //     resdata.forEach(this.setupRows)
+        //   }
+        // } else {
+        //   // this.$bvModal.show('tokenExpired')
+        // }
+      }).catch(err => {
+        console.log(err)
+        this.isLoading = false
+      })
+    },
+    setupRows(data) {
+      const res = {
+        encodedID: data.uuid,
+        transCode: data.kode_transaksi,
+        customer: data.nama_customer,
+        cashier: data.kasir.nama,
+        refNumber: data.no_references,
+        transStatus: data.status,
+        transType: data.payment_type_str,
+        subTotalTrans: data.sub_total,
+        discountTrans: data.discount,
+        ongkirTrans: data.shipping,
+        pajakTrans: data.tax,
+        tglTrans: data.date_transaction,
+        toko: data.toko.nama_toko,
+      }
+      this.rows.push(res)
+    },
+    refreshTable() {
+      this.rows = []
+      this.fetchCustomerList()
+    },
   },
 }
 </script>
+
+<style lang="scss">
+@import '@core/scss/vue/libs/vue-select.scss';
+</style>
+
+<style lang="scss" scoped>
+.vgt-table {
+  font-size: 10px !important;
+}
+.v-select {
+  &.item-selector-title,
+  &.payment-selector {
+    background-color: #fff;
+
+    .dark-layout & {
+      background-color: unset;
+    }
+  }
+}
+</style>
