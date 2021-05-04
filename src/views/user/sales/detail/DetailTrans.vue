@@ -267,6 +267,25 @@
           </div>
           <!-- End Cart Section -->
         </b-card>
+        <!-- Action Button Section -->
+        <div>
+          <b-row>
+            <b-col
+              cols="12"
+              md="6"
+            >
+              <b-button
+                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+                class="mb-1"
+                block
+                @click="print"
+              >
+                Cetak (Struk 58mm)
+              </b-button>
+            </b-col>
+          </b-row>
+        </div>
+        <!-- End Action Button Section -->
       </b-col>
       <b-col
         cols="12"
@@ -517,16 +536,7 @@
             <b-col
               cols="12"
               md="3"
-            >
-              <b-button
-                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                class="mb-1"
-                block
-                @click="print"
-              >
-                Cetak
-              </b-button>
-            </b-col>
+            />
             <b-col
               cols="12"
               md="3"
@@ -537,7 +547,7 @@
                 block
                 @click="printLandscape"
               >
-                Cetak Invoice
+                Cetak Struk
               </b-button>
             </b-col>
             <b-col
@@ -746,7 +756,7 @@ export default {
       return this.logoImg
     },
     formatPrice(value) {
-      const val = (value / 1).toFixed(2).replace('.', ',')
+      const val = (value / 1).toFixed(0).replace('.', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     print() {
