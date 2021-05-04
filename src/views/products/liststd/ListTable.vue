@@ -1132,6 +1132,7 @@ export default {
       this.fetchDataUpload()
     },
     fetchUpdateCustomer() {
+      this.isLoading = true
       const param = new FormData()
       param.append('id_product', this.inpId)
       if (this.selectedFile !== null && this.selectedFile !== '') {
@@ -1174,6 +1175,7 @@ export default {
       })
     },
     fetchDataInsert() {
+      this.isLoading = true
       const param = new FormData()
       if (this.selectedFile !== null && this.selectedFile !== '') {
         param.append('gambar_product', this.selectedFile)
@@ -1214,12 +1216,12 @@ export default {
       })
     },
     fetchDataUpload() {
-      const data = {
-        kode_category: this.inpCode,
-        nama_category: this.inpName,
-        note_category: this.inpNotes,
+      this.isLoading = true
+      const param = new FormData()
+      if (this.selectedUploadFile !== null && this.selectedUploadFile !== '') {
+        param.append('excel', this.selectedUploadFile)
       }
-      appService.addAdminCategory(data).then(response => {
+      appService.importProductAdmin(param).then(response => {
         const res = response.data
         console.log(res)
         if (res.result) {

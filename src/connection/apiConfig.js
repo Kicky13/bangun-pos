@@ -100,4 +100,5 @@ export default {
   saveProductAdmin: 'admin/product/store',
   updateProductAdmin: 'admin/product/update',
   deleteProductAdmin: 'admin/product/delete/',
+  importProductAdmin: 'admin/product/import',
 }

@@ -585,4 +585,16 @@ export default class ApiService {
       url: this.urlCnf.deleteProductAdmin + uuid,
     })
   }
+
+  importProductAdmin(param) {
+    return axios({
+      method: 'post',
+      url: this.urlCnf.importProductAdmin,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        accept: 'multipart/form-data',
+      },
+      data: param,
+    })
+  }
 }
