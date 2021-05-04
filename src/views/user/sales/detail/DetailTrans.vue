@@ -243,6 +243,18 @@
           <div>
             <table width="100%">
               <tbody style="text-align: center;">
+                <tr v-if="dataPenjualan.tax === 0">
+                  <td
+                    colspan="2"
+                    style="text-align: left;"
+                  >
+                    Catatan :
+                    <br>
+                    ** Harga Produk Yang Tercantum Sudah Termasuk PPN **
+                    <br>
+                    <hr>
+                  </td>
+                </tr>
                 <tr>
                   <td width="50%">
                     Telp : {{ dataPenjualan.telpToko }}
@@ -503,6 +515,18 @@
           <div>
             <table width="100%">
               <tbody style="text-align: center;">
+                <tr v-if="dataPenjualan.tax === 0">
+                  <td
+                    colspan="2"
+                    style="text-align: left;"
+                  >
+                    Catatan :
+                    <br>
+                    ** Harga Produk Yang Tercantum Sudah Termasuk PPN **
+                    <br>
+                    <hr>
+                  </td>
+                </tr>
                 <tr>
                   <td width="50%">
                     Telp : {{ dataPenjualan.telpToko }}
