@@ -674,7 +674,7 @@ export default {
         {
           label: 'Action',
           field: 'action',
-          shortable: false,
+          sortable: false,
         },
       ],
       rows: [],
@@ -840,7 +840,7 @@ export default {
             itemlist.forEach(item => {
               this.subCategoryItems.push({
                 value: item.id,
-                text: (item.nama_category).toUpperCase(),
+                text: (item.nama_subcategory).toUpperCase(),
               })
             })
           } else {
@@ -1060,7 +1060,7 @@ export default {
       console.log(data)
       this.inpId = data.encodedID
       this.disableStdInput = false
-      this.productimgurl = null
+      this.productimgurl = data.imgproduk
       this.productCode = data.kodeproduk
       this.productName = data.namaproduk
       this.productPrice = 0
@@ -1133,27 +1133,24 @@ export default {
     },
     fetchUpdateCustomer() {
       const param = new FormData()
-      param.append('id_produk', this.inpId)
       param.append('gambar_product', this.selectedFile)
-      param.append('id_category', this.selectedCategory)
-      param.append('id_subcategory', this.selectedSubCategory)
+      // param.append('id_category', this.selectedCategory)
+      // param.append('id_subcategory', this.selectedSubCategory)
+      param.append('id_category', this.selectedSubCategory)
       param.append('id_brand', this.selectedBrand)
       param.append('id_type', this.selectedType)
       param.append('kode_product', this.productCode)
       param.append('nama_product', this.productName)
-      param.append('price', this.productPrice)
-      param.append('qty', 0)
-      param.append('uom', this.selectedUnit)
+      param.append('id_uom', this.selectedUnit)
       param.append('notes', this.productNote)
-      param.append('is_available', this.selectedStatus)
-      appService.saveProductAdmin(param).then(response => {
+      appService.updateProductAdmin(this.inpId, param).then(response => {
         const { data } = response
         this.isLoading = false
         if (data.result) {
           this.$toast({
             component: ToastificationContent,
             props: {
-              title: 'Sukses Menambahkan Produk',
+              title: 'Sukses Mengubah Data Produk',
               icon: 'CoffeeIcon',
               variant: 'success',
             },
@@ -1164,7 +1161,7 @@ export default {
           this.$toast({
             component: ToastificationContent,
             props: {
-              title: 'Gagal Menambahkan Produk',
+              title: 'Gagal Mengubah Data Produk',
               icon: 'AlertCircleIcon',
               variant: 'danger',
             },
@@ -1175,13 +1172,14 @@ export default {
     fetchDataInsert() {
       const param = new FormData()
       param.append('gambar_product', this.selectedFile)
-      param.append('id_category', this.selectedCategory)
-      param.append('id_subcategory', this.selectedSubCategory)
+      // param.append('id_category', this.selectedCategory)
+      // param.append('id_subcategory', this.selectedSubCategory)
+      param.append('id_category', this.selectedSubCategory)
       param.append('id_brand', this.selectedBrand)
       param.append('id_type', this.selectedType)
       param.append('kode_product', this.productCode)
       param.append('nama_product', this.productName)
-      param.append('uom', this.selectedUnit)
+      param.append('id_uom', this.selectedUnit)
       param.append('notes', this.productNote)
       appService.saveProductAdmin(param).then(response => {
         const { data } = response

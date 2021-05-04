@@ -335,7 +335,7 @@ export default class ApiService {
 
   updateAdminCategory(id, param) {
     return axios({
-      method: 'post',
+      method: 'put',
       url: this.urlCnf.updateAdminCategory + id,
       data: param,
     })
@@ -559,6 +559,18 @@ export default class ApiService {
     return axios({
       method: 'post',
       url: this.urlCnf.saveProductAdmin,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        accept: 'multipart/form-data',
+      },
+      data: param,
+    })
+  }
+
+  updateProductAdmin(id, param) {
+    return axios({
+      method: 'put',
+      url: this.urlCnf.updateProductAdmin + id,
       headers: {
         'Content-Type': 'multipart/form-data',
         accept: 'multipart/form-data',
