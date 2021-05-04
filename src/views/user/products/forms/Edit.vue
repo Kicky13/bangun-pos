@@ -638,6 +638,7 @@ export default {
     },
     onFileChange(e) {
       const file = e.target.files[0]
+      console.log(file)
       if (file) {
         this.logoSize = file.size
         if (file.size <= 500000 && ((file.type).toLowerCase() === 'image/png' || (file.type).toLowerCase() === 'image/jpeg' || (file.type).toLowerCase() === 'image/jpg')) {
@@ -657,7 +658,9 @@ export default {
               },
             })
           }
-          if ((file.type).toLowerCase() !== 'image/png' || (file.type).toLowerCase() !== 'image/jpeg' || (file.type).toLowerCase() !== 'image/jpg') {
+          if ((file.type).toLowerCase() === 'image/png' || (file.type).toLowerCase() === 'image/jpeg' || (file.type).toLowerCase() === 'image/jpg') {
+            console.log(file.type)
+          } else {
             this.allowedTipeFile = 0
             this.$toast({
               component: ToastificationContent,
@@ -704,8 +707,8 @@ export default {
       //     variant: 'danger',
       //   },
       // })
-      this.isLoading = true
       if (this.formValidate()) {
+        this.isLoading = true
         const param = new FormData()
         param.append('gambar_product', this.selectedFile)
         param.append('id_product', this.productId)
