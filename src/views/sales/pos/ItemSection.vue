@@ -576,6 +576,7 @@ export default {
     async getAllAntrian() {
       appService.getListAntrian().then(response => {
         const { data } = response.data
+        console.log(data)
         this.listAntrian = []
         if (data) {
           data.forEach(antrian => {
@@ -587,6 +588,7 @@ export default {
     async loadAntrian(dataAntrian) {
       appService.getLoadAntrian(dataAntrian.uuid).then(response => {
         const { data } = response.data
+        console.log(data)
         if (data) {
           this.listAntrian.push({
             uuid: dataAntrian.uuid,

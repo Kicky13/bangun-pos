@@ -121,7 +121,7 @@
                         <!-- Price Item -->
                         <b-col>
                           <span>
-                            Rp. {{ formatPrice(item.price) }} / PCS
+                            Rp. {{ formatPrice(item.price) }} / {{ item.nama_uom }}
                             <feather-icon
                               v-b-modal.cartProductEdit
                               icon="EditIcon"
@@ -682,6 +682,39 @@
                     </b-input-group>
                   </b-form-group>
                 </b-col>
+                <b-col
+                  sm="6"
+                  style="margin-top: 10px;"
+                >
+                  <b-form-checkbox
+                    @change="disabledTax"
+                  >
+                    Harga termasuk pajak
+                  </b-form-checkbox>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col sm="6">
+                  <b-form-group
+                    label="Discount"
+                    label-for="discount"
+                    label-cols-md="4"
+                  >
+                    <b-input-group
+                      prepend="Rp."
+                      append=".00"
+                      class="input-group-merge"
+                    >
+                      <b-form-input
+                        id="discount"
+                        v-model.number="inputDiscount"
+                        style="text-align: right;"
+                        @keypress="isNumberKey($event, discountStop)"
+                        @input="discountLength"
+                      />
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
                 <b-col sm="6">
                   <b-form-group
                     label="Customer"
@@ -708,20 +741,20 @@
               <b-row>
                 <b-col sm="6">
                   <b-form-group
-                    label="Discount"
-                    label-for="discount"
+                    label="Pajak"
+                    label-for="tax"
                     label-cols-md="4"
                   >
                     <b-input-group
-                      append=".00"
+                      :append="'\xa0\xa0%\xa0'"
                       class="input-group-merge"
                     >
                       <b-form-input
-                        id="discount"
-                        v-model.number="inputDiscount"
+                        id="tax"
+                        v-model.number="inputTax"
                         style="text-align: right;"
-                        @keypress="isNumberKey($event, discountStop)"
-                        @input="discountLength"
+                        :disabled="disabledTaxInput"
+                        @keypress="isNumberKey"
                       />
                     </b-input-group>
                   </b-form-group>
@@ -744,19 +777,19 @@
               <b-row>
                 <b-col sm="6">
                   <b-form-group
-                    label="Pajak"
-                    label-for="tax"
+                    label-for="taxConvert"
                     label-cols-md="4"
                   >
                     <b-input-group
+                      prepend="Rp."
                       append=".00"
                       class="input-group-merge"
                     >
                       <b-form-input
-                        id="tax"
-                        v-model.number="inputTax"
+                        id="taxConvert"
+                        :value="taxConvert"
                         style="text-align: right;"
-                        @keypress="isNumberKey"
+                        disabled
                       />
                     </b-input-group>
                   </b-form-group>
@@ -783,6 +816,7 @@
                     label-cols-md="4"
                   >
                     <b-input-group
+                      prepend="Rp."
                       append=".00"
                       class="input-group-merge"
                     >
@@ -819,6 +853,7 @@
                     label-cols-md="4"
                   >
                     <b-input-group
+                      prepend="Rp."
                       append=".00"
                       class="input-group-merge"
                     >
@@ -839,6 +874,7 @@
                     label-cols-md="5"
                   >
                     <b-input-group
+                      prepend="Rp."
                       append=".00"
                       class="input-group-merge"
                     >
@@ -887,7 +923,7 @@
 
 <script>
 import {
-  BRow, BCol, BCard, BForm, BFormGroup, BFormInput, BButton, BAlert, BFormSelect, BInputGroup, BModal, BFormTextarea, VBModal, BFormInvalidFeedback,
+  BRow, BCol, BCard, BForm, BFormGroup, BFormInput, BButton, BAlert, BFormSelect, BInputGroup, BModal, BFormTextarea, VBModal, BFormInvalidFeedback, BFormCheckbox,
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
@@ -913,6 +949,7 @@ export default {
     BInputGroup,
     BCard,
     BFormInvalidFeedback,
+    BFormCheckbox,
   },
   directives: {
     Ripple,
@@ -1096,6 +1133,7 @@ export default {
       tempPrice: 0,
       discountStop: false,
       checkId: {},
+      disabledTaxInput: false,
     }
   },
   computed: {
@@ -1120,10 +1158,13 @@ export default {
       return false
     },
     grandTotal() {
-      return this.totalSubtotal - this.inputDiscount + this.inputTax + this.inputOngkir
+      return this.totalSubtotal - this.inputDiscount + this.taxConvert + this.inputOngkir
     },
     kembalian() {
       return this.inputPaid > 0 ? this.inputPaid - this.grandTotal : 0
+    },
+    taxConvert() {
+      return (this.totalSubtotal * this.inputTax) / 100
     },
   },
   mounted() {
@@ -1228,6 +1269,7 @@ export default {
             kode_produk: product.kode_produk,
             price: product.price,
             nama_produk: product.nama_produk,
+            nama_uom: product.nama_uom,
             quantity: 1,
             subtotal() {
               return this.price * this.quantity
@@ -1261,14 +1303,17 @@ export default {
         kode_transaction: this.transactionCode,
         transaction_id: this.checkId.id_transaction || null,
         discount: this.inputDiscount,
+        no_references: this.noReference,
         shipping: this.inputOngkir,
         tax: this.inputTax,
-        pay_amount: this.grandTotal,
+        pay_amount: this.selectedPaymentMethod === 2 ? 0 : this.grandTotal,
         payment_type: this.selectedPaymentMethod,
         items: products,
       }
-      parentComponent.$emit('deleteAntrian', param.transaction_id)
-      this.checkId = {}
+      if (this.checkId) {
+        parentComponent.$emit('deleteAntrian', param.transaction_id)
+      }
+      console.log(param)
       if (this.formSaveTransactionValidate()) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
@@ -1303,6 +1348,7 @@ export default {
             customer_id: this.selectedCustomer ? this.customerList.find(list => list.text === this.selectedCustomer).value : null,
             cashier_id: this.selectedCashier,
             kode_transaction: this.transactionCode,
+            no_references: this.noReference,
             discount: this.inputDiscount,
             shipping: this.inputOngkir,
             tax: this.inputTax,
@@ -1316,8 +1362,7 @@ export default {
               this.makeToast('Antrian Berhasil Ditambahkan', 'CoffeeIcon', 'success', 'Silahkan cek di daftar antrian')
               this.setTransactionCode()
               parentComponent.$emit('updateAntrian', data)
-              this.selectedCustomer = null
-              this.items = []
+              this.resetButton()
             }
           }).catch(err => {
             console.log(err)
@@ -1333,6 +1378,7 @@ export default {
       this.selectedCashier = null
       this.noReference = null
       this.items = []
+      this.checkId = {}
     },
     resetAddNewCustomer() {
       this.customerBaru = {
@@ -1354,6 +1400,7 @@ export default {
       this.inputPaid = 0
       this.note = ''
       this.items = []
+      this.checkId = {}
     },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
@@ -1551,6 +1598,14 @@ export default {
     },
     quantityValidate() {
       return this.items.find(item => item.quantity > 0)
+    },
+    disabledTax(event) {
+      if (event) {
+        this.inputTax = 0
+        this.disabledTaxInput = true
+      } else {
+        this.disabledTaxInput = false
+      }
     },
     repeateAgain() {
       this.items.push({
