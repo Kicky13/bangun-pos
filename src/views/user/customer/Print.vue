@@ -102,49 +102,45 @@
       <!-- table -->
       <table width="100%">
         <thead style="text-align: center;">
-          <th>Kode Penjualan</th>
+          <th>Kode Customer</th>
           <th>Customer</th>
-          <th>Ref. Code</th>
-          <th>Sub. Total</th>
-          <th>Diskon</th>
-          <th>Pajak</th>
-          <th>Ongkir</th>
-          <th>Type Pembayaran</th>
-          <th>Status</th>
+          <th>No. Handphone</th>
+          <th>Jumlah Trans.</th>
+          <th>Nilai Total Trans.</th>
+          <th>Total Hutang</th>
+          <th>Hutang Dibayar</th>
+          <th>Sisa Hutang</th>
         </thead>
         <tbody>
           <tr
-            v-for="(item) in dataListTrans"
+            v-for="(item) in dataCustomer"
             :id="item.transId"
             :key="item.transId"
             ref="row"
           >
             <td>
-              {{ item.saleCode }}
+              {{ item.custCode }}
             </td>
             <td>
               {{ item.customer }}
             </td>
             <td style="text-align: center">
-              {{ item.refCode }}
-            </td>
-            <td>
-              {{ formatPrice(item.subTotal) }}
-            </td>
-            <td>
-              {{ formatPrice(item.diskon) }}
-            </td>
-            <td>
-              {{ formatPrice(item.pajak) }}
-            </td>
-            <td>
-              {{ formatPrice(item.ongkir) }}
+              {{ item.nohp }}
             </td>
             <td style="text-align: center">
-              {{ item.typeBayar }}
+              {{ item.jumTrans }}
             </td>
-            <td style="text-align: center">
-              {{ item.status }}
+            <td>
+              {{ formatPrice(item.totalTrans) }}
+            </td>
+            <td>
+              {{ formatPrice(item.totalHutang) }}
+            </td>
+            <td>
+              {{ formatPrice(item.sudahBayar) }}
+            </td>
+            <td>
+              {{ formatPrice(item.sisaHutang) }}
             </td>
           </tr>
         </tbody>
@@ -174,7 +170,7 @@ export default {
     Ripple,
   },
   props: {
-    dataListTrans: {
+    dataCustomer: {
       type: Array,
       default: () => [],
     },
@@ -320,8 +316,8 @@ export default {
       this.printDate = today.toUTCString()
     },
     setDataTable() {
-      console.log(this.dataListTrans)
-      this.dataListTrans.forEach(x => {
+      console.log(this.dataCustomer)
+      this.dataCustomer.forEach(x => {
         this.rows.push(x)
       })
     },
@@ -329,21 +325,6 @@ export default {
       const val = (value / 1).toFixed(2).replace('.', ',')
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
       return `Rp. ${formatedval}`
-    },
-    setRows(data) {
-      const res = {
-        transId: data.id,
-        saleCode: data.kode_transaksi,
-        customer: data.customer.nama,
-        refCode: data.no_references ?? '-',
-        subTotal: data.sub_total,
-        diskon: data.discount,
-        pajak: data.pajak,
-        ongkir: data.ongkir,
-        typeBayar: data.type_pembayaran,
-        status: data.status,
-      }
-      this.rows.push(res)
     },
     printLandscape() {
       const localOptions = {
