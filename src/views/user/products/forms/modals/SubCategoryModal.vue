@@ -171,7 +171,7 @@ export default {
         id_category: this.selectedCategory,
         kode_category: this.subcategoryCode,
         nama_category: this.subcategoryName,
-        note_category: this.subcategoryNotes,
+        notes: this.subcategoryNotes,
       }
       axios({
         method: 'post',

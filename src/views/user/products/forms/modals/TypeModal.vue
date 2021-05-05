@@ -119,7 +119,7 @@ export default {
       const param = {
         kode_type: this.typeCode,
         nama_type: this.typeName,
-        note_type: this.typeNotes,
+        notes: this.typeNotes,
       }
       axios({
         method: 'post',

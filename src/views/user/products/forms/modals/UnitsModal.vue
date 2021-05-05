@@ -119,7 +119,7 @@ export default {
       const param = {
         kode_uom: this.unitCode,
         nama_uom: this.unitName,
-        note_uom: this.unitNotes,
+        notes: this.unitNotes,
       }
       axios({
         method: 'post',
