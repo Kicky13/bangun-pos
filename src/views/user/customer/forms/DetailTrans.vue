@@ -143,7 +143,7 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>Pajak :</b>
+                    <b>Pajak (@ {{ dataPenjualan.tax }}%):</b>
                   </td>
                   <td
                     colspan="2"
@@ -185,6 +185,20 @@
                     colspan="2"
                     style="text-align: right;"
                   >
+                    <b>Status :</b>
+                  </td>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>{{ dataPenjualan.paymentStatus }}</b>
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
                     <b>Tipe Pembayaran :</b>
                   </td>
                   <td
@@ -193,7 +207,7 @@
                   >
                     <b>{{ dataPenjualan.typePayment }}</b>
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td
                     colspan="2"
@@ -243,6 +257,18 @@
           <div>
             <table width="100%">
               <tbody style="text-align: center;">
+                <tr v-if="dataPenjualan.tax === 0">
+                  <td
+                    colspan="2"
+                    style="text-align: left;"
+                  >
+                    Catatan :
+                    <br>
+                    ** Harga Produk Yang Tercantum Sudah Termasuk PPN **
+                    <br>
+                    <hr>
+                  </td>
+                </tr>
                 <tr>
                   <td width="50%">
                     Telp : {{ dataPenjualan.telpToko }}
@@ -267,6 +293,25 @@
           </div>
           <!-- End Cart Section -->
         </b-card>
+        <!-- Action Button Section -->
+        <div>
+          <b-row>
+            <b-col
+              cols="12"
+              md="6"
+            >
+              <b-button
+                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+                class="mb-1"
+                block
+                @click="print"
+              >
+                Cetak (Struk 58mm)
+              </b-button>
+            </b-col>
+          </b-row>
+        </div>
+        <!-- End Action Button Section -->
       </b-col>
       <b-col
         cols="12"
@@ -297,12 +342,12 @@
                   </td>
                   <td
                     rowspan="4"
-                    width="20%"
+                    width="15%"
                   />
                   <td width="25%">
                     Kode Penjualan
                   </td>
-                  <td width="25%">
+                  <td width="30%">
                     : {{ dataPenjualan.saleCode }}
                   </td>
                 </tr>
@@ -405,7 +450,7 @@
                     colspan="3"
                     style="text-align: right;"
                   >
-                    <b>Pajak :</b>
+                    <b>Pajak (@ {{ dataPenjualan.tax }}%):</b>
                   </td>
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
@@ -449,12 +494,23 @@
                     colspan="3"
                     style="text-align: right;"
                   >
+                    Status :
+                  </td>
+                  <td style="text-align: right;">
+                    {{ dataPenjualan.paymentStatus }}
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td
+                    colspan="3"
+                    style="text-align: right;"
+                  >
                     No. Pembayaran :
                   </td>
                   <td style="text-align: right;">
                     {{ dataPenjualan.noPemb }}
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td
                     colspan="3"
@@ -484,6 +540,18 @@
           <div>
             <table width="100%">
               <tbody style="text-align: center;">
+                <tr v-if="dataPenjualan.tax === 0">
+                  <td
+                    colspan="2"
+                    style="text-align: left;"
+                  >
+                    Catatan :
+                    <br>
+                    ** Harga Produk Yang Tercantum Sudah Termasuk PPN **
+                    <br>
+                    <hr>
+                  </td>
+                </tr>
                 <tr>
                   <td width="50%">
                     Telp : {{ dataPenjualan.telpToko }}
@@ -517,16 +585,7 @@
             <b-col
               cols="12"
               md="3"
-            >
-              <b-button
-                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                class="mb-1"
-                block
-                @click="print"
-              >
-                Cetak
-              </b-button>
-            </b-col>
+            />
             <b-col
               cols="12"
               md="3"
@@ -537,7 +596,7 @@
                 block
                 @click="printLandscape"
               >
-                Cetak Invoice
+                Cetak Struk
               </b-button>
             </b-col>
             <b-col
@@ -746,7 +805,7 @@ export default {
       return this.logoImg
     },
     formatPrice(value) {
-      const val = (value / 1).toFixed(2).replace('.', ',')
+      const val = (value / 1).toFixed(0).replace('.', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     print() {

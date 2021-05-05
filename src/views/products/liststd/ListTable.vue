@@ -455,6 +455,7 @@
               thumbnail
               fluid
               alt="Image Produk"
+              style="min-width: 100%"
             />
             <b-img
               v-else
@@ -462,6 +463,7 @@
               thumbnail
               fluid
               alt="Image Produk"
+              style="min-width: 100%"
             />
           </b-col>
           <b-col
@@ -1132,8 +1134,12 @@ export default {
       this.fetchDataUpload()
     },
     fetchUpdateCustomer() {
+      this.isLoading = true
       const param = new FormData()
-      param.append('gambar_product', this.selectedFile)
+      param.append('id_product', this.inpId)
+      if (this.selectedFile !== null && this.selectedFile !== '') {
+        param.append('gambar_product', this.selectedFile)
+      }
       // param.append('id_category', this.selectedCategory)
       // param.append('id_subcategory', this.selectedSubCategory)
       param.append('id_category', this.selectedSubCategory)
@@ -1143,14 +1149,14 @@ export default {
       param.append('nama_product', this.productName)
       param.append('id_uom', this.selectedUnit)
       param.append('notes', this.productNote)
-      appService.updateProductAdmin(this.inpId, param).then(response => {
+      appService.updateProductAdmin(param).then(response => {
         const { data } = response
         this.isLoading = false
         if (data.result) {
           this.$toast({
             component: ToastificationContent,
             props: {
-              title: 'Sukses Mengubah Data Produk',
+              title: 'Sukses Mengubah Informasi Produk',
               icon: 'CoffeeIcon',
               variant: 'success',
             },
@@ -1161,7 +1167,8 @@ export default {
           this.$toast({
             component: ToastificationContent,
             props: {
-              title: 'Gagal Mengubah Data Produk',
+              // title: 'Gagal Mengubah Data Produk',
+              title: `Gagal Mengubah Informasi Produk : ${data.message[0]}`,
               icon: 'AlertCircleIcon',
               variant: 'danger',
             },
@@ -1170,8 +1177,11 @@ export default {
       })
     },
     fetchDataInsert() {
+      this.isLoading = true
       const param = new FormData()
-      param.append('gambar_product', this.selectedFile)
+      if (this.selectedFile !== null && this.selectedFile !== '') {
+        param.append('gambar_product', this.selectedFile)
+      }
       // param.append('id_category', this.selectedCategory)
       // param.append('id_subcategory', this.selectedSubCategory)
       param.append('id_category', this.selectedSubCategory)
@@ -1199,7 +1209,7 @@ export default {
           this.$toast({
             component: ToastificationContent,
             props: {
-              title: 'Gagal Menambahkan Produk',
+              title: `Gagal Menambahkan Produk : ${data.message[0]}`,
               icon: 'AlertCircleIcon',
               variant: 'danger',
             },
@@ -1208,12 +1218,12 @@ export default {
       })
     },
     fetchDataUpload() {
-      const data = {
-        kode_category: this.inpCode,
-        nama_category: this.inpName,
-        note_category: this.inpNotes,
+      this.isLoading = true
+      const param = new FormData()
+      if (this.selectedUploadFile !== null && this.selectedUploadFile !== '') {
+        param.append('excel', this.selectedUploadFile)
       }
-      appService.addAdminCategory(data).then(response => {
+      appService.importProductAdmin(param).then(response => {
         const res = response.data
         console.log(res)
         if (res.result) {

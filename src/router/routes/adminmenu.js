@@ -78,6 +78,25 @@ export default [
     },
   },
   {
+    path: '/product/subcategory',
+    name: 'subcategory-product',
+    component: () => import('@/views/products/subcategory/Subcategory.vue'),
+    meta: {
+      pageTitle: 'Sub Ketegori',
+      resource: 'ProductSettings',
+      action: 'manage',
+      breadcrumb: [
+        {
+          text: 'Pengaturan Produk',
+        },
+        {
+          text: 'Sub Ketegori',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/product/merk',
     name: 'brand-product',
     component: () => import('@/views/products/brand/Brand.vue'),

@@ -349,6 +349,7 @@
               thumbnail
               fluid
               alt="Image Produk"
+              style="min-width: 100%"
             />
             <b-img
               v-else
@@ -356,6 +357,7 @@
               thumbnail
               fluid
               alt="Image Produk"
+              style="min-width: 100%"
             />
           </b-col>
         </b-row>
@@ -680,6 +682,7 @@ export default {
         this.selectedUnit = null
         this.selectedType = null
         this.selectedFile = null
+        this.productimgurl = null
       } else {
         this.productCode = this.matchedItem.kode_produk
         this.productName = this.matchedItem.nama_produk
@@ -690,6 +693,7 @@ export default {
         this.selectedUnit = this.matchedItem.id_uom
         this.selectedType = this.matchedItem.id_type
         this.selectedFile = null
+        this.productimgurl = this.matchedItem.img_produk
         this.disableStdInput = true
       }
     },

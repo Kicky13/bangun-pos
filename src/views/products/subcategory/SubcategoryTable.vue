@@ -82,7 +82,7 @@
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
-              @click="ubahData(props.row)"
+              @click="ubahData(props.formattedRow)"
             >
               Ubah
             </b-button>
@@ -90,7 +90,7 @@
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
-              @click="hapusData(props.row)"
+              @click="hapusData(props.formattedRow)"
             >
               Hapus
             </b-button>
@@ -157,7 +157,7 @@
       id="FormData"
       centered
       size="lg"
-      title="Form Kategori"
+      title="Form Sub Kategori"
       ok-title="Simpan"
       cancel-title="Tutup"
       ok-variant="danger"
@@ -166,12 +166,12 @@
       <b-form>
         <b-row>
           <b-col
-            lg="12"
-            md="12"
-            sm="12"
+            lg="6"
+            md="6"
+            sm="6"
           >
             <b-form-group
-              label="Nama Uom / Satuan :"
+              label="Nama Sub Kategori :"
               label-for="dataName"
             >
               <b-form-input
@@ -181,8 +181,25 @@
                 name="dataName"
               />
               <b-form-invalid-feedback>
-                Nama Uom / Satuan wajib diisi
+                Nama Kategori wajib diisi
               </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col
+            lg="6"
+            md="6"
+            sm="6"
+          >
+            <b-form-group
+              label="Kategori"
+              label-for="kategori"
+            >
+              <b-form-select
+                id="kategori"
+                v-model="selectedCategory"
+                name="kategori"
+                :options="categoryPicker"
+              />
             </b-form-group>
           </b-col>
         </b-row>
@@ -286,11 +303,19 @@ export default {
       inpNotes: '',
       isLoading: false,
       editForm: false,
+      selectedCategory: null,
       deleteData: [],
       tokoBangunanList: [],
       selectedToko: '',
       pageLength: 10,
       dir: false,
+      categoryPicker: [
+        {
+          value: null,
+          text: 'Pilih Salah Satu',
+          disabled: true,
+        },
+      ],
       columns: [
         {
           label: 'ID',
@@ -301,12 +326,17 @@ export default {
           field: 'code',
         },
         {
-          label: 'Nama',
-          field: 'name',
+          label: 'ID Kategori',
+          field: 'categoryID',
+          hidden: true,
         },
         {
-          label: 'Keterangan',
-          field: 'notes',
+          label: 'Kategori',
+          field: 'category',
+        },
+        {
+          label: 'Nama Sub',
+          field: 'name',
         },
         {
           label: 'Action',
@@ -338,6 +368,7 @@ export default {
   },
   watch: {},
   created() {
+    this.fetchCategory()
     this.fetchDataList()
   },
   methods: {
@@ -346,27 +377,47 @@ export default {
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
       return `Rp. ${formatedval}`
     },
-    fetchDataList() {
+    fetchCategory() {
       this.isLoading = true
-      appService.getAdminUom().then(response => {
-        this.rows = []
-        const res = response.data
+      appService.getAdminCategory().then(response => {
+        const res = response.data.data
         this.isLoading = false
-        const resdata = res.data
-        if (resdata) {
-          resdata.forEach(this.setupRows)
+        if (res) {
+          res.forEach(this.setupPicker)
         }
       }).catch(err => {
         console.log(err)
         this.isLoading = false
       })
     },
+    fetchDataList() {
+      this.isLoading = true
+      appService.getAdminSubCategory().then(response => {
+        this.rows = []
+        const res = response.data.data
+        this.isLoading = false
+        if (res) {
+          res.forEach(this.setupRows)
+        }
+      }).catch(err => {
+        console.log(err)
+        this.isLoading = false
+      })
+    },
+    setupPicker(data) {
+      const res = {
+        value: data.id,
+        text: (data.nama_category).toUpperCase(),
+      }
+      this.categoryPicker.push(res)
+    },
     setupRows(data) {
       const res = {
         encodedID: data.id,
-        code: data.kode_uom,
-        name: (data.nama_uom).toUpperCase(),
-        notes: data.notes,
+        code: data.kode_subcategory,
+        categoryID: data.id_category,
+        category: (data.nama_category).toUpperCase(),
+        name: (data.nama_subcategory).toUpperCase(),
       }
       this.rows.push(res)
     },
@@ -379,6 +430,7 @@ export default {
       this.inpCode = ''
       this.inpName = ''
       this.inpNotes = ''
+      this.selectedCategory = null
     },
     tambahData() {
       this.clearForm()
@@ -396,7 +448,8 @@ export default {
       this.inpId = data.encodedID
       this.inpCode = data.code
       this.inpName = data.name
-      this.inpNotes = data.notes
+      this.selectedCategory = data.categoryID
+      this.inpNotes = ''
     },
     handleOk(okBtn) {
       if (this.formValidate()) {
@@ -425,19 +478,20 @@ export default {
       // console.log('OK')
       this.isLoading = true
       if (this.editForm) {
-        this.fetchUpdateCustomer()
+        this.fetchUpdate()
       } else {
         this.fetchDataInsert()
       }
     },
-    fetchUpdateCustomer() {
+    fetchUpdate() {
       const data = {
-        id: this.inpId,
-        kode_uom: this.inpCode,
-        nama_uom: this.inpName,
+        parent_id: this.selectedCategory,
+        id_category: this.selectedCategory,
+        kode_category: this.inpCode,
+        nama_category: this.inpName,
         notes: this.inpNotes,
       }
-      appService.updateAdminUom(this.inpId, data).then(response => {
+      appService.updateAdminCategory(this.inpId, data).then(response => {
         console.log(response)
         this.clearForm()
         this.fetchDataList()
@@ -448,11 +502,13 @@ export default {
     },
     fetchDataInsert() {
       const data = {
-        kode_uom: this.inpCode,
-        nama_uom: this.inpName,
+        parent_id: this.selectedCategory,
+        id_category: this.selectedCategory,
+        kode_category: this.inpCode,
+        nama_category: this.inpName,
         notes: this.inpNotes,
       }
-      appService.addAdminUom(data).then(response => {
+      appService.addAdminSubCategory(data).then(response => {
         const res = response.data
         console.log(res)
         if (res.result) {
@@ -487,7 +543,7 @@ export default {
     },
     handleDelete() {
       console.log(this.deleteData)
-      appService.deleteAdminUom(this.deleteData.encodedID).then(response => {
+      appService.deleteAdminSubCategory(this.deleteData.encodedID).then(response => {
         console.log(response)
         this.fetchDataList()
         this.$toast({
@@ -508,6 +564,9 @@ export default {
       const errMsg = []
       if (this.inpName.length === 0) {
         errMsg.push('Nama Kategori Wajib Diisi')
+      }
+      if (this.selectedCategory === null) {
+        errMsg.push('Pilih salah satu kategori')
       }
       errMsg.forEach(msg => {
         this.$toast({

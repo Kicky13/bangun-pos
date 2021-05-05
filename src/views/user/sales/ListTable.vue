@@ -26,30 +26,12 @@
           </div>
         </b-form-group>
       </div>
-      <!-- <div style="float:left;width: 200px !important; margin-left:10px;">
-        <b-form-group>
-          <b-form-select
-            id="pembayaran"
-            v-model="selectedPembayaran"
-            :options="pembayaranItems"
-          />
-        </b-form-group>
-      </div>
-      <div style="float:left;width: 200px !important; margin-left:10px;">
-        <b-form-group>
-          <b-form-select
-            id="status"
-            v-model="selectedStatus"
-            :options="statusItems"
-          />
-        </b-form-group>
-      </div> -->
       <div style="float:left;margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="danger"
           style="margin-top: -15px;"
-          :to="{name: 'user-sale-print'}"
+          @click="cetakDataJual"
         >
           Print
         </b-button>
@@ -59,6 +41,7 @@
     <!-- table -->
     <vue-good-table
       id="printTable"
+      ref="dataJual"
       :columns="columns"
       :rows="rows"
       :rtl="direction"
@@ -118,20 +101,6 @@
                 />
                 <span>Detail</span>
               </b-dropdown-item>
-              <!-- <b-dropdown-item>
-                <feather-icon
-                  icon="Edit2Icon"
-                  class="mr-50"
-                />
-                <span>Edit</span>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <feather-icon
-                  icon="TrashIcon"
-                  class="mr-50"
-                />
-                <span>Delete</span>
-              </b-dropdown-item> -->
             </b-dropdown>
           </span>
         </span>
@@ -370,6 +339,14 @@ export default {
     this.fetchSalesList()
   },
   methods: {
+    cetakDataJual() {
+      const { selectedRows } = this.$refs.dataJual
+      if (selectedRows.length < 1) {
+        this.$router.push({ name: 'user-sale-print', params: { dataJual: this.rows } })
+      } else {
+        this.$router.push({ name: 'user-sale-print', params: { dataJual: selectedRows } })
+      }
+    },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')

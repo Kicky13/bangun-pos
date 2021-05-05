@@ -186,12 +186,14 @@
                 v-bind="previewSetting"
                 :src="imageURL"
                 alt="Logo"
+                style="min-width: 100%"
               />
               <b-img
                 v-else
                 v-bind="previewSetting"
                 :src="require('@/assets/images/slider/06.jpg')"
                 alt="Logo"
+                style="min-width: 100%"
               />
             </b-form-group>
           </b-col>
@@ -334,8 +336,8 @@ export default {
       previewSetting: {
         fluid: true,
         thumbnail: true,
-        width: 230,
-        height: 210,
+        // width: 230,
+        // height: 210,
       },
       ownerName: this.formData.nama_pemilik ?? '',
       ownerNumber: this.formData.telp_pemilik ?? '',

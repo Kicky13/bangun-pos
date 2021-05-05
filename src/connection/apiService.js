@@ -452,7 +452,7 @@ export default class ApiService {
 
   updateAdminUom(id, param) {
     return axios({
-      method: 'post',
+      method: 'put',
       url: this.urlCnf.updateAdminUom + id,
       data: param,
     })
@@ -567,10 +567,10 @@ export default class ApiService {
     })
   }
 
-  updateProductAdmin(id, param) {
+  updateProductAdmin(param) {
     return axios({
-      method: 'put',
-      url: this.urlCnf.updateProductAdmin + id,
+      method: 'post',
+      url: this.urlCnf.updateProductAdmin,
       headers: {
         'Content-Type': 'multipart/form-data',
         accept: 'multipart/form-data',
@@ -583,6 +583,18 @@ export default class ApiService {
     return axios({
       method: 'delete',
       url: this.urlCnf.deleteProductAdmin + uuid,
+    })
+  }
+
+  importProductAdmin(param) {
+    return axios({
+      method: 'post',
+      url: this.urlCnf.importProductAdmin,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        accept: 'multipart/form-data',
+      },
+      data: param,
     })
   }
 }
