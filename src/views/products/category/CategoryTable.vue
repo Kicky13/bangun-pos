@@ -82,7 +82,7 @@
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
-              @click="ubahData(props.formattedRow)"
+              @click="ubahData(props.row)"
             >
               Ubah
             </b-button>
@@ -90,7 +90,7 @@
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
-              @click="hapusData(props.formattedRow)"
+              @click="hapusData(props.row)"
             >
               Hapus
             </b-button>
@@ -305,6 +305,10 @@ export default {
           field: 'name',
         },
         {
+          label: 'Keterangan',
+          field: 'notes',
+        },
+        {
           label: 'Action',
           field: 'action',
         },
@@ -362,6 +366,7 @@ export default {
         encodedID: data.id,
         code: data.kode_category,
         name: (data.nama_category).toUpperCase(),
+        notes: data.notes,
       }
       this.rows.push(res)
     },
@@ -388,10 +393,11 @@ export default {
     },
     setForm(data) {
       console.log(data)
+      console.log('a')
       this.inpId = data.encodedID
       this.inpCode = data.code
       this.inpName = data.name
-      this.inpNotes = ''
+      this.inpNotes = data.notes
     },
     handleOk(okBtn) {
       if (this.formValidate()) {
@@ -430,7 +436,7 @@ export default {
         // id_category: this.inpId,
         kode_category: this.inpCode,
         nama_category: this.inpName,
-        note_category: this.inpNotes,
+        notes: this.inpNotes,
       }
       appService.updateAdminCategory(this.inpId, data).then(response => {
         console.log(response)
@@ -445,7 +451,7 @@ export default {
       const data = {
         kode_category: this.inpCode,
         nama_category: this.inpName,
-        note_category: this.inpNotes,
+        notes: this.inpNotes,
       }
       appService.addAdminCategory(data).then(response => {
         const res = response.data

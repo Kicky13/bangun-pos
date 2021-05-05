@@ -119,7 +119,7 @@ export default {
       const param = {
         kode_category: this.categoryCode,
         nama_category: this.categoryName,
-        note_category: this.categoryNotes,
+        notes: this.categoryNotes,
       }
       axios({
         method: 'post',

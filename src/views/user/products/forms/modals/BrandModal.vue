@@ -119,7 +119,7 @@ export default {
       const param = {
         kode_brand: this.brandCode,
         nama_brand: this.brandName,
-        note_brand: this.brandNotes,
+        notes: this.brandNotes,
       }
       axios({
         method: 'post',

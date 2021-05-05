@@ -143,7 +143,7 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>Pajak :</b>
+                    <b>Pajak (@ {{ dataPenjualan.tax }}%):</b>
                   </td>
                   <td
                     colspan="2"
@@ -185,6 +185,20 @@
                     colspan="2"
                     style="text-align: right;"
                   >
+                    <b>Status :</b>
+                  </td>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>{{ dataPenjualan.paymentStatus }}</b>
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
                     <b>Tipe Pembayaran :</b>
                   </td>
                   <td
@@ -193,7 +207,7 @@
                   >
                     <b>{{ dataPenjualan.typePayment }}</b>
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td
                     colspan="2"
@@ -328,12 +342,12 @@
                   </td>
                   <td
                     rowspan="4"
-                    width="20%"
+                    width="15%"
                   />
                   <td width="25%">
                     Kode Penjualan
                   </td>
-                  <td width="25%">
+                  <td width="30%">
                     : {{ dataPenjualan.saleCode }}
                   </td>
                 </tr>
@@ -436,7 +450,7 @@
                     colspan="3"
                     style="text-align: right;"
                   >
-                    <b>Pajak :</b>
+                    <b>Pajak (@ {{ dataPenjualan.tax }}%):</b>
                   </td>
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
@@ -480,12 +494,23 @@
                     colspan="3"
                     style="text-align: right;"
                   >
+                    Status :
+                  </td>
+                  <td style="text-align: right;">
+                    {{ dataPenjualan.paymentStatus }}
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td
+                    colspan="3"
+                    style="text-align: right;"
+                  >
                     No. Pembayaran :
                   </td>
                   <td style="text-align: right;">
                     {{ dataPenjualan.noPemb }}
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td
                     colspan="3"

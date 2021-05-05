@@ -82,7 +82,7 @@
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
-              @click="ubahData(props.formattedRow)"
+              @click="ubahData(props.row)"
             >
               Ubah
             </b-button>
@@ -90,7 +90,7 @@
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
-              @click="hapusData(props.formattedRow)"
+              @click="hapusData(props.row)"
             >
               Hapus
             </b-button>
@@ -305,6 +305,10 @@ export default {
           field: 'name',
         },
         {
+          label: 'Keterangan',
+          field: 'notes',
+        },
+        {
           label: 'Action',
           field: 'action',
         },
@@ -362,6 +366,7 @@ export default {
         encodedID: data.id,
         code: data.kode_uom,
         name: (data.nama_uom).toUpperCase(),
+        notes: data.notes,
       }
       this.rows.push(res)
     },
@@ -391,7 +396,7 @@ export default {
       this.inpId = data.encodedID
       this.inpCode = data.code
       this.inpName = data.name
-      this.inpNotes = ''
+      this.inpNotes = data.notes
     },
     handleOk(okBtn) {
       if (this.formValidate()) {
@@ -430,7 +435,7 @@ export default {
         id: this.inpId,
         kode_uom: this.inpCode,
         nama_uom: this.inpName,
-        note_uom: this.inpNotes,
+        notes: this.inpNotes,
       }
       appService.updateAdminUom(this.inpId, data).then(response => {
         console.log(response)
@@ -445,7 +450,7 @@ export default {
       const data = {
         kode_uom: this.inpCode,
         nama_uom: this.inpName,
-        note_uom: this.inpNotes,
+        notes: this.inpNotes,
       }
       appService.addAdminUom(data).then(response => {
         const res = response.data
