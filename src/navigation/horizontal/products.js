@@ -13,6 +13,13 @@ export default [
         action: 'manage',
       },
       {
+        title: 'Sub Kategori',
+        route: 'subcategory-product',
+        icon: 'FileTextIcon',
+        resource: 'Product',
+        action: 'manage',
+      },
+      {
         title: 'Merek',
         route: 'brand-product',
         icon: 'FileTextIcon',
