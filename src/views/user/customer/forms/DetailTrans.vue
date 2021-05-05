@@ -138,12 +138,12 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
                   </td>
                 </tr>
-                <tr>
+                <tr v-if="dataPenjualan.includetax === false">
                   <td
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>Pajak (@ {{ dataPenjualan.tax }}%):</b>
+                    <b>Pajak (@ {{ dataPenjualan.percenttax }}%):</b>
                   </td>
                   <td
                     colspan="2"
@@ -257,7 +257,7 @@
           <div>
             <table width="100%">
               <tbody style="text-align: center;">
-                <tr v-if="dataPenjualan.tax === 0">
+                <tr v-if="dataPenjualan.includetax === true">
                   <td
                     colspan="2"
                     style="text-align: left;"
@@ -445,12 +445,12 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
                   </td>
                 </tr>
-                <tr>
+                <tr v-if="dataPenjualan.includetax === false">
                   <td
                     colspan="3"
                     style="text-align: right;"
                   >
-                    <b>Pajak (@ {{ dataPenjualan.tax }}%):</b>
+                    <b>Pajak (@ {{ dataPenjualan.percenttax }}%):</b>
                   </td>
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
@@ -540,7 +540,7 @@
           <div>
             <table width="100%">
               <tbody style="text-align: center;">
-                <tr v-if="dataPenjualan.tax === 0">
+                <tr v-if="dataPenjualan.includetax === true">
                   <td
                     colspan="2"
                     style="text-align: left;"
@@ -682,6 +682,9 @@ export default {
         namaToko: null,
         alamatToko: null,
         logoToko: null,
+        percent_tax: 0,
+        include_tax: false,
+        note: '',
       },
       uuId: '53922ae4305e48aa941999a0362b45b5',
       // eslint-disable-next-line global-require
@@ -773,6 +776,9 @@ export default {
             this.dataPenjualan.namaToko = mPenjualan.toko.nama_toko
             this.dataPenjualan.alamatToko = mPenjualan.toko.alamat
             this.dataPenjualan.logoToko = mPenjualan.toko.logo
+            this.dataPenjualan.percenttax = mPenjualan.percent_tax
+            this.dataPenjualan.includetax = mPenjualan.include_tax
+            this.dataPenjualan.note = mPenjualan.note ? mPenjualan.note : ''
             const itemlist = data.data.detail
             itemlist.forEach(item => {
               this.items.push({
