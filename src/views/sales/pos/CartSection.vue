@@ -918,6 +918,27 @@
         </b-card>
       </b-col>
     </b-row>
+    <b-modal
+      id="askPrint"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Ya, Cetak"
+      cancel-title="Lain Kali"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="handlePrint"
+      @cancel="handleCancelPrint"
+    >
+      <div class="d-block text-center">
+        <h3>Apakah Ingin Mencetak Struck / Nota Transaksi ?</h3>
+      </div>
+    </b-modal>
+    <detail-trans
+      :detail="finalTrans"
+      style="display: none;"
+    />
   </div>
 </template>
 
@@ -930,6 +951,7 @@ import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import { parentComponent } from './PageContent.vue'
+import DetailTrans from './DetailTrans.vue'
 
 const appService = new ApiService()
 
@@ -950,6 +972,7 @@ export default {
     BCard,
     BFormInvalidFeedback,
     BFormCheckbox,
+    DetailTrans,
   },
   directives: {
     Ripple,
@@ -958,6 +981,7 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
+      finalTrans: {},
       transactionCode: '',
       // List Item
       customerList: [],
@@ -1183,6 +1207,20 @@ export default {
     parentComponent.$off('addProductToCart')
   },
   methods: {
+    handlePrint() {
+      this.$htmlToPaper('printReceipt', null, () => {
+        this.setTransactionCode()
+        this.resetSaveTransaction()
+        this.finalTrans = {}
+        this.$bvModal.hide('paymentModal')
+        console.log('done')
+      })
+    },
+    handleCancelPrint() {
+      this.setTransactionCode()
+      this.resetSaveTransaction()
+      this.finalTrans = {}
+    },
     async setTransactionCode() {
       appService.getKodeTransaction().then(response => {
         const { data } = response
@@ -1287,6 +1325,7 @@ export default {
       })
     },
     async saveTransaction() {
+      this.$bvModal.show('askPrint')
       const products = []
       this.items.forEach(item => {
         products.push({
@@ -1321,8 +1360,8 @@ export default {
             this.makeToast('Transaksi Gagal Disimpan', 'AlertCircleIcon', 'danger', data.message[0])
           } else {
             this.makeToast('Transaksi Berhasil Disimpan', 'CoffeeIcon', 'success', 'Silahkan cek di daftar penjualan')
-            this.setTransactionCode()
-            this.resetSaveTransaction()
+            this.finalTrans = data
+            this.$bvModal.show('askPrint')
           }
         }).catch(err => {
           console.log(err)

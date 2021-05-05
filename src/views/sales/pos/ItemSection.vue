@@ -632,7 +632,7 @@ export default {
               const product = {
                 id_produk: item.id_produk,
                 kode_produk: item.kode_produk,
-                img_produk: item.img_produk ? item.img_produk : '/img/06.95d1c509.jpg',
+                img_produk: item.img_produk ? item.img_produk : '/img/06.e77f2397.jpg',
                 price: item.price,
                 nama_produk: item.nama_produk,
                 nama_uom: (item.nama_uom).toUpperCase(),
