@@ -1159,6 +1159,7 @@ export default {
       discountStop: false,
       checkId: {},
       disabledTaxInput: false,
+      uangKembalian: 0,
     }
   },
   computed: {
@@ -1364,6 +1365,7 @@ export default {
             if (this.checkId.id_transaction) {
               parentComponent.$emit('deleteAntrian', param.transaction_id)
             }
+            Object.assign(data, { bayar: this.inputPaid, kembalian: this.uangKembalian })
             this.finalTrans = data
             this.$bvModal.show('askPrint')
           }
