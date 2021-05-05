@@ -388,7 +388,6 @@ export default {
     detail: {
       immediate: true,
       handler() {
-        console.log(this.detail)
         if (this.detail.id) {
           console.log(this.detail)
           const mPenjualan = this.detail
@@ -396,7 +395,7 @@ export default {
           this.dataPenjualan.date = mPenjualan.date
           this.dataPenjualan.saleCode = mPenjualan.kode_transaksi
           this.dataPenjualan.ref = mPenjualan.no_referensi
-          this.dataPenjualan.biller = mPenjualan.cashier ? '' : mPenjualan.cashier.name
+          this.dataPenjualan.biller = mPenjualan.cashier ? mPenjualan.cashier.name : ''
           this.dataPenjualan.customer = mPenjualan.customer === null ? '' : mPenjualan.customer.nama
           this.dataPenjualan.subtotal = mPenjualan.sub_total
           this.dataPenjualan.disc = mPenjualan.discount
@@ -411,6 +410,8 @@ export default {
           this.dataPenjualan.logoToko = mPenjualan.toko.logo
           this.dataPenjualan.percenttax = mPenjualan.percent_tax
           this.dataPenjualan.includetax = mPenjualan.include_tax
+          this.dataPenjualan.bayar = mPenjualan.bayar
+          this.dataPenjualan.kembalian = mPenjualan.kembalian
           this.dataPenjualan.note = mPenjualan.note ? mPenjualan.note : ''
           const itemlist = this.detail.detail
           itemlist.forEach(item => {
