@@ -188,9 +188,10 @@ export default [
     },
   },
   {
-    path: '/history/transaksi/print/:id',
+    path: '/history/transaksi/print/',
     name: 'customer-history-trans-print',
     component: () => import('@/views/user/customer/forms/Print.vue'),
+    props: true,
     meta: {
       // pageTitle: 'Penjualan',
       resource: 'CustomerUser',
@@ -254,24 +255,6 @@ export default [
       // breadcrumb: [
       //   {
       //     text: 'Customer',
-      //     active: true,
-      //   },
-      // ],
-    },
-  },
-  {
-    path: '/test/print/:id',
-    name: 'user-customer-list-trans-detail',
-    component: () => import('@/views/user/customer/forms/Print.vue'),
-    meta: {
-      // pageTitle: 'Penjualan',
-      resource: 'CustomerUser',
-      action: 'manage',
-      redTitle: 'Detail Data Transaksi',
-      redSubs: 'Detail Data Transaksi yang pernah dilakukan oleh customer.',
-      // breadcrumb: [
-      //   {
-      //     text: 'Sales',
       //     active: true,
       //   },
       // ],

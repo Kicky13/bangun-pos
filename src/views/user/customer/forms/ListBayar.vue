@@ -31,7 +31,7 @@
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="danger"
           style="margin-top: -15px;"
-          :to="{name: 'customer-history-trans-print'}"
+          @click="cetakDataCustomer"
         >
           Print
         </b-button>
@@ -40,6 +40,7 @@
 
     <!-- table -->
     <vue-good-table
+      ref="dataCustomer"
       :columns="columns"
       :rows="rows"
       :rtl="direction"
@@ -337,11 +338,18 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
   created() {
-    // console.log(localStorage.getItem('userData'))
     this.fetchListTransaksi()
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
   },
   methods: {
+    cetakDataCustomer() {
+      const { selectedRows } = this.$refs.dataCustomer
+      if (selectedRows.length < 1) {
+        this.$router.push({ name: 'customer-history-trans-print', params: { dataCustomer: this.rows } })
+      } else {
+        this.$router.push({ name: 'customer-history-trans-print', params: { dataCustomer: selectedRows } })
+      }
+    },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
@@ -350,28 +358,6 @@ export default {
     getLogTrans(transid) {
       this.selectedTransId = transid
     },
-    // logStatus(logdata, logresult) {
-    //   if (logresult) {
-    //     if (logdata) {
-    //       return true
-    //     } else {
-    //       this.$toast({
-    //         component: ToastificationContent,
-    //         position: 'top-right',
-    //         props: {
-    //           title: 'Data Tidak Ditemukan',
-    //           icon: 'CoffeeIcon',
-    //           variant: 'danger',
-    //           text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
-    //         },
-    //       })
-    //       // return false
-    //     }
-    //   } else {
-    //     this.$bvModal.show('tokenExpired')
-    //     // return false
-    //   }
-    // },
     fetchListTransaksi() {
       this.isLoading = true
       appService.historyList({ id_customer: this.customerID }).then(response => {
