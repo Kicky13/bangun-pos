@@ -346,11 +346,10 @@ export default {
       this.isLoading = true
       appService.getAdminBrand().then(response => {
         this.rows = []
-        const res = response.data
+        const res = response.data.data
         this.isLoading = false
-        const resdata = res.data
-        if (resdata) {
-          resdata.forEach(this.setupRows)
+        if (res) {
+          res.forEach(this.setupRows)
         }
       }).catch(err => {
         console.log(err)
@@ -420,19 +419,17 @@ export default {
       // console.log('OK')
       this.isLoading = true
       if (this.editForm) {
-        this.fetchUpdateCustomer()
+        this.fetchUpdate()
       } else {
         this.fetchDataInsert()
       }
     },
-    fetchUpdateCustomer() {
+    fetchUpdate() {
       const data = {
-        id_brand: this.inpId,
-        kode_brand: this.inpCode,
         nama_brand: this.inpName,
-        note_brand: this.inpNotes,
+        notes: this.inpNotes,
       }
-      appService.updateAdminBrand(data).then(response => {
+      appService.updateAdminBrand(this.inpId, data).then(response => {
         console.log(response)
         this.clearForm()
         this.fetchDataList()

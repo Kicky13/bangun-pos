@@ -390,7 +390,7 @@ export default class ApiService {
 
   updateAdminBrand(id, param) {
     return axios({
-      method: 'post',
+      method: 'put',
       url: this.urlCnf.updateAdminBrand + id,
       data: param,
     })
@@ -421,7 +421,7 @@ export default class ApiService {
 
   updateAdminType(id, param) {
     return axios({
-      method: 'post',
+      method: 'put',
       url: this.urlCnf.updateAdminType + id,
       data: param,
     })
