@@ -687,6 +687,7 @@
                   style="margin-top: 10px;"
                 >
                   <b-form-checkbox
+                    :checked="disabledTaxInput"
                     @change="disabledTax"
                   >
                     Harga termasuk pajak
@@ -1339,18 +1340,18 @@ export default {
         date_transaction: this.currentDate(),
         customer_id: this.selectedCustomer ? this.customerList.find(list => list.text === this.selectedCustomer).value : null,
         cashier_id: this.selectedCashier,
-        kode_transaction: this.transactionCode,
         transaction_id: this.checkId.id_transaction || null,
+        kode_transaction: this.transactionCode,
         discount: this.inputDiscount,
-        no_references: this.noReference,
         shipping: this.inputOngkir,
-        tax: this.inputTax,
+        tax: this.taxConvert,
+        percent_tax: this.inputTax === 0 ? null : this.inputTax,
+        include_tax: this.disabledTaxInput ? 1 : 0,
+        note: this.note,
         pay_amount: this.selectedPaymentMethod === 2 ? 0 : this.grandTotal,
         payment_type: this.selectedPaymentMethod,
         items: products,
-      }
-      if (this.checkId) {
-        parentComponent.$emit('deleteAntrian', param.transaction_id)
+        no_references: this.noReference,
       }
       console.log(param)
       if (this.formSaveTransactionValidate()) {
@@ -1360,6 +1361,9 @@ export default {
             this.makeToast('Transaksi Gagal Disimpan', 'AlertCircleIcon', 'danger', data.message[0])
           } else {
             this.makeToast('Transaksi Berhasil Disimpan', 'CoffeeIcon', 'success', 'Silahkan cek di daftar penjualan')
+            if (this.checkId.id_transaction) {
+              parentComponent.$emit('deleteAntrian', param.transaction_id)
+            }
             this.finalTrans = data
             this.$bvModal.show('askPrint')
           }
@@ -1387,11 +1391,14 @@ export default {
             customer_id: this.selectedCustomer ? this.customerList.find(list => list.text === this.selectedCustomer).value : null,
             cashier_id: this.selectedCashier,
             kode_transaction: this.transactionCode,
-            no_references: this.noReference,
             discount: this.inputDiscount,
             shipping: this.inputOngkir,
-            tax: this.inputTax,
+            percent_tax: this.inputTax === 0 ? null : this.inputTax,
+            include_tax: this.disabledTaxInput ? 1 : 0,
+            note: this.note,
+            tax: this.taxConvert,
             items: products,
+            no_references: this.noReference,
           }
           appService.addAntrian(param).then(response => {
             const { data } = response.data
@@ -1440,6 +1447,7 @@ export default {
       this.note = ''
       this.items = []
       this.checkId = {}
+      this.disabledTaxInput = false
     },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
@@ -1608,6 +1616,7 @@ export default {
       parentComponent.$on('dataAntrian', dataAntrian => {
         this.selectedCustomer = this.customerList.find(customer => customer.text === dataAntrian.nama_customer).text
         this.selectedCashier = this.cashierList.find(cashier => cashier.id === dataAntrian.id_kasir).value
+        this.noReference = dataAntrian.no_references === '-' ? null : dataAntrian.no_references
         this.checkId.id_transaction = dataAntrian.id_transaction
         this.checkId.uuid = dataAntrian.uuid
         appService.getDetailTransaction(dataAntrian.uuid).then(response => {
@@ -1639,11 +1648,9 @@ export default {
       return this.items.find(item => item.quantity > 0)
     },
     disabledTax(event) {
-      if (event) {
+      this.disabledTaxInput = event
+      if (this.disabledTaxInput) {
         this.inputTax = 0
-        this.disabledTaxInput = true
-      } else {
-        this.disabledTaxInput = false
       }
     },
     repeateAgain() {
