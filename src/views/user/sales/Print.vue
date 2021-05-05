@@ -47,13 +47,13 @@
             v-if="userData.avatar"
             :src="userData.avatar"
             alt="Logo POS Retail"
-            style="margin-bottom : 20px; width: 50%;"
+            style="margin-bottom : 20px; width: 100%;"
           />
           <b-img
             v-else
             :src="require('@/assets/images/logo/POSRetailBlack.png')"
             alt="Logo POS Retail"
-            style="margin-bottom : 20px; width: 50%"
+            style="margin-bottom : 20px; width: 100%"
           />
         </div>
         <div style="col-md-9">

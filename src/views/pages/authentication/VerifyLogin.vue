@@ -142,8 +142,7 @@ export default {
         identityNumber: toko.no_identitas,
         ownerNumber: toko.telp_pemilik,
         shopNumber: toko.telp_toko,
-        // eslint-disable-next-line global-require
-        avatar: require('@/assets/images/avatars/13-small.png'),
+        avatar: toko.logo_toko,
         email: 'user@demo.com',
         role,
         ability: userAbility,
