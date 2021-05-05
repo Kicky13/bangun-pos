@@ -483,7 +483,7 @@ export default class ApiService {
 
   updateAdminSubCategory(id, param) {
     return axios({
-      method: 'post',
+      method: 'put',
       url: this.urlCnf.updateAdminSubCategory + id,
       data: param,
     })

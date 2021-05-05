@@ -490,7 +490,7 @@ export default {
         nama_category: this.inpName,
         notes: this.inpNotes,
       }
-      appService.updateAdminCategory(this.inpId, data).then(response => {
+      appService.updateAdminSubCategory(this.inpId, data).then(response => {
         console.log(response)
         this.clearForm()
         this.fetchDataList()
