@@ -36,7 +36,7 @@
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="primary"
           style="margin-top: -15px;"
-          @click="handleDelete"
+          @click="confirmDelete"
         >
           Delete
         </b-button>
@@ -401,6 +401,23 @@
         <h3>Apakah Anda Sudah Yakin ?</h3>
       </div>
     </b-modal>
+    <b-modal
+      id="confirmDelete"
+      centered
+      size="sm"
+      hide-header
+      hide-header-close
+      ok-title="Ya, Lanjutkan ..."
+      cancel-title="Batalkan"
+      ok-variant="danger"
+      cancel-variant="secondary"
+      @ok="handleDelete"
+      @cancel="cancelDelete"
+    >
+      <div class="d-block text-center">
+        <h3>Apakah Anda Yakin Menghapus data berikut ?</h3>
+      </div>
+    </b-modal>
     <alert-token />
     <!-- End of Customer Add -->
   </b-card>
@@ -744,6 +761,27 @@ export default {
         console.log(err)
         this.isLoading = false
       })
+    },
+    confirmDelete(okBtn) {
+      const { selectedRows } = this.$refs.dataCustomer
+      if (selectedRows.length > 0) {
+        this.$bvModal.show('confirmDelete')
+      } else {
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'ERROR',
+            icon: 'AlertTriangleIcon',
+            variant: 'danger',
+            text: 'Centang salah satu data untuk dihapus',
+          },
+        })
+        okBtn.preventDefault()
+      }
+    },
+    cancelDelete() {
+      this.$bvModal.hide('confirmDelete')
     },
     handleDelete() {
       this.isLoading = true
