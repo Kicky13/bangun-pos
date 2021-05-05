@@ -28,6 +28,7 @@
             v-ripple.400="'rgba(40, 199, 111, 0.15)'"
             class="mb-1"
             block
+            :to="{name: 'user-customer'}"
           >
             Kembali
           </b-button>
@@ -127,7 +128,7 @@
             <td style="text-align: center">
               {{ item.refCode }}
             </td>
-            <td style="text-align: left">
+            <td>
               {{ formatPrice(item.subTotal) }}
             </td>
             <td>
