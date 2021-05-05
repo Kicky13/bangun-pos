@@ -1159,7 +1159,6 @@ export default {
       discountStop: false,
       checkId: {},
       disabledTaxInput: false,
-      uangKembalian: 0,
     }
   },
   computed: {
@@ -1327,7 +1326,6 @@ export default {
       })
     },
     async saveTransaction() {
-      this.$bvModal.show('askPrint')
       const products = []
       this.items.forEach(item => {
         products.push({
@@ -1354,7 +1352,6 @@ export default {
         items: products,
         no_references: this.noReference,
       }
-      console.log(param)
       if (this.formSaveTransactionValidate()) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
@@ -1365,7 +1362,7 @@ export default {
             if (this.checkId.id_transaction) {
               parentComponent.$emit('deleteAntrian', param.transaction_id)
             }
-            Object.assign(data, { bayar: this.inputPaid, kembalian: this.uangKembalian })
+            Object.assign(data, { bayar: this.inputPaid, kembalian: this.kembalian })
             this.finalTrans = data
             this.$bvModal.show('askPrint')
           }
@@ -1511,20 +1508,29 @@ export default {
       return false
     },
     formSaveTransactionValidate() {
+      const title = 'Simpan Antrian'
+      const icon = 'AlertCircleIcon'
+      if (this.selectedCustomer === '') {
+        this.selectedCustomer = null
+      }
       if (!this.quantityValidate()) {
-        this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Quantity item masih kosong')
+        this.makeToast(title, icon, 'danger', 'Quantity item masih kosong')
         return false
       }
       if (!this.selectedPaymentMethod) {
-        this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Silahkan pilih tipe pembayaran terlebih dahulu')
+        this.makeToast(title, icon, 'danger', 'Silahkan pilih tipe pembayaran terlebih dahulu')
         return false
       }
       if (this.selectedCustomer === null && this.selectedPaymentMethod === 2) {
-        this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Walk-in customer tidak diizinkan berhutang')
+        this.makeToast(title, icon, 'danger', 'Walk-in customer tidak diizinkan berhutang')
         return false
       }
       if (this.kembalian < 0) {
-        this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Total pembayaran kurang')
+        this.makeToast(title, icon, 'danger', 'Total pembayaran kurang')
+        return false
+      }
+      if (this.selectedPaymentMethod === 1 && this.inputPaid < this.grandTotal) {
+        this.makeToast(title, icon, 'danger', 'Total pembayaran kurang')
         return false
       }
       return true
