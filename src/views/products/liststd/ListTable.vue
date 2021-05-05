@@ -212,6 +212,12 @@
                 File harus dengan tipe .XLS / .XLSX
               </b-form-invalid-feedback>
             </b-form-group>
+            <div>
+              <!-- https://api-posretail.metrojasa.com/api/admin/product/download -->
+              <span><b>Catatan:</b></span>
+              <br>
+              <span>Lampiran file yang diupload harus sesuai dengan template yang telah disediakan. Template dapat didownload pada link <a href="https://api-posretail.metrojasa.com/api/admin/product/download">berikut</a>.</span>
+            </div>
           </b-col>
         </b-row>
       </b-form>
