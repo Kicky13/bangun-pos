@@ -25,8 +25,9 @@
       <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="secondary"
+          variant="primary"
           style="margin-top: -15px;"
+          @click="cetakDataCustomer"
         >
           Print
         </b-button>
@@ -603,10 +604,16 @@ export default {
     this.fetchCustomerList()
   },
   methods: {
+    cetakDataCustomer() {
+      const { selectedRows } = this.$refs.dataCustomer
+      if (selectedRows.length < 1) {
+        this.$router.push({ name: 'user-customer-print', params: { dataCustomer: this.rows } })
+      } else {
+        this.$router.push({ name: 'user-customer-print', params: { dataCustomer: selectedRows } })
+      }
+    },
     formatRefCode() {
-      // console.log(this.productCode)
       this.jagobangunRef = this.jagobangunRef.replace(/[^0-9-]/g, '')
-      // console.log(this.productCode)
     },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')

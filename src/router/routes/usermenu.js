@@ -134,6 +134,25 @@ export default [
     },
   },
   {
+    path: '/mycustomer/print',
+    name: 'user-customer-print',
+    component: () => import('@/views/user/customer/Print.vue'),
+    props: true,
+    meta: {
+      // pageTitle: 'Customer',
+      resource: 'CustomerUser',
+      action: 'manage',
+      redTitle: 'Data Customer',
+      redSubs: 'Daftarkan Semua Pelanggan Tokomu untuk Pencatatan Buku KAS Lebih Mudah.',
+      // breadcrumb: [
+      //   {
+      //     text: 'Customer',
+      //     active: true,
+      //   },
+      // ],
+    },
+  },
+  {
     path: '/myprofile',
     name: 'user-profile',
     component: () => import('@/views/pages/authentication/Profile.vue'),

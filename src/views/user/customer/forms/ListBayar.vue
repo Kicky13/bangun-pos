@@ -31,7 +31,7 @@
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="danger"
           style="margin-top: -15px;"
-          @click="cetakDataCustomer"
+          @click="cetakDataListTrans"
         >
           Print
         </b-button>
@@ -40,7 +40,7 @@
 
     <!-- table -->
     <vue-good-table
-      ref="dataCustomer"
+      ref="dataListTrans"
       :columns="columns"
       :rows="rows"
       :rtl="direction"
@@ -342,12 +342,12 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
   },
   methods: {
-    cetakDataCustomer() {
-      const { selectedRows } = this.$refs.dataCustomer
+    cetakDataListTrans() {
+      const { selectedRows } = this.$refs.dataListTrans
       if (selectedRows.length < 1) {
-        this.$router.push({ name: 'customer-history-trans-print', params: { dataCustomer: this.rows } })
+        this.$router.push({ name: 'customer-history-trans-print', params: { dataListTrans: this.rows } })
       } else {
-        this.$router.push({ name: 'customer-history-trans-print', params: { dataCustomer: selectedRows } })
+        this.$router.push({ name: 'customer-history-trans-print', params: { dataListTrans: selectedRows } })
       }
     },
     formatPrice(value) {
