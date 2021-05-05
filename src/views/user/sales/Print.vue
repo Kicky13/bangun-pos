@@ -38,83 +38,150 @@
     <!-- End Action Button Section -->
     <b-card id="printTable">
       <loading-grow v-if="isLoading" />
+      <div
+        class="row"
+        style="margin-bottom: 25px"
+      >
+        <div class="col-md-3">
+          <b-img
+            v-if="userData.avatar"
+            :src="userData.avatar"
+            alt="Logo POS Retail"
+            style="margin-bottom : 20px; width: 50%;"
+          />
+          <b-img
+            v-else
+            :src="require('@/assets/images/logo/POSRetailBlack.png')"
+            alt="Logo POS Retail"
+            style="margin-bottom : 20px; width: 50%"
+          />
+        </div>
+        <div style="col-md-9">
+          <table width="100%">
+            <tbody>
+              <tr>
+                <td>
+                  Nama Toko
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ userData.shopName }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  No. Telp
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ userData.shopNumber }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Alamat
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ userData.ownerAddress }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Tanggal Cetak
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ printDate }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <!-- table -->
-      <vue-good-table
-        id="printTable"
-        :columns="columns"
-        :rows="rows"
-        :rtl="direction"
-        :select-options="{ enabled: false }"
-        :search-options="{
-          enabled: false,
-          externalQuery: searchTerm }"
-        :pagination-options="{
-          enabled: false,
-          perPage:pageLength
-        }"
-      >
-        <template
-          slot="table-row"
-          slot-scope="props"
-        >
-
-          <!-- Column: Status -->
-
-          <span v-if="props.column.field === 'paymentStatus'">
-            <b-badge :variant="paymentVariant(props.row.paymentStatus)">
-              {{ props.row.paymentStatus }}
-            </b-badge>
-          </span>
-
-          <span v-else-if="props.column.field === 'saleStatus'">
-            <b-badge :variant="salesVariant(props.row.saleStatus)">
-              {{ props.row.saleStatus }}
-            </b-badge>
-          </span>
-
-          <!-- Column: Common -->
-          <span v-else>
-            {{ props.formattedRow[props.column.field] }}
-          </span>
-        </template>
-      </vue-good-table>
-
+      <table width="100%">
+        <thead style="text-align: center">
+          <th>Kode Penjualan</th>
+          <th>Tanggal</th>
+          <th>Customer</th>
+          <th>Kode Ref.</th>
+          <th>Kasir</th>
+          <th>Subtotal</th>
+          <th>Diskon</th>
+          <th>Ongkos Kirim</th>
+          <th>Pajak</th>
+          <th>Tipe Pembayaran</th>
+          <th>Status</th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item) in dataJual"
+            :id="item.id"
+            :key="item.id"
+          >
+            <td>
+              {{ item.saleCode }}
+            </td>
+            <td>
+              {{ item.date }}
+            </td>
+            <td>{{ item.customer }}</td>
+            <td style="text-align: center">
+              {{ item.ref }}
+            </td>
+            <td>{{ item.biller }}</td>
+            <td style="text-align: right">
+              {{ formatPrice(item.subtotal) }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.disc) }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.ship) }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.tax) }}
+            </td>
+            <td style="text-align: center">
+              {{ item.typePayment }}
+            </td>
+            <td style="text-align: center">
+              {{ item.paymentStatus }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </b-card>
   </div>
 </template>
 
 <script>
 import {
-  BBadge, BCard, BButton, BRow, BCol, // BPagination, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem,
+  BCard, BButton, BRow, BCol, BImg,
 } from 'bootstrap-vue'
-import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
 import Ripple from 'vue-ripple-directive'
-import ApiService from '@/connection/apiService'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
-
-const appService = new ApiService()
 
 export default {
   components: {
     BButton,
-    VueGoodTable,
-    // BPagination,
-    // BFormGroup,
-    // BFormInput,
-    // BFormSelect,
-    // BDropdown,
-    // BDropdownItem,
-    BBadge,
     BCard,
     LoadingGrow,
     BRow,
     BCol,
+    BImg,
   },
   directives: {
     Ripple,
+  },
+  props: {
+    dataJual: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -123,6 +190,8 @@ export default {
       isLoading: false,
       pageLength: 10,
       dir: false,
+      userData: null,
+      printDate: null,
       pembayaranItems: [
         {
           value: null,
@@ -244,41 +313,27 @@ export default {
   created() {
     window.addEventListener('resize', this.initTrHeight)
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
-    this.fetchSalesList()
+    this.setDataTable()
+    this.getDataUser()
   },
   methods: {
-    // advanceSearch(val) {
-    //   this.searchTerm = val
-    // },
-    fetchSalesList() {
-      this.isLoading = true
-      appService.getSales({
-        limit: 10,
-        page: 1,
-      }).then(response => {
-        const res = response.data.data
-        this.isLoading = false
-        if (res.length > 0) {
-          // console.log(res)
-          res.forEach(this.setupRows)
-        } else {
-          this.$toast({
-            component: ToastificationContent,
-            position: 'top-right',
-            props: {
-              title: 'Data Not Found',
-              icon: 'CoffeeIcon',
-              variant: 'danger',
-              text: 'Data empty on server, using dummy data now',
-            },
-          })
-          // this.$http.get('/app-data/salesUser')
-          //   .then(resData => { this.rows = resData.data })
-        }
-      }).catch(err => {
-        console.log(err)
-        this.isLoading = false
+    getDataUser() {
+      const userData = JSON.parse(localStorage.getItem('userData'))
+      this.userData = userData
+      const timeElapsed = Date.now()
+      const today = new Date(timeElapsed)
+      this.printDate = today.toUTCString()
+    },
+    setDataTable() {
+      console.log(this.dataJual)
+      this.dataJual.forEach(x => {
+        this.rows.push(x)
       })
+    },
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace('.', ',')
+      const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      return `Rp. ${formatedval}`
     },
     setupRows(data) {
       const res = {

@@ -39,6 +39,7 @@ export default [
     path: '/mysale/print',
     name: 'user-sale-print',
     component: () => import('@/views/user/sales/Print.vue'),
+    props: true,
     meta: {
       // pageTitle: 'Penjualan',
       resource: 'SalesUser',
