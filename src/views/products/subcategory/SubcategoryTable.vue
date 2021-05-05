@@ -485,6 +485,7 @@ export default {
     },
     fetchUpdate() {
       const data = {
+        parent_id: this.selectedCategory,
         id_category: this.selectedCategory,
         kode_category: this.inpCode,
         nama_category: this.inpName,
@@ -501,6 +502,7 @@ export default {
     },
     fetchDataInsert() {
       const data = {
+        parent_id: this.selectedCategory,
         id_category: this.selectedCategory,
         kode_category: this.inpCode,
         nama_category: this.inpName,
