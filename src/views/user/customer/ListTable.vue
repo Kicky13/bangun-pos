@@ -654,7 +654,7 @@ export default {
     },
     clearForm() {
       this.customerName = ''
-      this.customerPhone = 0
+      this.customerPhone = '0'
       this.jagobangunRef = ''
       this.identityNumber = ''
       this.customerAddress = ''
@@ -843,12 +843,13 @@ export default {
       if (this.customerName.length < 3) {
         errMsg.push('Nama Customer Wajib Diisi, Minimal 3 Karakter')
       }
-      console.log(this.customerPhone.length)
       if (this.customerPhone.length < 10 || this.customerPhone.length > 12) {
         errMsg.push('Telp Customer Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
-      if (!this.customerPhone.charAt(0) === '0') {
-        errMsg.push('No Telp Customer Wajib Diawali Dengan Angka 0')
+      if (this.customerPhone.charAt(0) === '0') {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      } else {
+        errMsg.push('No Telp Pemilik Wajib Diawali Dengan Angka 0')
       }
       if (this.identityNumber.length > 0 && this.identityNumber.length < 16) {
         errMsg.push('Nomor Identitas Wajib Diisi 16 Digits Angka')
