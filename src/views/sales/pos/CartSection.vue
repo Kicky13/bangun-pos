@@ -365,7 +365,7 @@
                       autocomplete="off"
                     />
                     <b-form-invalid-feedback>
-                      Nama customer tidak boleh kosong
+                      Nama Customer Wajib Diisi Minimal 3 Karakter
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -396,10 +396,11 @@
                       :state="(customerBaru.telp_customer.length >= 10 && customerBaru.telp_customer.length <= 12) && (customerBaru.telp_customer.charAt(0) === '0')"
                       trim
                       autocomplete="off"
+                      :formatter="formatContact"
                       @keypress="telpCustomerLength"
                     />
                     <b-form-invalid-feedback>
-                      No. handphone tidak boleh kosong dan dimulai angka 0
+                      Telepon Customer Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan dan Diawali Angka 0 (Contoh Format : 081234567890)
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -411,13 +412,14 @@
                     <b-form-input
                       id="ktp"
                       v-model="customerBaru.no_identitas"
-                      :state="customerBaru.no_identitas.length > 0 ? customerBaru.no_identitas.length === 16 ? true : false : null"
+                      :state="customerBaru.no_identitas.length === 0 || customerBaru.no_identitas.length === 16"
+                      :formatter="formatIdentitas"
                       trim
                       autocomplete="off"
                       @keypress="noIdentitasLength"
                     />
                     <b-form-invalid-feedback>
-                      No. identitas harus terdiri dari 16 karakter
+                      Nomor Identitas Customer Wajib Diisi 16 Angka
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -1208,6 +1210,12 @@ export default {
     parentComponent.$off('addProductToCart')
   },
   methods: {
+    formatContact(e) {
+      return String(e).substring(0, 12)
+    },
+    formatIdentitas(e) {
+      return String(e).substring(0, 16)
+    },
     handlePrint() {
       this.$htmlToPaper('printReceipt', null, () => {
         this.setTransactionCode()
@@ -1488,16 +1496,16 @@ export default {
       const errMsg = []
       const title = 'Tambah Customer'
       if (!this.customerBaru.nama_customer.length) {
-        errMsg.unshift('Nama customer tidak boleh kosong')
+        errMsg.unshift('Nama Customer Wajib Diisi, Minimal 3 Karakter')
       }
-      if (!this.customerBaru.telp_customer.length) {
-        errMsg.unshift('No. Handphone tidak boleh kosong')
+      if (!this.customerBaru.telp_customer.length < 10 || this.customerBaru.telp_customer.length > 12) {
+        errMsg.unshift('Telp Customer Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (this.customerBaru.telp_customer.charAt(0) !== '0') {
-        errMsg.unshift('No. handphone harus dimulai angka 0')
+        errMsg.unshift('No Telp Customer Wajib Diawali Dengan Angka 0')
       }
       if (this.customerBaru.no_identitas.length > 0 && this.customerBaru.no_identitas.length < 16) {
-        errMsg.unshift('No. identitas harus terdiri dari 16 karakter')
+        errMsg.unshift('Nomor Identitas Wajib Diisi 16 Digits Angka')
       }
       if (errMsg.length === 0) {
         return true

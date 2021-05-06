@@ -342,6 +342,7 @@
               <b-form-input
                 id="phone"
                 v-model="customerPhone"
+                :formatter="formatContact"
                 :state="customerPhone.length >= 10 && customerPhone.length <= 12 && customerPhone.charAt(0) === '0'"
                 type="number"
               />
@@ -359,10 +360,12 @@
                 id="ktp"
                 v-model="identityNumber"
                 type="number"
+                :state="identityNumber.length === 0 || identityNumber.length === 16"
+                :formatter="formatIdentitas"
               />
-              <!-- <b-form-invalid-feedback>
+              <b-form-invalid-feedback>
                 Nomor Identitas Customer Wajib Diisi 16 Angka
-              </b-form-invalid-feedback> -->
+              </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
         </b-row>
@@ -604,6 +607,12 @@ export default {
     this.fetchCustomerList()
   },
   methods: {
+    formatContact(e) {
+      return String(e).substring(0, 12)
+    },
+    formatIdentitas(e) {
+      return String(e).substring(0, 16)
+    },
     cetakDataCustomer() {
       const { selectedRows } = this.$refs.dataCustomer
       if (selectedRows.length < 1) {
@@ -840,6 +849,9 @@ export default {
       }
       if (!this.customerPhone.charAt(0) === '0') {
         errMsg.push('No Telp Customer Wajib Diawali Dengan Angka 0')
+      }
+      if (this.identityNumber.length > 0 && this.identityNumber.length < 16) {
+        errMsg.push('Nomor Identitas Wajib Diisi 16 Digits Angka')
       }
       errMsg.forEach(msg => {
         this.$toast({
