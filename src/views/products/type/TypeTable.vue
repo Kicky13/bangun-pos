@@ -17,7 +17,7 @@
             />
           </b-form-group>
         </b-col>
-        <b-col
+        <!-- <b-col
           lg="1"
           md="1"
           sm="12"
@@ -28,7 +28,8 @@
           >
             Cetak
           </b-button>
-        </b-col><b-col
+        </b-col> -->
+        <b-col
           lg="1"
           md="1"
           sm="12"
