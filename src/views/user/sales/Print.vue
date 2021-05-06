@@ -3,16 +3,16 @@
     <!-- Action Button Section -->
     <div>
       <b-row>
-        <b-col
-          cols="12"
-          md="2"
-        />
+        <b-col />
+        <b-col />
+        <b-col />
         <b-col
           cols="12"
           md="2"
         >
           <b-button
             v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+            variant="primary"
             class="mb-1"
             block
             @click="printLandscape"
