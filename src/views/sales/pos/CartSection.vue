@@ -30,6 +30,7 @@
                     v-model="selectedCustomer"
                     placeholder="Walk-in Customer"
                     list="customer-list"
+                    autocomplete="off"
                   />
                   <datalist id="customer-list">
                     <option
@@ -68,6 +69,7 @@
                   id="jagoId"
                   v-model="noReference"
                   placeholder="No. Referensi Jago Bangunan"
+                  autocomplete="off"
                   @keypress="isNumberKey"
                 />
               </b-col>
@@ -728,6 +730,7 @@
                       id="customer"
                       v-model="selectedCustomer"
                       placeholder="Walk-in Customer"
+                      autocomplete="off"
                       list="customer-list"
                     />
                     <datalist id="customer-list">
@@ -772,6 +775,7 @@
                       id="idBayar"
                       v-model="noReference"
                       style="text-align: right"
+                      autocomplete="off"
                       @keypress="isNumberKey"
                     />
                   </b-form-group>
@@ -1343,9 +1347,10 @@ export default {
           price: item.price,
         })
       })
+      const customerName = this.customerList.find(list => list.text === this.selectedCustomer)
       const param = {
         date_transaction: this.currentDate(),
-        customer_id: this.selectedCustomer ? this.customerList.find(list => list.text === this.selectedCustomer).value : null,
+        customer_id: customerName ? customerName.value : null,
         cashier_id: this.selectedCashier,
         transaction_id: this.checkId.id_transaction || null,
         kode_transaction: this.transactionCode,
@@ -1360,7 +1365,7 @@ export default {
         items: products,
         no_references: this.noReference,
       }
-      if (this.formSaveTransactionValidate()) {
+      if (this.formSaveTransactionValidate(param.customer_id)) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
           if (data.message) {
@@ -1515,12 +1520,9 @@ export default {
       })
       return false
     },
-    formSaveTransactionValidate() {
+    formSaveTransactionValidate(customerId) {
       const title = 'Simpan Antrian'
       const icon = 'AlertCircleIcon'
-      if (this.selectedCustomer === '') {
-        this.selectedCustomer = null
-      }
       if (!this.quantityValidate()) {
         this.makeToast(title, icon, 'danger', 'Quantity item masih kosong')
         return false
@@ -1529,7 +1531,7 @@ export default {
         this.makeToast(title, icon, 'danger', 'Silahkan pilih tipe pembayaran terlebih dahulu')
         return false
       }
-      if (this.selectedCustomer === null && this.selectedPaymentMethod === 2) {
+      if (customerId === null && this.selectedPaymentMethod === 2) {
         this.makeToast(title, icon, 'danger', 'Walk-in customer tidak diizinkan berhutang')
         return false
       }
