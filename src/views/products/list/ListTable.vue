@@ -40,6 +40,7 @@
           <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="secondary"
+            @click="printTable"
           >
             Print
           </b-button>
@@ -163,12 +164,75 @@
         </div>
       </template>
     </vue-good-table>
+
+    <b-card
+      id="printTable"
+      hidden
+    >
+      <div
+        class="row"
+        style="margin-bottom: 25px"
+      >
+        <div class="col-md-3">
+          <b-img
+            :src="require('@/assets/images/logo/POSRetailBlack.png')"
+            alt="Logo POS Retail"
+            style="margin-bottom : 20px; width: 100%"
+          />
+        </div>
+      </div>
+
+      <!-- table -->
+      <table width="100%">
+        <thead style="text-align: center">
+          <th>Kode Produk</th>
+          <th>Nama</th>
+          <th>Kategori</th>
+          <th>Sub-Kategori</th>
+          <th>Brand/Merk</th>
+          <th>Tipe</th>
+          <th>Satuan/UOM</th>
+          <th>Toko</th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item) in rows"
+            :id="item.id"
+            :key="item.id"
+          >
+            <td>
+              {{ item.kodeproduk }}
+            </td>
+            <td>
+              {{ item.namaproduk }}
+            </td>
+            <td style="text-align: center">
+              {{ item.namacategory }}
+            </td>
+            <td style="text-align: center">
+              {{ item.namasubcategory }}
+            </td>
+            <td>{{ item.namabrand }}</td>
+            <td style="text-align: center">
+              {{ item.namatype }}
+            </td>
+            <td>
+              {{ item.namauom }}
+            </td>
+            <td>
+              {{ item.namatoko }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-card>
+
   </b-card>
 </template>
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BRow, BCol,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BRow, BCol, BImg,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import vSelect from 'vue-select'
@@ -187,6 +251,7 @@ export default {
     BFormGroup,
     BFormInput,
     BFormSelect,
+    BImg,
     BCard,
     BRow,
     BCol,
@@ -326,6 +391,19 @@ export default {
     this.fetchCustomerList()
   },
   methods: {
+    printTable() {
+      console.log(this.rows)
+      const localOptions = {
+        styles: [
+          'https://cdn.jsdelivr.net/npm/vue-good-table@2.18.1/dist/vue-good-table.min.css',
+          'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+          'https://unpkg.com/kidlat-css/css/kidlat.css',
+        ],
+      }
+      this.$htmlToPaper('printTable', localOptions, () => {
+        console.warn('done')
+      })
+    },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')

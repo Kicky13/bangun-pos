@@ -25,6 +25,7 @@
           <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="secondary"
+            @click="printTable"
           >
             Print
           </b-button>
@@ -528,6 +529,64 @@
     </b-modal>
     <!-- End of Customer Add -->
 
+    <b-card
+      id="printTable"
+      hidden
+    >
+      <div
+        class="row"
+        style="margin-bottom: 25px"
+      >
+        <div class="col-md-3">
+          <b-img
+            :src="require('@/assets/images/logo/POSRetailBlack.png')"
+            alt="Logo POS Retail"
+            style="margin-bottom : 20px; width: 100%"
+          />
+        </div>
+      </div>
+
+      <!-- table -->
+      <table width="100%">
+        <thead style="text-align: center">
+          <th>Kode Produk</th>
+          <th>Nama</th>
+          <th>Kategori</th>
+          <th>Sub-Kategori</th>
+          <th>Brand/Merk</th>
+          <th>Tipe</th>
+          <th>Satuan/UOM</th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item) in rows"
+            :id="item.id"
+            :key="item.id"
+          >
+            <td>
+              {{ item.kodeproduk }}
+            </td>
+            <td>
+              {{ item.namaproduk }}
+            </td>
+            <td style="text-align: center">
+              {{ item.namacategory }}
+            </td>
+            <td style="text-align: center">
+              {{ item.namasubcategory }}
+            </td>
+            <td>{{ item.namabrand }}</td>
+            <td style="text-align: center">
+              {{ item.namatype }}
+            </td>
+            <td>
+              {{ item.namauom }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-card>
+
   </b-card>
 </template>
 
@@ -717,6 +776,18 @@ export default {
     this.setListUOM()
   },
   methods: {
+    printTable() {
+      const localOptions = {
+        styles: [
+          'https://cdn.jsdelivr.net/npm/vue-good-table@2.18.1/dist/vue-good-table.min.css',
+          'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+          'https://unpkg.com/kidlat-css/css/kidlat.css',
+        ],
+      }
+      this.$htmlToPaper('printTable', localOptions, () => {
+        console.warn('done')
+      })
+    },
     formatProductCode() {
       // console.log(this.productCode)
       this.productCode = this.productCode.replace(/[^0-9-]/g, '')
