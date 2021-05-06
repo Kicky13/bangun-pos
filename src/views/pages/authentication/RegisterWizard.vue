@@ -56,6 +56,7 @@
               <b-form-input
                 id="phone"
                 v-model="ownerNumber"
+                :formatter="formatContact"
                 :state="ownerNumber.length >= 10 && ownerNumber.length <= 12 && ownerNumber.charAt(0) === '0'"
                 type="number"
               />
@@ -73,6 +74,7 @@
                 id="identity"
                 v-model="identitas"
                 type="number"
+                :formatter="formatIdentitas"
                 :state="identitas.length > 0 && identitas.length === 16"
               />
               <b-form-invalid-feedback>
@@ -158,6 +160,7 @@
                 id="shopphone"
                 v-model="shopNumber"
                 type="number"
+                :formatter="formatContact"
                 :state="shopNumber.length >= 10 && shopNumber.length <= 12 && shopNumber.charAt(0) === '0'"
               />
               <b-form-invalid-feedback>
@@ -392,6 +395,12 @@ export default {
     window.removeEventListener('resize', this.initTrHeight)
   },
   methods: {
+    formatContact(e) {
+      return String(e).substring(0, 12)
+    },
+    formatIdentitas(e) {
+      return String(e).substring(0, 16)
+    },
     async formSubmitted() {
       this.isLoading = true
       const param = new FormData()
