@@ -25,6 +25,7 @@
           <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="secondary"
+            @click="print"
           >
             Print
           </b-button>
@@ -148,12 +149,111 @@
         </div>
       </template>
     </vue-good-table>
+    <b-card
+      id="printMe"
+      style="display: none;"
+    >
+      <!-- Customer Form Section -->
+      <div>
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td
+                width="30%"
+              >
+                <b-img
+                  :src="require('@/assets/images/logo/POSRetailBlack.png')"
+                  alt="Logo POS Retail"
+                  style="margin-bottom : 20px; width: 100%"
+                />
+              </td>
+              <td width="15%" />
+              <td width="25%" />
+              <td width="30%" />
+            </tr>
+          </tbody>
+        </table>
+        <hr>
+      </div>
+      <div>
+        <table
+          width="100%"
+          style="font-size: 10px;"
+        >
+          <thead style="text-align: center;">
+            <th width="8%">
+              Kode Toko
+            </th>
+            <th width="15%">
+              Nama
+            </th>
+            <th width="12%">
+              Telp Toko
+            </th>
+            <th width="15%">
+              Alamat Toko
+            </th>
+            <th width="10%">
+              Jumlah Trans
+            </th>
+            <th width="10%">
+              Jumlah Produk
+            </th>
+            <th width="10%">
+              Jumlah Customer
+            </th>
+            <th width="10%">
+              Nama Pemilik
+            </th>
+            <th width="10%">
+              Telp Pemilik
+            </th>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(item) in rows"
+              :id="item.id"
+              :key="item.id"
+              ref="row"
+            >
+              <td style="text-align: left;">
+                {{ item.encodedID }}
+              </td>
+              <td style="text-align: left;">
+                {{ item.shopName }}
+              </td>
+              <td style="text-align: center;">
+                {{ item.shopNumber }}
+              </td>
+              <td style="text-align: left;">
+                {{ item.shopAddress }}
+              </td>
+              <td style="text-align: right;">
+                {{ item.jumTrans }}
+              </td>
+              <td style="text-align: right;">
+                {{ item.jumProduk }}
+              </td>
+              <td style="text-align: right;">
+                {{ item.jumCust }}
+              </td>
+              <td style="text-align: right;">
+                {{ item.ownerName }}
+              </td>
+              <td style="text-align: center;">
+                <b>{{ item.ownerNumber }}</b>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </b-card>
   </b-card>
 </template>
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BRow, BCol,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BImg, BRow, BCol,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 // import vSelect from 'vue-select'
@@ -175,6 +275,7 @@ export default {
     BCard,
     BRow,
     BCol,
+    BImg,
     // vSelect,
     LoadingGrow,
   },
@@ -351,6 +452,11 @@ export default {
     this.fetchCustomerList()
   },
   methods: {
+    print() {
+      this.$htmlToPaper('printMe', null, () => {
+        console.warn('done')
+      })
+    },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
