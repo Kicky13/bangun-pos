@@ -1503,7 +1503,7 @@ export default {
       if (!this.customerBaru.nama_customer.length) {
         errMsg.unshift('Nama Customer Wajib Diisi, Minimal 3 Karakter')
       }
-      if (!this.customerBaru.telp_customer.length < 10 || this.customerBaru.telp_customer.length > 12) {
+      if (this.customerBaru.telp_customer.length < 10) {
         errMsg.unshift('Telp Customer Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (this.customerBaru.telp_customer.charAt(0) !== '0') {
