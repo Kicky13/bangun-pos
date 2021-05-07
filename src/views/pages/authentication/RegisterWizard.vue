@@ -222,7 +222,7 @@
             </small>
           </b-col>
           <b-col md="12">
-            <h3>Data Kasir</h3>
+            <h3>Data Kasir (Maksimal 20 Karakter)</h3>
             <div>
               <b-button
                 variant="primary"
@@ -253,6 +253,7 @@
                     id="cashier"
                     v-model="item.namecash"
                     type="text"
+                    :formatter="formatKasir"
                   />
                 </b-form-group>
               </b-col>
@@ -395,6 +396,9 @@ export default {
     window.removeEventListener('resize', this.initTrHeight)
   },
   methods: {
+    formatKasir(e) {
+      return String(e).substring(0, 20)
+    },
     formatContact(e) {
       return String(e).substring(0, 12)
     },
@@ -417,11 +421,11 @@ export default {
       })
       if (this.formValidate()) {
         param.append('nama_toko', this.shopName)
-        if (this.shopLogo !== null) {
+        if (this.shopLogo !== null && this.shopLogo !== '') {
           param.append('logo_toko', this.shopLogo)
         }
         param.append('telp_toko', this.shopNumber)
-        param.append('alamat', this.address)
+        param.append('alamat', this.shopAddress)
         param.append('nama_pemilik', this.ownerName)
         param.append('no_identitas', this.identitas)
         param.append('telp_pemilik', this.ownerNumber)
@@ -612,7 +616,7 @@ export default {
         errMsg.push('Nama Toko Wajib Diisi, Minimal 3 Karakter')
       }
       if (this.shopNumber.length < 10 || this.shopNumber.length > 12) {
-        console.log('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
+        errMsg.push('Telp Toko Wajib Diisi Minimal 10 Karakter & Maksimal 12 Karakter')
       }
       if (this.shopNumber.charAt(0) === '0') {
         console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')

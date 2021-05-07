@@ -24,6 +24,7 @@
                       id="kode"
                       v-model="productCode"
                       name="kode"
+                      autocomplete="off"
                       placeholder="Masukkan kode atau scan barcode pada kemasan produk"
                       :disabled="disableStdInput"
                       :state="productCode.length > 0 && productCode !== '-'"
@@ -47,15 +48,10 @@
                       id="nama"
                       v-model="productName"
                       name="nama"
-                      list="produk-sig"
+                      autocomplete="off"
                       placeholder="Masukkan nama produk"
                       :disabled="disableStdInput"
                       :state="productName.length > 0"
-                      @change="setProdukDetail"
-                    />
-                    <b-form-datalist
-                      id="produk-sig"
-                      :options="listProdukSIG"
                     />
                     <b-form-invalid-feedback>
                       Nama Produk Wajib Diisi
@@ -227,6 +223,7 @@
                       v-model="productPrice"
                       :state="productPrice > 0"
                       type="number"
+                      autocomplete="off"
                       name="sellprice"
                     />
                     <b-form-invalid-feedback>
@@ -359,6 +356,7 @@
               <b-form-textarea
                 id="note"
                 v-model="productNote"
+                autocomplete="off"
                 name="note"
                 rows="3"
               />
@@ -402,7 +400,7 @@
 
 <script>
 import {
-  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal, BFormDatalist, BFormInvalidFeedback,
+  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
@@ -436,7 +434,7 @@ export default {
     TypeModal,
     BrandModal,
     UnitsModal,
-    BFormDatalist,
+    // BFormDatalist,
     // BInputGroup,
     // BInputGroupPrepend,
     // FeatherIcon,
@@ -696,8 +694,10 @@ export default {
       this.selectedSubCategory = this.editidsubcategory
       if (this.editflag === 1) {
         this.disableStdUOMInput = true
+        this.disableStdInput = true
       } else {
         this.disableStdUOMInput = false
+        this.disableStdInput = false
       }
     },
     async formSubmitted() {
@@ -712,7 +712,9 @@ export default {
       if (this.formValidate()) {
         this.isLoading = true
         const param = new FormData()
-        param.append('gambar_product', this.selectedFile)
+        if (this.selectedFile !== null && this.selectedFile !== '') {
+          param.append('gambar_product', this.selectedFile)
+        }
         param.append('id_product', this.productId)
         param.append('id_price', this.priceId)
         param.append('id_category', this.selectedCategory)

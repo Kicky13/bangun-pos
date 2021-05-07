@@ -369,10 +369,10 @@ export default {
               component: ToastificationContent,
               position: 'top-right',
               props: {
-                title: 'Data Tidak Ditemukan',
+                title: 'Belum Ada Data',
                 icon: 'CoffeeIcon',
-                variant: 'danger',
-                text: 'Data Tidak Ditemukan, Mungkin Terjadi Kesalahan',
+                variant: 'success',
+                text: 'Data Tidak Ditemukan, Belum Ada Transaksi atau Mungkin Terjadi Kesalahan',
               },
             })
           }

@@ -214,7 +214,7 @@
             </small>
           </b-col>
           <b-col md="12">
-            <h3>Data Kasir</h3>
+            <h3>Data Kasir (Maksimal 20 Karakter)</h3>
             <div>
               <b-button
                 variant="primary"
@@ -245,6 +245,7 @@
                     id="cashier"
                     v-model="item.name"
                     type="text"
+                    :formatter="formatKasir"
                   />
                 </b-form-group>
               </b-col>
@@ -425,6 +426,9 @@ export default {
     window.removeEventListener('resize', this.initTrHeight)
   },
   methods: {
+    formatKasir(e) {
+      return String(e).substring(0, 20)
+    },
     formatContact(e) {
       return String(e).substring(0, 12)
     },
@@ -531,10 +535,10 @@ export default {
           this.ownerName = res.nama_pemilik ?? ''
           this.ownerNumber = res.telp_pemilik ?? ''
           this.identitas = res.no_identitas ?? ''
-          this.address = res.alamat ?? ''
+          this.address = res.alamat_pemilik ?? ''
           this.shopName = res.nama_toko ?? ''
           this.shopNumber = res.telp_toko ?? ''
-          this.shopAddress = res.alamat_pemilik ?? ''
+          this.shopAddress = res.alamat ?? ''
           this.shopCode = res.kode_toko ?? ''
           // this.shopLogo = res.logo_toko
           // this.token = res.kode_toko
@@ -576,7 +580,7 @@ export default {
       if (this.formValidate()) {
         param.append('nama_toko', this.shopName)
         // param.append('logo_toko', this.shopLogo)
-        if (this.shopLogo !== null) {
+        if (this.shopLogo !== null && this.shopLogo !== '') {
           param.append('logo_toko', this.shopLogo)
         }
         param.append('telp_toko', this.shopNumber)
