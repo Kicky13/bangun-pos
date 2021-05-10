@@ -235,7 +235,7 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
                   </td>
                 </tr>
-                <tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="2"
                     style="text-align: right;"
@@ -247,6 +247,20 @@
                     style="text-align: right;"
                   >
                     <b>Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Kurang Bayar :</b>
+                  </td>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Rp. {{ formatPrice(dataPenjualan.kurangBayar) }}</b>
                   </td>
                 </tr>
               </tbody>
@@ -369,6 +383,7 @@ export default {
         grandTotal: 0,
         bayar: 0,
         kembalian: 0,
+        kurangBayar: 0,
         typePayment: null,
         paymentStatus: null,
         telpToko: null,
@@ -402,7 +417,7 @@ export default {
           this.dataPenjualan.ship = mPenjualan.shipping
           this.dataPenjualan.tax = mPenjualan.tax
           this.dataPenjualan.grandTotal = (mPenjualan.sub_total + mPenjualan.tax + mPenjualan.shipping) - mPenjualan.discount
-          this.dataPenjualan.paymentStatus = mPenjualan.status
+          this.dataPenjualan.paymentStatus = mPenjualan.status === 'PAID' ? 'LUNAS' : 'BELUM LUNAS'
           this.dataPenjualan.typePayment = mPenjualan.payment_type
           this.dataPenjualan.telpToko = mPenjualan.toko.telp_toko
           this.dataPenjualan.namaToko = mPenjualan.toko.nama_toko
@@ -410,9 +425,11 @@ export default {
           this.dataPenjualan.logoToko = mPenjualan.toko.logo
           this.dataPenjualan.percenttax = mPenjualan.percent_tax
           this.dataPenjualan.includetax = mPenjualan.include_tax
-          this.dataPenjualan.bayar = mPenjualan.bayar
-          this.dataPenjualan.kembalian = mPenjualan.kembalian
+          this.dataPenjualan.bayar = mPenjualan.money_paid
+          this.dataPenjualan.kembalian = mPenjualan.change
+          this.dataPenjualan.kurangBayar = mPenjualan.payment_type === 'CASH' ? 0 : mPenjualan.debt
           this.dataPenjualan.note = mPenjualan.note ? mPenjualan.note : ''
+          this.items = []
           const itemlist = this.detail.detail
           itemlist.forEach(item => {
             this.items.push({

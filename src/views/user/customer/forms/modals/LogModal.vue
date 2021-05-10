@@ -259,6 +259,7 @@ export default {
       appService.getLogTransaction({
         kode_transaksi: uuid,
       }).then(response => {
+        this.rows = []
         const datares = response.data.data
         // const { data } = response
         // console.log(data.result)

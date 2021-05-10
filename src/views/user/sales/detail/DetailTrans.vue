@@ -508,10 +508,10 @@
                     colspan="3"
                     style="text-align: right;"
                   >
-                    Status :
+                    <b>Status :</b>
                   </td>
                   <td style="text-align: right;">
-                    {{ dataPenjualan.paymentStatus }}
+                    <b>{{ dataPenjualan.paymentStatus }}</b>
                   </td>
                 </tr>
                 <!-- <tr>
@@ -534,17 +534,6 @@
                   </td>
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colspan="3"
-                    style="text-align: right;"
-                  >
-                    <b>Kembalian :</b>
-                  </td>
-                  <td style="text-align: right;">
-                    <b>Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
                   </td>
                 </tr>
                 <tr v-if="dataPenjualan.typePayment === 'CASH'">
@@ -726,39 +715,7 @@ export default {
       uuId: '53922ae4305e48aa941999a0362b45b5',
       // eslint-disable-next-line global-require
       logoImg: require('@/assets/images/logo/POSRetailBlack.png'),
-      items: [{
-        id: 20200001909,
-        name: 'Google - Google Home - White/Slate fabric',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 10,
-        price: 34,
-        subtotal: 340,
-      }, {
-        id: 20200001910,
-        name: 'Apple Watch Series 4 GPS',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 2,
-        price: 22,
-        subtotal: 44,
-      }, {
-        id: 20200001911,
-        name: 'Apple Macbook Air Latest Version',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 3,
-        price: 110,
-        subtotal: 330,
-      }, {
-        id: 20200001912,
-        name: 'Beats Headphone',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 21,
-        price: 12,
-        subtotal: 252,
-      }],
+      items: [],
     }
   },
   mounted() {
@@ -807,7 +764,7 @@ export default {
             //   this.dataPenjualan.typePayment = 'KREDIT'
             // }
             // this.dataPenjualan.paymentStatus = 'PAID'
-            this.dataPenjualan.paymentStatus = mPenjualan.status
+            this.dataPenjualan.paymentStatus = mPenjualan.status === 'PAID' ? 'LUNAS' : 'BELUM LUNAS'
             this.dataPenjualan.typePayment = mPenjualan.payment_type
             this.dataPenjualan.telpToko = mPenjualan.toko.telp_toko
             this.dataPenjualan.namaToko = mPenjualan.toko.nama_toko
@@ -818,8 +775,9 @@ export default {
             this.dataPenjualan.note = mPenjualan.note ? mPenjualan.note : ''
             this.dataPenjualan.bayar = mPenjualan.payment_type === 'CASH' ? mPenjualan.money_paid : mPenjualan.pay_amount
             this.dataPenjualan.kembalian = mPenjualan.change
-            this.dataPenjualan.kurangBayar = 0
+            this.dataPenjualan.kurangBayar = mPenjualan.payment_type === 'CASH' ? 0 : mPenjualan.debt
             const itemlist = data.data.detail
+            this.items = []
             itemlist.forEach(item => {
               this.items.push({
                 id: item.id_detail,
