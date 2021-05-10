@@ -5,7 +5,7 @@
   >
     <b-card-header>
       <h4 class="mb-0">
-        Total Penjualan ({{ tanggalHariIni }})
+        Total Penjualan (<span style="color: red;">{{ tanggalHariIni }}</span>)
       </h4>
       <b-card-text class="font-medium-5 mb-0">
         <feather-icon
@@ -42,7 +42,7 @@
         class="border-top border-right d-flex align-items-between flex-column py-1"
       >
         <b-card-text class="text-muted mb-0">
-          Transaksi Penjualan Tunai
+          <span style="color: red;">Transaksi Penjualan Tunai</span>
         </b-card-text>
         <h3 class="font-weight-bolder mb-0">
           Rp. {{ formatPrice(data.completed) }}
@@ -55,7 +55,7 @@
         class="border-top d-flex align-items-between flex-column py-1"
       >
         <b-card-text class="text-muted mb-0">
-          Transaksi Penjualan Kredit
+          <span style="color: red;">Transaksi Penjualan Kredit</span>
         </b-card-text>
         <h3 class="font-weight-bolder mb-0">
           Rp. {{ formatPrice(data.inProgress) }}
@@ -66,9 +66,10 @@
         md="12"
         sm="12"
         class="border-top border-right d-flex align-items-between flex-column py-1"
+        style="border-top: solid 3px black !important;"
       >
         <b-card-text class="text-muted mb-0">
-          Total Outstanding Hutang Customer
+          <span style="color: red;">Total Outstanding Hutang Customer</span>
         </b-card-text>
         <h1 class="font-weight-bolder mb-0">
           Rp. {{ formatPrice(data.allinProgress) }}
@@ -184,7 +185,8 @@ export default {
     },
     getNow() {
       const today = new Date()
-      const date = `${today.getFullYear()}:${(today.getMonth() + 1)}:${today.getDate()}`
+      const bulan = parseInt(today.getMonth() + 1, 10) < 10 ? `0${(today.getMonth() + 1)}` : (today.getMonth() + 1)
+      const date = `${today.getFullYear()}-${bulan}-${today.getDate()}`
       const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`
       const dateTime = `${date} ${time}`
       this.tanggalHariIni = dateTime

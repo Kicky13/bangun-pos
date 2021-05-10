@@ -78,7 +78,7 @@
       </div>
       <div style="margin-top: 10px;">
         <br>
-        <small><i>*). Menampilkan Data {{ rentang }} ( <b>{{ mulai }}</b> s/d <b>{{ akhir }}</b> )</i></small>
+        <small style="color: red;"><i>*). Menampilkan Data {{ rentang }} ( <b>{{ mulai }}</b> s/d <b>{{ akhir }}</b> )</i></small>
       </div>
     </b-card-body>
   </b-card>
