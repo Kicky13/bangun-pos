@@ -90,7 +90,7 @@
               v-ripple.400="'rgba(234, 84, 85, 0.15)'"
               size="sm"
               variant="outline-danger"
-              @click="pembayaran(props.formattedRow)"
+              @click="pembayaran(props.row)"
             >
               Bayar
             </b-button>
@@ -258,7 +258,7 @@
               <b-form-input
                 id="bayar"
                 v-model="paySum"
-                :state="paySum > 0 && paysum <= remainingDebt"
+                :state="paySum > 0 || paysum <= remainingDebt"
                 placeholder="nominal"
                 type="number"
               />
@@ -834,17 +834,30 @@ export default {
     fetchDeleteCustomer(data) {
       appService.deleteCustomer(data.encodedID).then(response => {
         console.log(response)
-        this.fetchCustomerList()
-        this.$toast({
-          component: ToastificationContent,
-          position: 'top-right',
-          props: {
-            title: 'Berhasil Dihapus',
-            icon: 'CoffeIcon',
-            variant: 'success',
-            text: 'Customer Berhasil Dihapus',
-          },
-        })
+        if (response.data.result) {
+          this.fetchCustomerList()
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Berhasil Dihapus',
+              icon: 'CoffeIcon',
+              variant: 'success',
+              text: 'Customer Berhasil Dihapus',
+            },
+          })
+        } else {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Gagal Dihapus',
+              icon: 'CoffeIcon',
+              variant: 'danger',
+              text: 'Customer Sudah memiliki transaksi',
+            },
+          })
+        }
       }).catch(err => {
         console.log(err)
       })
@@ -881,6 +894,7 @@ export default {
       return false
     },
     pembayaran(propsData) {
+      console.log(propsData)
       this.setBayar(propsData)
       this.$bvModal.show('listBayar')
     },
