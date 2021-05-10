@@ -236,7 +236,7 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
                   </td>
                 </tr>
-                <tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="2"
                     style="text-align: right;"
@@ -248,6 +248,20 @@
                     style="text-align: right;"
                   >
                     <b>Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Kurang Bayar :</b>
+                  </td>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Rp. {{ formatPrice(dataPenjualan.kurangBayar) }}</b>
                   </td>
                 </tr>
               </tbody>
@@ -533,6 +547,28 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
                   </td>
                 </tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
+                  <td
+                    colspan="3"
+                    style="text-align: right;"
+                  >
+                    <b>Kembalian :</b>
+                  </td>
+                  <td style="text-align: right;">
+                    <b>Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="3"
+                    style="text-align: right;"
+                  >
+                    <b>Kurang Bayar :</b>
+                  </td>
+                  <td style="text-align: right;">
+                    <b>Rp. {{ formatPrice(dataPenjualan.kurangBayar) }}</b>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -676,6 +712,7 @@ export default {
         grandTotal: 0,
         bayar: 0,
         kembalian: 0,
+        kurangBayar: 0,
         typePayment: null,
         paymentStatus: null,
         telpToko: null,
@@ -779,6 +816,9 @@ export default {
             this.dataPenjualan.percenttax = mPenjualan.percent_tax
             this.dataPenjualan.includetax = mPenjualan.include_tax
             this.dataPenjualan.note = mPenjualan.note ? mPenjualan.note : ''
+            this.dataPenjualan.bayar = mPenjualan.payment_type === 'CASH' ? mPenjualan.money_paid : mPenjualan.pay_amount
+            this.dataPenjualan.kembalian = mPenjualan.change
+            this.dataPenjualan.kurangBayar = 0
             const itemlist = data.data.detail
             itemlist.forEach(item => {
               this.items.push({
