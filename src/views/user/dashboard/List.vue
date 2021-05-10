@@ -145,7 +145,7 @@ export default {
           this.goalOverview = {
             totalTransaction: data.sales,
             // completed: data.paid,
-            completed: parseFloat(data.totalUnpaid, 10) - parseFloat(data.unpaid, 10),
+            completed: parseFloat(data.sales, 10) - parseFloat(data.unpaid, 10),
             inProgress: data.unpaid,
             allinProgress: data.totalUnpaid,
           }
