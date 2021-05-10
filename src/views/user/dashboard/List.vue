@@ -174,13 +174,14 @@ export default {
           const itemlist = data.data
           itemlist.forEach(item => {
             const fomatPrice = this.formatPrice(item.price)
+            const quantity = parseInt(item.qty, 10)
             this.transactionData.push({
               mode: item.nama_product,
               types: `Rp. ${fomatPrice} / ${item.nama_uom}`,
               avatar: 'DollarSignIcon',
               avatarVariant: 'light-primary',
               // payment: `${item.price} / ${item.nama_uom}`,
-              payment: `${item.qty} x ${item.nama_uom}`,
+              payment: `${quantity} x ${item.nama_uom}`,
               deduction: false,
               // id: item.kode_produk,
               // name: item.nama_produk,
