@@ -5,7 +5,7 @@
   >
     <b-card-header>
       <h4 class="mb-0">
-        Total Penjualan Yang di Dapat Hari Ini :
+        Total Penjualan ({{ tanggalHariIni }})
       </h4>
       <b-card-text class="font-medium-5 mb-0">
         <feather-icon
@@ -42,7 +42,7 @@
         class="border-top border-right d-flex align-items-between flex-column py-1"
       >
         <b-card-text class="text-muted mb-0">
-          Sudah Dibayar (Hari Ini)
+          Transaksi Penjualan Tunai
         </b-card-text>
         <h3 class="font-weight-bolder mb-0">
           Rp. {{ formatPrice(data.completed) }}
@@ -55,7 +55,7 @@
         class="border-top d-flex align-items-between flex-column py-1"
       >
         <b-card-text class="text-muted mb-0">
-          Belum Dibayar (Hari Ini)
+          Transaksi Penjualan Kredit
         </b-card-text>
         <h3 class="font-weight-bolder mb-0">
           Rp. {{ formatPrice(data.inProgress) }}
@@ -68,7 +68,7 @@
         class="border-top border-right d-flex align-items-between flex-column py-1"
       >
         <b-card-text class="text-muted mb-0">
-          Transaksi Belum di Bayar Hingga Hari Ini
+          Total Outstanding Hutang Customer
         </b-card-text>
         <h1 class="font-weight-bolder mb-0">
           Rp. {{ formatPrice(data.allinProgress) }}
@@ -106,6 +106,7 @@ export default {
   data() {
     return {
       mdata: {},
+      tanggalHariIni: '',
       // goalOverviewRadialBar: {
       //   chart: {
       //     height: 245,
@@ -170,6 +171,9 @@ export default {
       // },
     }
   },
+  mounted() {
+    this.getNow()
+  },
   methods: {
     formatPrice(value) {
       // console.log(value)
@@ -177,6 +181,13 @@ export default {
       // console.log(val)
       // console.log(val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'))
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    },
+    getNow() {
+      const today = new Date()
+      const date = `${today.getFullYear()}:${(today.getMonth() + 1)}:${today.getDate()}`
+      const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`
+      const dateTime = `${date} ${time}`
+      this.tanggalHariIni = dateTime
     },
   },
 }
