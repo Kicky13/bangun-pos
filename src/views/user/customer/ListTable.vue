@@ -258,7 +258,7 @@
               <b-form-input
                 id="bayar"
                 v-model="paySum"
-                :state="paySum > 0"
+                :state="paySum > 0 && paysum <= remainingDebt"
                 placeholder="nominal"
                 type="number"
               />
@@ -539,6 +539,11 @@ export default {
           hidden: true,
         },
         {
+          label: 'No. References',
+          field: 'noref',
+          hidden: true,
+        },
+        {
           label: 'No Identitas',
           field: 'identitas',
           hidden: true,
@@ -636,6 +641,7 @@ export default {
         q: '',
         page: 1,
       }).then(response => {
+        console.log(response)
         this.rows = []
         const res = response.data
         this.isLoading = false
@@ -664,7 +670,7 @@ export default {
       this.customerID = data.custCode
       this.customerName = data.customer
       this.customerPhone = data.nohp
-      this.jagobangunRef = ''
+      this.jagobangunRef = data.noref
       this.identityNumber = data.identitas
       this.customerAddress = data.address
     },
@@ -676,6 +682,7 @@ export default {
         customer: data.nama,
         shopName: data.toko.name,
         nohp: data.telp_customer,
+        noref: data.no_references,
         address: data.alamat,
         identitas: data.no_identitas,
         jumTrans: data.total_transaction,
@@ -692,6 +699,7 @@ export default {
       this.$bvModal.show('customerAdd')
     },
     editData(propsData) {
+      console.log(propsData)
       this.setForm(propsData)
       this.editForm = true
       this.$bvModal.show('customerAdd')
@@ -892,7 +900,17 @@ export default {
         errMsg.push('PayID')
       }
       if (this.paySum > this.remainingDebt) {
-        this.paySum = this.remainingDebt
+        errMsg.push('paySum')
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Error',
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+            text: 'Jumlah yang dibayarkan tidak boleh melebihi hutang',
+          },
+        })
       }
 
       if (errMsg.length === 0) {
