@@ -387,7 +387,8 @@ export default {
     setupRows(data) {
       const res = {
         id: data.uuid,
-        date: data.date_transaction,
+        // date: data.date_transaction,
+        date: data.created_at,
         saleCode: data.kode_transaksi,
         ref: data.no_references ?? '-',
         biller: data.kasir.nama,
