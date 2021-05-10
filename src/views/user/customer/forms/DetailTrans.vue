@@ -185,6 +185,20 @@
                     colspan="2"
                     style="text-align: right;"
                   >
+                    <b>Tipe Pembayaran :</b>
+                  </td>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>{{ dataPenjualan.typePayment }}</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
                     <b>Status :</b>
                   </td>
                   <td
@@ -199,20 +213,6 @@
                     colspan="2"
                     style="text-align: right;"
                   >
-                    <b>Tipe Pembayaran :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>{{ dataPenjualan.typePayment }}</b>
-                  </td>
-                </tr> -->
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
                     No. Pembayaran :
                   </td>
                   <td
@@ -221,7 +221,7 @@
                   >
                     {{ dataPenjualan.noPemb }}
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td
                     colspan="2"
@@ -236,7 +236,7 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
                   </td>
                 </tr>
-                <tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="2"
                     style="text-align: right;"
@@ -248,6 +248,20 @@
                     style="text-align: right;"
                   >
                     <b>Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Kurang Bayar :</b>
+                  </td>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Rp. {{ formatPrice(dataPenjualan.kurangBayar) }}</b>
                   </td>
                 </tr>
               </tbody>
@@ -494,10 +508,10 @@
                     colspan="3"
                     style="text-align: right;"
                   >
-                    Status :
+                    <b>Status :</b>
                   </td>
                   <td style="text-align: right;">
-                    {{ dataPenjualan.paymentStatus }}
+                    <b>{{ dataPenjualan.paymentStatus }}</b>
                   </td>
                 </tr>
                 <!-- <tr>
@@ -522,7 +536,7 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
                   </td>
                 </tr>
-                <tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="3"
                     style="text-align: right;"
@@ -531,6 +545,17 @@
                   </td>
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="3"
+                    style="text-align: right;"
+                  >
+                    <b>Kurang Bayar :</b>
+                  </td>
+                  <td style="text-align: right;">
+                    <b>Rp. {{ formatPrice(dataPenjualan.kurangBayar) }}</b>
                   </td>
                 </tr>
               </tbody>
@@ -676,6 +701,7 @@ export default {
         grandTotal: 0,
         bayar: 0,
         kembalian: 0,
+        kurangBayar: 0,
         typePayment: null,
         paymentStatus: null,
         telpToko: null,
@@ -689,39 +715,7 @@ export default {
       uuId: '53922ae4305e48aa941999a0362b45b5',
       // eslint-disable-next-line global-require
       logoImg: require('@/assets/images/logo/POSRetailBlack.png'),
-      items: [{
-        id: 20200001909,
-        name: 'Google - Google Home - White/Slate fabric',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 10,
-        price: 34,
-        subtotal: 340,
-      }, {
-        id: 20200001910,
-        name: 'Apple Watch Series 4 GPS',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 2,
-        price: 22,
-        subtotal: 44,
-      }, {
-        id: 20200001911,
-        name: 'Apple Macbook Air Latest Version',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 3,
-        price: 110,
-        subtotal: 330,
-      }, {
-        id: 20200001912,
-        name: 'Beats Headphone',
-        stock: 50,
-        uom: '50 KG',
-        quantity: 21,
-        price: 12,
-        subtotal: 252,
-      }],
+      items: [],
     }
   },
   mounted() {
@@ -770,7 +764,7 @@ export default {
             //   this.dataPenjualan.typePayment = 'KREDIT'
             // }
             // this.dataPenjualan.paymentStatus = 'PAID'
-            this.dataPenjualan.paymentStatus = mPenjualan.status
+            this.dataPenjualan.paymentStatus = mPenjualan.status === 'PAID' ? 'LUNAS' : 'BELUM LUNAS'
             this.dataPenjualan.typePayment = mPenjualan.payment_type
             this.dataPenjualan.telpToko = mPenjualan.toko.telp_toko
             this.dataPenjualan.namaToko = mPenjualan.toko.nama_toko
@@ -779,7 +773,11 @@ export default {
             this.dataPenjualan.percenttax = mPenjualan.percent_tax
             this.dataPenjualan.includetax = mPenjualan.include_tax
             this.dataPenjualan.note = mPenjualan.note ? mPenjualan.note : ''
+            this.dataPenjualan.bayar = mPenjualan.money_paid
+            this.dataPenjualan.kembalian = mPenjualan.change
+            this.dataPenjualan.kurangBayar = mPenjualan.payment_type === 'CASH' ? 0 : mPenjualan.debt
             const itemlist = data.data.detail
+            this.items = []
             itemlist.forEach(item => {
               this.items.push({
                 id: item.id_detail,
