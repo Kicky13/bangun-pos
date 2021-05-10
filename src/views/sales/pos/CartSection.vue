@@ -1364,6 +1364,8 @@ export default {
         payment_type: this.selectedPaymentMethod,
         items: products,
         no_references: this.noReference,
+        money_paid: this.inputPaid,
+        change: this.kembalian,
       }
       if (this.formSaveTransactionValidate(param.customer_id)) {
         appService.updatePayTransaction(param).then(response => {
