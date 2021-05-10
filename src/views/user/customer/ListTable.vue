@@ -294,7 +294,7 @@
       id="customerAdd"
       centered
       size="lg"
-      title="Tambah Customer"
+      :title="formTitle"
       ok-title="Simpan"
       cancel-title="Tutup"
       ok-variant="danger"
@@ -468,6 +468,7 @@ export default {
   },
   data() {
     return {
+      formTitle: 'Tambah Customer',
       custUuid: '',
       customerCode: '',
       remainingDebt: 0,
@@ -475,7 +476,7 @@ export default {
       paySum: 0,
       selectedType: 1,
       customerName: '',
-      customerPhone: 0,
+      customerPhone: '',
       jagobangunRef: '',
       identityNumber: '',
       customerAddress: '',
@@ -666,13 +667,14 @@ export default {
       this.customerAddress = ''
     },
     setForm(data) {
-      this.custUuid = data.encodedID
-      this.customerID = data.custCode
-      this.customerName = data.customer
-      this.customerPhone = data.nohp
-      this.jagobangunRef = data.noref
-      this.identityNumber = data.identitas
-      this.customerAddress = data.address
+      console.log(data)
+      this.custUuid = data.encodedID ?? ''
+      this.customerID = data.custCode ?? ''
+      this.customerName = data.customer ?? ''
+      this.customerPhone = data.nohp ?? ''
+      this.jagobangunRef = data.noref ?? ''
+      this.identityNumber = data.identitas ?? ''
+      this.customerAddress = data.address ?? ''
     },
     setupRows(data) {
       const res = {
@@ -696,12 +698,13 @@ export default {
     addCustomer() {
       this.editForm = false
       this.clearForm()
+      this.formTitle = 'Tambah Customer'
       this.$bvModal.show('customerAdd')
     },
     editData(propsData) {
-      console.log(propsData)
       this.setForm(propsData)
       this.editForm = true
+      this.formTitle = 'Edit Customer'
       this.$bvModal.show('customerAdd')
     },
     handleOk(okBtn) {
@@ -975,10 +978,10 @@ export default {
       })
     },
     setBayar(data) {
-      this.customerCode = data.custCode
-      this.customerName = data.customer
-      this.remainingDebt = data.sisaHutang
-      this.paymentID = data.encodedID
+      this.customerCode = data.custCode ?? ''
+      this.customerName = data.customer ?? ''
+      this.remainingDebt = data.sisaHutang ?? ''
+      this.paymentID = data.encodedID ?? ''
       this.paySum = 0
     },
     clearBayar() {
