@@ -1337,7 +1337,7 @@ export default {
       })
       const param = {
         date_transaction: this.currentDate(),
-        customer_id: this.selectedCustomer,
+        customer_id: this.selectedCustomer.value,
         cashier_id: this.selectedCashier,
         transaction_id: this.checkId.id_transaction || null,
         kode_transaction: this.transactionCode,
