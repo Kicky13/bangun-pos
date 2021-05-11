@@ -1388,7 +1388,8 @@ export default {
           })
           const param = {
             date_transaction: this.currentDate(),
-            customer_id: this.selectedCustomer ? this.customerList.find(list => list.text === this.selectedCustomer).value : null,
+            // customer_id: this.selectedCustomer ? this.customerList.find(list => list.text === this.selectedCustomer).value : null,
+            customer_id: this.selectedCustomer,
             cashier_id: this.selectedCashier,
             kode_transaction: this.transactionCode,
             discount: this.inputDiscount,
