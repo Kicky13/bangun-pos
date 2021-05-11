@@ -634,6 +634,7 @@ export default {
                 price: item.price,
                 nama_produk: item.nama_produk,
                 nama_uom: (item.nama_uom).toUpperCase(),
+                is_available: item.is_available,
               }
               this.productList.push(product)
             })
@@ -649,7 +650,20 @@ export default {
       this.getAllProducts()
     },
     addProductToCart(product) {
-      parentComponent.$emit('addProductToCart', product)
+      if (product.is_available === 1) {
+        parentComponent.$emit('addProductToCart', product)
+      } else {
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Produk Tidak Tersedia',
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+            text: 'Tidak bisa menambahkan item pembelian',
+          },
+        })
+      }
     },
     deleteAntrian(id) {
       // eslint-disable-next-line no-alert
