@@ -25,21 +25,13 @@
                   label="Customer"
                   label-for="customer"
                 >
-                  <b-form-input
-                    id="customer"
+                  <v-select
                     v-model="selectedCustomer"
                     placeholder="Walk-in Customer"
-                    list="customer-list"
-                    autocomplete="off"
+                    :options="customerList"
+                    :clearable="false"
+                    label="text"
                   />
-                  <datalist id="customer-list">
-                    <option
-                      v-for="cl in customerList"
-                      :key="cl.text"
-                    >
-                      {{ cl.text }}
-                    </option>
-                  </datalist>
                 </b-form-group>
               </b-col>
               <!-- Add New Customer Button -->
@@ -726,21 +718,13 @@
                     label-for="customer"
                     label-cols="5"
                   >
-                    <b-form-input
-                      id="customer"
+                    <v-select
                       v-model="selectedCustomer"
                       placeholder="Walk-in Customer"
-                      autocomplete="off"
-                      list="customer-list"
+                      :options="customerList"
+                      :clearable="false"
+                      label="text"
                     />
-                    <datalist id="customer-list">
-                      <option
-                        v-for="cl in customerList"
-                        :key="cl.text"
-                      >
-                        {{ cl.text }}
-                      </option>
-                    </datalist>
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -957,6 +941,7 @@ import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
 import ApiService from '@/connection/apiService'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import vSelect from 'vue-select'
 import { parentComponent } from './PageContent.vue'
 import DetailTrans from './DetailTrans.vue'
 
@@ -980,6 +965,7 @@ export default {
     BFormInvalidFeedback,
     BFormCheckbox,
     DetailTrans,
+    vSelect,
   },
   directives: {
     Ripple,
@@ -1347,10 +1333,9 @@ export default {
           price: item.price,
         })
       })
-      const customerName = this.customerList.find(list => list.text === this.selectedCustomer)
       const param = {
         date_transaction: this.currentDate(),
-        customer_id: customerName ? customerName.value : null,
+        customer_id: this.selectedCustomer,
         cashier_id: this.selectedCashier,
         transaction_id: this.checkId.id_transaction || null,
         kode_transaction: this.transactionCode,
@@ -1364,9 +1349,11 @@ export default {
         payment_type: this.selectedPaymentMethod,
         items: products,
         no_references: this.noReference,
-        money_paid: this.inputPaid,
+        money_paid: this.inputPaid + this.taxConvert,
         change: this.kembalian,
       }
+      console.log(param)
+      console.log(this.selectedCustomer)
       if (this.formSaveTransactionValidate(param.customer_id)) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
@@ -1690,6 +1677,31 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+@import '@core/scss/vue/libs/vue-select.scss';
+
+.vs__selected-options {
+  width: 100px;
+  flex-wrap: nowrap;
+}
+.v-select.vs--single .vs__selected {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.form-row {
+  flex-wrap: nowrap;
+}
+.vs--single .vs__dropdown-toggle {
+  overflow: hidden;
+}
+.vs__search {
+  padding-right: 0;
+}
+</style>
 
 <style lang="scss" scoped>
 .repeater-form {
