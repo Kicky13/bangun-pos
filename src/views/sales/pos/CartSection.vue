@@ -1349,11 +1349,10 @@ export default {
         payment_type: this.selectedPaymentMethod,
         items: products,
         no_references: this.noReference,
-        money_paid: this.inputPaid + this.taxConvert,
+        money_paid: this.inputPaid,
         change: this.kembalian,
       }
       console.log(param)
-      console.log(this.selectedCustomer)
       if (this.formSaveTransactionValidate(param.customer_id)) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
