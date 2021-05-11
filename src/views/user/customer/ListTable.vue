@@ -258,9 +258,8 @@
               <b-form-input
                 id="bayar"
                 v-model="paySum"
-                :state="paySum > 0 || paySum <= remainingDebt"
+                :state="paySum !== '' && parseInt(paySum) <= remainingDebt"
                 placeholder="nominal"
-                type="number"
                 @keyup="formatBayar"
               />
             </b-form-group>
@@ -622,6 +621,9 @@ export default {
     },
     formatBayar() {
       this.paySum = this.paySum.replace(/[^0-9]/g, '')
+      if (parseInt(this.paySum, 10) > this.remainingDebt) {
+        this.paySum = this.remainingDebt
+      }
     },
     cetakDataCustomer() {
       const { selectedRows } = this.$refs.dataCustomer
@@ -911,8 +913,14 @@ export default {
       if (this.customerName.length === 0) {
         errMsg.push('CustomerName')
       }
-      if (this.paySum === 0 || this.paySum === '') {
-        errMsg.push('Jumlah yang Dibayarkan Tidak Valid')
+      // if (parseInt(this.paySum, 10) === 0) {
+      //   errMsg.push('Jumlah yang Dibayarkan Tidak Valid')
+      // }
+      if (this.paySum === '') {
+        console.log(this.paySum)
+        errMsg.push('Inputan yang Dibayarkan Tidak Valid')
+      } else {
+        console.log(this.paySum)
       }
       if (this.selectedType === null) {
         errMsg.push('SelectedType')
@@ -920,18 +928,24 @@ export default {
       if (this.paymentID === 0) {
         errMsg.push('PayID')
       }
-      if (this.paySum > this.remainingDebt) {
+      if (this.paySum.charAt(0) === '0') {
+        errMsg.push('Jumlah yang Dibayarkan Tidak Valid')
+      } else {
+        console.log('No Telp Pemilik Sudah Diawali Dengan Angka 0')
+      }
+      if (parseInt(this.paySum, 10) > this.remainingDebt) {
         // errMsg.push('paySum')
-        this.$toast({
-          component: ToastificationContent,
-          position: 'top-right',
-          props: {
-            title: 'Error',
-            icon: 'AlertCircleIcon',
-            variant: 'danger',
-            text: 'Jumlah yang dibayarkan tidak boleh melebihi hutang',
-          },
-        })
+        errMsg.push('Jumlah yang dibayarkan tidak boleh melebihi hutang')
+        // this.$toast({
+        //   component: ToastificationContent,
+        //   position: 'top-right',
+        //   props: {
+        //     title: 'Error',
+        //     icon: 'AlertCircleIcon',
+        //     variant: 'danger',
+        //     text: 'Jumlah yang dibayarkan tidak boleh melebihi hutang',
+        //   },
+        // })
       }
       if (errMsg.length === 0) {
         return true
@@ -940,9 +954,10 @@ export default {
         this.$toast({
           component: ToastificationContent,
           props: {
-            title: msg,
+            title: 'Error',
             icon: 'AlertCircleIcon',
             variant: 'danger',
+            text: msg,
           },
         })
       })
@@ -1009,14 +1024,14 @@ export default {
       this.customerName = data.customer ?? ''
       this.remainingDebt = data.sisaHutang ?? ''
       this.paymentID = data.encodedID ?? ''
-      this.paySum = 0
+      this.paySum = '0'
     },
     clearBayar() {
       this.customerCode = ''
       this.customerName = ''
       this.paymentID = ''
       this.remainingDebt = 0
-      this.paySum = 0
+      this.paySum = '0'
       this.paymentID = 0
     },
     refreshTable() {
