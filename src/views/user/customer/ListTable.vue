@@ -622,7 +622,7 @@ export default {
     formatBayar() {
       this.paySum = this.paySum.replace(/[^0-9]/g, '')
       if (parseInt(this.paySum, 10) > this.remainingDebt) {
-        this.paySum = this.remainingDebt
+        this.paySum = `${this.remainingDebt}`
       }
     },
     cetakDataCustomer() {
