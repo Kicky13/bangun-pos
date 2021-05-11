@@ -18,13 +18,15 @@
                 text="Urutkan"
                 variant="outline-danger"
               >
-                <b-dropdown-item
-                  v-for="sortItem in sortList"
-                  :key="sortItem.value"
-                  @click="sortByPrice(sortItem)"
-                >
-                  {{ sortItem.text }}
-                </b-dropdown-item>
+                <div class="scrollable-menu">
+                  <b-dropdown-item
+                    v-for="sortItem in sortList"
+                    :key="sortItem.value"
+                    @click="sortByPrice(sortItem)"
+                  >
+                    {{ sortItem.text }}
+                  </b-dropdown-item>
+                </div>
               </b-dropdown>
               <!-- Filter Button -->
               <!-- Kategori -->
@@ -34,13 +36,15 @@
                 variant="outline-danger"
                 style="margin-left: 5px;"
               >
-                <b-dropdown-item
-                  v-for="categoryItem in categoryList"
-                  :key="categoryItem.id"
-                  @click="getCategory(categoryItem)"
-                >
-                  {{ categoryItem.name }}
-                </b-dropdown-item>
+                <div class="scrollable-menu">
+                  <b-dropdown-item
+                    v-for="categoryItem in categoryList"
+                    :key="categoryItem.id"
+                    @click="getCategory(categoryItem)"
+                  >
+                    {{ categoryItem.name }}
+                  </b-dropdown-item>
+                </div>
               </b-dropdown>
               <!-- Sub Kategori -->
               <b-dropdown
@@ -49,13 +53,15 @@
                 variant="outline-danger"
                 style="margin-left: 5px;"
               >
-                <b-dropdown-item
-                  v-for="subCategoryItem in subCategoryList"
-                  :key="subCategoryItem.id"
-                  @click="getSubCategory(subCategoryItem)"
-                >
-                  {{ subCategoryItem.name }}
-                </b-dropdown-item>
+                <div class="scrollable-menu">
+                  <b-dropdown-item
+                    v-for="subCategoryItem in subCategoryList"
+                    :key="subCategoryItem.id"
+                    @click="getSubCategory(subCategoryItem)"
+                  >
+                    {{ subCategoryItem.name }}
+                  </b-dropdown-item>
+                </div>
               </b-dropdown>
               <!-- Brand -->
               <b-dropdown
@@ -64,13 +70,15 @@
                 variant="outline-primary"
                 style="margin-left: 5px;"
               >
-                <b-dropdown-item
-                  v-for="brandItem in brandList"
-                  :key="brandItem.id"
-                  @click="getBrand(brandItem)"
-                >
-                  {{ brandItem.name }}
-                </b-dropdown-item>
+                <div class="scrollable-menu">
+                  <b-dropdown-item
+                    v-for="brandItem in brandList"
+                    :key="brandItem.id"
+                    @click="getBrand(brandItem)"
+                  >
+                    {{ brandItem.name }}
+                  </b-dropdown-item>
+                </div>
               </b-dropdown>
               <!-- Antrian -->
               <b-button
@@ -742,5 +750,11 @@ export default {
     display: flex;
     align-items: center;
   }
+}
+.scrollable-menu {
+  height: auto;
+  max-height: 30vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 </style>
