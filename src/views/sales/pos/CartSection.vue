@@ -745,6 +745,7 @@
                         style="text-align: right;"
                         :disabled="disabledTaxInput"
                         @keypress="isNumberKey"
+                        @keyup="maxTax"
                       />
                     </b-input-group>
                   </b-form-group>
@@ -1206,6 +1207,12 @@ export default {
     formatIdentitas(e) {
       return String(e).substring(0, 16)
     },
+    maxTax(e) {
+      console.log(e)
+      if (parseInt(this.inputTax, 10) > 100) {
+        this.inputTax = 100
+      }
+    },
     handlePrint() {
       this.$htmlToPaper('printReceipt', null, () => {
         this.setTransactionCode()
@@ -1337,7 +1344,7 @@ export default {
       })
       const param = {
         date_transaction: this.currentDate(),
-        customer_id: this.selectedCustomer.value,
+        customer_id: this.selectedCustomer ? this.selectedCustomer.value : null,
         cashier_id: this.selectedCashier,
         transaction_id: this.checkId.id_transaction || null,
         kode_transaction: this.transactionCode,
@@ -1354,7 +1361,7 @@ export default {
         money_paid: this.inputPaid,
         change: this.kembalian,
       }
-      console.log(param)
+      // console.log(param)
       if (this.formSaveTransactionValidate(param.customer_id)) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
@@ -1391,7 +1398,7 @@ export default {
           const param = {
             date_transaction: this.currentDate(),
             // customer_id: this.selectedCustomer ? this.customerList.find(list => list.text === this.selectedCustomer).value : null,
-            customer_id: this.selectedCustomer,
+            customer_id: this.selectedCustomer ? this.selectedCustomer.value : null,
             cashier_id: this.selectedCashier,
             kode_transaction: this.transactionCode,
             discount: this.inputDiscount,
@@ -1529,6 +1536,10 @@ export default {
       }
       if (this.kembalian < 0) {
         this.makeToast(title, icon, 'danger', 'Total pembayaran kurang')
+        return false
+      }
+      if (parseInt(this.inputTax, 10) < 0 || parseInt(this.inputTax, 10) > 100) {
+        this.makeToast(title, icon, 'danger', 'Pajak Tidak Boleh Melebihi 100 %')
         return false
       }
       if (this.selectedPaymentMethod === 1 && this.inputPaid < this.grandTotal) {
