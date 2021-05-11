@@ -2,6 +2,15 @@
   <b-card
     class="text-center"
   >
+    <b-button
+      v-if="product.is_available === 1"
+      :variant="color"
+      tag="a"
+      class="btn-icon float-sm-right"
+      style="margin: 0.5rem; position: absolute; opacity: 0.5; width: 80%;"
+    >
+      <span>Tidak Tersedia</span>
+    </b-button>
     <!-- <b-link disabled :to="{ name: 'apps-e-commerce-product-details', params: { slug: product.slug } }"> -->
     <b-img
       :alt="`${product.nama_produk}-${product.id_produk}`"
@@ -40,12 +49,13 @@
 
 <script>
 import {
-  BCard, BImg,
+  BCard, BImg, BButton,
 } from 'bootstrap-vue'
 
 export default {
   components: {
     BCard,
+    BButton,
     // BAvatar,
     // BButton,
     // BLink,

@@ -18,6 +18,15 @@
           icon="EditIcon"
         />
       </b-button>
+      <b-button
+        v-if="product.is_available === 0"
+        :variant="color"
+        tag="a"
+        class="btn-icon float-sm-right"
+        style="margin: 0.5rem;"
+      >
+        <span>Tidak Tersedia</span>
+      </b-button>
     </b-card-header>
     <b-card-body
       style="padding: 0rem !important"
