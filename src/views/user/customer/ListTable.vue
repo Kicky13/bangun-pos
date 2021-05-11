@@ -258,9 +258,10 @@
               <b-form-input
                 id="bayar"
                 v-model="paySum"
-                :state="paySum > 0 || paysum <= remainingDebt"
+                :state="paySum > 0 || paySum <= remainingDebt"
                 placeholder="nominal"
                 type="number"
+                @keyup="formatBayar"
               />
             </b-form-group>
             <b-form-invalid-feedback>
@@ -619,6 +620,9 @@ export default {
     formatIdentitas(e) {
       return String(e).substring(0, 16)
     },
+    formatBayar() {
+      this.paySum = this.paySum.replace(/[^0-9]/g, '')
+    },
     cetakDataCustomer() {
       const { selectedRows } = this.$refs.dataCustomer
       if (selectedRows.length < 1) {
@@ -907,8 +911,8 @@ export default {
       if (this.customerName.length === 0) {
         errMsg.push('CustomerName')
       }
-      if (this.paySum === 0) {
-        errMsg.push('PayAmount')
+      if (this.paySum === 0 || this.paySum === '') {
+        errMsg.push('Jumlah yang Dibayarkan Tidak Valid')
       }
       if (this.selectedType === null) {
         errMsg.push('SelectedType')
@@ -917,7 +921,7 @@ export default {
         errMsg.push('PayID')
       }
       if (this.paySum > this.remainingDebt) {
-        errMsg.push('paySum')
+        // errMsg.push('paySum')
         this.$toast({
           component: ToastificationContent,
           position: 'top-right',
@@ -929,26 +933,35 @@ export default {
           },
         })
       }
-
       if (errMsg.length === 0) {
         return true
       }
+      errMsg.forEach(msg => {
+        this.$toast({
+          component: ToastificationContent,
+          props: {
+            title: msg,
+            icon: 'AlertCircleIcon',
+            variant: 'danger',
+          },
+        })
+      })
       return false
     },
     handleSubmitPay(okBtn) {
       if (this.validatePay()) {
         this.$bvModal.show('askPay')
       } else {
-        this.$toast({
-          component: ToastificationContent,
-          position: 'top-right',
-          props: {
-            title: 'Error',
-            icon: 'AlertCircleIcon',
-            variant: 'danger',
-            text: 'Please complete form',
-          },
-        })
+        // this.$toast({
+        //   component: ToastificationContent,
+        //   position: 'top-right',
+        //   props: {
+        //     title: 'Error',
+        //     icon: 'AlertCircleIcon',
+        //     variant: 'danger',
+        //     text: 'Please complete form',
+        //   },
+        // })
         okBtn.preventDefault()
       }
     },

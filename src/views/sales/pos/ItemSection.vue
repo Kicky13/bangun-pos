@@ -75,10 +75,10 @@
               <!-- Antrian -->
               <b-button
                 v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+                v-b-modal.listAntrian
                 variant="secondary-outline"
               >
                 <feather-icon
-                  v-b-modal.listAntrian
                   :badge="totalAntrian"
                   icon="ClockIcon"
                   size="30"
@@ -587,12 +587,14 @@ export default {
     async loadAntrian(dataAntrian) {
       appService.getLoadAntrian(dataAntrian.uuid).then(response => {
         const { data } = response.data
+        console.log(data)
         if (data) {
           this.listAntrian.push({
             uuid: dataAntrian.uuid,
             id_transaction: dataAntrian.id_transaction,
             kode_transaksi: dataAntrian.kode_transaksi,
             nama_customer: dataAntrian.nama_customer || 'Walk-in Customer',
+            id_customer: data.id_customer,
             no_references: dataAntrian.no_references || '-',
             id_kasir: dataAntrian.id_kasir,
             sub_total: data.sub_total,

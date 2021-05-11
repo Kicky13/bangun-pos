@@ -1234,11 +1234,13 @@ export default {
           this.customerList.push({
             value: null,
             text: 'Walk-in Customer',
+            id: null,
           })
           data.forEach(item => {
             this.customerList.push({
               value: item.uuid,
               text: item.nama,
+              id: item.id,
             })
           })
         }
@@ -1478,6 +1480,7 @@ export default {
       return [year, month, day].join('-')
     },
     handlePaymentModal() {
+      // console.log(this.selectedCustomer)
       if (!this.items.length) {
         this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Silahkan isi keranjang terlebih dahulu')
       } else if (!this.selectedCashier) {
@@ -1621,8 +1624,12 @@ export default {
     },
     getAntrianData() {
       parentComponent.$on('dataAntrian', dataAntrian => {
-        this.selectedCustomer = this.customerList.find(customer => customer.text === dataAntrian.nama_customer).text
+        // console.log(dataAntrian)
+        // console.log(this.customerList.find(customer => customer.id === dataAntrian.id_customer))
+        // this.selectedCustomer = this.customerList.find(customer => customer.text === dataAntrian.nama_customer).text
+        this.selectedCustomer = this.customerList.find(customer => customer.id === dataAntrian.id_customer)
         this.selectedCashier = this.cashierList.find(cashier => cashier.id === dataAntrian.id_kasir).value
+        // console.log(this.selectedCashier)
         this.noReference = dataAntrian.no_references === '-' ? null : dataAntrian.no_references
         this.checkId.id_transaction = dataAntrian.id_transaction
         this.checkId.uuid = dataAntrian.uuid
