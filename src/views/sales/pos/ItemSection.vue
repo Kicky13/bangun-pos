@@ -74,11 +74,11 @@
               </b-dropdown>
               <!-- Antrian -->
               <b-button
+                v-b-modal.listAntrian
                 v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 variant="secondary-outline"
               >
                 <feather-icon
-                  v-b-modal.listAntrian
                   :badge="totalAntrian"
                   icon="ClockIcon"
                   size="30"
