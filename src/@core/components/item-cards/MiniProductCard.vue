@@ -3,7 +3,7 @@
     class="text-center"
   >
     <b-button
-      v-if="product.is_available === 1"
+      v-if="product.is_available === 0"
       :variant="color"
       tag="a"
       class="btn-icon float-sm-right"
