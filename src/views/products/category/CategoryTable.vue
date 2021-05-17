@@ -441,6 +441,16 @@ export default {
       }
       appService.updateAdminCategory(this.inpId, data).then(response => {
         console.log(response)
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Berhasil Memperbarui Data',
+            icon: 'CoffeIcon',
+            variant: 'success',
+            text: 'Berhasil Memperbarui Data Kategori',
+          },
+        })
         this.clearForm()
         this.fetchDataList()
         this.editForm = false
@@ -458,6 +468,16 @@ export default {
         const res = response.data
         console.log(res)
         if (res.result) {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Berhasil Menyimpan Data',
+              icon: 'CoffeIcon',
+              variant: 'success',
+              text: 'Berhasil Menyimpan Data Kategori',
+            },
+          })
           this.fetchDataList()
           this.clearForm()
         } else {
@@ -499,7 +519,7 @@ export default {
             title: 'Berhasil Dihapus',
             icon: 'CoffeIcon',
             variant: 'success',
-            text: 'Customer Berhasil Dihapus',
+            text: 'Kategori Berhasil Dihapus',
           },
         })
       }).catch(err => {

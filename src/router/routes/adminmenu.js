@@ -63,7 +63,7 @@ export default [
     name: 'category-product',
     component: () => import('@/views/products/category/Category.vue'),
     meta: {
-      pageTitle: 'Ketegori',
+      pageTitle: 'Kategori',
       resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
@@ -71,7 +71,7 @@ export default [
           text: 'Pengaturan Produk',
         },
         {
-          text: 'Ketegori',
+          text: 'Kategori',
           active: true,
         },
       ],
@@ -82,7 +82,7 @@ export default [
     name: 'subcategory-product',
     component: () => import('@/views/products/subcategory/Subcategory.vue'),
     meta: {
-      pageTitle: 'Sub Ketegori',
+      pageTitle: 'Sub Kategori',
       resource: 'ProductSettings',
       action: 'manage',
       breadcrumb: [
@@ -90,7 +90,7 @@ export default [
           text: 'Pengaturan Produk',
         },
         {
-          text: 'Sub Ketegori',
+          text: 'Sub Kategori',
           active: true,
         },
       ],

@@ -340,6 +340,10 @@ export default {
           field: 'name',
         },
         {
+          label: 'Keterangan',
+          field: 'notes',
+        },
+        {
           label: 'Action',
           field: 'action',
         },
@@ -419,6 +423,7 @@ export default {
         categoryID: data.id_category,
         category: (data.nama_category).toUpperCase(),
         name: (data.nama_subcategory).toUpperCase(),
+        notes: data.notes,
       }
       this.rows.push(res)
     },
@@ -450,7 +455,7 @@ export default {
       this.inpCode = data.code
       this.inpName = data.name
       this.selectedCategory = data.categoryID
-      this.inpNotes = ''
+      this.inpNotes = data.notes
     },
     handleOk(okBtn) {
       if (this.formValidate()) {
@@ -493,6 +498,16 @@ export default {
       }
       appService.updateAdminSubCategory(this.inpId, data).then(response => {
         console.log(response)
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Berhasil Memperbarui Data',
+            icon: 'CoffeIcon',
+            variant: 'success',
+            text: 'Berhasil Memperbarui Data Sub Kategori',
+          },
+        })
         this.clearForm()
         this.fetchDataList()
         this.editForm = false
@@ -511,6 +526,16 @@ export default {
         const res = response.data
         console.log(res)
         if (res.result) {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Berhasil Menyimpan Data',
+              icon: 'CoffeIcon',
+              variant: 'success',
+              text: 'Berhasil Menyimpan Data Sub Kategori',
+            },
+          })
           this.fetchDataList()
           this.clearForm()
         } else {
@@ -552,7 +577,7 @@ export default {
             title: 'Berhasil Dihapus',
             icon: 'CoffeIcon',
             variant: 'success',
-            text: 'Customer Berhasil Dihapus',
+            text: 'Sub Kategori Berhasil Dihapus',
           },
         })
       }).catch(err => {

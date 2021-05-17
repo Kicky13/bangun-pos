@@ -447,12 +447,12 @@ export default {
     },
   },
   watch: {
-    searchTerm: {
-      immediate: true,
-      handler() {
-        this.fetchCustomerList()
-      },
-    },
+    // searchTerm: {
+    //   immediate: true,
+    //   handler() {
+    //     this.fetchCustomerList()
+    //   },
+    // },
     selectItemV: {
       immediate: true,
       handler() {
@@ -500,7 +500,7 @@ export default {
       this.isLoading = true
       appService.getAdminPriceList({
         // limit: 50,
-        q: this.searchTerm,
+        // q: this.searchTerm,
         // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
         id_toko: this.selectItemV.value,
       }).then(response => {

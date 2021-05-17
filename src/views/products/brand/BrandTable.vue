@@ -306,6 +306,10 @@ export default {
           field: 'name',
         },
         {
+          label: 'Keterangan',
+          field: 'notes',
+        },
+        {
           label: 'Action',
           field: 'action',
         },
@@ -362,6 +366,7 @@ export default {
         encodedID: data.id,
         code: data.kode_brand,
         name: (data.nama_brand).toUpperCase(),
+        notes: data.notes,
       }
       this.rows.push(res)
     },
@@ -391,7 +396,7 @@ export default {
       this.inpId = data.encodedID
       this.inpCode = data.code
       this.inpName = data.name
-      this.inpNotes = ''
+      this.inpNotes = data.notes
     },
     handleOk(okBtn) {
       if (this.formValidate()) {
@@ -432,6 +437,16 @@ export default {
       }
       appService.updateAdminBrand(this.inpId, data).then(response => {
         console.log(response)
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Berhasil Memperbarui Data',
+            icon: 'CoffeIcon',
+            variant: 'success',
+            text: 'Berhasil Memperbarui Data Brand / Merek',
+          },
+        })
         this.clearForm()
         this.fetchDataList()
         this.editForm = false
@@ -449,6 +464,16 @@ export default {
         const res = response.data
         console.log(res)
         if (res.result) {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Berhasil Menyimpan Data',
+              icon: 'CoffeIcon',
+              variant: 'success',
+              text: 'Berhasil Menyimpan Data Brand / Merk',
+            },
+          })
           this.fetchDataList()
           this.clearForm()
         } else {
@@ -490,7 +515,7 @@ export default {
             title: 'Berhasil Dihapus',
             icon: 'CoffeIcon',
             variant: 'success',
-            text: 'Customer Berhasil Dihapus',
+            text: 'Brand / Merek Berhasil Dihapus',
           },
         })
       }).catch(err => {

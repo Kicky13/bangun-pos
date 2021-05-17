@@ -158,7 +158,7 @@
       id="FormData"
       centered
       size="lg"
-      title="Form Kategori"
+      title="Form Tipe Produk"
       ok-title="Simpan"
       cancel-title="Tutup"
       ok-variant="danger"
@@ -306,6 +306,10 @@ export default {
           field: 'name',
         },
         {
+          label: 'Keterangan',
+          field: 'notes',
+        },
+        {
           label: 'Action',
           field: 'action',
         },
@@ -363,6 +367,7 @@ export default {
         encodedID: data.id,
         code: data.kode_type,
         name: (data.nama_type).toUpperCase(),
+        notes: data.notes,
       }
       this.rows.push(res)
     },
@@ -392,7 +397,7 @@ export default {
       this.inpId = data.encodedID
       this.inpCode = data.code
       this.inpName = data.name
-      this.inpNotes = ''
+      this.inpNotes = data.notes
     },
     handleOk(okBtn) {
       if (this.formValidate()) {
@@ -431,10 +436,20 @@ export default {
         id_type: this.inpId,
         kode_type: this.inpCode,
         nama_type: this.inpName,
-        note_type: this.inpNotes,
+        notes: this.inpNotes,
       }
       appService.updateAdminType(this.inpId, data).then(response => {
         console.log(response)
+        this.$toast({
+          component: ToastificationContent,
+          position: 'top-right',
+          props: {
+            title: 'Berhasil Memperbarui Data',
+            icon: 'CoffeIcon',
+            variant: 'success',
+            text: 'Berhasil Memperbarui Data Tipe Produk',
+          },
+        })
         this.clearForm()
         this.fetchDataList()
         this.editForm = false
@@ -446,12 +461,22 @@ export default {
       const data = {
         kode_type: this.inpCode,
         nama_type: this.inpName,
-        note_type: this.inpNotes,
+        notes: this.inpNotes,
       }
       appService.addAdminType(data).then(response => {
         const res = response.data
         console.log(res)
         if (res.result) {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Berhasil Menyimpan Data',
+              icon: 'CoffeIcon',
+              variant: 'success',
+              text: 'Berhasil Menyimpan Data Tipe Produk',
+            },
+          })
           this.fetchDataList()
           this.clearForm()
         } else {
@@ -493,7 +518,7 @@ export default {
             title: 'Berhasil Dihapus',
             icon: 'CoffeIcon',
             variant: 'success',
-            text: 'Customer Berhasil Dihapus',
+            text: 'Tipe Produk Berhasil Dihapus',
           },
         })
       }).catch(err => {

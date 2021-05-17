@@ -246,7 +246,7 @@
       id="FormData"
       centered
       size="lg"
-      title="Form Tambah Produk"
+      title="Form Produk"
       ok-title="Simpan"
       cancel-title="Tutup"
       ok-variant="danger"
@@ -1233,9 +1233,10 @@ export default {
           this.$toast({
             component: ToastificationContent,
             props: {
-              title: 'Sukses Mengubah Informasi Produk',
+              title: 'Berhasil Mengubah Informasi Produk',
               icon: 'CoffeeIcon',
               variant: 'success',
+              text: 'Master Produk Berhasil Diubah',
             },
           })
           this.fetchDataList()
@@ -1245,9 +1246,10 @@ export default {
             component: ToastificationContent,
             props: {
               // title: 'Gagal Mengubah Data Produk',
-              title: `Gagal Mengubah Informasi Produk : ${data.message[0]}`,
+              title: 'Gagal Mengubah Informasi Produk',
               icon: 'AlertCircleIcon',
               variant: 'danger',
+              text: `Galat : ${data.message[0]}`,
             },
           })
         }
@@ -1275,9 +1277,10 @@ export default {
           this.$toast({
             component: ToastificationContent,
             props: {
-              title: 'Sukses Menambahkan Produk',
+              title: 'Berhasil Menambahkan Produk',
               icon: 'CoffeeIcon',
               variant: 'success',
+              text: 'Master Produk Berhasil Ditambahkan',
             },
           })
           this.fetchDataList()
@@ -1286,9 +1289,10 @@ export default {
           this.$toast({
             component: ToastificationContent,
             props: {
-              title: `Gagal Menambahkan Produk : ${data.message[0]}`,
+              title: 'Gagal Menambahkan Produk',
               icon: 'AlertCircleIcon',
               variant: 'danger',
+              text: `Galat : ${data.message[0]}`,
             },
           })
         }
@@ -1304,6 +1308,16 @@ export default {
         const res = response.data
         console.log(res)
         if (res.result) {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Berhasil Mengupload Data',
+              icon: 'CoffeIcon',
+              variant: 'success',
+              text: 'Master Produk Berhasil Diupload',
+            },
+          })
           this.fetchDataList()
           this.clearUploadForm()
         } else {
@@ -1345,7 +1359,7 @@ export default {
             title: 'Berhasil Dihapus',
             icon: 'CoffeIcon',
             variant: 'success',
-            text: 'Customer Berhasil Dihapus',
+            text: 'Produk Berhasil Dihapus',
           },
         })
       }).catch(err => {
