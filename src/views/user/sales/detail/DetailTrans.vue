@@ -752,7 +752,7 @@ export default {
             this.dataPenjualan.saleCode = mPenjualan.kode_transaksi
             this.dataPenjualan.ref = mPenjualan.no_referensi
             this.dataPenjualan.biller = mPenjualan.cashier.name
-            this.dataPenjualan.customer = mPenjualan.customer.nama
+            this.dataPenjualan.customer = mPenjualan.customer === null ? '' : mPenjualan.customer.nama
             this.dataPenjualan.subtotal = mPenjualan.sub_total
             this.dataPenjualan.disc = mPenjualan.discount
             this.dataPenjualan.ship = mPenjualan.shipping
