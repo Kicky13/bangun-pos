@@ -17,18 +17,32 @@
           {{ $route.meta.redSubs }}
         </h5>
       </b-row>
+      <b-row>
+        <b-button
+          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+          variant="primary"
+          style="border-color: #ff0048 !important;"
+          @click="$router.go(-1)"
+        >
+          <feather-icon
+            icon="ArrowLeftIcon"
+            size="16"
+          /> Kembali
+        </b-button>
+      </b-row>
     </div>
   </div>
 </template>
 
 <script>
 import {
-  BRow,
+  BRow, BButton,
 } from 'bootstrap-vue'
 
 export default {
   components: {
     BRow,
+    BButton,
     // BCol,
     // BBreadcrumb,
     // BBreadcrumbItem,

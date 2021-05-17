@@ -632,7 +632,7 @@
                 v-ripple.400="'rgba(40, 199, 111, 0.15)'"
                 class="mb-1"
                 block
-                :to="{name: 'user-sale'}"
+                @click="$router.go(-1)"
               >
                 Kembali
               </b-button>
