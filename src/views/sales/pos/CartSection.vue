@@ -594,10 +594,11 @@
                       class="input-group-merge"
                     >
                       <b-form-input
-                        id="hargaJualAkhir"
-                        v-model.number="tempPrice"
+                        id="ubahHargaJual"
+                        v-model.number="initialData.price_edit"
                         style="text-align: right"
-                        @keypress="isNumberKey"
+                        @keypress="isNumberKey($event, initialData.stopPriceEdit())"
+                        @input="inputPriceEdit($event, initialData.kode_produk)"
                       />
                     </b-input-group>
                   </b-form-group>
@@ -1317,6 +1318,13 @@ export default {
             nama_produk: product.nama_produk,
             nama_uom: product.nama_uom,
             quantity: 1,
+            price_edit: 0,
+            stopPriceEdit() {
+              if (this.price_edit >= 999999999999999) {
+                return true
+              }
+              return false
+            },
             subtotal() {
               return this.price * this.quantity
             },
@@ -1606,9 +1614,8 @@ export default {
       this.items.map(item => {
         if (item.kode_produk === this.initialData.kode_produk) {
           temp = item
-          temp.price = this.tempPrice
+          temp.price = temp.price_edit
           this.makeToast(item.nama_produk, 'CoffeeIcon', 'success', 'Harga jual berhasil diubah')
-          this.tempPrice = 0
         }
         return true
       })
@@ -1629,6 +1636,17 @@ export default {
           if (item.kode_produk === kode) {
             temp = item
             temp.quantity = 1
+          }
+        })
+      }
+    },
+    inputPriceEdit(price, kode) {
+      let temp = {}
+      if (price >= 999999999999999) {
+        this.items.forEach(item => {
+          if (item.kode_produk === kode) {
+            temp = item
+            temp.price_edit = 999999999999999
           }
         })
       }
