@@ -82,8 +82,8 @@
               </b-dropdown>
               <!-- Antrian -->
               <b-button
-                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 v-b-modal.listAntrian
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 variant="secondary-outline"
               >
                 <feather-icon

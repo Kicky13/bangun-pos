@@ -1369,7 +1369,6 @@ export default {
         money_paid: this.inputPaid,
         change: this.kembalian,
       }
-      // console.log(param)
       if (this.formSaveTransactionValidate(param.customer_id)) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
@@ -1405,7 +1404,6 @@ export default {
           })
           const param = {
             date_transaction: this.currentDate(),
-            // customer_id: this.selectedCustomer ? this.customerList.find(list => list.text === this.selectedCustomer).value : null,
             customer_id: this.selectedCustomer ? this.selectedCustomer.value : null,
             cashier_id: this.selectedCashier,
             kode_transaction: this.transactionCode,
