@@ -651,14 +651,27 @@ export default {
             this.selectedFile = null
             this.$router.push('/myproduct')
           } else {
-            this.$toast({
-              component: ToastificationContent,
-              props: {
-                title: 'Gagal Menambahkan Produk',
-                icon: 'AlertCircleIcon',
-                variant: 'danger',
-              },
+            const errMsg = data.message
+            errMsg.forEach(msg => {
+              this.$toast({
+                component: ToastificationContent,
+                position: 'top-right',
+                props: {
+                  title: 'Gagal Menambahkan Produk',
+                  icon: 'AlertCircleIcon',
+                  variant: 'danger',
+                  text: msg,
+                },
+              })
             })
+            // this.$toast({
+            //   component: ToastificationContent,
+            //   props: {
+            //     title: 'Gagal Menambahkan Produk',
+            //     icon: 'AlertCircleIcon',
+            //     variant: 'danger',
+            //   },
+            // })
           }
         })
       }
