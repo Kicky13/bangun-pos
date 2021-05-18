@@ -675,9 +675,10 @@ export default {
           this.matchedCode = item
         }
       })
-      console.log(this.matchedItem)
       if (this.matchedItem.length === 0) {
-        if (this.matchedCode.length > 0) {
+        if (this.matchedCode.length === 0) {
+          console.log('Kode Produk Tidak Cocok Dengan Kode Standard')
+        } else {
           this.productCode = ''
         }
         this.disableStdInput = false
