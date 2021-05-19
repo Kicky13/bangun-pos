@@ -41,13 +41,15 @@
             variant="outline-primary"
             style="margin-left: 5px;"
           >
-            <b-dropdown-item
-              v-for="sortCategoryOption in sortByCategoryOptions"
-              :key="sortCategoryOption.value"
-              @click="setCategory(sortCategoryOption)"
-            >
-              {{ sortCategoryOption.text }}
-            </b-dropdown-item>
+            <div class="scrollable-menu">
+              <b-dropdown-item
+                v-for="sortCategoryOption in sortByCategoryOptions"
+                :key="sortCategoryOption.value"
+                @click="setCategory(sortCategoryOption)"
+              >
+                {{ sortCategoryOption.text }}
+              </b-dropdown-item>
+            </div>
           </b-dropdown>
           <b-dropdown
             v-ripple.400="'rgba(234, 84, 85, 0.15)'"
@@ -57,13 +59,15 @@
             variant="outline-primary"
             style="margin-left: 5px;"
           >
-            <b-dropdown-item
-              v-for="sortSubCategoryOption in sortBySubCategoryOptions"
-              :key="sortSubCategoryOption.value"
-              @click="setSubCategory(sortSubCategoryOption)"
-            >
-              {{ sortSubCategoryOption.text }}
-            </b-dropdown-item>
+            <div class="scrollable-menu">
+              <b-dropdown-item
+                v-for="sortSubCategoryOption in sortBySubCategoryOptions"
+                :key="sortSubCategoryOption.value"
+                @click="setSubCategory(sortSubCategoryOption)"
+              >
+                {{ sortSubCategoryOption.text }}
+              </b-dropdown-item>
+            </div>
           </b-dropdown>
           <b-dropdown
             v-ripple.400="'rgba(234, 84, 85, 0.15)'"
@@ -73,13 +77,15 @@
             variant="outline-primary"
             style="margin-left: 5px;"
           >
-            <b-dropdown-item
-              v-for="sortBrandOption in sortByBrandOptions"
-              :key="sortBrandOption.value"
-              @click="setBrand(sortBrandOption)"
-            >
-              {{ sortBrandOption.text }}
-            </b-dropdown-item>
+            <div class="scrollable-menu">
+              <b-dropdown-item
+                v-for="sortBrandOption in sortByBrandOptions"
+                :key="sortBrandOption.value"
+                @click="setBrand(sortBrandOption)"
+              >
+                {{ sortBrandOption.text }}
+              </b-dropdown-item>
+            </div>
           </b-dropdown>
           <b-dropdown
             v-ripple.400="'rgba(234, 84, 85, 0.15)'"
@@ -537,5 +543,10 @@ export default {
 .space-5 {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+.scrollable-menu {
+    height: auto;
+    max-height: 300px;
+    overflow-x: hidden;
 }
 </style>
