@@ -1,12 +1,15 @@
 <template>
+  <!-- // @mouseover="mouseover"
+    @mouseout="mouseleave" -->
   <b-card
     class="text-center"
     no-body
   >
     <b-card-header
       class="text-right"
-      style="padding: 0rem !important"
+      style="padding: 0rem !important; position: absolute;"
     >
+    <!-- // v-show="isHovering === true" -->
       <b-button
         :variant="color"
         tag="a"
@@ -23,7 +26,7 @@
         :variant="color"
         tag="a"
         class="btn-icon float-sm-right"
-        style="margin: 0.5rem;"
+        style="margin: 0.5rem; opacity: 0.5;"
       >
         <span>Tidak Tersedia</span>
       </b-button>
@@ -110,11 +113,30 @@ export default {
       default: 'primary',
     },
   },
+  data() {
+    return {
+      isHovering: false,
+    }
+  },
   methods: {
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
+    mouseover() {
+      console.log('ada')
+      this.isHovering = true
+    },
+    mouseleave() {
+      console.log('tidak')
+      this.isHovering = false
+    },
   },
 }
 </script>
+
+<style lang="scss" scoped>
+  .hovering{
+    color: red
+  }
+</style>

@@ -242,13 +242,14 @@
                     <b-form-input
                       id="sellprice"
                       v-model="productPrice"
-                      :state="productPrice > 0"
+                      :state="productPrice > 0 && productPrice <= 999999999999999"
                       type="number"
                       autocomplete="off"
                       name="sellprice"
+                      @keyup="formatBayar"
                     />
                     <b-form-invalid-feedback>
-                      Harga Produk wajib diisi dengan benar
+                      Harga Produk wajib diisi dengan benar Maksimal 999.999.999.999.999
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -559,6 +560,15 @@ export default {
     this.setListUOM()
   },
   methods: {
+    formatHarga(e) {
+      return String(e).substring(0, 15)
+    },
+    formatBayar() {
+      this.productPrice = this.productPrice.replace(/[^0-9]/g, '')
+      if (parseInt(this.productPrice, 10) > 999999999999999) {
+        this.productPrice = '999999999999999'
+      }
+    },
     formatProductCode() {
       // console.log(this.productCode)
       this.productCode = this.productCode.replace(/[^0-9-]/g, '')
