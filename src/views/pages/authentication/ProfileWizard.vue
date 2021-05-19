@@ -561,7 +561,8 @@ export default {
         this.isLoading = false
       })
     },
-    storageInfoUpdate() {
+    storageInfoUpdate(token) {
+      authService.setToken(token)
       const toko = JSON.parse(localStorage.getItem('userData'))
       const newData = {
         id: toko.id,
@@ -624,7 +625,7 @@ export default {
                 variant: 'success',
               },
             })
-            this.storageInfoUpdate()
+            this.storageInfoUpdate(data.token)
           } else {
             this.$toast({
               component: ToastificationContent,

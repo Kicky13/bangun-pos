@@ -9,7 +9,7 @@
       class="text-right"
       style="padding: 0rem !important; position: absolute;"
     >
-    <!-- // v-show="isHovering === true" -->
+      <!-- // v-show="isHovering === true" -->
       <b-button
         :variant="color"
         tag="a"

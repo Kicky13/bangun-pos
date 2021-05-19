@@ -34,6 +34,14 @@
                     : {{ dataPenjualan.saleCode }}
                   </td>
                 </tr>
+                <!-- <tr>
+                  <td width="40%">
+                    Tgl Transaksi
+                  </td>
+                  <td width="60%">
+                    : {{ dataPenjualan.date }}
+                  </td>
+                </tr> -->
                 <tr>
                   <td width="40%">
                     Customer
@@ -393,6 +401,7 @@ export default {
         percenttax: 0,
         includetax: false,
         note: '',
+        tglCetak: '',
       },
       items: [],
       // eslint-disable-next-line global-require
@@ -446,8 +455,23 @@ export default {
     },
   },
   mounted() {
+    this.getWaktuCetak()
+  },
+  created() {
+    this.getWaktuCetak()
   },
   methods: {
+    async getWaktuCetak() {
+      const currentdate = new Date()
+      const tanggal = parseInt(currentdate.getDate(), 10) < 10 ? `0${currentdate.getDate()}` : currentdate.getDate()
+      const bulan = parseInt(currentdate.getMonth() + 1, 10) < 10 ? `0${currentdate.getMonth() + 1}` : currentdate.getMonth() + 1
+      const tahun = parseInt(currentdate.getFullYear(), 10) < 10 ? `0${currentdate.getFullYear()}` : currentdate.getFullYear()
+      const jam = parseInt(currentdate.getHours(), 10) < 10 ? `0${currentdate.getHours()}` : currentdate.getHours()
+      const menit = parseInt(currentdate.getMinutes(), 10) < 10 ? `0${currentdate.getMinutes()}` : currentdate.getMinutes()
+      const detik = parseInt(currentdate.getSeconds(), 10) < 10 ? `0${currentdate.getSeconds()}` : currentdate.getSeconds()
+      // console.log(`${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`)
+      this.tglCetak = `${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`
+    },
     logoUrl() {
       return this.logoImg
     },
@@ -455,12 +479,14 @@ export default {
       const val = (value / 1).toFixed(0).replace('.', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
-    print() {
+    async print() {
+      await this.getWaktuCetak()
       this.$htmlToPaper('printReceipt', null, () => {
         console.warn('done')
       })
     },
-    printLandscape() {
+    async printLandscape() {
+      await this.getWaktuCetak()
       const localOptions = {
         styles: [
           'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
