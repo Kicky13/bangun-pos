@@ -561,6 +561,27 @@ export default {
         this.isLoading = false
       })
     },
+    storageInfoUpdate() {
+      const toko = JSON.parse(localStorage.getItem('userData'))
+      const newData = {
+        id: toko.id,
+        fullName: this.ownerName ?? toko.fullName,
+        shopName: this.shopName ?? toko.shopName,
+        username: toko.username,
+        password: toko.role,
+        ownerAddress: this.address ?? toko.ownerAddress,
+        identityNumber: this.identitas ?? toko.identityNumber,
+        ownerNumber: this.ownerNumber ?? toko.ownerNumber,
+        shopNumber: this.shopNumber ?? toko.shopNumber,
+        avatar: this.imageURL ?? toko.avatar,
+        email: 'user@demo.com',
+        role: toko.role,
+        ability: toko.ability,
+      }
+      localStorage.removeItem('userData')
+      localStorage.setItem('userData', JSON.stringify(newData))
+      this.$router.go()
+    },
     async formSubmitted() {
       this.isLoading = true
       const param = new FormData()
@@ -603,7 +624,7 @@ export default {
                 variant: 'success',
               },
             })
-            this.fetchProfile()
+            this.storageInfoUpdate()
           } else {
             this.$toast({
               component: ToastificationContent,

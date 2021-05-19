@@ -9,6 +9,7 @@ export default [
       action: 'manage',
       redTitle: 'Data Penjualan',
       redSubs: 'Catatan Penjualan Barang-Barang di Toko Kamu.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Sales',
@@ -46,6 +47,7 @@ export default [
       action: 'manage',
       redTitle: 'Data Penjualan',
       redSubs: 'Catatan Penjualan Barang-Barang di Toko Kamu.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Sales',
@@ -64,6 +66,7 @@ export default [
       action: 'manage',
       redTitle: 'Katalog Produk',
       redSubs: 'Berikut list produk yang kamu jual',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Produk',
@@ -162,6 +165,7 @@ export default [
       action: 'manage',
       redTitle: 'Profile Toko Kamu',
       redSubs: 'Lengkapi Profile Tokomu Untuk Melengkapi Data Transaksi',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Customer',
