@@ -37,6 +37,14 @@
                 </tr>
                 <tr>
                   <td width="40%">
+                    Tgl Transaksi
+                  </td>
+                  <td width="60%">
+                    : {{ dataPenjualan.date }}
+                  </td>
+                </tr>
+                <tr>
+                  <td width="40%">
                     Customer
                   </td>
                   <td width="60%">
@@ -288,7 +296,7 @@
                     Telp : {{ dataPenjualan.telpToko }}
                   </td>
                   <td width="50%">
-                    Cetak : {{ dataPenjualan.date }}
+                    Cetak : {{ tglCetak }}
                   </td>
                 </tr>
                 <tr>
@@ -338,7 +346,7 @@
               <tbody>
                 <tr>
                   <td
-                    rowspan="4"
+                    rowspan="5"
                     width="30%"
                   >
                     <b-img
@@ -355,7 +363,7 @@
                     />
                   </td>
                   <td
-                    rowspan="4"
+                    rowspan="5"
                     width="15%"
                   />
                   <td width="25%">
@@ -363,6 +371,14 @@
                   </td>
                   <td width="30%">
                     : {{ dataPenjualan.saleCode }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Tgl Transaksi
+                  </td>
+                  <td>
+                    : {{ dataPenjualan.date }}
                   </td>
                 </tr>
                 <tr>
@@ -582,7 +598,7 @@
                     Telp : {{ dataPenjualan.telpToko }}
                   </td>
                   <td width="50%">
-                    Cetak : {{ dataPenjualan.date }}
+                    Cetak : {{ tglCetak }}
                   </td>
                 </tr>
                 <tr>
@@ -711,6 +727,7 @@ export default {
         percent_tax: 0,
         include_tax: false,
         note: '',
+        tglCetak: '',
       },
       uuId: '53922ae4305e48aa941999a0362b45b5',
       // eslint-disable-next-line global-require
@@ -719,10 +736,12 @@ export default {
     }
   },
   mounted() {
+    this.getWaktuCetak()
     // console.log(this.$route.params.id)
     this.getDetailTransaction(this.$route.params.id)
   },
   created() {
+    this.getWaktuCetak()
     window.addEventListener('resize', this.initTrHeight)
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
     // this.$http.get('/app-data/transDetail')
@@ -735,6 +754,17 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
   methods: {
+    getWaktuCetak() {
+      const currentdate = new Date()
+      const tanggal = parseInt(currentdate.getDate(), 10) < 10 ? `0${currentdate.getDate()}` : currentdate.getDate()
+      const bulan = parseInt(currentdate.getMonth() + 1, 10) < 10 ? `0${currentdate.getMonth() + 1}` : currentdate.getMonth() + 1
+      const tahun = parseInt(currentdate.getFullYear(), 10) < 10 ? `0${currentdate.getFullYear()}` : currentdate.getFullYear()
+      const jam = parseInt(currentdate.getHours(), 10) < 10 ? `0${currentdate.getHours()}` : currentdate.getHours()
+      const menit = parseInt(currentdate.getMinutes(), 10) < 10 ? `0${currentdate.getMinutes()}` : currentdate.getMinutes()
+      const detik = parseInt(currentdate.getSeconds(), 10) < 10 ? `0${currentdate.getSeconds()}` : currentdate.getSeconds()
+      // console.log(`${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`)
+      this.tglCetak = `${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`
+    },
     async getDetailTransaction(paramid) {
       this.isLoading = true
       console.log(paramid)
@@ -813,11 +843,13 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     print() {
+      this.getWaktuCetak()
       this.$htmlToPaper('printReceipt', null, () => {
         console.warn('done')
       })
     },
     printLandscape() {
+      this.getWaktuCetak()
       const localOptions = {
         styles: [
           'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
