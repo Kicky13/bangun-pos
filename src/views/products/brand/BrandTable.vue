@@ -458,7 +458,7 @@ export default {
       const data = {
         kode_brand: this.inpCode,
         nama_brand: this.inpName,
-        note_brand: this.inpNotes,
+        notes: this.inpNotes,
       }
       appService.addAdminBrand(data).then(response => {
         const res = response.data

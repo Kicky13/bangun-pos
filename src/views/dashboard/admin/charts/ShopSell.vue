@@ -10,7 +10,7 @@
         />
         <flat-pickr
           v-model="dateRange"
-          :config="{ mode: 'range'}"
+          :config="{ mode: 'range', minDate: '2021-01-01', maxDate: 'today' }"
           class="form-control flat-picker bg-transparent border-0 shadow-none"
           placeholder="DD-MM-YYYY"
           @on-change="fetchDataPenjualan"
