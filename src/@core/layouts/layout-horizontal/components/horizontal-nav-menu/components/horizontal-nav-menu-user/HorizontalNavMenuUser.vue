@@ -19,6 +19,7 @@
       </b-row>
       <b-row>
         <b-button
+          v-if="$route.meta.goBackButton"
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="primary"
           style="border-color: #ff0048 !important;"
