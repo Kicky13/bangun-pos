@@ -28,6 +28,7 @@ export default [
       action: 'manage',
       redTitle: 'Detail Data Penjualan',
       redSubs: 'Detail Data Penjualan di Toko Kamu.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Sales',
@@ -85,6 +86,7 @@ export default [
       action: 'manage',
       redTitle: 'Tambah Produk',
       redSubs: 'Tambahkan Produk Baru Yang Akan Kamu Jual.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Produk',
@@ -107,6 +109,7 @@ export default [
       action: 'manage',
       redTitle: 'Edit Produk',
       redSubs: 'Ubah data Produk yang sudah ada',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Produk',
@@ -128,6 +131,7 @@ export default [
       action: 'manage',
       redTitle: 'Data Customer',
       redSubs: 'Daftarkan Semua Pelanggan Tokomu untuk Pencatatan Buku KAS Lebih Mudah.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Customer',
@@ -147,6 +151,7 @@ export default [
       action: 'manage',
       redTitle: 'Data Customer',
       redSubs: 'Daftarkan Semua Pelanggan Tokomu untuk Pencatatan Buku KAS Lebih Mudah.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Customer',
@@ -184,6 +189,7 @@ export default [
       action: 'manage',
       redTitle: 'Data Transaksi',
       redSubs: 'Catatan transaksi yang pernah dilakukan dengan customer.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Customer',
@@ -202,6 +208,7 @@ export default [
       action: 'manage',
       redTitle: 'Detail Data Transaksi',
       redSubs: 'Detail Data Transaksi yang pernah dilakukan oleh customer.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Sales',
@@ -221,6 +228,7 @@ export default [
       action: 'manage',
       redTitle: 'Detail Data Transaksi',
       redSubs: 'Detail Data Transaksi yang pernah dilakukan oleh customer.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Sales',
@@ -239,6 +247,7 @@ export default [
       action: 'manage',
       redTitle: 'Detail Data Transaksi',
       redSubs: 'Detail Data Transaksi yang pernah dilakukan oleh customer.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Sales',
@@ -257,6 +266,7 @@ export default [
       action: 'manage',
       redTitle: 'Detail Data Transaksi',
       redSubs: 'Detail Data Transaksi yang pernah dilakukan oleh customer.',
+      goBackButton: true,
       // breadcrumb: [
       //   {
       //     text: 'Sales',
@@ -275,6 +285,7 @@ export default [
       action: 'manage',
       redTitle: 'Selamat Datang, di POS Dashboard',
       redSubs: 'Monitoring Transaksi Penjualan di Toko Kamu.',
+      goBackButton: false,
       // breadcrumb: [
       //   {
       //     text: 'Customer',
