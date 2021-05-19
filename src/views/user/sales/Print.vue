@@ -56,7 +56,7 @@
             style="margin-bottom : 20px; width: 100%"
           />
         </div>
-        <div style="col-md-9">
+        <div class="col-md-9">
           <table width="100%">
             <tbody>
               <tr>

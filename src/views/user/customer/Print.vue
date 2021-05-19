@@ -56,7 +56,7 @@
             style="margin-bottom : 20px; width: 100%"
           />
         </div>
-        <div style="col-md-9">
+        <div class="col-md-9">
           <table width="100%">
             <tbody>
               <tr>
@@ -308,12 +308,25 @@ export default {
     this.getDataUser()
   },
   methods: {
+    getWaktuCetak() {
+      const currentdate = new Date()
+      const tanggal = parseInt(currentdate.getDate(), 10) < 10 ? `0${currentdate.getDate()}` : currentdate.getDate()
+      const bulan = parseInt(currentdate.getMonth() + 1, 10) < 10 ? `0${currentdate.getMonth() + 1}` : currentdate.getMonth() + 1
+      const tahun = parseInt(currentdate.getFullYear(), 10) < 10 ? `0${currentdate.getFullYear()}` : currentdate.getFullYear()
+      const jam = parseInt(currentdate.getHours(), 10) < 10 ? `0${currentdate.getHours()}` : currentdate.getHours()
+      const menit = parseInt(currentdate.getMinutes(), 10) < 10 ? `0${currentdate.getMinutes()}` : currentdate.getMinutes()
+      const detik = parseInt(currentdate.getSeconds(), 10) < 10 ? `0${currentdate.getSeconds()}` : currentdate.getSeconds()
+      // console.log(`${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`)
+      return `${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`
+    },
     getDataUser() {
       const userData = JSON.parse(localStorage.getItem('userData'))
       this.userData = userData
       const timeElapsed = Date.now()
       const today = new Date(timeElapsed)
-      this.printDate = today.toUTCString()
+      // this.printDate = today.toUTCString()
+      console.log(today.toUTCString())
+      this.printDate = this.getWaktuCetak()
     },
     setDataTable() {
       console.log(this.dataCustomer)
