@@ -1059,7 +1059,7 @@ export default {
       this.isLoading = true
       appService.getAdminProductSIGList({
         // limit: 50,
-        q: this.searchTerm,
+        // q: this.searchTerm,
         // id_toko: this.selectedToko ? this.tokoBangunanList.find(list => list.text === this.selectedToko).value : '',
         // id_toko: null,
       }).then(response => {
@@ -1318,6 +1318,10 @@ export default {
               text: 'Master Produk Berhasil Diupload',
             },
           })
+          this.setListCategory()
+          this.setListBrand()
+          this.setListType()
+          this.setListUOM()
           this.fetchDataList()
           this.clearUploadForm()
         } else {
