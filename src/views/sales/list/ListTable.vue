@@ -576,7 +576,8 @@ export default {
         discountTrans: data.discount,
         ongkirTrans: data.shipping,
         pajakTrans: data.tax,
-        tglTrans: data.date_transaction,
+        // tglTrans: data.date_transaction,
+        tglTrans: data.created_at,
         toko: data.toko.nama_toko,
       }
       this.rows.push(res)
