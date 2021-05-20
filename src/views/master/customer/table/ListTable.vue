@@ -67,47 +67,10 @@
         slot="table-row"
         slot-scope="props"
       >
-        <span v-if="props.column.field === 'stCustomer'">
-          <span>
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              :variant="paymentVariant(props.row.statusCust)"
-            >
-              {{ props.row.statusCust }}
-            </b-button>
-          </span>
-        </span>
-
-        <!-- Column: Action -->
-        <span v-if="props.column.field === 'action'">
-          <span>
-            <b-button
-              v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-              size="sm"
-              variant="outline-secondary"
-              :to="{ name: 'customer-history-trans', params: { id: props.formattedRow.encodedID } }"
-            >
-              List Trans.
-            </b-button>
-            <b-button
-              v-if="props.row.sisaHutang > 0"
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              variant="outline-danger"
-              @click="pembayaran(props.formattedRow)"
-            >
-              Bayar
-            </b-button>
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              variant="outline-danger"
-              @click="editData(props.formattedRow)"
-            >
-              Edit
-            </b-button>
-          </span>
+        <span v-if="props.column.field === 'statusCust'">
+          <b-badge :variant="paymentVariant(props.row.statusCust)">
+            {{ props.row.statusCust }}
+          </b-badge>
         </span>
 
         <!-- Column: Common -->
@@ -268,7 +231,7 @@
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BImg, BRow, BCol,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BImg, BRow, BCol, BBadge,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import vSelect from 'vue-select'
@@ -291,6 +254,7 @@ export default {
     BImg,
     BRow,
     BCol,
+    BBadge,
     vSelect,
     LoadingGrow,
   },
@@ -448,8 +412,8 @@ export default {
         },
         {
           label: 'Status',
-          field: 'stCustomer',
-          sortable: false,
+          field: 'statusCust',
+          // sortable: false,
           // filterOptions: {
           //   enabled: true,
           //   filterDropdownItems: ['TERMINATED', 'ACTIVE'],
@@ -469,8 +433,8 @@ export default {
   computed: {
     paymentVariant() {
       const statusColor = {
-        ACTIVE: 'outline-secondary',
-        TERMINATED: 'outline-danger',
+        ACTIVE: 'light-success',
+        TERMINATED: 'light-danger',
       }
       return status => statusColor[status]
     },

@@ -1355,17 +1355,31 @@ export default {
       console.log(this.deleteData)
       appService.deleteProductAdmin(this.deleteData.encodedID).then(response => {
         console.log(response)
-        this.fetchDataList()
-        this.$toast({
-          component: ToastificationContent,
-          position: 'top-right',
-          props: {
-            title: 'Berhasil Dihapus',
-            icon: 'CoffeIcon',
-            variant: 'success',
-            text: 'Produk Berhasil Dihapus',
-          },
-        })
+        const { data } = response
+        if (data.result) {
+          this.fetchDataList()
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Berhasil Dihapus',
+              icon: 'CoffeIcon',
+              variant: 'success',
+              text: data.message,
+            },
+          })
+        } else {
+          this.$toast({
+            component: ToastificationContent,
+            position: 'top-right',
+            props: {
+              title: 'Gagal Dihapus',
+              icon: 'AlertCircleIcon',
+              variant: 'error',
+              text: data.message,
+            },
+          })
+        }
       }).catch(err => {
         console.log(err)
       })

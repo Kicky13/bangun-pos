@@ -50,6 +50,7 @@
     <div class="demo-inline-spacing" />
     <!-- table -->
     <vue-good-table
+      id="dataTable"
       ref="dataCustomer"
       :columns="columns"
       :rows="rows"
@@ -67,62 +68,17 @@
         slot="table-row"
         slot-scope="props"
       >
-        <span v-if="props.column.field === 'sTransStatus'">
-          <span>
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              :variant="statusVariant(props.row.transStatus)"
-            >
-              {{ props.row.transStatus }}
-            </b-button>
-          </span>
+        <!-- Column: transType -->
+        <span v-if="props.column.field === 'transType'">
+          <b-badge :variant="paymentVariant(props.row.transType)">
+            {{ props.row.transType }}
+          </b-badge>
         </span>
-
-        <span v-if="props.column.field === 'sTransType'">
-          <span>
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              :variant="paymentVariant(props.row.transType)"
-            >
-              {{ props.row.transType }}
-            </b-button>
-          </span>
+        <span v-else-if="props.column.field === 'pembStatus'">
+          <b-badge :variant="paymentVariant(props.row.pembStatus)">
+            {{ props.row.pembStatus }}
+          </b-badge>
         </span>
-
-        <!-- Column: Action -->
-        <span v-if="props.column.field === 'action'">
-          <span>
-            <b-button
-              v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-              size="sm"
-              variant="outline-secondary"
-              :to="{ name: 'customer-history-trans', params: { id: props.formattedRow.encodedID } }"
-            >
-              List Trans.
-            </b-button>
-            <b-button
-              v-if="props.row.sisaHutang > 0"
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              variant="outline-danger"
-              @click="pembayaran(props.formattedRow)"
-            >
-              Bayar
-            </b-button>
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              variant="outline-danger"
-              @click="editData(props.formattedRow)"
-            >
-              Edit
-            </b-button>
-          </span>
-        </span>
-
-        <!-- Column: Common -->
         <span v-else>
           {{ props.formattedRow[props.column.field] }}
         </span>
@@ -283,7 +239,7 @@
                 <b>{{ item.transType }}</b>
               </td>
               <td style="text-align: center;">
-                <b>{{ item.transStatus }}</b>
+                <b>{{ item.pembStatus }}</b>
               </td>
               <td style="text-align: center;">
                 <b>{{ item.toko }}</b>
@@ -298,7 +254,7 @@
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BImg, BRow, BCol,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BImg, BRow, BCol, BBadge,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import vSelect from 'vue-select'
@@ -321,6 +277,7 @@ export default {
     BRow,
     BCol,
     BImg,
+    BBadge,
     vSelect,
     LoadingGrow,
   },
@@ -458,8 +415,8 @@ export default {
         },
         {
           label: 'Pembayaran',
-          field: 'sTransType',
-          sortable: false,
+          field: 'transType',
+          // sortable: false,
           // filterOptions: {
           //   enabled: true,
           //   filterDropdownItems: ['CASH', 'KREDIT'],
@@ -467,8 +424,8 @@ export default {
         },
         {
           label: 'Status',
-          field: 'sTransStatus',
-          sortable: false,
+          field: 'pembStatus',
+          // sortable: false,
           // filterOptions: {
           //   enabled: true,
           //   filterDropdownItems: ['PAID', 'UNPAID'],
@@ -487,16 +444,31 @@ export default {
   },
   computed: {
     paymentVariant() {
+      // const statusColor = {
+      //   CASH: 'outline-secondary',
+      //   KREDIT: 'outline-danger',
+      // }
       const statusColor = {
-        CASH: 'outline-secondary',
-        KREDIT: 'outline-danger',
+        CASH: 'light-secondary',
+        KREDIT: 'light-danger',
+        PAID: 'light-success',
+        UNPAID: 'light-danger',
+      }
+      return status => statusColor[status]
+    },
+    statusVariantAlt() {
+      const statusColor = {
+        PAID: 'outline-secondary',
+        UNPAID: 'outline-danger',
       }
       return status => statusColor[status]
     },
     statusVariant() {
       const statusColor = {
-        PAID: 'outline-secondary',
-        UNPAID: 'outline-danger',
+        CASH: 'light-secondary',
+        KREDIT: 'light-danger',
+        PAID: 'light-success',
+        UNPAID: 'light-danger',
       }
       return status => statusColor[status]
     },
@@ -598,6 +570,7 @@ export default {
         cashier: data.kasir.nama,
         refNumber: data.no_references,
         transStatus: data.status,
+        pembStatus: data.status,
         transType: data.payment_type_str,
         subTotalTrans: data.sub_total,
         discountTrans: data.discount,
