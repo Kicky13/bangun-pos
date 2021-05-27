@@ -524,7 +524,7 @@ export default {
         shopNumber: data.telp_toko,
         shopLogo: null,
         jumTrans: data.qty_trans,
-        jumCust: data.tot_cust,
+        jumCust: data.tot_product,
         jumProduk: data.tot_product,
       }
       this.rows.push(res)
