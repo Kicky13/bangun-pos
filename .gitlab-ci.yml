@@ -57,7 +57,7 @@ build-prod:
     # Pull repo
     - echo "Pulling external repo into build"
     - ssh git@$GITLAB_URL
-    - git clone git@$GITLAB_URL:$EXTERNAL_REPO_URL /tmp
+    - git clone git@$GITLAB_URL:$EXTERNAL_REPO_URL /tmp/front-bangun
     
     # Do something after pulling your repo
     - npm install
