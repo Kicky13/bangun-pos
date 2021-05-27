@@ -60,8 +60,10 @@ build-prod:
     - git clone git@$GITLAB_URL:$EXTERNAL_REPO_URL /tmp/front-bangun
     
     # Do something after pulling your repo
+    - cd /tmp/front-bangun && git checkout prod
     - cd /tmp/front-bangun && npm install
     - cd /tmp/front-bangun && npm run build
+    
     # Push repo changes into current repo
     - git remote rm origin && git remote add origin "git@$GITLAB_URL:${CI_PROJECT_PATH}.git"
     - git add /tmp/front-bangun
