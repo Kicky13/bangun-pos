@@ -284,7 +284,7 @@
       cancel-title="Batalkan"
       ok-variant="danger"
       cancel-variant="secondary"
-      @ok="deleteCashier"
+      @ok="deleteTheCashier"
       @cancel="handleCancelDelete"
     >
       <div class="d-block text-center">
@@ -678,7 +678,7 @@ export default {
       this.deleteCashier = param.uuid
       this.$bvModal.show('askDelete')
     },
-    async deleteCashier() {
+    async deleteTheCashier() {
       this.isLoading = true
       appService.deleteCashier(this.deleteCashier).then(response => {
         const { data } = response
