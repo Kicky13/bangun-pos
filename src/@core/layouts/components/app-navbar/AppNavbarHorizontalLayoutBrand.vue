@@ -1,5 +1,7 @@
 <template>
-  <div class="navbar-header d-xl-block d-lg-block d-md-block d-none">
+  <div
+    class="navbar-header d-xl-block d-lg-block d-md-block d-none"
+  >
     <ul class="nav navbar-nav">
       <li class="nav-item">
         <b-link
@@ -12,6 +14,7 @@
               :src="appLogoImage"
               alt="logo"
               fluid-grow
+              style="margin-left: 5px;"
             />
           </span>
           <h2 class="brand-text mb-0">
