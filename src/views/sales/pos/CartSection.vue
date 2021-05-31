@@ -7,7 +7,10 @@
           <div>
             <b-row>
               <!-- Selling Code -->
-              <b-col cols="5">
+              <b-col
+                cols="12"
+                md="5"
+              >
                 <b-form-group
                   label="Kode Penjualan"
                   label-for="sellingCode"
@@ -20,7 +23,11 @@
                 </b-form-group>
               </b-col>
               <!-- Customer List -->
-              <b-col cols="5">
+              <b-col
+                cols="10"
+                md="5"
+                class="list-customer"
+              >
                 <b-form-group
                   label="Customer"
                   label-for="customer"
@@ -35,7 +42,10 @@
                 </b-form-group>
               </b-col>
               <!-- Add New Customer Button -->
-              <b-col cols="2">
+              <b-col
+                cols="2"
+                class="add-customer"
+              >
                 <b-button
                   v-ripple.400="'rgba(255, 255, 255, 0.15)'"
                   v-b-modal.addCustomer
@@ -48,7 +58,10 @@
             </b-row>
             <b-row>
               <!-- Cashier List -->
-              <b-col cols="5">
+              <b-col
+                cols="12"
+                md="5"
+              >
                 <b-form-select
                   id="cashier"
                   v-model="selectedCashier"
@@ -56,7 +69,11 @@
                 />
               </b-col>
               <!-- No. Reference -->
-              <b-col cols="5">
+              <b-col
+                cols="12"
+                md="5"
+                class="mt-1 mt-md-0"
+              >
                 <b-form-input
                   id="jagoId"
                   v-model="noReference"
@@ -195,7 +212,7 @@
                       class="text-md-right"
                     >
                       <b-form-group
-                        label="Price"
+                        label="Harga"
                         label-for="price"
                       >
                         <b-form-input
@@ -247,44 +264,61 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col md="6">
-              <b-form-group
-                label="Item"
-                label-for="items"
-                label-cols="6"
-                label-cols-md="4"
-              >
-                <b-input-group
-                  class="input-group-merge"
-                >
-                  <b-form-input
-                    id="items"
-                    style="text-align: right;"
-                    :value="items.length + '(' + Number(totalQuantity) + ')'"
-                    plaintext
-                  />
-                </b-input-group>
-              </b-form-group>
+            <b-col md="5">
+              <b-row>
+                <b-col cols="6">
+                  <label
+                    for="items"
+                    style="margin-top: 10px; font-size: 14px;"
+                  >
+                    Items
+                  </label>
+                </b-col>
+                <b-col cols="6">
+                  <b-input-group
+                    class="input-group-merge"
+                  >
+                    <b-form-input
+                      id="items"
+                      style="text-align: right;"
+                      :value="items.length + '(' + Number(totalQuantity) + ')'"
+                      plaintext
+                    />
+                  </b-input-group>
+                </b-col>
+              </b-row>
             </b-col>
-            <b-col md="6">
-              <b-form-group
-                label="Sub Total"
-                label-for="subtotal"
-                label-cols-md="4"
-              >
-                <b-input-group
-                  prepend="Rp."
-                  append=".00"
-                  class="input-group-merge"
+            <b-col md="7">
+              <b-row>
+                <b-col
+                  cols="12"
+                  md="4"
                 >
-                  <b-form-input
-                    id="subtotal"
-                    style="text-align: right;"
-                    :value="totalSubtotal"
-                    disabled
-                  />
-                </b-input-group>
-              </b-form-group>
+                  <label
+                    for="subtotal"
+                    style="margin-top: 10px; font-size: 14px;"
+                  >
+                    Sub Total
+                  </label>
+                </b-col>
+                <b-col
+                  cols="12"
+                  md="8"
+                >
+                  <b-input-group
+                    prepend="Rp."
+                    append=".00"
+                    class="input-group-merge"
+                  >
+                    <b-form-input
+                      id="subtotal"
+                      style="text-align: right;"
+                      :value="totalSubtotal"
+                      disabled
+                    />
+                  </b-input-group>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
           <b-row>
@@ -346,7 +380,10 @@
           >
             <b-form>
               <b-row>
-                <b-col cols="6">
+                <b-col
+                  cols="12"
+                  md="6"
+                >
                   <b-form-group
                     label="Nama Customer :"
                     label-for="customerName"
@@ -363,7 +400,10 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="6">
+                <b-col
+                  cols="12"
+                  md="6"
+                >
                   <b-form-group
                     label="No. Referensi :"
                     label-for="reference"
@@ -379,7 +419,10 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col cols="6">
+                <b-col
+                  cols="12"
+                  md="6"
+                >
                   <b-form-group
                     label="No. Handphone : "
                     label-for="phone"
@@ -398,7 +441,10 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col cols="6">
+                <b-col
+                  cols="12"
+                  md="6"
+                >
                   <b-form-group
                     label="No. Identitas/KTP :"
                     label-for="ktp"
@@ -551,7 +597,10 @@
                 </b-col>
               </b-row> -->
               <b-row>
-                <b-col cols="6">
+                <b-col
+                  cols="12"
+                  md="6"
+                >
                   <b-form-group
                     label="Harga Jual Awal :"
                     label-for="hargaJualAwal"
@@ -571,7 +620,10 @@
                     </b-input-group>
                   </b-form-group>
                 </b-col>
-                <b-col cols="6">
+                <b-col
+                  cols="12"
+                  md="6"
+                >
                   <!-- <b-form-group
                     label-for="units"
                     label="Units :"
@@ -642,7 +694,8 @@
                   <b-form-group
                     label="Items"
                     label-for="items"
-                    label-cols="4"
+                    label-cols="6"
+                    label-cols-md="4"
                   >
                     <b-input-group
                       class="input-group-merge"
@@ -660,10 +713,41 @@
               </b-row>
               <b-row>
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="subtotal"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Sub Total
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-input-group
+                        prepend="Rp."
+                        append=".00"
+                        class="input-group-merge"
+                      >
+                        <b-form-input
+                          id="subtotal"
+                          style="text-align: right;"
+                          :value="totalSubtotal"
+                          disabled
+                        />
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label="Sub Total"
                     label-for="subtotal"
-                    label-cols="4"
+                    label-cols="6"
+                    label-cols-md="4"
                   >
                     <b-input-group
                       prepend="Rp."
@@ -677,7 +761,7 @@
                         disabled
                       />
                     </b-input-group>
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
                 <b-col
                   sm="6"
@@ -691,11 +775,43 @@
                   </b-form-checkbox>
                 </b-col>
               </b-row>
-              <b-row>
+              <b-row class="mt-1">
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="discount"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Discount
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-input-group
+                        prepend="Rp."
+                        append=".00"
+                        class="input-group-merge"
+                      >
+                        <b-form-input
+                          id="discount"
+                          v-model.number="inputDiscount"
+                          style="text-align: right;"
+                          @keypress="isNumberKey($event, discountStop)"
+                          @input="discountLength"
+                        />
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label="Discount"
                     label-for="discount"
+                    label-cols="6"
                     label-cols-md="4"
                   >
                     <b-input-group
@@ -711,13 +827,39 @@
                         @input="discountLength"
                       />
                     </b-input-group>
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="5"
+                    >
+                      <label
+                        for="customer"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Customer
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="7"
+                    >
+                      <v-select
+                        v-model="selectedCustomer"
+                        placeholder="Walk-in Customer"
+                        :options="customerList"
+                        :clearable="false"
+                        label="text"
+                      />
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label="Customer"
                     label-for="customer"
-                    label-cols="5"
+                    label-cols="6"
+                    label-cols-md="5"
                   >
                     <v-select
                       v-model="selectedCustomer"
@@ -726,14 +868,46 @@
                       :clearable="false"
                       label="text"
                     />
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
               </b-row>
-              <b-row>
+              <b-row class="mt-1">
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="pajak"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Pajak
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-input-group
+                        :append="'\xa0\xa0%\xa0'"
+                        class="input-group-merge"
+                      >
+                        <b-form-input
+                          id="tax"
+                          v-model.number="inputTax"
+                          style="text-align: right;"
+                          :disabled="disabledTaxInput"
+                          @keypress="isNumberKey"
+                          @keyup="maxTax"
+                        />
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label="Pajak"
                     label-for="tax"
+                    label-cols="6"
                     label-cols-md="4"
                   >
                     <b-input-group
@@ -749,12 +923,38 @@
                         @keyup="maxTax"
                       />
                     </b-input-group>
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="5"
+                    >
+                      <label
+                        for="no-refernesi"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        No. Referensi
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="7"
+                    >
+                      <b-form-input
+                        id="idBayar"
+                        v-model="noReference"
+                        style="text-align: right"
+                        autocomplete="off"
+                        @keypress="isNumberKey"
+                      />
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label="No. Referensi"
                     label-for="idBayar"
+                    label-cols="6"
                     label-cols-md="5"
                   >
                     <b-form-input
@@ -764,13 +964,37 @@
                       autocomplete="off"
                       @keypress="isNumberKey"
                     />
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
               </b-row>
-              <b-row>
+              <b-row class="mt-1">
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="4"
+                    />
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-input-group
+                        prepend="Rp."
+                        append=".00"
+                        class="input-group-merge"
+                      >
+                        <b-form-input
+                          id="taxConvert"
+                          :value="taxConvert"
+                          style="text-align: right;"
+                          disabled
+                        />
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label-for="taxConvert"
+                    label-cols="6"
                     label-cols-md="4"
                   >
                     <b-input-group
@@ -785,12 +1009,36 @@
                         disabled
                       />
                     </b-input-group>
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="5"
+                    >
+                      <label
+                        for="tipePembayaran"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Tipe Pembayaran
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="7"
+                    >
+                      <b-form-select
+                        id="tipebayar"
+                        v-model="selectedPaymentMethod"
+                        :options="paymentMethod"
+                      />
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label="Tipe Pembayaran"
                     label-for="tipePembayaran"
+                    label-cols="6"
                     label-cols-md="5"
                   >
                     <b-form-select
@@ -798,14 +1046,45 @@
                       v-model="selectedPaymentMethod"
                       :options="paymentMethod"
                     />
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
               </b-row>
-              <b-row>
+              <b-row class="mt-1">
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="ongkir"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Ong. Kirim
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-input-group
+                        prepend="Rp."
+                        append=".00"
+                        class="input-group-merge"
+                      >
+                        <b-form-input
+                          id="ongkir"
+                          v-model.number="inputOngkir"
+                          style="text-align: right;"
+                          @keypress="isNumberKey"
+                        />
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label="Ong. Kirim"
                     label-for="ongkir"
+                    label-cols="6"
                     label-cols-md="4"
                   >
                     <b-input-group
@@ -820,11 +1099,11 @@
                         @keypress="isNumberKey"
                       />
                     </b-input-group>
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
                 <b-col sm="6" />
               </b-row>
-              <b-row>
+              <b-row class="mt-1">
                 <b-col sm="12">
                   <b-alert
                     variant="secondary"
@@ -840,9 +1119,41 @@
               </b-row>
               <b-row>
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="paid"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Bayar
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-input-group
+                        prepend="Rp."
+                        append=".00"
+                        class="input-group-merge"
+                      >
+                        <b-form-input
+                          id="paid"
+                          v-model.number="inputPaid"
+                          style="text-align: right"
+                          :disabled="inputPaidValue()"
+                          @keypress="isNumberKey"
+                        />
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label="Bayar"
                     label-for="paid"
+                    label-cols="6"
                     label-cols-md="4"
                   >
                     <b-input-group
@@ -858,12 +1169,43 @@
                         @keypress="isNumberKey"
                       />
                     </b-input-group>
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
                 <b-col sm="6">
-                  <b-form-group
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="5"
+                    >
+                      <label
+                        for="paidReturn"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Kembalian
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="7"
+                    >
+                      <b-input-group
+                        prepend="Rp."
+                        append=".00"
+                        class="input-group-merge"
+                      >
+                        <b-form-input
+                          id="paidReturn"
+                          style="text-align: right;"
+                          :value="kembalian"
+                          disabled
+                        />
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                  <!-- <b-form-group
                     label="Kembalian"
                     label-for="paidReturn"
+                    label-cols="6"
                     label-cols-md="5"
                   >
                     <b-input-group
@@ -878,10 +1220,10 @@
                         disabled
                       />
                     </b-input-group>
-                  </b-form-group>
+                  </b-form-group> -->
                 </b-col>
               </b-row>
-              <b-row>
+              <b-row class="mt-1">
                 <b-col sm="12">
                   <b-form-textarea
                     v-model="note"
@@ -1741,5 +2083,16 @@ export default {
 .repeater-form {
   overflow: hidden;
   transition: .35s height;
+}
+@media (max-width: 540px) {
+  .add-customer {
+    padding-left: 0;
+    text-align: right;
+  }
+}
+@media (max-width: 320px) {
+  .add-customer {
+    text-align: left;
+  }
 }
 </style>
