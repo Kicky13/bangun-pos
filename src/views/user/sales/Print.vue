@@ -101,58 +101,63 @@
       </div>
 
       <!-- table -->
-      <table width="100%">
-        <thead style="text-align: center">
-          <th>Kode Penjualan</th>
-          <th>Tanggal</th>
-          <th>Customer</th>
-          <th>Kode Ref.</th>
-          <th>Kasir</th>
-          <th>Subtotal</th>
-          <th>Diskon</th>
-          <th>Ongkos Kirim</th>
-          <th>Pajak</th>
-          <th>Tipe Pembayaran</th>
-          <th>Status</th>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(item) in dataJual"
-            :id="item.id"
-            :key="item.id"
-          >
-            <td>
-              {{ item.saleCode }}
-            </td>
-            <td>
-              {{ item.date }}
-            </td>
-            <td>{{ item.customer }}</td>
-            <td style="text-align: center">
-              {{ item.ref }}
-            </td>
-            <td>{{ item.biller }}</td>
-            <td style="text-align: right">
-              {{ formatPrice(item.subtotal) }}
-            </td>
-            <td style="text-align: right">
-              {{ formatPrice(item.disc) }}
-            </td>
-            <td style="text-align: right">
-              {{ formatPrice(item.ship) }}
-            </td>
-            <td style="text-align: right">
-              {{ formatPrice(item.tax) }}
-            </td>
-            <td style="text-align: center">
-              {{ item.typePayment }}
-            </td>
-            <td style="text-align: center">
-              {{ item.paymentStatus }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="container">
+        <table
+          width="100%"
+          style="overflow-x: auto;"
+        >
+          <thead style="text-align: center">
+            <th>Kode Penjualan</th>
+            <th>Tanggal</th>
+            <th>Customer</th>
+            <th>Kode Ref.</th>
+            <th>Kasir</th>
+            <th>Subtotal</th>
+            <th>Diskon</th>
+            <th>Ongkos Kirim</th>
+            <th>Pajak</th>
+            <th>Tipe Pembayaran</th>
+            <th>Status</th>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(item) in dataJual"
+              :id="item.id"
+              :key="item.id"
+            >
+              <td>
+                {{ item.saleCode }}
+              </td>
+              <td>
+                {{ item.date }}
+              </td>
+              <td>{{ item.customer }}</td>
+              <td style="text-align: center">
+                {{ item.ref }}
+              </td>
+              <td>{{ item.biller }}</td>
+              <td style="text-align: right">
+                {{ formatPrice(item.subtotal) }}
+              </td>
+              <td style="text-align: right">
+                {{ formatPrice(item.disc) }}
+              </td>
+              <td style="text-align: right">
+                {{ formatPrice(item.ship) }}
+              </td>
+              <td style="text-align: right">
+                {{ formatPrice(item.tax) }}
+              </td>
+              <td style="text-align: center">
+                {{ item.typePayment }}
+              </td>
+              <td style="text-align: center">
+                {{ item.paymentStatus }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </b-card>
   </div>
 </template>

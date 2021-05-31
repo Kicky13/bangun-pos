@@ -6,10 +6,19 @@
     hide-footer
   >
     <!-- search input -->
-    <div class="custom-search d-flex">
+    <div
+      class="custom-search d-flex"
+      style="width: 100%;"
+    >
       <b-form-group>
-        <div class="d-flex align-items-center">
-          <b-input-group class="input-group-merge">
+        <div
+          class="d-flex align-items-center"
+          style="width: 100%;"
+        >
+          <b-input-group
+            class="input-group-merge"
+            style="width: 100%;"
+          >
             <b-form-input
               v-model="searchTerm"
               placeholder="Search"
@@ -35,15 +44,6 @@
       :search-options="{
         enabled: true,
         externalQuery: searchTerm }"
-      :select-options="{
-        enabled: true,
-        selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
-        selectionInfoClass: 'custom-class',
-        selectionText: 'rows selected',
-        clearSelectionText: 'clear',
-        disableSelectInfo: true, // disable the select info panel on top
-        selectAllByGroup: true, // when used in combination with a grouped table, add a checkbox in the header row to check/uncheck the entire group
-      }"
       :pagination-options="{
         enabled: true,
         perPage:pageLength

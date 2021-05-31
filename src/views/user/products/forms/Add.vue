@@ -6,7 +6,7 @@
         <b-row>
           <b-col
             lg="8"
-            md="8"
+            md="12"
             sm="12"
           >
             <div>
@@ -67,7 +67,7 @@
               <b-row>
                 <b-col
                   lg="4"
-                  md="4"
+                  md="8"
                   sm="12"
                 >
                   <b-form-group
@@ -90,7 +90,7 @@
                 </b-col>
                 <b-col
                   lg="2"
-                  md="2"
+                  md="4"
                   sm="12"
                 >
                   <b-button
@@ -108,7 +108,7 @@
                 </b-col>
                 <b-col
                   lg="4"
-                  md="4"
+                  md="8"
                   sm="12"
                 >
                   <b-form-group
@@ -130,7 +130,7 @@
                 </b-col>
                 <b-col
                   lg="2"
-                  md="2"
+                  md="4"
                   sm="12"
                 >
                   <b-button
@@ -150,7 +150,7 @@
               <b-row>
                 <b-col
                   lg="4"
-                  md="4"
+                  md="8"
                   sm="12"
                 >
                   <b-form-group
@@ -172,7 +172,7 @@
                 </b-col>
                 <b-col
                   lg="2"
-                  md="2"
+                  md="4"
                   sm="12"
                 >
                   <b-button
@@ -190,7 +190,7 @@
                 </b-col>
                 <b-col
                   lg="4"
-                  md="4"
+                  md="8"
                   sm="12"
                 >
                   <b-form-group
@@ -212,7 +212,7 @@
                 </b-col>
                 <b-col
                   lg="2"
-                  md="2"
+                  md="4"
                   sm="12"
                 >
                   <b-button
@@ -232,7 +232,7 @@
               <b-row>
                 <b-col
                   lg="6"
-                  md="6"
+                  md="8"
                   sm="12"
                 >
                   <b-form-group
@@ -255,7 +255,7 @@
                 </b-col>
                 <b-col
                   lg="4"
-                  md="4"
+                  md="8"
                   sm="12"
                 >
                   <b-form-group
@@ -277,7 +277,7 @@
                 </b-col>
                 <b-col
                   lg="2"
-                  md="2"
+                  md="4"
                   sm="12"
                 >
                   <b-button
@@ -301,7 +301,7 @@
                   sm="12"
                 >
                   <b-form-group
-                    label="Lampirkan Gambar Produk (* .PNG / .JPEG Maks 500KB) :"
+                    label="Gambar Produk (* .PNG / .JPEG Maks 500KB) :"
                     label-for="attachment"
                   >
                     <b-form-file
@@ -342,7 +342,7 @@
           </b-col>
           <b-col
             lg="4"
-            md="4"
+            md="12"
             sm="12"
           >
             <span>Pratinjau Gambar Produk :</span>
@@ -388,12 +388,12 @@
         <b-row>
           <b-col
             lg="10"
-            md="10"
+            md="8"
             sm="12"
           />
           <b-col
             lg="2"
-            md="2"
+            md="4"
             sm="12"
           >
             <div>
