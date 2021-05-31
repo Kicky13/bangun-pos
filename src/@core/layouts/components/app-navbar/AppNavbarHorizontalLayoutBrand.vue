@@ -9,7 +9,14 @@
         >
           <span class="brand-logo">
             <b-img
+              class="d-none"
               :src="appLogoImage"
+              alt="logo"
+              fluid-grow
+            />
+            <b-img
+              class="d-xl-none"
+              :src="require('@/assets/images/logo/POSRetailLogo.png')"
               alt="logo"
               fluid-grow
             />

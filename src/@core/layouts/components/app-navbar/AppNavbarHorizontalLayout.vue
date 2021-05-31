@@ -5,7 +5,7 @@
   >
 
     <!-- Nav Menu Toggler -->
-    <ul class="nav navbar-nav d-xl-none">
+    <ul class="nav navbar-nav d-none">
       <li class="nav-item">
         <b-link
           class="nav-link"

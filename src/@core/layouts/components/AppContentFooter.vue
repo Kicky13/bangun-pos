@@ -7,7 +7,7 @@
     /> -->
     <b-col
       lg="3"
-      md="3"
+      md="12"
       sm="12"
       style="text-align: center;"
     >
@@ -16,6 +16,7 @@
         :src="require('@/assets/images/logo/logo-at-putih.png')"
         fluid
         alt="Logo Akses Toko Putih"
+        style="max-width: 216px;"
       />
       <div>
         <b-link
@@ -65,7 +66,7 @@
     </b-col>
     <b-col
       lg="2"
-      md="2"
+      md="3"
       sm="12"
     >
       <div style="margin-bottom: 20px;" />
@@ -106,7 +107,7 @@
     </b-col>
     <b-col
       lg="2"
-      md="2"
+      md="3"
       sm="12"
     >
       <div style="margin-bottom: 20px;" />
@@ -166,7 +167,7 @@
     </b-col>
     <b-col
       lg="2"
-      md="2"
+      md="3"
       sm="12"
     >
       <div style="margin-bottom: 20px;" />

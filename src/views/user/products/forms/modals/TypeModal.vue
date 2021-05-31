@@ -32,8 +32,8 @@
           </b-form-group>
         </b-col> -->
         <b-col
-          lg="6"
-          md="6"
+          lg="12"
+          md="12"
           sm="12"
         >
           <b-form-group

@@ -10,7 +10,7 @@
       <b-row>
         <b-col
           lg="6"
-          md="6"
+          md="12"
           sm="12"
         >
           <b-input-group class="input-group-merge space-5">
@@ -30,7 +30,7 @@
         </b-col>
         <b-col
           lg="6"
-          md="6"
+          md="12"
           sm="12"
         >
           <b-dropdown

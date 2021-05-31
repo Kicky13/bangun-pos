@@ -1,59 +1,68 @@
 <template>
   <b-card>
     <loading-grow v-if="isLoading" />
-    <div class="demo-inline-spacing">
-
-      <!-- input search -->
-      <div
-        class="d-flex justify-content-end"
-        style="float:left;"
+    <b-row>
+      <b-col
+        lg="2"
+        md="3"
+        sm="12"
       >
-        <b-form-group>
-          <div
-            class="d-flex align-items-center"
-            style="width: 500px !important;"
-          >
-            <b-form-input
-              v-model="searchTerm"
-              placeholder="Search Here..."
-              type="text"
-              class="d-inline-block"
-            />
-          </div>
-        </b-form-group>
-      </div>
-      <div style="float:left; !important; margin-left:10px;">
+        <label
+          class="mr-1"
+          style="font-size: 16px; font-weight: bold;"
+        >Pencarian :</label>
+      </b-col>
+      <b-col
+        lg="4"
+        md="6"
+        sm="12"
+      >
+        <b-form-input
+          v-model="searchTerm"
+          placeholder="Masukkan kata kunci pencarian disini"
+          type="text"
+          class="d-inline-block"
+          style="margin-bottom : 10px;"
+        />
+      </b-col>
+      <b-col
+        lg="1"
+        md="3"
+        sm="12"
+      >
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="primary"
-          style="margin-top: -15px;"
+          style="margin-bottom : 10px;"
           @click="cetakDataCustomer"
         >
           Print
         </b-button>
-      </div>
-      <div style="float:left; !important; margin-left:10px;">
+      </b-col>
+      <b-col
+        lg="5"
+        md="6"
+        sm="12"
+      >
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="primary"
-          style="margin-top: -15px;"
+          style="margin-right : 5px; margin-bottom : 10px;"
           @click="confirmDelete"
         >
-          Delete
+          Hapus
         </b-button>
-      </div>
-      <div style="float:left; !important; margin-left:10px;">
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="primary"
-          style="margin-top: -15px;"
+          style="margin-bottom : 10px;"
           @click="addCustomer"
         >
           Tambahkan Customer
         </b-button>
-      </div>
-    </div>
-
+      </b-col>
+    </b-row>
+    <br>
     <!-- table -->
     <vue-good-table
       ref="dataCustomer"
@@ -159,10 +168,125 @@
         </div>
       </template>
     </vue-good-table>
+    <!-- table -->
+    <div
+      id="printData"
+      class="container"
+      style="display : none;"
+    >
+      <div
+        class="row"
+        style="margin-bottom: 25px"
+      >
+        <div class="col-md-3">
+          <b-img
+            v-if="userData.avatar"
+            :src="userData.avatar"
+            alt="Logo POS Retail"
+            style="margin-bottom : 20px; width: 100%;"
+          />
+          <b-img
+            v-else
+            :src="require('@/assets/images/logo/POSRetailBlack.png')"
+            alt="Logo POS Retail"
+            style="margin-bottom : 20px; width: 100%"
+          />
+        </div>
+        <div class="col-md-9">
+          <table width="100%">
+            <tbody>
+              <tr>
+                <td>
+                  Nama Toko
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ userData.shopName }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  No. Telp
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ userData.shopNumber }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Alamat
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ userData.ownerAddress }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Tanggal Cetak
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ printDate }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- table -->
+      <table width="100%">
+        <thead style="text-align: center;">
+          <th>Kode Customer</th>
+          <th>Customer</th>
+          <th>No. Handphone</th>
+          <th>Jumlah Trans.</th>
+          <th>Nilai Total Trans.</th>
+          <th>Total Hutang</th>
+          <th>Hutang Dibayar</th>
+          <th>Sisa Hutang</th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item) in dataCustomer"
+            :id="item.transId"
+            :key="item.transId"
+            ref="row"
+          >
+            <td>
+              {{ item.custCode }}
+            </td>
+            <td>
+              {{ item.customer }}
+            </td>
+            <td style="text-align: center">
+              {{ item.nohp }}
+            </td>
+            <td style="text-align: center">
+              {{ item.jumTrans }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.totalTrans) }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.totalHutang) }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.sudahBayar) }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.sisaHutang) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Pay Debt -->
     <b-modal
       id="listBayar"
+      centered
       size="lg"
       ok-title="Simpan"
       cancel-variant="outline-secondary"
@@ -170,7 +294,11 @@
     >
       <b-form>
         <b-row>
-          <b-col cols="6">
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label="Kode Customer"
               label-for="code-customer"
@@ -183,7 +311,11 @@
               />
             </b-form-group>
           </b-col>
-          <b-col>
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label="Nama Customer"
               label-for="nama-customer"
@@ -198,7 +330,11 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col cols="6">
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label="Sisa Hutang"
               label-for="sisa-hutnag"
@@ -211,7 +347,11 @@
               />
             </b-form-group>
           </b-col>
-          <b-col>
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label="Tipe Pembayaran"
               label-for="tipe-pembayaran"
@@ -302,7 +442,11 @@
     >
       <b-form>
         <b-row>
-          <b-col cols="6">
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label="Nama Customer :"
               label-for="customerName"
@@ -317,7 +461,11 @@
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
-          <b-col cols="6">
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label-for="reference"
               label="No. Referensi (Tukang JagoBagun) :"
@@ -334,7 +482,11 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col cols="6">
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label="Nomor Handphone : "
               label-for="phone"
@@ -351,7 +503,11 @@
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
-          <b-col cols="6">
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label-for="ktp"
               label="Nomor Identitas/KTP"
@@ -370,7 +526,11 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col cols="12">
+          <b-col
+            lg="12"
+            md="12"
+            sm="12"
+          >
             <b-form-group
               label="Alamat :"
               label-for="address"
@@ -391,7 +551,7 @@
     <b-modal
       id="askSubmit"
       centered
-      size="sm"
+      size="lg"
       hide-header
       hide-header-close
       ok-title="Ya, Lanjutkan ..."
@@ -429,7 +589,7 @@
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BModal, VBModal, BRow, BCol, BFormTextarea, BForm, BFormInvalidFeedback,
+  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BCard, BModal, VBModal, BRow, BCol, BFormTextarea, BForm, BFormInvalidFeedback, BImg,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
@@ -452,6 +612,7 @@ export default {
     BFormInput,
     BFormSelect,
     BCard,
+    BImg,
     // AddCustomer,
     BModal,
     BRow,
@@ -468,6 +629,7 @@ export default {
   },
   data() {
     return {
+      userData: null,
       formTitle: 'Tambah Customer',
       custUuid: '',
       customerCode: '',
@@ -591,6 +753,7 @@ export default {
         },
       ],
       rows: [],
+      dataCustomer: [],
       searchTerm: '',
       selected: 'Cash',
       option: ['Cash', 'Kredit'],
@@ -610,9 +773,30 @@ export default {
   },
   watch: {},
   created() {
+    this.getDataUser()
     this.fetchCustomerList()
   },
   methods: {
+    getWaktuCetak() {
+      const currentdate = new Date()
+      const tanggal = parseInt(currentdate.getDate(), 10) < 10 ? `0${currentdate.getDate()}` : currentdate.getDate()
+      const bulan = parseInt(currentdate.getMonth() + 1, 10) < 10 ? `0${currentdate.getMonth() + 1}` : currentdate.getMonth() + 1
+      const tahun = parseInt(currentdate.getFullYear(), 10) < 10 ? `0${currentdate.getFullYear()}` : currentdate.getFullYear()
+      const jam = parseInt(currentdate.getHours(), 10) < 10 ? `0${currentdate.getHours()}` : currentdate.getHours()
+      const menit = parseInt(currentdate.getMinutes(), 10) < 10 ? `0${currentdate.getMinutes()}` : currentdate.getMinutes()
+      const detik = parseInt(currentdate.getSeconds(), 10) < 10 ? `0${currentdate.getSeconds()}` : currentdate.getSeconds()
+      // console.log(`${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`)
+      return `${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`
+    },
+    getDataUser() {
+      const userData = JSON.parse(localStorage.getItem('userData'))
+      this.userData = userData
+      const timeElapsed = Date.now()
+      const today = new Date(timeElapsed)
+      // this.printDate  = today.toUTCString()
+      console.log(today.toUTCString())
+      this.printDate = this.getWaktuCetak()
+    },
     formatContact(e) {
       return String(e).substring(0, 12)
     },
@@ -626,12 +810,31 @@ export default {
       }
     },
     cetakDataCustomer() {
+      this.isLoading = true
       const { selectedRows } = this.$refs.dataCustomer
       if (selectedRows.length < 1) {
-        this.$router.push({ name: 'user-customer-print', params: { dataCustomer: this.rows } })
+        this.dataCustomer = this.rows
+        // this.$router.push({ name: 'user-customer-print', params: { dataCustomer: this.rows } })
       } else {
-        this.$router.push({ name: 'user-customer-print', params: { dataCustomer: selectedRows } })
+        this.dataCustomer = selectedRows
+        // this.$router.push({ name: 'user-customer-print', params: { dataCustomer: selectedRows } })
       }
+      setTimeout(() => {
+        this.isLoading = false
+        this.printLandscape()
+      }, 2000)
+    },
+    printLandscape() {
+      const localOptions = {
+        styles: [
+          'https://cdn.jsdelivr.net/npm/vue-good-table@2.18.1/dist/vue-good-table.min.css',
+          'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+          'https://unpkg.com/kidlat-css/css/kidlat.css',
+        ],
+      }
+      this.$htmlToPaper('printData', localOptions, () => {
+        console.warn('done')
+      })
     },
     formatRefCode() {
       this.jagobangunRef = this.jagobangunRef.replace(/[^0-9-]/g, '')

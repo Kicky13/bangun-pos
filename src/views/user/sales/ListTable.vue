@@ -1,42 +1,45 @@
 <template>
   <b-card>
     <loading-grow v-if="isLoading" />
-    <div class="demo-inline-spacing">
-
-      <!-- input search -->
-      <div
-        class="d-flex justify-content-end"
-        style="float:left;"
+    <b-row>
+      <b-col
+        lg="2"
+        md="3"
+        sm="12"
       >
-        <b-form-group>
-          <div
-            class="d-flex align-items-center"
-            style="width: 700px !important;"
-          >
-            <label
-              class="mr-1"
-              style="font-size: 16px; font-weight: bold;"
-            >Search</label>
-            <b-form-input
-              v-model="searchTerm"
-              placeholder="Masukkan kata kunci pencarian disini"
-              type="text"
-              class="d-inline-block"
-            />
-          </div>
-        </b-form-group>
-      </div>
-      <div style="float:left;margin-left:10px;">
+        <label
+          class="mr-1"
+          style="font-size: 16px; font-weight: bold;"
+        >Pencarian :</label>
+      </b-col>
+      <b-col
+        lg="6"
+        md="6"
+        sm="12"
+      >
+        <b-form-input
+          v-model="searchTerm"
+          placeholder="Masukkan kata kunci pencarian disini"
+          type="text"
+          class="d-inline-block"
+          style="margin-bottom : 10px;"
+        />
+      </b-col>
+      <b-col
+        lg="2"
+        md="3"
+        sm="12"
+      >
         <b-button
           v-ripple.400="'rgba(255, 255, 255, 0.15)'"
           variant="danger"
-          style="margin-top: -15px;"
           @click="cetakDataJual"
         >
           Print
         </b-button>
-      </div>
-    </div>
+      </b-col>
+    </b-row>
+    <br>
 
     <!-- table -->
     <vue-good-table
@@ -159,13 +162,136 @@
         </div>
       </template>
     </vue-good-table>
+    <!-- table -->
+    <div
+      id="printData"
+      class="container"
+      style="display : none;"
+    >
+      <div
+        class="row"
+        style="margin-bottom: 25px"
+      >
+        <div class="col-md-3">
+          <b-img
+            v-if="userData.avatar"
+            :src="userData.avatar"
+            alt="Logo POS Retail"
+            style="margin-bottom : 20px; width: 100%;"
+          />
+          <b-img
+            v-else
+            :src="require('@/assets/images/logo/POSRetailBlack.png')"
+            alt="Logo POS Retail"
+            style="margin-bottom : 20px; width: 100%"
+          />
+        </div>
+        <div class="col-md-9">
+          <table width="100%">
+            <tbody>
+              <tr>
+                <td>
+                  Nama Toko
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ userData.shopName }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  No. Telp
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ userData.shopNumber }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Alamat
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ userData.ownerAddress }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Tanggal Cetak
+                </td>
+                <td>:</td>
+                <td style="padding-left: 5%">
+                  {{ printDate }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <table
+        width="100%"
+        style="overflow-x: auto;"
+      >
+        <thead style="text-align: center">
+          <th>Kode Penjualan</th>
+          <th>Tanggal</th>
+          <th>Customer</th>
+          <th>Kode Ref.</th>
+          <th>Kasir</th>
+          <th>Subtotal</th>
+          <th>Diskon</th>
+          <th>Ongkos Kirim</th>
+          <th>Pajak</th>
+          <th>Tipe Pembayaran</th>
+          <th>Status</th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item) in dataJual"
+            :id="item.id"
+            :key="item.id"
+          >
+            <td>
+              {{ item.saleCode }}
+            </td>
+            <td>
+              {{ item.date }}
+            </td>
+            <td>{{ item.customer }}</td>
+            <td style="text-align: center">
+              {{ item.ref }}
+            </td>
+            <td>{{ item.biller }}</td>
+            <td style="text-align: right">
+              {{ formatPrice(item.subtotal) }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.disc) }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.ship) }}
+            </td>
+            <td style="text-align: right">
+              {{ formatPrice(item.tax) }}
+            </td>
+            <td style="text-align: center">
+              {{ item.typePayment }}
+            </td>
+            <td style="text-align: center">
+              {{ item.paymentStatus }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <alert-token />
   </b-card>
 </template>
 
 <script>
 import {
-  BButton, BPagination, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem, BBadge, BCard,
+  BRow, BCol, BButton, BPagination, BFormInput, BFormSelect, BDropdown, BDropdownItem, BBadge, BCard, BImg,
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store/index'
@@ -179,10 +305,13 @@ const appService = new ApiService()
 
 export default {
   components: {
+    BRow,
+    BCol,
+    BImg,
     BButton,
     VueGoodTable,
     BPagination,
-    BFormGroup,
+    // BFormGroup,
     BFormInput,
     BFormSelect,
     BDropdown,
@@ -197,6 +326,7 @@ export default {
   },
   data() {
     return {
+      userData: null,
       selectedPembayaran: null,
       selectedStatus: null,
       isLoading: false,
@@ -306,6 +436,7 @@ export default {
         },
       ],
       rows: [],
+      dataJual: [],
       searchTerm: '',
     }
   },
@@ -336,16 +467,57 @@ export default {
     },
   },
   created() {
+    this.getDataUser()
     this.fetchSalesList()
   },
   methods: {
+    getWaktuCetak() {
+      const currentdate = new Date()
+      const tanggal = parseInt(currentdate.getDate(), 10) < 10 ? `0${currentdate.getDate()}` : currentdate.getDate()
+      const bulan = parseInt(currentdate.getMonth() + 1, 10) < 10 ? `0${currentdate.getMonth() + 1}` : currentdate.getMonth() + 1
+      const tahun = parseInt(currentdate.getFullYear(), 10) < 10 ? `0${currentdate.getFullYear()}` : currentdate.getFullYear()
+      const jam = parseInt(currentdate.getHours(), 10) < 10 ? `0${currentdate.getHours()}` : currentdate.getHours()
+      const menit = parseInt(currentdate.getMinutes(), 10) < 10 ? `0${currentdate.getMinutes()}` : currentdate.getMinutes()
+      const detik = parseInt(currentdate.getSeconds(), 10) < 10 ? `0${currentdate.getSeconds()}` : currentdate.getSeconds()
+      // console.log(`${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`)
+      return `${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`
+    },
+    getDataUser() {
+      const userData = JSON.parse(localStorage.getItem('userData'))
+      this.userData = userData
+      const timeElapsed = Date.now()
+      const today = new Date(timeElapsed)
+      // this.printDate  = today.toUTCString()
+      console.log(today.toUTCString())
+      this.printDate = this.getWaktuCetak()
+    },
     cetakDataJual() {
+      this.isLoading = true
       const { selectedRows } = this.$refs.dataJual
       if (selectedRows.length < 1) {
-        this.$router.push({ name: 'user-sale-print', params: { dataJual: this.rows } })
+        this.dataJual = this.rows
+        // this.$router.push({ name: 'user-sale-print', params: { dataJual: this.rows } })
       } else {
-        this.$router.push({ name: 'user-sale-print', params: { dataJual: selectedRows } })
+        this.dataJual = selectedRows
+        // this.$router.push({ name: 'user-sale-print', params: { dataJual: selectedRows } })
       }
+      // this.printLandscape()
+      setTimeout(() => {
+        this.isLoading = false
+        this.printLandscape()
+      }, 2000)
+    },
+    printLandscape() {
+      const localOptions = {
+        styles: [
+          'https://cdn.jsdelivr.net/npm/vue-good-table@2.18.1/dist/vue-good-table.min.css',
+          'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+          'https://unpkg.com/kidlat-css/css/kidlat.css',
+        ],
+      }
+      this.$htmlToPaper('printData', localOptions, () => {
+        console.warn('done')
+      })
     },
     formatPrice(value) {
       const val = (value / 1).toFixed(2).replace('.', ',')

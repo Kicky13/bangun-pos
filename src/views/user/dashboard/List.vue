@@ -3,14 +3,14 @@
     <loading-grow v-if="isLoading" />
     <b-col
       lg="8"
-      md="8"
+      md="12"
       sm="12"
     >
       <dashboard-bar-chart />
     </b-col>
     <b-col
       lg="4"
-      md="4"
+      md="12"
       sm="12"
     >
       <ecommerce-goal-overview :data="goalOverview" />
