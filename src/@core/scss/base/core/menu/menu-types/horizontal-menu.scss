@@ -65,14 +65,16 @@
     }
   }
   .header-navbar {
-    background: $white;
+    // background: $white;
+    background: rgb(0, 0, 0);
     z-index: 999 !important;
     line-height: 1;
     min-height: auto;
     // Navbar- Brand Center - Logo
     &.navbar-horizontal.floating-nav {
       width: calc(100vw - (100vw - 100%) - calc(#{$content-padding} * 2));
-      background: $white;
+      // background: $white;
+      background: rgb(0, 0, 0);
     }
     // .navbar-container {
     //   border-radius: $border-radius;
@@ -428,7 +430,8 @@
     .horizontal-menu-wrapper {
       position: relative;
       .navbar-horizontal.header-navbar {
-        background: $white;
+        // background: $white;
+        background: rgb(0, 0, 0);
         // ? Added for angular fix as it adds this class to navbar in hz layout
         &.navbar-static-top {
           left: 0;
@@ -570,7 +573,8 @@
       }
     }
     .header-navbar {
-      background: $white;
+      // background: $white;
+      background: rgb(0, 0, 0);
     }
     .app-content {
       padding: calc(#{$navbar-height} + calc(#{$content-padding} - 0.8rem)) calc(#{$content-padding} - 0.8rem) 0

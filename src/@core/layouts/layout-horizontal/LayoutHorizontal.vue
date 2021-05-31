@@ -21,6 +21,7 @@
         :toggleVerticalMenuActive="toggleVerticalMenuActive"
       >
         <app-navbar-horizontal-layout-brand />
+        <app-navbar-horizontal-layout-brand-small />
         <app-navbar-horizontal-layout :toggle-vertical-menu-active="toggleVerticalMenuActive" />
       </slot>
     </b-navbar>
@@ -110,6 +111,7 @@
 import AppBreadcrumb from '@core/layouts/components/AppBreadcrumb.vue'
 import AppNavbarHorizontalLayout from '@core/layouts/components/app-navbar/AppNavbarHorizontalLayout.vue'
 import AppNavbarHorizontalLayoutBrand from '@core/layouts/components/app-navbar/AppNavbarHorizontalLayoutBrand.vue'
+import AppNavbarHorizontalLayoutBrandSmall from '@core/layouts/components/app-navbar/AppNavbarHorizontalLayoutBrandSmall.vue'
 import AppContentFooter from '@core/layouts/components/AppContentFooter.vue'
 import AppFooter from '@core/layouts/components/AppFooter.vue'
 import useAppConfig from '@core/app-config/useAppConfig'
@@ -138,6 +140,7 @@ export default {
     AppBreadcrumb,
     AppNavbarHorizontalLayout,
     AppNavbarHorizontalLayoutBrand,
+    AppNavbarHorizontalLayoutBrandSmall,
     AppContentFooter,
     AppFooter,
     HorizontalNavMenu,
