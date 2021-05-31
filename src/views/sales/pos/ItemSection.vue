@@ -11,12 +11,14 @@
                 Menampilkan <strong>{{ totalProduct }}</strong> produk. Dengan Kategori dari <strong>{{ selectedCategory.name }}</strong>, Sub Kategori dari <strong>{{ selectedSubCategory.name }}</strong> dan Brand / Merk dari <strong>{{ selectedBrand.name }}</strong>.
               </small>
             </div>
-            <div class="view-options d-flex mt-1">
+            <div class="view-options d-flex flex-wrap">
               <!-- Sort Button -->
               <b-dropdown
                 v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 text="Urutkan"
                 variant="outline-danger"
+                class="mt-1"
+                style="margin-right: 5px;"
               >
                 <div class="scrollable-menu">
                   <b-dropdown-item
@@ -34,7 +36,8 @@
                 v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 text="Kategori"
                 variant="outline-danger"
-                style="margin-left: 5px;"
+                class="mt-1"
+                style="margin-right: 5px;"
               >
                 <div class="scrollable-menu">
                   <b-dropdown-item
@@ -51,7 +54,8 @@
                 v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 text="Sub Kategori"
                 variant="outline-danger"
-                style="margin-left: 5px;"
+                class="mt-1"
+                style="margin-right: 5px;"
               >
                 <div class="scrollable-menu">
                   <b-dropdown-item
@@ -68,7 +72,7 @@
                 v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 text="Brand"
                 variant="outline-primary"
-                style="margin-left: 5px;"
+                class="mt-1 mr-1"
               >
                 <div class="scrollable-menu">
                   <b-dropdown-item
@@ -85,6 +89,7 @@
                 v-b-modal.listAntrian
                 v-ripple.400="'rgba(234, 84, 85, 0.15)'"
                 variant="secondary-outline"
+                class="mt-1 antrian-button"
               >
                 <feather-icon
                   :badge="totalAntrian"
@@ -126,6 +131,7 @@
         <b-col
           v-for="product in productList"
           :key="product.id_produk"
+          cols="6"
           xl="4"
           sm="6"
           class="ecommerce-card"
@@ -774,5 +780,10 @@ export default {
     height: auto;
     max-height: 300px;
     overflow-x: hidden;
+}
+@media (max-width: 1080px) {
+  .antrian-button {
+    padding: 0;
+  }
 }
 </style>
