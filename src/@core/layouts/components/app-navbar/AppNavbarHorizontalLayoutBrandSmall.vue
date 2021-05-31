@@ -1,6 +1,6 @@
 <template>
   <div
-    class="navbar-header"
+    class="navbar-header d-xl-none d-lg-none d-md-none d-sm-block d-xs-block"
     style="width: 75px !important;"
   >
     <b-link

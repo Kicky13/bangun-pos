@@ -1,6 +1,6 @@
 <template>
   <div
-    class="navbar-header d-xl-block d-lg-block d-md-block d-none"
+    class="navbar-header d-md-block d-none"
   >
     <ul class="nav navbar-nav">
       <li class="nav-item">
