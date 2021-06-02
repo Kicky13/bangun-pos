@@ -31,6 +31,7 @@
               :src="appLogoImage"
               alt="logo"
               fluid-grow
+              style="margin-left: 5px;"
             />
           </span>
           <h2 class="brand-text mb-0">

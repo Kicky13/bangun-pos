@@ -33,7 +33,7 @@ tagVariant
 import dashboard from './dashboard'
 import product from './products'
 import sales from './sales'
-import purchase from './purchases'
+import masters from './purchases'
 
 // Array of sections
-export default [...dashboard, ...product, ...purchase, ...sales]
+export default [...dashboard, ...product, ...sales, ...masters]

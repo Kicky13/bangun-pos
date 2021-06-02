@@ -2,7 +2,8 @@ export default [
   {
     title: 'Dashboard',
     icon: 'HomeIcon',
-    route: 'dashboard-ecommerce',
+    route: 'dashboard-admin',
     resource: 'Dashboard',
+    action: 'manage',
   },
 ]
