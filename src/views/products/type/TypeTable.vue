@@ -37,6 +37,7 @@
           <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="primary"
+            style="margin-bottom : 5px;"
             @click="tambahData"
           >
             Tambah
