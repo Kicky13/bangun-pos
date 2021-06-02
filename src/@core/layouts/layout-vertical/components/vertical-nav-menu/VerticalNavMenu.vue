@@ -9,7 +9,10 @@
     @mouseleave="updateMouseHovered(false)"
   >
     <!-- main menu header-->
-    <div class="navbar-header expanded">
+    <div
+      class="navbar-header expanded"
+      style="background: black;"
+    >
       <slot
         name="header"
         :toggleVerticalMenuActive="toggleVerticalMenuActive"
@@ -28,6 +31,7 @@
                 <b-img
                   :src="appLogoImage"
                   alt="logo"
+                  style="max-width: 110px !important;"
                 />
               </span>
               <h2 class="brand-text">

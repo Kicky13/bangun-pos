@@ -1,30 +1,13 @@
 export default [
   {
-    header: 'Sale',
+    header: 'Transaksi',
     resource: 'Sales',
   },
   {
-    title: 'Sale List',
+    title: 'Data Transaksi',
     route: 'list-sale',
-    icon: 'ServerIcon',
+    icon: 'FileTextIcon',
     resource: 'Sales',
-  },
-  {
-    title: 'POS',
-    route: 'pointof-sale',
-    icon: 'GridIcon',
-    resource: 'Sales',
-  },
-  {
-    title: 'Giftcard List',
-    route: 'giftcard-sale',
-    icon: 'CreditCardIcon',
-    resource: 'Sales',
-  },
-  {
-    title: 'Coupon',
-    route: 'coupon-sale',
-    icon: 'CreditCardIcon',
-    resource: 'Sales',
+    action: 'manage',
   },
 ]

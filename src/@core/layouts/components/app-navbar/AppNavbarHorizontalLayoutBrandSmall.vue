@@ -1,7 +1,7 @@
 <template>
   <div
     class="navbar-header d-xl-none d-lg-none d-md-none d-sm-block d-xs-block"
-    style="width: 75px !important;"
+    style="width: 60px !important;"
   >
     <b-link
       v-if="userdata.role === 'user'"
@@ -27,6 +27,7 @@
           :src="require('@/assets/images/logo/POSRetailLogo.png')"
           alt="logo"
           fluid-grow
+          style="margin-left: 5px;"
         />
       </span>
     </b-link>
