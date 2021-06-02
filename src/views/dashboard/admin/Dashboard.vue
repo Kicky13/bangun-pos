@@ -1,19 +1,34 @@
 <template>
   <section id="dashboard-ecommerce">
     <b-row class="match-height">
-      <b-col cols="6">
+      <b-col
+        xl="6"
+        md="12"
+      >
         <shop-sell />
       </b-col>
-      <b-col cols="6">
+      <b-col
+        xl="6"
+        md="12"
+      >
         <product-selling />
       </b-col>
-      <b-col cols="4">
+      <b-col
+        xl="4"
+        md="12"
+      >
         <best-seller />
       </b-col>
-      <b-col cols="4">
+      <b-col
+        xl="4"
+        md="12"
+      >
         <top-grossing />
       </b-col>
-      <b-col cols="4">
+      <b-col
+        xl="4"
+        md="12"
+      >
         <favourite />
       </b-col>
     </b-row>
