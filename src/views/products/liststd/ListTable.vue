@@ -4,7 +4,7 @@
     <div>
       <b-row>
         <b-col
-          lg="4"
+          lg="6"
           md="4"
           sm="12"
         >
@@ -19,19 +19,20 @@
         </b-col>
         <b-col
           lg="1"
-          md="1"
+          md="2"
           sm="12"
         >
           <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="secondary"
+            style="margin-bottom : 5px;"
             @click="printTable"
           >
             Print
           </b-button>
         </b-col>
         <b-col
-          lg="2"
+          lg="1"
           md="2"
           sm="12"
         >
@@ -45,6 +46,7 @@
           <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="primary"
+            style="margin-bottom : 5px;"
             @click="tambahData"
           >
             Tambah
@@ -52,7 +54,7 @@
         </b-col>
         <b-col
           lg="1"
-          md="1"
+          md="2"
           sm="12"
         >
           <!-- <b-button
@@ -65,6 +67,7 @@
           <b-button
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="primary"
+            style="margin-bottom : 5px;"
             @click="uploadData"
           >
             Upload
