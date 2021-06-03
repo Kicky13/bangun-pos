@@ -767,6 +767,10 @@ export default {
 <style lang="scss">
   @import "~@core/scss/base/pages/app-ecommerce.scss";
   @import "../node_modules/vue-good-table/src/styles/style.scss";
+  .modal-xl {
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>
 
 <style lang="scss" scoped>
