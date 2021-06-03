@@ -176,11 +176,31 @@
       >
         Aplikasi
       </h2>
-      <b-img
-        :src="require('@/assets/images/logo/gplay-id.png')"
-        fluid
-        alt="Logo Google Play"
-      />
+      <b-link
+        class="ml-25 text-white"
+        href="https://play.google.com/store/apps/details?id=id.sisi.aksestokomobile"
+        target="_blank"
+        style="font-size: 1.25rem;"
+      >
+        <b-img
+          :src="require('@/assets/images/logo/gplay-id.png')"
+          fluid
+          alt="Logo Google Play"
+        />
+      </b-link>
+      <div style="margin-bottom: 20px;" />
+      <b-link
+        class="ml-25 text-white"
+        href="https://aksestoko.id/application/ios"
+        target="_blank"
+        style="font-size: 1.25rem;"
+      >
+        <b-img
+          src="https://aksestoko.id/themes/aksestoko/assets/img/App-Store-Logo-black.png"
+          fluid
+          alt="Logo App Store"
+        />
+      </b-link>
       <div style="margin-bottom: 20px;" />
     </b-col>
     <!-- <b-col
