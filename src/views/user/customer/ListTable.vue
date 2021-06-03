@@ -367,7 +367,58 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row class="mt-2">
+        <b-row>
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          />
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
+            <b-form-group
+              label="No. Pembayaran"
+              label-for="no-pembayaran"
+              class="font-weight-bold"
+            >
+              <b-form-input
+                id="no-pembayaran"
+                v-model="paymentID"
+                placeholder="nominal"
+                disabled
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          />
+          <b-col
+            lg="6"
+            md="12"
+            sm="12"
+          >
+            <b-form-group
+              label="Bayar"
+              label-for="bayar"
+              class="font-weight-bold"
+            >
+              <b-form-input
+                id="bayar"
+                v-model="paySum"
+                :state="paySum !== '' && parseInt(paySum) <= remainingDebt"
+                placeholder="nominal"
+                @keyup="formatBayar"
+              />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <!-- <b-row class="mt-2">
           <b-col cols="2" />
           <b-col cols="10">
             <b-form-group
@@ -407,7 +458,7 @@
               Jumlah yg dibayarkan tidak boleh 0
             </b-form-invalid-feedback>
           </b-col>
-        </b-row>
+        </b-row> -->
       </b-form>
     </b-modal>
     <b-modal
