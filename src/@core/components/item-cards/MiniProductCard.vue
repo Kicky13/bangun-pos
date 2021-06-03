@@ -7,7 +7,7 @@
       :variant="color"
       tag="a"
       class="btn-icon float-sm-right d-md-block d-none"
-      style="margin: 1.5rem; position: absolute; opacity: 0.5; width: 80%;"
+      style="margin: 1.5rem; position: absolute; opacity: 0.5; width: 90%;"
     >
       <span>Tidak Tersedia</span>
     </b-button>
@@ -16,7 +16,7 @@
       :variant="color"
       tag="a"
       class="btn-icon float-sm-right d-sm-block d-xs-block d-xl-none d-lg-none d-md-none"
-      style="margin: 0.5rem; position: absolute; opacity: 0.5; width: 80%;"
+      style="margin: 0.5rem; position: absolute; opacity: 0.5; width: 90%;"
     >
       <span>Tidak Tersedia</span>
     </b-button>
@@ -26,7 +26,6 @@
       thumbnail
       style="background-color:white;
       border:none;
-      max-width:90%;
       height: 175px;
       margin-top: 0.5rem;"
       fluid
@@ -39,7 +38,6 @@
       thumbnail
       style="background-color:white;
       border:none;
-      max-width:90%;
       height: 110px;
       margin-top: 0.5rem;"
       fluid
