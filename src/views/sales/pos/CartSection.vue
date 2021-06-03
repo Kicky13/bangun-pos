@@ -3,7 +3,7 @@
     <b-row>
       <b-col>
         <b-card>
-          <!-- Customer Form Section -->
+          <!-- Form Section -->
           <div>
             <b-row>
               <!-- Selling Code -->
@@ -17,7 +17,7 @@
                 >
                   <b-form-input
                     id="sellingCode"
-                    v-model="transactionCode"
+                    v-model="sellingCode"
                     disabled
                   />
                 </b-form-group>
@@ -26,22 +26,21 @@
               <b-col
                 cols="10"
                 md="5"
-                class="list-customer"
               >
                 <b-form-group
                   label="Customer"
-                  label-for="customer"
+                  label-for="customer-list"
                 >
                   <v-select
+                    id="customer-list"
                     v-model="selectedCustomer"
                     placeholder="Walk-in Customer"
                     :options="customerList"
-                    :clearable="false"
                     label="text"
                   />
                 </b-form-group>
               </b-col>
-              <!-- Add New Customer Button -->
+              <!-- Add Customer Button -->
               <b-col
                 cols="2"
                 class="add-customer"
@@ -63,7 +62,7 @@
                 md="5"
               >
                 <b-form-select
-                  id="cashier"
+                  id="cashier-list"
                   v-model="selectedCashier"
                   :options="cashierList"
                 />
@@ -75,11 +74,13 @@
                 class="mt-1 mt-md-0"
               >
                 <b-form-input
-                  id="jagoId"
+                  id="no-reference"
+                  ref="noReference"
                   v-model="noReference"
+                  type="tel"
                   placeholder="No. Referensi Jago Bangunan"
                   autocomplete="off"
-                  @keypress="isNumberKey"
+                  @keyup="numberOnly($event, 'noReference')"
                 />
               </b-col>
             </b-row>
@@ -89,7 +90,7 @@
               </b-col>
             </b-row>
           </div>
-          <!-- End Customer Form Section -->
+          <!-- End Form Section -->
           <!-- Cart Section -->
           <div>
             <b-form
@@ -97,12 +98,7 @@
               class="repeater-form"
               @submit.prevent="repeateAgain"
             >
-              <div
-                style="flex-wrap: nowrap;
-                max-height: 400px;
-                overflow-x: hidden;
-                overflow-y: auto;"
-              >
+              <div style="flex-wrap: nowrap; max-height: 400px; overflow-x: hidden; overflow-y: auto;">
                 <!-- Row Loop -->
                 <template v-if="items.length">
                   <b-row
@@ -129,12 +125,12 @@
                         </b-col>
                       </b-row>
                       <b-row>
-                        <!-- Price Item -->
+                        <!-- Item Price -->
                         <b-col>
                           <span>
                             Rp. {{ formatPrice(item.price) }} / {{ item.nama_uom }}
                             <feather-icon
-                              v-b-modal.cartProductEdit
+                              v-b-modal.editItemPrice
                               icon="EditIcon"
                               style="color: #b20838; margin-top: -8px;"
                               @click="initialData = item"
@@ -173,11 +169,11 @@
                             class="p-0"
                           >
                             <b-form-input
-                              v-model.number="item.quantity"
+                              v-model="item.quantity"
+                              type="tel"
                               class="text-center"
                               autocomplete="off"
-                              @keypress="isNumberKey($event, item.stopinput())"
-                              @input="inputQuantity($event, item.kode_produk)"
+                              @keyup="numberOnly($event, 'quantity', item.kode_produk)"
                             />
                           </b-col>
                           <b-col
@@ -197,12 +193,6 @@
                             </b-button>
                           </b-col>
                         </b-row>
-                        <!-- <b-form-spinbutton
-                          id="demo-sb"
-                          v-model="item.quantity"
-                          min="1"
-                          max="100"
-                        /> -->
                       </b-form-group>
                     </b-col>
                     <!-- Profession -->
@@ -216,8 +206,8 @@
                         label-for="price"
                       >
                         <b-form-input
-                          id="pzrice"
-                          :value="item.price * item.quantity"
+                          id="price"
+                          :value="formatNumber(item.price * item.quantity)"
                           plaintext
                           class="text-md-right"
                         />
@@ -245,11 +235,7 @@
                   </b-row>
                 </template>
                 <template v-else>
-                  <div
-                    style="color: #b20838;
-                    font-style: italic;
-                    text-align: center;"
-                  >
+                  <div style="color: #b20838; font-style: italic; text-align: center;">
                     --- Keranjang Kosong ---
                   </div>
                 </template>
@@ -269,19 +255,17 @@
                 <b-col cols="6">
                   <label
                     for="items"
-                    style="margin-top: 10px; font-size: 14px;"
+                    style="margin-top: 8px; font-size: 14px;"
                   >
                     Items
                   </label>
                 </b-col>
                 <b-col cols="6">
-                  <b-input-group
-                    class="input-group-merge"
-                  >
+                  <b-input-group class="input-group-merge">
                     <b-form-input
                       id="items"
                       style="text-align: right;"
-                      :value="items.length + '(' + Number(totalQuantity) + ')'"
+                      :value="`${items.length} (${totalQuantity})`"
                       plaintext
                     />
                   </b-input-group>
@@ -296,7 +280,7 @@
                 >
                   <label
                     for="subtotal"
-                    style="margin-top: 10px; font-size: 14px;"
+                    style="margin-top: 8px; font-size: 14px;"
                   >
                     Sub Total
                   </label>
@@ -307,13 +291,13 @@
                 >
                   <b-input-group
                     prepend="Rp."
-                    append=".00"
+                    append=",00"
                     class="input-group-merge"
                   >
                     <b-form-input
                       id="subtotal"
                       style="text-align: right;"
-                      :value="totalSubtotal"
+                      :value="formatNumber(totalSubtotal)"
                       disabled
                     />
                   </b-input-group>
@@ -336,6 +320,7 @@
                   variant="secondary"
                   class="mb-1"
                   block
+                  style="padding-left: 0; padding-right: 0;"
                   @click="resetButton"
                 >
                   Batal
@@ -348,6 +333,7 @@
                   variant="warning"
                   class="mb-1"
                   block
+                  style="padding-left: 0; padding-right: 0;"
                   :style="!items.length ? {opacity: opacityValue, cursor: cursorValue} : ''"
                   @click="addToAntrian"
                 >
@@ -360,6 +346,7 @@
                   variant="danger"
                   class="mb-1"
                   block
+                  style="padding-left: 0; padding-right: 0;"
                   :style="!items.length ? {opacity: opacityValue, cursor: cursorValue} : ''"
                   @click="handlePaymentModal"
                 >
@@ -411,9 +398,9 @@
                     <b-form-input
                       id="reference"
                       v-model="customerBaru.no_reference"
-                      trim
+                      type="tel"
                       autocomplete="off"
-                      @keypress="isNumberKey"
+                      @keyup="numberOnly($event, 'newNoReference')"
                     />
                   </b-form-group>
                 </b-col>
@@ -425,16 +412,16 @@
                 >
                   <b-form-group
                     label="No. Handphone : "
-                    label-for="phone"
+                    label-for="handphone"
                   >
                     <b-form-input
-                      id="phone"
+                      id="handphone"
                       v-model="customerBaru.telp_customer"
+                      type="tel"
                       :state="(customerBaru.telp_customer.length >= 10 && customerBaru.telp_customer.length <= 12) && (customerBaru.telp_customer.charAt(0) === '0')"
-                      trim
                       autocomplete="off"
                       :formatter="formatContact"
-                      @keypress="telpCustomerLength"
+                      @keyup="numberOnly($event, 'newNoHandphone')"
                     />
                     <b-form-invalid-feedback>
                       Telepon Customer Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan dan Diawali Angka 0 (Contoh Format : 081234567890)
@@ -452,11 +439,11 @@
                     <b-form-input
                       id="ktp"
                       v-model="customerBaru.no_identitas"
+                      type="tel"
                       :state="customerBaru.no_identitas.length === 0 || customerBaru.no_identitas.length === 16"
-                      :formatter="formatIdentitas"
-                      trim
                       autocomplete="off"
-                      @keypress="noIdentitasLength"
+                      :formatter="formatIdentitas"
+                      @keyup="numberOnly($event, 'newNoIdentitas')"
                     />
                     <b-form-invalid-feedback>
                       Nomor Identitas Customer Wajib Diisi 16 Angka
@@ -504,98 +491,12 @@
           <!-- End of Customer Add -->
           <!-- Edit Cart Product -->
           <b-modal
-            id="cartProductEdit"
+            id="editItemPrice"
             centered
             size="lg"
             hide-footer
           >
             <b-form>
-              <!-- <b-row>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Kode Produk :"
-                    label-for="kodeProduk"
-                    style="font-weight: bold"
-                  >
-                    <b-form-input
-                      id="kodeProduk"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Nama Produk :"
-                    label-for="namaProduk"
-                    style="font-weight: bold"
-                  >
-                    <b-form-input
-                      id="namaProduk"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Kategori :"
-                    label-for="kategori"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="kategori"
-                      v-model="selectedKategori"
-                      :options="kategori"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Sub Kategori :"
-                    label-for="subKategori"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="subKategori"
-                      v-model="selectedSubKategori"
-                      :options="subKategori"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Type :"
-                    label-for="type"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="type"
-                      v-model="selectedType"
-                      :options="type"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-                <b-col cols="6">
-                  <b-form-group
-                    label="Brand :"
-                    label-for="brand"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="brand"
-                      v-model="selectedBrand"
-                      :options="brand"
-                      disabled
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row> -->
               <b-row>
                 <b-col
                   cols="12"
@@ -608,13 +509,13 @@
                   >
                     <b-input-group
                       prepend="Rp."
-                      append=".00"
+                      append=",00"
                       class="input-group-merge"
                     >
                       <b-form-input
                         id="hargaJualAwal"
                         style="text-align: right;"
-                        :value="initialData.price"
+                        :value="formatNumber(initialData.price)"
                         disabled
                       />
                     </b-input-group>
@@ -624,17 +525,6 @@
                   cols="12"
                   md="6"
                 >
-                  <!-- <b-form-group
-                    label-for="units"
-                    label="Units :"
-                    style="font-weight: bold"
-                  >
-                    <b-form-select
-                      id="units"
-                      v-model="selectedUnits"
-                      :options="units"
-                    />
-                  </b-form-group> -->
                   <b-form-group
                     label="Ubah Harga Jual :"
                     label-for="ubahHargaJual"
@@ -642,15 +532,16 @@
                   >
                     <b-input-group
                       prepend="Rp."
-                      append=".00"
+                      append=",00"
                       class="input-group-merge"
                     >
                       <b-form-input
                         id="ubahHargaJual"
-                        v-model.number="initialData.price_edit"
+                        v-model="initialData.edit_price"
+                        type="tel"
                         style="text-align: right"
-                        @keypress="isNumberKey($event, initialData.stopPriceEdit())"
-                        @input="inputPriceEdit($event, initialData.kode_produk)"
+                        autocomplete="off"
+                        @keyup="numberOnly($event, 'editPrice', initialData.kode_produk)"
                       />
                     </b-input-group>
                   </b-form-group>
@@ -663,13 +554,13 @@
                 >
                   <b-button
                     class="mr-1"
-                    @click="$bvModal.hide('cartProductEdit')"
+                    @click="$bvModal.hide('editItemPrice')"
                   >
                     Tutup
                   </b-button>
                   <b-button
                     variant="danger"
-                    @click="submitNewPrice"
+                    @click="submitNewItemPrice"
                   >
                     Simpan
                   </b-button>
@@ -681,6 +572,7 @@
           <!-- Payment Modal -->
           <b-modal
             id="paymentModal"
+            centered
             size="lg"
             hide-footer
           >
@@ -690,12 +582,11 @@
             </template>
             <b-form>
               <b-row>
-                <b-col sm="6">
+                <b-col lg="6">
                   <b-form-group
                     label="Items"
                     label-for="items"
                     label-cols="6"
-                    label-cols-md="4"
                   >
                     <b-input-group
                       class="input-group-merge"
@@ -703,16 +594,16 @@
                       <b-form-input
                         id="items"
                         style="text-align: right;"
-                        :value="items.length + '(' + totalQuantity + ')'"
+                        :value="`${items.length} (${totalQuantity})`"
                         plaintext
                       />
                     </b-input-group>
                   </b-form-group>
                 </b-col>
-                <b-col sm="6" />
+                <b-col lg="6" />
               </b-row>
               <b-row>
-                <b-col sm="6">
+                <b-col lg="6">
                   <b-row>
                     <b-col
                       cols="12"
@@ -731,40 +622,21 @@
                     >
                       <b-input-group
                         prepend="Rp."
-                        append=".00"
+                        append=",00"
                         class="input-group-merge"
                       >
                         <b-form-input
                           id="subtotal"
                           style="text-align: right;"
-                          :value="totalSubtotal"
+                          :value="formatNumber(totalSubtotal)"
                           disabled
                         />
                       </b-input-group>
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label="Sub Total"
-                    label-for="subtotal"
-                    label-cols="6"
-                    label-cols-md="4"
-                  >
-                    <b-input-group
-                      prepend="Rp."
-                      append=".00"
-                      class="input-group-merge"
-                    >
-                      <b-form-input
-                        id="subtotal"
-                        style="text-align: right;"
-                        :value="totalSubtotal"
-                        disabled
-                      />
-                    </b-input-group>
-                  </b-form-group> -->
                 </b-col>
                 <b-col
-                  sm="6"
+                  lg="6"
                   style="margin-top: 10px;"
                 >
                   <b-form-checkbox
@@ -776,7 +648,7 @@
                 </b-col>
               </b-row>
               <b-row class="mt-1">
-                <b-col sm="6">
+                <b-col lg="6">
                   <b-row>
                     <b-col
                       cols="12"
@@ -795,48 +667,28 @@
                     >
                       <b-input-group
                         prepend="Rp."
-                        append=".00"
+                        append=",00"
                         class="input-group-merge"
                       >
                         <b-form-input
                           id="discount"
-                          v-model.number="inputDiscount"
+                          v-model="discountWithFormat"
+                          type="tel"
                           style="text-align: right;"
-                          @keypress="isNumberKey($event, discountStop)"
-                          @input="discountLength"
+                          @keyup="numberOnly($event, 'inputDiscount')"
                         />
                       </b-input-group>
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label="Discount"
-                    label-for="discount"
-                    label-cols="6"
-                    label-cols-md="4"
-                  >
-                    <b-input-group
-                      prepend="Rp."
-                      append=".00"
-                      class="input-group-merge"
-                    >
-                      <b-form-input
-                        id="discount"
-                        v-model.number="inputDiscount"
-                        style="text-align: right;"
-                        @keypress="isNumberKey($event, discountStop)"
-                        @input="discountLength"
-                      />
-                    </b-input-group>
-                  </b-form-group> -->
                 </b-col>
-                <b-col sm="6">
-                  <b-row>
+                <b-col lg="6">
+                  <b-row class="mt-md-1 mt-lg-0">
                     <b-col
                       cols="12"
-                      md="5"
+                      md="4"
                     >
                       <label
-                        for="customer"
+                        for="customerListModal"
                         style="margin-top: 10px; font-size: 14px;"
                       >
                         Customer
@@ -844,42 +696,28 @@
                     </b-col>
                     <b-col
                       cols="12"
-                      md="7"
+                      md="8"
                     >
                       <v-select
+                        id="customertListModal"
                         v-model="selectedCustomer"
                         placeholder="Walk-in Customer"
                         :options="customerList"
-                        :clearable="false"
                         label="text"
                       />
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label="Customer"
-                    label-for="customer"
-                    label-cols="6"
-                    label-cols-md="5"
-                  >
-                    <v-select
-                      v-model="selectedCustomer"
-                      placeholder="Walk-in Customer"
-                      :options="customerList"
-                      :clearable="false"
-                      label="text"
-                    />
-                  </b-form-group> -->
                 </b-col>
               </b-row>
               <b-row class="mt-1">
-                <b-col sm="6">
+                <b-col lg="6">
                   <b-row>
                     <b-col
                       cols="12"
                       md="4"
                     >
                       <label
-                        for="pajak"
+                        for="tax"
                         style="margin-top: 10px; font-size: 14px;"
                       >
                         Pajak
@@ -895,44 +733,25 @@
                       >
                         <b-form-input
                           id="tax"
-                          v-model.number="inputTax"
+                          v-model="inputTax"
+                          type="tel"
                           style="text-align: right;"
                           :disabled="disabledTaxInput"
-                          @keypress="isNumberKey"
-                          @keyup="maxTax"
+                          autocomplete="off"
+                          @keyup="numberOnly($event, 'inputTax')"
                         />
                       </b-input-group>
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label="Pajak"
-                    label-for="tax"
-                    label-cols="6"
-                    label-cols-md="4"
-                  >
-                    <b-input-group
-                      :append="'\xa0\xa0%\xa0'"
-                      class="input-group-merge"
-                    >
-                      <b-form-input
-                        id="tax"
-                        v-model.number="inputTax"
-                        style="text-align: right;"
-                        :disabled="disabledTaxInput"
-                        @keypress="isNumberKey"
-                        @keyup="maxTax"
-                      />
-                    </b-input-group>
-                  </b-form-group> -->
                 </b-col>
-                <b-col sm="6">
-                  <b-row>
+                <b-col lg="6">
+                  <b-row class="mt-md-1 mt-lg-0">
                     <b-col
                       cols="12"
-                      md="5"
+                      md="4"
                     >
                       <label
-                        for="no-refernesi"
+                        for="no-referensi"
                         style="margin-top: 10px; font-size: 14px;"
                       >
                         No. Referensi
@@ -940,35 +759,21 @@
                     </b-col>
                     <b-col
                       cols="12"
-                      md="7"
+                      md="8"
                     >
                       <b-form-input
-                        id="idBayar"
+                        id="no-referensi"
                         v-model="noReference"
                         style="text-align: right"
                         autocomplete="off"
-                        @keypress="isNumberKey"
+                        @keyup="numberOnly($event, 'noReference')"
                       />
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label="No. Referensi"
-                    label-for="idBayar"
-                    label-cols="6"
-                    label-cols-md="5"
-                  >
-                    <b-form-input
-                      id="idBayar"
-                      v-model="noReference"
-                      style="text-align: right"
-                      autocomplete="off"
-                      @keypress="isNumberKey"
-                    />
-                  </b-form-group> -->
                 </b-col>
               </b-row>
               <b-row class="mt-1">
-                <b-col sm="6">
+                <b-col lg="6">
                   <b-row>
                     <b-col
                       cols="12"
@@ -980,42 +785,24 @@
                     >
                       <b-input-group
                         prepend="Rp."
-                        append=".00"
+                        append=",00"
                         class="input-group-merge"
                       >
                         <b-form-input
                           id="taxConvert"
-                          :value="taxConvert"
+                          :value="formatNumber(taxConvert)"
                           style="text-align: right;"
                           disabled
                         />
                       </b-input-group>
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label-for="taxConvert"
-                    label-cols="6"
-                    label-cols-md="4"
-                  >
-                    <b-input-group
-                      prepend="Rp."
-                      append=".00"
-                      class="input-group-merge"
-                    >
-                      <b-form-input
-                        id="taxConvert"
-                        :value="taxConvert"
-                        style="text-align: right;"
-                        disabled
-                      />
-                    </b-input-group>
-                  </b-form-group> -->
                 </b-col>
-                <b-col sm="6">
-                  <b-row>
+                <b-col lg="6">
+                  <b-row class="mt-md-1 mt-lg-0">
                     <b-col
                       cols="12"
-                      md="5"
+                      md="4"
                     >
                       <label
                         for="tipePembayaran"
@@ -1026,31 +813,20 @@
                     </b-col>
                     <b-col
                       cols="12"
-                      md="7"
+                      md="8"
                     >
                       <b-form-select
-                        id="tipebayar"
+                        id="tipePembayaran"
                         v-model="selectedPaymentMethod"
                         :options="paymentMethod"
+                        @change="inputPaymentMethod"
                       />
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label="Tipe Pembayaran"
-                    label-for="tipePembayaran"
-                    label-cols="6"
-                    label-cols-md="5"
-                  >
-                    <b-form-select
-                      id="tipebayar"
-                      v-model="selectedPaymentMethod"
-                      :options="paymentMethod"
-                    />
-                  </b-form-group> -->
                 </b-col>
               </b-row>
               <b-row class="mt-1">
-                <b-col sm="6">
+                <b-col lg="6">
                   <b-row>
                     <b-col
                       cols="12"
@@ -1069,42 +845,24 @@
                     >
                       <b-input-group
                         prepend="Rp."
-                        append=".00"
+                        append=",00"
                         class="input-group-merge"
                       >
                         <b-form-input
                           id="ongkir"
-                          v-model.number="inputOngkir"
+                          v-model="ongkirWithFormat"
+                          type="tel"
                           style="text-align: right;"
-                          @keypress="isNumberKey"
+                          @keyup="numberOnly($event, 'inputOngkir')"
                         />
                       </b-input-group>
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label="Ong. Kirim"
-                    label-for="ongkir"
-                    label-cols="6"
-                    label-cols-md="4"
-                  >
-                    <b-input-group
-                      prepend="Rp."
-                      append=".00"
-                      class="input-group-merge"
-                    >
-                      <b-form-input
-                        id="ongkir"
-                        v-model.number="inputOngkir"
-                        style="text-align: right;"
-                        @keypress="isNumberKey"
-                      />
-                    </b-input-group>
-                  </b-form-group> -->
                 </b-col>
-                <b-col sm="6" />
+                <b-col lg="6" />
               </b-row>
               <b-row class="mt-1">
-                <b-col sm="12">
+                <b-col>
                   <b-alert
                     variant="secondary"
                     show
@@ -1118,7 +876,7 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col sm="6">
+                <b-col lg="6">
                   <b-row>
                     <b-col
                       cols="12"
@@ -1137,45 +895,26 @@
                     >
                       <b-input-group
                         prepend="Rp."
-                        append=".00"
+                        append=",00"
                         class="input-group-merge"
                       >
                         <b-form-input
                           id="paid"
-                          v-model.number="inputPaid"
+                          v-model="paidWithFormat"
+                          type="tel"
                           style="text-align: right"
-                          :disabled="inputPaidValue()"
-                          @keypress="isNumberKey"
+                          :disabled="inputPaidValue"
+                          @keyup="numberOnly($event, 'inputPaid')"
                         />
                       </b-input-group>
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label="Bayar"
-                    label-for="paid"
-                    label-cols="6"
-                    label-cols-md="4"
-                  >
-                    <b-input-group
-                      prepend="Rp."
-                      append=".00"
-                      class="input-group-merge"
-                    >
-                      <b-form-input
-                        id="paid"
-                        v-model.number="inputPaid"
-                        style="text-align: right"
-                        :disabled="inputPaidValue()"
-                        @keypress="isNumberKey"
-                      />
-                    </b-input-group>
-                  </b-form-group> -->
                 </b-col>
-                <b-col sm="6">
-                  <b-row>
+                <b-col lg="6">
+                  <b-row class="mt-md-1 mt-lg-0">
                     <b-col
                       cols="12"
-                      md="5"
+                      md="4"
                     >
                       <label
                         for="paidReturn"
@@ -1186,45 +925,26 @@
                     </b-col>
                     <b-col
                       cols="12"
-                      md="7"
+                      md="8"
                     >
                       <b-input-group
                         prepend="Rp."
-                        append=".00"
+                        append=",00"
                         class="input-group-merge"
                       >
                         <b-form-input
                           id="paidReturn"
                           style="text-align: right;"
-                          :value="kembalian"
+                          :value="formatNumber(kembalian)"
                           disabled
                         />
                       </b-input-group>
                     </b-col>
                   </b-row>
-                  <!-- <b-form-group
-                    label="Kembalian"
-                    label-for="paidReturn"
-                    label-cols="6"
-                    label-cols-md="5"
-                  >
-                    <b-input-group
-                      prepend="Rp."
-                      append=".00"
-                      class="input-group-merge"
-                    >
-                      <b-form-input
-                        id="paidReturn"
-                        style="text-align: right;"
-                        :value="kembalian"
-                        disabled
-                      />
-                    </b-input-group>
-                  </b-form-group> -->
                 </b-col>
               </b-row>
               <b-row class="mt-1">
-                <b-col sm="12">
+                <b-col>
                   <b-form-textarea
                     v-model="note"
                   />
@@ -1319,7 +1039,7 @@ export default {
   data() {
     return {
       finalTrans: {},
-      transactionCode: '',
+      sellingCode: '',
       // List Item
       customerList: [],
       cashierList: [],
@@ -1344,6 +1064,7 @@ export default {
         no_references: '',
       },
       inputDiscount: 0,
+      discountWithFormat: 0,
       inputTax: 0,
       paymentMethod: [{
         value: null,
@@ -1358,7 +1079,10 @@ export default {
         text: 'Kredit',
       }],
       inputOngkir: 0,
+      ongkirWithFormat: 0,
       inputPaid: 0,
+      paidWithFormat: 0,
+      inputPaidValue: false,
       note: '',
       warehouses: [{
         value: null,
@@ -1501,14 +1225,14 @@ export default {
     totalQuantity() {
       let total = 0
       this.items.forEach(item => {
-        total += item.quantity
+        total += Number(item.quantity)
       })
       return total
     },
     totalSubtotal() {
       let total = 0
       this.items.forEach(item => {
-        total += item.subtotal()
+        total += Number(item.subtotal())
       })
       return total
     },
@@ -1519,7 +1243,7 @@ export default {
       return false
     },
     grandTotal() {
-      return this.totalSubtotal - this.inputDiscount + this.taxConvert + this.inputOngkir
+      return Number(this.totalSubtotal) - Number(this.inputDiscount) + Number(this.taxConvert) + Number(this.inputOngkir)
     },
     kembalian() {
       return this.inputPaid > 0 ? this.inputPaid - this.grandTotal : 0
@@ -1550,12 +1274,6 @@ export default {
     formatIdentitas(e) {
       return String(e).substring(0, 16)
     },
-    maxTax(e) {
-      console.log(e)
-      if (parseInt(this.inputTax, 10) > 100) {
-        this.inputTax = 100
-      }
-    },
     handlePrint() {
       this.$htmlToPaper('printReceipt', null, () => {
         this.setTransactionCode()
@@ -1573,7 +1291,7 @@ export default {
     async setTransactionCode() {
       appService.getKodeTransaction().then(response => {
         const { data } = response
-        this.transactionCode = data.kode
+        this.sellingCode = data.kode
       })
     },
     async getAllCustomers() {
@@ -1660,9 +1378,9 @@ export default {
             nama_produk: product.nama_produk,
             nama_uom: product.nama_uom,
             quantity: 1,
-            price_edit: 0,
+            edit_price: 0,
             stopPriceEdit() {
-              if (this.price_edit >= 999999999999999) {
+              if (this.edit_price >= 999999999999999) {
                 return true
               }
               return false
@@ -1697,7 +1415,7 @@ export default {
         customer_id: this.selectedCustomer ? this.selectedCustomer.value : null,
         cashier_id: this.selectedCashier,
         transaction_id: this.checkId.id_transaction || null,
-        kode_transaction: this.transactionCode,
+        kode_transaction: this.sellingCode,
         discount: this.inputDiscount,
         shipping: this.inputOngkir,
         tax: this.taxConvert,
@@ -1711,6 +1429,7 @@ export default {
         money_paid: this.inputPaid,
         change: this.kembalian,
       }
+      console.log(param)
       if (this.formSaveTransactionValidate(param.customer_id)) {
         appService.updatePayTransaction(param).then(response => {
           const { data } = response.data
@@ -1748,7 +1467,7 @@ export default {
             date_transaction: this.currentDate(),
             customer_id: this.selectedCustomer ? this.selectedCustomer.value : null,
             cashier_id: this.selectedCashier,
-            kode_transaction: this.transactionCode,
+            kode_transaction: this.sellingCode,
             discount: this.inputDiscount,
             shipping: this.inputOngkir,
             percent_tax: this.inputTax === 0 ? null : this.inputTax,
@@ -1780,7 +1499,7 @@ export default {
     resetButton() {
       this.selectedCustomer = null
       this.selectedCashier = null
-      this.noReference = null
+      this.noReference = ''
       this.items = []
       this.checkId = {}
     },
@@ -1812,6 +1531,10 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     removeItem(index) {
+      if (this.inputDiscount > this.grandTotal) {
+        this.inputDiscount = this.grandTotal
+        this.discountWithFormat = this.formatNumber(this.inputDiscount)
+      }
       this.items.splice(index, 1)
       this.trTrimHeight(this.$refs.row[0].offsetHeight)
     },
@@ -1870,10 +1593,6 @@ export default {
     formSaveTransactionValidate(customerId) {
       const title = 'Simpan Antrian'
       const icon = 'AlertCircleIcon'
-      if (!this.quantityValidate()) {
-        this.makeToast(title, icon, 'danger', 'Quantity item masih kosong')
-        return false
-      }
       if (!this.selectedPaymentMethod) {
         this.makeToast(title, icon, 'danger', 'Silahkan pilih tipe pembayaran terlebih dahulu')
         return false
@@ -1899,10 +1618,6 @@ export default {
     addToAntrianValidate() {
       if (!this.selectedCashier) {
         this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Silahkan pilih kasir terlebih dahulu')
-        return false
-      }
-      if (!this.quantityValidate()) {
-        this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Quantity item masih kosong')
         return false
       }
       return true
@@ -1932,67 +1647,27 @@ export default {
       }
       return true
     },
-    discountLength(event) {
-      const discount = event
-      if (discount >= this.grandTotal) {
-        this.discountStop = true
-        this.inputDiscount = this.totalSubtotal + this.inputTax + this.inputOngkir
-      } else {
-        this.discountStop = false
-      }
-      return true
-    },
-    inputPaidValue() {
-      if (this.selectedPaymentMethod === 2) {
-        this.inputPaid = 0
-        return true
-      }
-      return false
-    },
-    submitNewPrice() {
+    submitNewItemPrice() {
       let temp = {}
-      this.items.map(item => {
+      this.items.forEach(item => {
         if (item.kode_produk === this.initialData.kode_produk) {
           temp = item
-          temp.price = temp.price_edit
+          temp.price = this.regroupNumber(temp.edit_price)
+          temp.edit_price = 0
+          this.initialData.edit_price = 0
           this.makeToast(item.nama_produk, 'CoffeeIcon', 'success', 'Harga jual berhasil diubah')
         }
-        return true
       })
-      this.$bvModal.hide('cartProductEdit')
+      this.$bvModal.hide('editItemPrice')
     },
-    inputQuantity(quantity, kode) {
-      let temp = {}
-      if (quantity >= 99999) {
-        this.items.forEach(item => {
-          if (item.kode_produk === kode) {
-            temp = item
-            temp.quantity = 99999
-          }
-        })
-      }
-      if (quantity === '0') {
-        this.items.forEach(item => {
-          if (item.kode_produk === kode) {
-            temp = item
-            temp.quantity = 1
-          }
-        })
-      }
-    },
-    inputPriceEdit(price, kode) {
-      let temp = {}
-      if (price >= 999999999999999) {
-        this.items.forEach(item => {
-          if (item.kode_produk === kode) {
-            temp = item
-            temp.price_edit = 999999999999999
-          }
-        })
-      }
+    scrollToNoReference() {
+      setTimeout(() => {
+        this.$nextTick(() => this.$refs.noReference.focus())
+      }, 500)
     },
     getAntrianData() {
       parentComponent.$on('dataAntrian', dataAntrian => {
+        this.scrollToNoReference()
         // console.log(dataAntrian)
         // console.log(this.customerList.find(customer => customer.id === dataAntrian.id_customer))
         // this.selectedCustomer = this.customerList.find(customer => customer.text === dataAntrian.nama_customer).text
@@ -2027,9 +1702,6 @@ export default {
         })
       })
     },
-    quantityValidate() {
-      return this.items.find(item => item.quantity > 0)
-    },
     disabledTax(event) {
       this.disabledTaxInput = event
       if (this.disabledTaxInput) {
@@ -2050,6 +1722,111 @@ export default {
         this.trSetHeight(this.$refs.form.scrollHeight)
       })
     },
+    numberOnly(...args) {
+      const num = /[^0-9]/gi
+      const dataValue = args[0].target.value.replace(num, '')
+      const dataTarget = args[1]
+      if (dataTarget === 'noReference') {
+        this.noReference = dataValue
+      } else if (dataTarget === 'quantity') {
+        this.quantityRule(args[2], dataValue)
+      } else if (dataTarget === 'newNoReference') {
+        this.customerBaru.no_reference = dataValue
+      } else if (dataTarget === 'newNoHandphone') {
+        this.customerBaru.telp_customer = dataValue
+      } else if (dataTarget === 'newNoIdentitas') {
+        this.customerBaru.no_identitas = dataValue
+      } else if (dataTarget === 'editPrice') {
+        this.editPriceRule(args[2], dataValue)
+      } else if (dataTarget === 'inputDiscount') {
+        this.discountWithFormat = this.formatNumber(dataValue)
+        this.inputDiscountRule()
+      } else if (dataTarget === 'inputTax') {
+        this.inputTax = dataValue
+        this.inputTaxRule()
+      } else if (dataTarget === 'inputOngkir') {
+        this.ongkirWithFormat = this.formatNumber(dataValue)
+        this.inputOngkirRule()
+      } else if (dataTarget === 'inputPaid') {
+        this.inputPaid = dataValue
+        this.paidWithFormat = this.formatNumber(this.inputPaid)
+      }
+    },
+    formatNumber(value) {
+      return new Intl.NumberFormat().format(value)
+    },
+    regroupNumber(number) {
+      return number.split('.').join('')
+    },
+    quantityRule(kodeProduk, dataValue) {
+      let temp = {}
+      this.items.forEach(item => {
+        if (item.kode_produk === kodeProduk) {
+          temp = item
+          temp.quantity = dataValue
+          if (dataValue >= 99999) {
+            temp.quantity = 99999
+          }
+          if (dataValue === '' || dataValue === '0') {
+            temp.quantity = 1
+          }
+          if (dataValue.charAt(0) === '0' && dataValue.length > 1) {
+            temp.quantity = Number(dataValue.substr(1, dataValue.length))
+          }
+        }
+      })
+    },
+    editPriceRule(kodeProduk, dataValue) {
+      let temp = {}
+      this.items.forEach(item => {
+        if (item.kode_produk === kodeProduk) {
+          temp = item
+          temp.edit_price = dataValue
+          if (dataValue >= 999999999999999) {
+            this.initialData.edit_price = '999.999.999.999.999'
+          } else {
+            this.initialData.edit_price = this.formatNumber(dataValue)
+          }
+          if (dataValue === '') {
+            temp.edit_price = 0
+          }
+          if (dataValue.charAt(0) === '0' && dataValue.length > 1) {
+            temp.edit_price = dataValue.substr(1, dataValue.length)
+          }
+        }
+      })
+    },
+    inputDiscountRule() {
+      this.inputDiscount = Number(this.regroupNumber(this.discountWithFormat))
+      if (this.inputDiscount > this.totalSubtotal + this.inputTax + this.inputOngkir) {
+        this.inputDiscount = this.totalSubtotal + this.inputTax + this.inputOngkir
+        this.discountWithFormat = this.formatNumber(this.inputDiscount)
+      }
+    },
+    inputTaxRule() {
+      if (Number(this.inputTax) > 100) {
+        this.inputTax = 100
+      }
+      if (this.inputTax === '') {
+        this.inputTax = 0
+      }
+      if (String(this.inputTax).charAt(0) === '0' && this.inputTax.length > 1) {
+        this.inputTax = this.inputTax.substr(1, this.inputTax.length)
+      }
+    },
+    inputOngkirRule() {
+      this.inputOngkir = Number(this.regroupNumber(this.ongkirWithFormat))
+    },
+    inputPaymentMethod(paymentMethod) {
+      if (paymentMethod === 2) {
+        this.inputPaidValue = true
+        this.paidWithFormat = 0
+        this.inputPaid = this.paidWithFormat
+      } else {
+        this.inputPaidValue = false
+        this.inputPaid = Number(this.regroupNumber(this.paidWithFormat))
+      }
+    },
   },
 }
 </script>
@@ -2057,6 +1834,9 @@ export default {
 <style lang="scss">
 @import '@core/scss/vue/libs/vue-select.scss';
 
+html {
+  scroll-behavior: smooth;
+}
 .vs__selected-options {
   width: 100px;
   flex-wrap: nowrap;
