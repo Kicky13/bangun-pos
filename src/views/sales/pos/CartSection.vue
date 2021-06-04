@@ -29,13 +29,14 @@
               >
                 <b-form-group
                   label="Customer"
-                  label-for="customer-list"
+                  label-for="customerList"
                 >
                   <v-select
-                    id="customer-list"
+                    id="customerList"
                     v-model="selectedCustomer"
                     placeholder="Walk-in Customer"
                     :options="customerList"
+                    :clearable="false"
                     label="text"
                   />
                 </b-form-group>
@@ -74,10 +75,11 @@
                 class="mt-1 mt-md-0"
               >
                 <b-form-input
-                  id="no-reference"
+                  id="noReference1"
                   ref="noReference"
                   v-model="noReference"
-                  type="tel"
+                  type="text"
+                  inputmode="numeric"
                   placeholder="No. Referensi Jago Bangunan"
                   autocomplete="off"
                   @keyup="numberOnly($event, 'noReference')"
@@ -169,8 +171,10 @@
                             class="p-0"
                           >
                             <b-form-input
+                              id="quantity"
                               v-model="item.quantity"
-                              type="tel"
+                              type="text"
+                              inputmode="numeric"
                               class="text-center"
                               autocomplete="off"
                               @keyup="numberOnly($event, 'quantity', item.kode_produk)"
@@ -206,7 +210,7 @@
                         label-for="price"
                       >
                         <b-form-input
-                          id="price"
+                          id="price1"
                           :value="formatNumber(item.price * item.quantity)"
                           plaintext
                           class="text-md-right"
@@ -393,12 +397,13 @@
                 >
                   <b-form-group
                     label="No. Referensi :"
-                    label-for="reference"
+                    label-for="noReference2"
                   >
                     <b-form-input
-                      id="reference"
+                      id="noReference2"
                       v-model="customerBaru.no_reference"
-                      type="tel"
+                      type="text"
+                      inputmode="numeric"
                       autocomplete="off"
                       @keyup="numberOnly($event, 'newNoReference')"
                     />
@@ -412,12 +417,13 @@
                 >
                   <b-form-group
                     label="No. Handphone : "
-                    label-for="handphone"
+                    label-for="noHandphone"
                   >
                     <b-form-input
-                      id="handphone"
+                      id="noHandphone"
                       v-model="customerBaru.telp_customer"
-                      type="tel"
+                      type="text"
+                      inputmode="numeric"
                       :state="(customerBaru.telp_customer.length >= 10 && customerBaru.telp_customer.length <= 12) && (customerBaru.telp_customer.charAt(0) === '0')"
                       autocomplete="off"
                       :formatter="formatContact"
@@ -434,12 +440,13 @@
                 >
                   <b-form-group
                     label="No. Identitas/KTP :"
-                    label-for="ktp"
+                    label-for="noKtp"
                   >
                     <b-form-input
-                      id="ktp"
+                      id="noKtp"
                       v-model="customerBaru.no_identitas"
-                      type="tel"
+                      type="text"
+                      inputmode="numeric"
                       :state="customerBaru.no_identitas.length === 0 || customerBaru.no_identitas.length === 16"
                       autocomplete="off"
                       :formatter="formatIdentitas"
@@ -538,7 +545,8 @@
                       <b-form-input
                         id="ubahHargaJual"
                         v-model="initialData.edit_price"
-                        type="tel"
+                        type="text"
+                        inputmode="numeric"
                         style="text-align: right"
                         autocomplete="off"
                         @keyup="numberOnly($event, 'editPrice', initialData.kode_produk)"
@@ -673,7 +681,9 @@
                         <b-form-input
                           id="discount"
                           v-model="discountWithFormat"
-                          type="tel"
+                          type="text"
+                          inputmode="numeric"
+                          autocomplete="off"
                           style="text-align: right;"
                           @keyup="numberOnly($event, 'inputDiscount')"
                         />
@@ -703,6 +713,7 @@
                         v-model="selectedCustomer"
                         placeholder="Walk-in Customer"
                         :options="customerList"
+                        :clearable="false"
                         label="text"
                       />
                     </b-col>
@@ -734,7 +745,8 @@
                         <b-form-input
                           id="tax"
                           v-model="inputTax"
-                          type="tel"
+                          type="text"
+                          inputmode="numeric"
                           style="text-align: right;"
                           :disabled="disabledTaxInput"
                           autocomplete="off"
@@ -751,7 +763,7 @@
                       md="4"
                     >
                       <label
-                        for="no-referensi"
+                        for="noReference3"
                         style="margin-top: 10px; font-size: 14px;"
                       >
                         No. Referensi
@@ -762,9 +774,11 @@
                       md="8"
                     >
                       <b-form-input
-                        id="no-referensi"
+                        id="noReference3"
                         v-model="noReference"
                         style="text-align: right"
+                        type="text"
+                        inputmode="numeric"
                         autocomplete="off"
                         @keyup="numberOnly($event, 'noReference')"
                       />
@@ -851,7 +865,9 @@
                         <b-form-input
                           id="ongkir"
                           v-model="ongkirWithFormat"
-                          type="tel"
+                          type="text"
+                          inputmode="numeric"
+                          autocomplete="off"
                           style="text-align: right;"
                           @keyup="numberOnly($event, 'inputOngkir')"
                         />
@@ -901,7 +917,9 @@
                         <b-form-input
                           id="paid"
                           v-model="paidWithFormat"
-                          type="tel"
+                          type="text"
+                          inputmode="numeric"
+                          autocomplete="off"
                           style="text-align: right"
                           :disabled="inputPaidValue"
                           @keyup="numberOnly($event, 'inputPaid')"
@@ -1232,7 +1250,7 @@ export default {
     totalSubtotal() {
       let total = 0
       this.items.forEach(item => {
-        total += Number(item.subtotal())
+        total += item.subtotal()
       })
       return total
     },
@@ -1531,8 +1549,8 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     removeItem(index) {
-      if (this.inputDiscount > this.grandTotal) {
-        this.inputDiscount = this.grandTotal
+      if (this.inputDiscount >= this.totalSubtotal - this.items[index].price) {
+        this.inputDiscount = this.totalSubtotal - this.items[index].price
         this.discountWithFormat = this.formatNumber(this.inputDiscount)
       }
       this.items.splice(index, 1)
@@ -1753,10 +1771,10 @@ export default {
       }
     },
     formatNumber(value) {
-      return new Intl.NumberFormat().format(value)
+      return new Intl.NumberFormat(['ban', 'id']).format(value)
     },
     regroupNumber(number) {
-      return number.split('.').join('')
+      return Number(number.split('.').join(''))
     },
     quantityRule(kodeProduk, dataValue) {
       let temp = {}
@@ -1791,31 +1809,31 @@ export default {
             temp.edit_price = 0
           }
           if (dataValue.charAt(0) === '0' && dataValue.length > 1) {
-            temp.edit_price = dataValue.substr(1, dataValue.length)
+            temp.edit_price = Number(dataValue.substr(1, dataValue.length))
           }
         }
       })
     },
     inputDiscountRule() {
-      this.inputDiscount = Number(this.regroupNumber(this.discountWithFormat))
-      if (this.inputDiscount > this.totalSubtotal + this.inputTax + this.inputOngkir) {
-        this.inputDiscount = this.totalSubtotal + this.inputTax + this.inputOngkir
+      this.inputDiscount = this.regroupNumber(this.discountWithFormat)
+      if (this.inputDiscount >= this.totalSubtotal) {
+        this.inputDiscount = this.totalSubtotal
         this.discountWithFormat = this.formatNumber(this.inputDiscount)
       }
     },
     inputTaxRule() {
-      if (Number(this.inputTax) > 100) {
+      if (this.inputTax > 100) {
         this.inputTax = 100
       }
       if (this.inputTax === '') {
         this.inputTax = 0
       }
       if (String(this.inputTax).charAt(0) === '0' && this.inputTax.length > 1) {
-        this.inputTax = this.inputTax.substr(1, this.inputTax.length)
+        this.inputTax = Number(this.inputTax.substr(1, this.inputTax.length))
       }
     },
     inputOngkirRule() {
-      this.inputOngkir = Number(this.regroupNumber(this.ongkirWithFormat))
+      this.inputOngkir = this.regroupNumber(this.ongkirWithFormat)
     },
     inputPaymentMethod(paymentMethod) {
       if (paymentMethod === 2) {
@@ -1824,7 +1842,7 @@ export default {
         this.inputPaid = this.paidWithFormat
       } else {
         this.inputPaidValue = false
-        this.inputPaid = Number(this.regroupNumber(this.paidWithFormat))
+        this.inputPaid = this.regroupNumber(this.paidWithFormat)
       }
     },
   },
