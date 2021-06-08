@@ -647,7 +647,7 @@
                 </b-col>
                 <b-col
                   lg="6"
-                  style="margin-top: 10px;"
+                  style="margin-top: 10px; display: none;"
                 >
                   <b-form-checkbox
                     :checked="disabledTaxInput"
@@ -723,7 +723,10 @@
                 </b-col>
               </b-row>
               <b-row class="mt-1">
-                <b-col lg="6">
+                <b-col
+                  lg="6"
+                  style="display: none;"
+                >
                   <b-row>
                     <b-col
                       cols="12"
@@ -789,7 +792,10 @@
                 </b-col>
               </b-row>
               <b-row class="mt-1">
-                <b-col lg="6">
+                <b-col
+                  lg="6"
+                  style="display: none;"
+                >
                   <b-row>
                     <b-col
                       cols="12"
