@@ -368,6 +368,7 @@
             size="lg"
             title="Tambah Customer"
             hide-footer
+            @hide="closeAddCustomer"
           >
             <b-form>
               <b-row>
@@ -481,7 +482,7 @@
                 >
                   <b-button
                     class="mr-1"
-                    @click="$bvModal.hide('addCustomer')"
+                    @click="closeAddCustomer"
                   >
                     Tutup
                   </b-button>
@@ -583,6 +584,7 @@
             centered
             size="lg"
             hide-footer
+            @hide="closePayment"
           >
             <template v-slot:modal-title>
               <h4>Selesaikan Pembayaran</h4>
@@ -972,7 +974,7 @@
                 <b-col class="text-right">
                   <b-button
                     class="mr-1"
-                    @click="$bvModal.hide('paymentModal')"
+                    @click="closePaymentModal"
                   >
                     Kembali
                   </b-button>
@@ -1681,7 +1683,7 @@ export default {
     scrollToNoReference() {
       setTimeout(() => {
         this.$nextTick(() => this.$refs.noReference.focus())
-      }, 500)
+      }, 700)
     },
     getAntrianData() {
       parentComponent.$on('dataAntrian', dataAntrian => {
@@ -1845,6 +1847,34 @@ export default {
         this.inputPaid = this.regroupNumber(this.paidWithFormat)
       }
     },
+    closePaymentModal() {
+      this.inputDiscount = 0
+      this.discountWithFormat = 0
+      this.inputTax = 0
+      this.inputOngkir = 0
+      this.ongkirWithFormat = 0
+      this.inputPaid = 0
+      this.paidWithFormat = 0
+      this.$bvModal.hide('paymentModal')
+    },
+    closeAnimateModal() {
+      const dialog = window.document.querySelector('.modal-dialog')
+      dialog.animate([
+        { opacity: '1' },
+        { opacity: '0' },
+      ], {
+        duration: 200,
+      })
+    },
+    closeAddCustomer() {
+      this.closeAnimateModal()
+      this.$bvModal.hide('addCustomer')
+    },
+    closePayment() {
+      this.closePaymentModal()
+      this.closeAnimateModal()
+      this.$bvModal.hide('paymentModal')
+    },
   },
 }
 </script>
@@ -1874,6 +1904,10 @@ html {
 }
 .vs__search {
   padding-right: 0;
+}
+#addCustomer, #paymentModal {
+  opacity: .99;
+  padding: 0;
 }
 </style>
 

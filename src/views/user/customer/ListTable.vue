@@ -524,7 +524,9 @@
               <b-form-input
                 id="reference"
                 v-model="jagobangunRef"
-                type="number"
+                type="text"
+                inputmode="numeric"
+                @keyup="numberOnly($event, 'jagobangunRef')"
               />
               <!-- <b-form-invalid-feedback>
                 Nomor Referensi Wajib Diisi 16 Angka
@@ -547,7 +549,9 @@
                 v-model="customerPhone"
                 :formatter="formatContact"
                 :state="customerPhone.length >= 10 && customerPhone.length <= 12 && customerPhone.charAt(0) === '0'"
-                type="number"
+                type="text"
+                inputmode="numeric"
+                @keyup="numberOnly($event, 'customerPhone')"
               />
               <b-form-invalid-feedback>
                 Telepon Customer Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan dan Diawali Angka 0 (Contoh Format : 081234567890)
@@ -566,9 +570,11 @@
               <b-form-input
                 id="ktp"
                 v-model="identityNumber"
-                type="number"
+                type="text"
+                inputmode="numeric"
                 :state="identityNumber.length === 0 || identityNumber.length === 16"
                 :formatter="formatIdentitas"
+                @keyup="numberOnly($event, 'identityNumber')"
               />
               <b-form-invalid-feedback>
                 Nomor Identitas Customer Wajib Diisi 16 Angka
@@ -847,6 +853,17 @@ export default {
       // this.printDate  = today.toUTCString()
       console.log(today.toUTCString())
       this.printDate = this.getWaktuCetak()
+    },
+    numberOnly(e, field) {
+      const num = /[^0-9]/gi
+      const dataValue = e.target.value.replace(num, '')
+      if (field === 'jagobangunRef') {
+        this.jagobangunRef = dataValue
+      } else if (field === 'customerPhone') {
+        this.customerPhone = dataValue
+      } else if (field === 'identityNumber') {
+        this.identityNumber = dataValue
+      }
     },
     formatContact(e) {
       return String(e).substring(0, 12)
