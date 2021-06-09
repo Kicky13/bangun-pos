@@ -647,14 +647,40 @@
                 </b-col>
                 <b-col
                   lg="6"
-                  style="margin-top: 10px; display: none;"
+                  style="margin-top: 10px;"
                 >
-                  <b-form-checkbox
+                  <!-- <b-form-checkbox
                     :checked="disabledTaxInput"
                     @change="disabledTax"
                   >
                     Harga termasuk pajak
-                  </b-form-checkbox>
+                  </b-form-checkbox> -->
+                  <b-row class="mt-md-1 mt-lg-0">
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="customerListModal"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Customer
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <v-select
+                        id="customertListModal"
+                        v-model="selectedCustomer"
+                        placeholder="Walk-in Customer"
+                        :options="customerList"
+                        :clearable="false"
+                        label="text"
+                      />
+                    </b-col>
+                  </b-row>
                 </b-col>
               </b-row>
               <b-row class="mt-1">
@@ -694,7 +720,7 @@
                   </b-row>
                 </b-col>
                 <b-col lg="6">
-                  <b-row class="mt-md-1 mt-lg-0">
+                  <!-- <b-row class="mt-md-1 mt-lg-0">
                     <b-col
                       cols="12"
                       md="4"
@@ -719,49 +745,7 @@
                         label="text"
                       />
                     </b-col>
-                  </b-row>
-                </b-col>
-              </b-row>
-              <b-row class="mt-1">
-                <b-col
-                  lg="6"
-                  style="display: none;"
-                >
-                  <b-row>
-                    <b-col
-                      cols="12"
-                      md="4"
-                    >
-                      <label
-                        for="tax"
-                        style="margin-top: 10px; font-size: 14px;"
-                      >
-                        Pajak
-                      </label>
-                    </b-col>
-                    <b-col
-                      cols="12"
-                      md="8"
-                    >
-                      <b-input-group
-                        :append="'\xa0\xa0%\xa0'"
-                        class="input-group-merge"
-                      >
-                        <b-form-input
-                          id="tax"
-                          v-model="inputTax"
-                          type="text"
-                          inputmode="numeric"
-                          style="text-align: right;"
-                          :disabled="disabledTaxInput"
-                          autocomplete="off"
-                          @keyup="numberOnly($event, 'inputTax')"
-                        />
-                      </b-input-group>
-                    </b-col>
-                  </b-row>
-                </b-col>
-                <b-col lg="6">
+                  </b-row> -->
                   <b-row class="mt-md-1 mt-lg-0">
                     <b-col
                       cols="12"
@@ -794,7 +778,131 @@
               <b-row class="mt-1">
                 <b-col
                   lg="6"
-                  style="display: none;"
+                >
+                  <!-- <b-row>
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="tax"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Pajak
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-input-group
+                        :append="'\xa0\xa0%\xa0'"
+                        class="input-group-merge"
+                      >
+                        <b-form-input
+                          id="tax"
+                          v-model="inputTax"
+                          type="text"
+                          inputmode="numeric"
+                          style="text-align: right;"
+                          :disabled="disabledTaxInput"
+                          autocomplete="off"
+                          @keyup="numberOnly($event, 'inputTax')"
+                        />
+                      </b-input-group>
+                    </b-col>
+                  </b-row> -->
+                  <b-row>
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="ongkir"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Ong. Kirim
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-input-group
+                        prepend="Rp."
+                        append=",00"
+                        class="input-group-merge"
+                      >
+                        <b-form-input
+                          id="ongkir"
+                          v-model="ongkirWithFormat"
+                          type="text"
+                          inputmode="numeric"
+                          autocomplete="off"
+                          style="text-align: right;"
+                          @keyup="numberOnly($event, 'inputOngkir')"
+                        />
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+                <b-col lg="6">
+                  <!-- <b-row class="mt-md-1 mt-lg-0">
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="noReference3"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        No. Referensi
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-form-input
+                        id="noReference3"
+                        v-model="noReference"
+                        style="text-align: right"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        @keyup="numberOnly($event, 'noReference')"
+                      />
+                    </b-col>
+                  </b-row> -->
+                  <b-row class="mt-md-1 mt-lg-0">
+                    <b-col
+                      cols="12"
+                      md="4"
+                    >
+                      <label
+                        for="tipePembayaran"
+                        style="margin-top: 10px; font-size: 14px;"
+                      >
+                        Tipe Pembayaran
+                      </label>
+                    </b-col>
+                    <b-col
+                      cols="12"
+                      md="8"
+                    >
+                      <b-form-select
+                        id="tipePembayaran"
+                        v-model="selectedPaymentMethod"
+                        :options="paymentMethod"
+                        @change="inputPaymentMethod"
+                      />
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+              <!-- <b-row class="mt-1">
+                <b-col
+                  lg="6"
                 >
                   <b-row>
                     <b-col
@@ -846,8 +954,8 @@
                     </b-col>
                   </b-row>
                 </b-col>
-              </b-row>
-              <b-row class="mt-1">
+              </b-row> -->
+              <!-- <b-row class="mt-1">
                 <b-col lg="6">
                   <b-row>
                     <b-col
@@ -884,7 +992,7 @@
                   </b-row>
                 </b-col>
                 <b-col lg="6" />
-              </b-row>
+              </b-row> -->
               <b-row class="mt-1">
                 <b-col>
                   <b-alert
@@ -1025,7 +1133,7 @@
 
 <script>
 import {
-  BRow, BCol, BCard, BForm, BFormGroup, BFormInput, BButton, BAlert, BFormSelect, BInputGroup, BModal, BFormTextarea, VBModal, BFormInvalidFeedback, BFormCheckbox,
+  BRow, BCol, BCard, BForm, BFormGroup, BFormInput, BButton, BAlert, BFormSelect, BInputGroup, BModal, BFormTextarea, VBModal, BFormInvalidFeedback,
 } from 'bootstrap-vue'
 import { heightTransition } from '@core/mixins/ui/transition'
 import Ripple from 'vue-ripple-directive'
@@ -1053,7 +1161,7 @@ export default {
     BInputGroup,
     BCard,
     BFormInvalidFeedback,
-    BFormCheckbox,
+    // BFormCheckbox,
     DetailTrans,
     vSelect,
   },
