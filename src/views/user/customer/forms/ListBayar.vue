@@ -376,12 +376,12 @@ export default {
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
-        {
+        /* {
           label: 'Pajak',
           field: 'pajak',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
-        },
+        }, */
         {
           label: 'Ongkir',
           field: 'ongkir',

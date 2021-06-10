@@ -242,7 +242,7 @@
           <th>Subtotal</th>
           <th>Diskon</th>
           <th>Ongkos Kirim</th>
-          <th>Pajak</th>
+          <!-- <th>Pajak</th> -->
           <th>Tipe Pembayaran</th>
           <th>Status</th>
         </thead>
@@ -272,9 +272,9 @@
             <td style="text-align: right">
               {{ formatPrice(item.ship) }}
             </td>
-            <td style="text-align: right">
+            <!-- <td style="text-align: right">
               {{ formatPrice(item.tax) }}
-            </td>
+            </td> -->
             <td style="text-align: center">
               {{ item.typePayment }}
             </td>
@@ -399,12 +399,12 @@ export default {
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
-        {
+        /* {
           label: 'Pajak',
           field: 'tax',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
-        },
+        }, */
         {
           label: 'Grand Total',
           field: 'grandtotal',

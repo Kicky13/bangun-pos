@@ -146,7 +146,7 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
                   </td>
                 </tr>
-                <tr v-if="dataPenjualan.includetax === false">
+                <!-- <tr v-if="dataPenjualan.includetax === false">
                   <td
                     colspan="2"
                     style="text-align: right;"
@@ -159,7 +159,7 @@
                   >
                     <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td
                     colspan="2"
@@ -475,7 +475,7 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
                   </td>
                 </tr>
-                <tr v-if="dataPenjualan.includetax === false">
+                <!-- <tr v-if="dataPenjualan.includetax === false">
                   <td
                     colspan="3"
                     style="text-align: right;"
@@ -485,7 +485,7 @@
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td
                     colspan="3"
