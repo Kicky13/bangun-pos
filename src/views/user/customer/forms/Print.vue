@@ -107,7 +107,7 @@
           <th>Ref. Code</th>
           <th>Sub. Total</th>
           <th>Diskon</th>
-          <th>Pajak</th>
+          <!-- <th>Pajak</th> -->
           <th>Ongkir</th>
           <th>Type Pembayaran</th>
           <th>Status</th>
@@ -134,9 +134,9 @@
             <td style="text-align: right">
               {{ formatPrice(item.diskon) }}
             </td>
-            <td style="text-align: right">
+            <!-- <td style="text-align: right">
               {{ formatPrice(item.pajak) }}
-            </td>
+            </td> -->
             <td style="text-align: right">
               {{ formatPrice(item.ongkir) }}
             </td>
@@ -239,10 +239,10 @@ export default {
           label: 'Diskon',
           field: 'diskon',
         },
-        {
-          label: 'Pajak',
-          field: 'pajak',
-        },
+        // {
+        //   label: 'Pajak',
+        //   field: 'pajak',
+        // },
         {
           label: 'Ongkir',
           field: 'ongkir',
