@@ -146,7 +146,7 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
                   </td>
                 </tr>
-                <tr v-if="dataPenjualan.includetax === false">
+                <!-- <tr v-if="dataPenjualan.includetax === false">
                   <td
                     colspan="2"
                     style="text-align: right;"
@@ -159,7 +159,7 @@
                   >
                     <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td
                     colspan="2"
@@ -230,7 +230,7 @@
                     {{ dataPenjualan.noPemb }}
                   </td>
                 </tr> -->
-                <tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="2"
                     style="text-align: right;"
@@ -242,6 +242,20 @@
                     style="text-align: right;"
                   >
                     <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Bayar :</b>
+                  </td>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Rp. {{ formatPrice(dataPenjualan.grandTotal-dataPenjualan.kurangBayar) }}</b>
                   </td>
                 </tr>
                 <tr v-if="dataPenjualan.typePayment === 'CASH'">
@@ -475,7 +489,7 @@
                     <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
                   </td>
                 </tr>
-                <tr v-if="dataPenjualan.includetax === false">
+                <!-- <tr v-if="dataPenjualan.includetax === false">
                   <td
                     colspan="3"
                     style="text-align: right;"
@@ -485,7 +499,7 @@
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td
                     colspan="3"
@@ -541,7 +555,7 @@
                     {{ dataPenjualan.noPemb }}
                   </td>
                 </tr> -->
-                <tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="3"
                     style="text-align: right;"
@@ -550,6 +564,17 @@
                   </td>
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="3"
+                    style="text-align: right;"
+                  >
+                    <b>Bayar :</b>
+                  </td>
+                  <td style="text-align: right;">
+                    <b>Rp. {{ formatPrice(dataPenjualan.grandTotal-dataPenjualan.kurangBayar) }}</b>
                   </td>
                 </tr>
                 <tr v-if="dataPenjualan.typePayment === 'CASH'">
