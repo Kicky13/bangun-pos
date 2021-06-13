@@ -6,17 +6,7 @@
       v-if="product.is_available === 0"
       :variant="color"
       tag="a"
-      class="btn-icon float-sm-right d-md-block d-none"
-      style="margin: 1.5rem; position: absolute; opacity: 0.5; width: 90%;"
-    >
-      <span>Tidak Tersedia</span>
-    </b-button>
-    <b-button
-      v-if="product.is_available === 0"
-      :variant="color"
-      tag="a"
-      class="btn-icon float-sm-right d-sm-block d-xs-block d-xl-none d-lg-none d-md-none"
-      style="margin: 0.5rem; position: absolute; opacity: 0.5; width: 90%;"
+      class="btn-icon not-available"
     >
       <span>Tidak Tersedia</span>
     </b-button>
@@ -129,5 +119,12 @@ export default {
 .card-body {
   padding: 0rem;
   margin-bottom: 0.5rem;
+}
+.not-available {
+  position: absolute;
+  top: .5em;
+  right: .5em;
+  left: .5em;
+  opacity: .5;
 }
 </style>
