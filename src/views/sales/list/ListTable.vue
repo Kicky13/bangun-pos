@@ -186,9 +186,9 @@
             <th width="10%">
               Ongkir
             </th>
-            <th width="10%">
+            <!-- <th width="10%">
               Pajak
-            </th>
+            </th> -->
             <th width="10%">
               No referensi
             </th>
@@ -230,9 +230,9 @@
               <td style="text-align: right;">
                 {{ formatPrice(item.ongkirTrans) }}
               </td>
-              <td style="text-align: right;">
+              <!-- <td style="text-align: right;">
                 {{ formatPrice(item.pajakTrans) }}
-              </td>
+              </td> -->
               <td style="text-align: center;">
                 <b>{{ item.refNumber }}</b>
               </td>
@@ -389,27 +389,30 @@ export default {
         {
           label: 'Sub Total',
           field: 'subTotalTrans',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Diskon',
           field: 'discountTrans',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Ongkir',
           field: 'ongkirTrans',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
-        {
+        /* {
           label: 'Pajak',
           field: 'pajakTrans',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
-        },
+        }, */
         {
           label: 'No. Referensi',
           field: 'refNumber',

@@ -385,28 +385,33 @@ export default {
         },
         {
           label: 'Jumlah Trans.',
+          type: 'number',
           field: 'jumTrans',
         },
         {
           label: 'Nilai Total Trans.',
+          type: 'number',
           field: 'totalTrans',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Total Hutang',
+          type: 'number',
           field: 'totalHutang',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Hutang Dibayar',
+          type: 'number',
           field: 'sudahBayar',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Sisa Hutang',
+          type: 'number',
           field: 'sisaHutang',
           tdClass: 'text-right',
           formatFn: this.formatPrice,

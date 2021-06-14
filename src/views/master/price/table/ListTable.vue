@@ -417,6 +417,7 @@ export default {
         },
         {
           label: 'Harga Jual',
+          type: 'number',
           field: 'price',
           tdClass: 'text-right',
           formatFn: this.formatPrice,

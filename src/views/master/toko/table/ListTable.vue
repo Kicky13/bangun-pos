@@ -386,14 +386,17 @@ export default {
         },
         {
           label: 'Jum. Transaksi',
+          type: 'number',
           field: 'jumTrans',
         },
         {
           label: 'Jum. Produk',
+          type: 'number',
           field: 'jumProduk',
         },
         {
           label: 'Jum. Customer',
+          type: 'number',
           field: 'jumCust',
         },
         {
