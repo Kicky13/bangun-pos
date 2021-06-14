@@ -384,18 +384,21 @@ export default {
         {
           label: 'Sub Total',
           field: 'subtotal',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Diskon',
           field: 'disc',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Ongkos Kirim',
           field: 'ship',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
@@ -408,6 +411,7 @@ export default {
         {
           label: 'Grand Total',
           field: 'grandtotal',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
