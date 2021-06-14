@@ -367,12 +367,14 @@ export default {
         {
           label: 'Sub. Total',
           field: 'subTotal',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Diskon',
           field: 'diskon',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
@@ -385,19 +387,20 @@ export default {
         {
           label: 'Ongkir',
           field: 'ongkir',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Grand Total',
           field: 'grandtotal',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Pembayaran',
           field: 'typeBayar',
-          sortable: false,
           filterOptions: {
             enabled: true,
             filterDropdownItems: ['CASH', 'KREDIT'],
@@ -406,7 +409,6 @@ export default {
         {
           label: 'Status',
           field: 'status',
-          sortable: false,
           filterOptions: {
             enabled: true,
             filterDropdownItems: ['PAID', 'UNPAID'],
