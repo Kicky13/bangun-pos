@@ -189,6 +189,7 @@ export default {
         {
           label: 'Jumlah Bayar',
           field: 'jumlahBayar',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },

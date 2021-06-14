@@ -418,18 +418,21 @@ export default {
         },
         {
           label: 'Sub. Total',
+          type: 'number',
           field: 'sub_total',
         },
         {
           label: 'Diskon',
+          type: 'number',
           field: 'discount',
         },
-        {
+        /* {
           label: 'Pajak',
           field: 'tax',
-        },
+        }, */
         {
           label: 'Ongkir',
+          type: 'number',
           field: 'shipping',
         },
         {
@@ -439,6 +442,7 @@ export default {
         {
           label: 'Action',
           field: 'action',
+          sortable: false,
         },
       ],
       searchTerm: '',
@@ -601,7 +605,6 @@ export default {
     async loadAntrian(dataAntrian) {
       appService.getLoadAntrian(dataAntrian.uuid).then(response => {
         const { data } = response.data
-        console.log(data)
         if (data) {
           this.listAntrian.push({
             uuid: dataAntrian.uuid,

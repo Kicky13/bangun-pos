@@ -418,7 +418,6 @@ export default {
         {
           label: 'Pembayaran',
           field: 'typePayment',
-          sortable: false,
           filterOptions: {
             enabled: true,
             filterDropdownItems: ['CASH', 'KREDIT'],
@@ -427,7 +426,6 @@ export default {
         {
           label: 'Status',
           field: 'paymentStatus',
-          sortable: false,
           filterOptions: {
             enabled: true,
             filterDropdownItems: ['PAID', 'UNPAID'],
