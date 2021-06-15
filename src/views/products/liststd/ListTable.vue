@@ -744,7 +744,6 @@ export default {
         {
           label: 'Action',
           field: 'action',
-          sortable: false,
         },
       ],
       rows: [],

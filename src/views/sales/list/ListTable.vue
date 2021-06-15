@@ -389,18 +389,21 @@ export default {
         {
           label: 'Sub Total',
           field: 'subTotalTrans',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Diskon',
           field: 'discountTrans',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
         {
           label: 'Ongkir',
           field: 'ongkirTrans',
+          type: 'number',
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
