@@ -230,7 +230,7 @@
                     {{ dataPenjualan.noPemb }}
                   </td>
                 </tr> -->
-                <tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="2"
                     style="text-align: right;"
@@ -242,6 +242,20 @@
                     style="text-align: right;"
                   >
                     <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Bayar :</b>
+                  </td>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <b>Rp. {{ formatPrice(dataPenjualan.grandTotal-dataPenjualan.kurangBayar) }}</b>
                   </td>
                 </tr>
                 <tr v-if="dataPenjualan.typePayment === 'CASH'">
@@ -541,7 +555,7 @@
                     {{ dataPenjualan.noPemb }}
                   </td>
                 </tr> -->
-                <tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="3"
                     style="text-align: right;"
@@ -550,6 +564,17 @@
                   </td>
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="3"
+                    style="text-align: right;"
+                  >
+                    <b>Bayar :</b>
+                  </td>
+                  <td style="text-align: right;">
+                    <b>Rp. {{ formatPrice(dataPenjualan.grandTotal-dataPenjualan.kurangBayar) }}</b>
                   </td>
                 </tr>
                 <tr v-if="dataPenjualan.typePayment === 'CASH'">

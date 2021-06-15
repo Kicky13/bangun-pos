@@ -4,8 +4,8 @@ WORKDIR /usr/src/app/my-app
 
 COPY package*.json ./
 
-RUN yarn install
+RUN npm install
 
-EXPOSE 8080
+EXPOSE 8081
 
-CMD ["yarn","serve"]
+CMD ["npm","run","serve"]

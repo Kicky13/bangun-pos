@@ -407,12 +407,12 @@ export default {
           tdClass: 'text-right',
           formatFn: this.formatPrice,
         },
-        /* {
-          label: 'Pajak',
-          field: 'pajakTrans',
-          tdClass: 'text-right',
-          formatFn: this.formatPrice,
-        }, */
+        // {
+        //   label: 'Pajak',
+        //   field: 'pajakTrans',
+        //   tdClass: 'text-right',
+        //   formatFn: this.formatPrice,
+        // },
         {
           label: 'No. Referensi',
           field: 'refNumber',

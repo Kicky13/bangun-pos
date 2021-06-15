@@ -115,7 +115,7 @@
             <th>Subtotal</th>
             <th>Diskon</th>
             <th>Ongkos Kirim</th>
-            <th>Pajak</th>
+            <!-- <th>Pajak</th> -->
             <th>Tipe Pembayaran</th>
             <th>Status</th>
           </thead>
@@ -145,9 +145,9 @@
               <td style="text-align: right">
                 {{ formatPrice(item.ship) }}
               </td>
-              <td style="text-align: right">
+              <!-- <td style="text-align: right">
                 {{ formatPrice(item.tax) }}
-              </td>
+              </td> -->
               <td style="text-align: center">
                 {{ item.typePayment }}
               </td>
@@ -258,10 +258,10 @@ export default {
           label: 'Ongkos Kirim',
           field: 'ship',
         },
-        {
-          label: 'Pajak',
-          field: 'tax',
-        },
+        // {
+        //   label: 'Pajak',
+        //   field: 'tax',
+        // },
         {
           label: 'Type Pembayaran',
           field: 'typePayment',
