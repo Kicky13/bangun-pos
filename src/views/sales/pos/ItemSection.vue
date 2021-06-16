@@ -214,7 +214,7 @@
           externalQuery: searchTerm
         }"
         :select-options="{
-          enabled: true,
+          enabled: false,
           selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
           selectionInfoClass: 'custom-class',
           selectionText: 'rows selected',

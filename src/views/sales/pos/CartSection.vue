@@ -1349,10 +1349,9 @@ export default {
       opacityValue: 0.5,
       cursorValue: 'auto !important',
       initialData: {},
-      tempPrice: 0,
-      discountStop: false,
       checkId: {},
       disabledTaxInput: false,
+      isFromCart: false,
     }
   },
   computed: {
@@ -1631,6 +1630,10 @@ export default {
       }
     },
     resetButton() {
+      if (this.isFromCart) {
+        this.setTransactionCode()
+        this.isFromCart = false
+      }
       this.selectedCustomer = null
       this.selectedCashier = null
       this.noReference = ''
@@ -1648,6 +1651,7 @@ export default {
       this.selectedCustomer = null
     },
     resetSaveTransaction() {
+      this.isFromCart = false
       this.selectedCustomer = null
       this.noReference = null
       this.inputDiscount = 0
@@ -1697,6 +1701,8 @@ export default {
         this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Silahkan isi keranjang terlebih dahulu')
       } else if (!this.selectedCashier) {
         this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Silahkan pilih kasir terlebih dahulu')
+      } else if (this.items.find(item => item.quantity === '0' || item.quantity === '')) {
+        this.makeToast('Simpan Transaksi', 'AlertCircleIcon', 'danger', 'Quantity tidak boleh 0 atau kosong')
       } else {
         this.$bvModal.show('paymentModal')
       }
@@ -1754,6 +1760,11 @@ export default {
         this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Silahkan pilih kasir terlebih dahulu')
         return false
       }
+      if (this.items.find(item => item.quantity === '0' || item.quantity === '')) {
+        this.makeToast('Tambah Antrian', 'AlertCircleIcon', 'danger', 'Quantity tidak boleh 0 atau kosong')
+        return false
+      }
+
       return true
     },
     isNumberKey(event, stop = false) {
@@ -1805,6 +1816,8 @@ export default {
         // console.log(dataAntrian)
         // console.log(this.customerList.find(customer => customer.id === dataAntrian.id_customer))
         // this.selectedCustomer = this.customerList.find(customer => customer.text === dataAntrian.nama_customer).text
+        this.isFromCart = true
+        this.sellingCode = dataAntrian.kode_transaksi
         this.selectedCustomer = this.customerList.find(customer => customer.id === dataAntrian.id_customer)
         this.selectedCashier = this.cashierList.find(cashier => cashier.id === dataAntrian.id_kasir).value
         // console.log(this.selectedCashier)
@@ -1901,9 +1914,6 @@ export default {
           if (dataValue >= 99999) {
             temp.quantity = 99999
           }
-          if (dataValue === '' || dataValue === '0') {
-            temp.quantity = 1
-          }
           if (dataValue.charAt(0) === '0' && dataValue.length > 1) {
             temp.quantity = Number(dataValue.substr(1, dataValue.length))
           }
@@ -1916,8 +1926,8 @@ export default {
         if (item.kode_produk === kodeProduk) {
           temp = item
           temp.edit_price = dataValue
-          if (dataValue >= 999999999999999) {
-            this.initialData.edit_price = '999.999.999.999.999'
+          if (dataValue >= 9999999999) {
+            this.initialData.edit_price = '9.999.999.999'
           } else {
             this.initialData.edit_price = this.formatNumber(dataValue)
           }
