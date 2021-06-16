@@ -1611,6 +1611,7 @@ export default {
             items: products,
             no_references: this.noReference,
           }
+          this.resetButton()
           appService.addAntrian(param).then(response => {
             const { data } = response.data
             if (data.message) {
@@ -1619,7 +1620,6 @@ export default {
               this.makeToast('Antrian Berhasil Ditambahkan', 'CoffeeIcon', 'success', 'Silahkan cek di daftar antrian')
               this.setTransactionCode()
               parentComponent.$emit('updateAntrian', data)
-              this.resetButton()
             }
           }).catch(err => {
             console.log(err)
