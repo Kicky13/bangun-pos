@@ -431,7 +431,7 @@
                       @keyup="numberOnly($event, 'newNoHandphone')"
                     />
                     <b-form-invalid-feedback>
-                      Telepon Customer Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan dan Diawali Angka 0 (Contoh Format : 081234567890)
+                      Telepon Customer Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan Diawali Angka 0 (Contoh Format : 081234567890)
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -503,6 +503,7 @@
             centered
             size="lg"
             hide-footer
+            @hide="initialData.edit_price = 0"
           >
             <b-form>
               <b-row>
