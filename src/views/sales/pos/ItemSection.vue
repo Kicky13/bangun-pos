@@ -594,11 +594,14 @@ export default {
     async getAllAntrian() {
       appService.getListAntrian().then(response => {
         const { data } = response.data
+        let antrianLength = 0
         this.listAntrian = []
         if (data) {
           data.forEach(antrian => {
             this.loadAntrian(antrian)
+            antrianLength += 1
           })
+          this.totalAntrian = antrianLength
         }
       })
     },
@@ -621,7 +624,6 @@ export default {
             status: data.status,
           })
         }
-        this.totalAntrian = this.listAntrian.length
       })
     },
     async getAllProducts() {

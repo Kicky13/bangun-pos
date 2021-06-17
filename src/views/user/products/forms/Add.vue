@@ -249,7 +249,7 @@
                       @keyup="formatBayar"
                     />
                     <b-form-invalid-feedback>
-                      Harga Produk wajib diisi dengan benar Maksimal 999.999.999.999.999
+                      Harga Produk wajib diisi dengan benar Maksimal 9.999.999.999
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -565,8 +565,11 @@ export default {
     },
     formatBayar() {
       this.productPrice = this.productPrice.replace(/[^0-9]/g, '')
-      if (parseInt(this.productPrice, 10) > 999999999999999) {
-        this.productPrice = '999999999999999'
+      if (parseInt(this.productPrice, 10) > 9999999999) {
+        this.productPrice = '9999999999'
+      }
+      if (this.productPrice.charAt(0) === '0' && this.productPrice.length > 1) {
+        this.productPrice = Number(this.productPrice.substr(1, this.productPrice.length))
       }
     },
     formatProductCode() {
