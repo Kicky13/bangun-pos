@@ -218,18 +218,22 @@
                     label="Harga jual"
                     label-for="sellprice"
                   >
-                    <b-form-input
-                      id="sellprice"
-                      v-model="productPrice"
-                      :state="productPrice > 0 && productPrice <= 999999999999999"
-                      type="number"
-                      autocomplete="off"
-                      name="sellprice"
-                      @keyup="formatBayar"
-                    />
-                    <b-form-invalid-feedback>
-                      Harga Produk wajib diisi dengan benar
-                    </b-form-invalid-feedback>
+                    <b-input-group prepend="Rp.">
+                      <b-form-input
+                        id="sellprice"
+                        v-model="priceWithFormat"
+                        :state="productPrice > 0 && productPrice <= 999999999999999"
+                        type="text"
+                        inputMode="numeric"
+                        autocomplete="off"
+                        name="sellprice"
+                        @keyup="formatBayar"
+                      />
+                      <!-- <b-form-invalid-feedback>
+                        Harga Produk wajib diisi dengan benar
+                      </b-form-invalid-feedback> -->
+                    </b-input-group>
+                    <small v-if="productPrice < 1" class="text-danger">Harga Produk wajib diisi dengan benar Maksimal 9.999.999.999</small>
                   </b-form-group>
                 </b-col>
                 <b-col
@@ -401,7 +405,7 @@
 
 <script>
 import {
-  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal, BFormInvalidFeedback,
+  BRow, BCol, BFormGroup, BFormInput, BForm, BButton, BCard, BFormSelect, BFormTextarea, BFormFile, BImg, VBModal, BFormInvalidFeedback, BInputGroup,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import LoadingGrow from '@core/components/loading-process/LoadingGrow.vue'
@@ -436,7 +440,7 @@ export default {
     BrandModal,
     UnitsModal,
     // BFormDatalist,
-    // BInputGroup,
+    BInputGroup,
     // BInputGroupPrepend,
     // FeatherIcon,
     BFormInvalidFeedback,
@@ -565,6 +569,7 @@ export default {
       selectedFile: '',
       listProdukSIG: [],
       detailProdukSIG: [],
+      priceWithFormat: '',
       statusItems: [
         {
           value: null,
@@ -636,13 +641,21 @@ export default {
       return String(e).substring(0, 15)
     },
     formatBayar() {
-      this.productPrice = this.productPrice.replace(/[^0-9]/g, '')
+      this.priceWithFormat = this.formatNumber(this.priceWithFormat.replace(/[^0-9]/g, ''))
+      this.productPrice = this.regroupNumber(this.priceWithFormat)
       if (parseInt(this.productPrice, 10) > 9999999999) {
-        this.productPrice = '9999999999'
+        this.priceWithFormat = '9.999.999.999'
       }
-      if (this.productPrice.charAt(0) === '0' && this.productPrice.length > 1) {
-        this.productPrice = Number(this.productPrice.substr(1, this.productPrice.length))
+      if (this.priceWithFormat.charAt(0) === '0' && this.priceWithFormat.length > 1) {
+        this.priceWithFormat = Number(this.priceWithFormat.substr(1, this.priceWithFormat.length))
       }
+      this.productPrice = this.regroupNumber(this.priceWithFormat)
+    },
+    formatNumber(value) {
+      return new Intl.NumberFormat(['ban', 'id']).format(value)
+    },
+    regroupNumber(number) {
+      return Number(number.split('.').join(''))
     },
     formatProductCode() {
       // console.log(this.productCode)
@@ -698,6 +711,7 @@ export default {
       this.productCode = this.editkodeproduk
       this.productName = this.editname
       this.productPrice = this.editprice
+      this.priceWithFormat = this.productPrice
       this.selectedCategory = this.editidcategory
       await this.setListSubCategory()
       this.selectedStatus = this.editisavailable

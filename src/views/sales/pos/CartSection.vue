@@ -1961,6 +1961,13 @@ export default {
     },
     inputOngkirRule() {
       this.inputOngkir = this.regroupNumber(this.ongkirWithFormat)
+      if (this.inputOngkir >= 9999999999) {
+        this.ongkirWithFormat = '9.999.999.999'
+      }
+      if (this.ongkirWithFormat.charAt(0) === '0' && this.ongkirWithFormat.length > 1) {
+        this.ongkirWithFormat = Number(this.ongkirWithFormat.substr(1, this.ongkirWithFormat.length))
+      }
+      this.inputOngkir = this.regroupNumber(this.ongkirWithFormat)
     },
     inputPaymentMethod(paymentMethod) {
       if (paymentMethod === 2) {
