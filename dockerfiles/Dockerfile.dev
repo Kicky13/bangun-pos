@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN npx browserslist@latest --update-db
 RUN mv .env.local .env
 RUN npm run build
 
