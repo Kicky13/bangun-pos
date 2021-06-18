@@ -44,16 +44,11 @@
         >
           <b-media no-body>
             <b-media-aside>
-              <b-avatar
-                rounded
-                size="42"
-                :variant="transaction.avatarVariant"
-              >
-                <feather-icon
-                  size="18"
-                  :icon="transaction.avatar"
-                />
-              </b-avatar>
+              <b-img
+                :src="require('@/assets/images/icons/Semen.png')"
+                height="40"
+                alt="Logo Produk"
+              />
             </b-media-aside>
             <b-media-body>
               <h6 class="transaction-title">
@@ -86,7 +81,7 @@
 
 <script>
 import {
-  BCard, BCardHeader, BCardTitle, BCardBody, BMediaBody, BMedia, BMediaAside, BAvatar, BDropdown, BDropdownItem,
+  BCard, BCardHeader, BCardTitle, BCardBody, BMediaBody, BMedia, BMediaAside, BDropdown, BDropdownItem, BImg,
 } from 'bootstrap-vue'
 
 export default {
@@ -98,9 +93,10 @@ export default {
     BMediaBody,
     BMedia,
     BMediaAside,
-    BAvatar,
+    // BAvatar,
     BDropdown,
     BDropdownItem,
+    BImg,
   },
   props: {
     data: {
