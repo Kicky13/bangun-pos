@@ -1,5 +1,8 @@
 <template>
-  <div style="height: inherit">
+  <div
+    id="panelProduk"
+    style="height: inherit"
+  >
     <!-- ECommerce Header -->
     <section id="ecommerce-header">
       <b-row>

@@ -5,7 +5,270 @@
         cols="12"
         lg="12"
       >
-        <b-card id="printReceipt">
+        <b-card
+          id="printSmallReceipt"
+        >
+          <!-- Customer Form Section -->
+          <div>
+            <table width="100%">
+              <tbody style="font-size:12px;">
+                <tr>
+                  <td>
+                    <b-img
+                      v-if="dataPenjualan.logoToko"
+                      :src="dataPenjualan.logoToko"
+                      alt="Logo POS Retail"
+                      style="margin-bottom : 20px; width: 100%"
+                    />
+                    <b-img
+                      v-else
+                      :src="require('@/assets/images/logo/POSRetailBlack.png')"
+                      alt="Logo POS Retail"
+                      style="margin-bottom : 20px; width: 100%"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Kode Penjualan :
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.saleCode">{{ dataPenjualan.saleCode }}</b>
+                    <b v-else> - </b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Tgl Transaksi :
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.date">{{ dataPenjualan.date }}</b>
+                    <b v-else> - </b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Customer :
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.customer">{{ dataPenjualan.customer }}</b>
+                    <b v-else> - </b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    No referensi :
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.ref">{{ dataPenjualan.ref }}</b>
+                    <b v-else> - </b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Kasir :
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.biller">{{ dataPenjualan.biller }}</b>
+                    <b v-else> - </b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <hr>
+          </div>
+          <!-- End Customer Form Section -->
+
+          <!-- Cart Section -->
+          <div>
+            <table width="100%">
+              <thead style="text-align: center;">
+                <th width="50%">
+                  Barang
+                </th>
+                <th width="50%">
+                  Sub Total
+                </th>
+              </thead>
+              <tbody style="font-size:12px;">
+                <tr
+                  v-for="(item) in items"
+                  :id="item.id"
+                  :key="item.id"
+                  ref="row"
+                >
+                  <td style="text-align: left;">
+                    {{ item.name }}
+                    <br>
+                    @Rp. {{ formatPrice(item.price) }}
+                    <br>
+                    (<b>{{ item.quantity }} X {{ item.uom }}</b>)
+                  </td>
+                  <td style="text-align: right;">
+                    <b>Rp. {{ formatPrice((item.price * item.quantity)) }}</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="2"
+                    style="text-align: right;"
+                  >
+                    <hr>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="2"
+                  >
+                    Sub Total :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="2"
+                  >
+                    Diskon :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="2"
+                  >
+                    Ongkos Kirim :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="2"
+                  >
+                    Grand Total :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.grandTotal) }}</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="2"
+                  >
+                    Tipe Pembayaran :
+                    <br>
+                    <b style="float: right">{{ dataPenjualan.typePayment }}</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="2"
+                  >
+                    Status :
+                    <br>
+                    <b style="float: right">{{ dataPenjualan.paymentStatus }}</b>
+                  </td>
+                </tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
+                  <td
+                    colspan="2"
+                  >
+                    Bayar :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="2"
+                  >
+                    Bayar :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.grandTotal-dataPenjualan.kurangBayar) }}</b>
+                  </td>
+                </tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
+                  <td
+                    colspan="2"
+                  >
+                    Kembalian :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="2"
+                  >
+                    Kurang Bayar :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.kurangBayar) }}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <hr>
+          <div>
+            <table width="100%">
+              <tbody style="text-align: center;font-size:12px;">
+                <tr v-if="dataPenjualan.includetax === true">
+                  <td
+                    style="text-align: left;"
+                  >
+                    Catatan :
+                    <br>
+                    ** Harga Produk Yang Tercantum Sudah Termasuk PPN **
+                    <br>
+                    <hr>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Telp : {{ dataPenjualan.telpToko }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Cetak : {{ tglCetak }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h1>{{ dataPenjualan.namaToko }}</h1>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ dataPenjualan.alamatToko }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <hr>
+          </div>
+          <!-- End Cart Section -->
+        </b-card>
+      </b-col>
+      <b-col
+        cols="12"
+        lg="12"
+      >
+        <b-card
+          id="printReceipt"
+          class="nonprintstruck"
+        >
           <!-- Customer Form Section -->
           <div>
             <table width="100%">
@@ -505,5 +768,50 @@ export default {
 .repeater-form {
   overflow: hidden;
   transition: .35s height;
+}
+</style>
+
+<style lang="scss">
+@media print {
+
+  // Global Styles
+  body {
+    background-color: transparent !important;
+    // width: 80mm;
+    // height: 100mm;
+  }
+  .btn-scroll-to-top, .content-header, .bt-print, .horizontal-menu-wrapper, .nonprintstruck, .nonPrintAble, #panelProduk, #panelBayar {
+    display: none !important;
+  }
+  nav.header-navbar {
+    display: none;
+  }
+  .header-navbar-shadow {
+    display: none !important;
+  }
+  .printAble, #CetakStruk {
+    display: block !important;
+  }
+  #printSmallReceipt {
+    max-width: 27%;
+    width: 27%;
+  }
+  .printstruck {
+    max-width: 27%;
+    width: 27%;
+  }
+  .printstruck, #printMe, #printSmallReceipt, .nonprintstruck {
+    margin-top: -50px;
+  }
+  footer.footer {
+    display: none;
+  }
+  .card {
+    background-color: transparent;
+    box-shadow: none;
+  }
+  .customizer-toggle {
+    display: none !important;
+  }
 }
 </style>
