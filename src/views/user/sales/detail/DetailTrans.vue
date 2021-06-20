@@ -6,13 +6,18 @@
         cols="12"
         lg="4"
       >
-        <b-card id="printReceipt">
+        <b-card
+          id="printSmallReceipt"
+          class="nonprintstruck"
+          :class="{'printAble': isPrintStruck}"
+          style="display: none;"
+        >
           <!-- Customer Form Section -->
           <div>
             <table width="100%">
-              <tbody>
+              <tbody style="font-size:12px;">
                 <tr>
-                  <td colspan="2">
+                  <td>
                     <b-img
                       v-if="dataPenjualan.logoToko"
                       :src="dataPenjualan.logoToko"
@@ -28,43 +33,58 @@
                   </td>
                 </tr>
                 <tr>
-                  <td width="40%">
-                    Kode Penjualan
-                  </td>
-                  <td width="60%">
-                    : {{ dataPenjualan.saleCode }}
+                  <td>
+                    Kode Penjualan :
                   </td>
                 </tr>
                 <tr>
-                  <td width="40%">
-                    Tgl Transaksi
-                  </td>
-                  <td width="60%">
-                    : {{ dataPenjualan.date }}
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.saleCode">{{ dataPenjualan.saleCode }}</b>
+                    <b v-else> - </b>
                   </td>
                 </tr>
                 <tr>
-                  <td width="40%">
-                    Customer
-                  </td>
-                  <td width="60%">
-                    : {{ dataPenjualan.customer }}
+                  <td>
+                    Tgl Transaksi :
                   </td>
                 </tr>
                 <tr>
-                  <td width="40%">
-                    No referensi
-                  </td>
-                  <td width="60%">
-                    : {{ dataPenjualan.ref }}
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.date">{{ dataPenjualan.date }}</b>
+                    <b v-else> - </b>
                   </td>
                 </tr>
                 <tr>
-                  <td width="40%">
-                    Kasir
+                  <td>
+                    Customer :
                   </td>
-                  <td width="60%">
-                    : {{ dataPenjualan.biller }}
+                </tr>
+                <tr>
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.customer">{{ dataPenjualan.customer }}</b>
+                    <b v-else> - </b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    No referensi :
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.ref">{{ dataPenjualan.ref }}</b>
+                    <b v-else> - </b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Kasir :
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;">
+                    <b v-if="dataPenjualan.biller">{{ dataPenjualan.biller }}</b>
+                    <b v-else> - </b>
                   </td>
                 </tr>
               </tbody>
@@ -77,20 +97,14 @@
           <div>
             <table width="100%">
               <thead style="text-align: center;">
-                <th width="30%">
+                <th width="50%">
                   Barang
                 </th>
-                <th width="25%">
-                  Harga
-                </th>
-                <th width="15%">
-                  Jum.
-                </th>
-                <th width="30%">
+                <th width="50%">
                   Sub Total
                 </th>
               </thead>
-              <tbody>
+              <tbody style="font-size:12px;">
                 <tr
                   v-for="(item) in items"
                   :id="item.id"
@@ -98,13 +112,11 @@
                   ref="row"
                 >
                   <td style="text-align: left;">
-                    {{ item.name }} (<b>{{ item.uom }}</b>)
-                  </td>
-                  <td style="text-align: right;">
-                    Rp. {{ formatPrice(item.price) }}
-                  </td>
-                  <td style="text-align: center;">
-                    {{ item.quantity }}
+                    {{ item.name }}
+                    <br>
+                    @Rp. {{ formatPrice(item.price) }}
+                    <br>
+                    (<b>{{ item.quantity }} X {{ item.uom }}</b>)
                   </td>
                   <td style="text-align: right;">
                     <b>Rp. {{ formatPrice((item.price * item.quantity)) }}</b>
@@ -112,7 +124,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="4"
+                    colspan="2"
                     style="text-align: right;"
                   >
                     <hr>
@@ -121,169 +133,91 @@
                 <tr>
                   <td
                     colspan="2"
-                    style="text-align: right;"
                   >
-                    <b>Sub Total :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
+                    Sub Total :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.subtotal) }}</b>
                   </td>
                 </tr>
                 <tr>
                   <td
                     colspan="2"
-                    style="text-align: right;"
                   >
-                    <b>Diskon :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
-                  </td>
-                </tr>
-                <!-- <tr v-if="dataPenjualan.includetax === false">
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Pajak (@ {{ dataPenjualan.percenttax }}%):</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.tax) }}</b>
-                  </td>
-                </tr> -->
-                <tr>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Ongkos Kirim :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
+                    Diskon :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.disc) }}</b>
                   </td>
                 </tr>
                 <tr>
                   <td
                     colspan="2"
-                    style="text-align: right;"
                   >
-                    <b>Grand Total :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.grandTotal) }}</b>
+                    Ongkos Kirim :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.ship) }}</b>
                   </td>
                 </tr>
                 <tr>
                   <td
                     colspan="2"
-                    style="text-align: right;"
                   >
-                    <b>Tipe Pembayaran :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>{{ dataPenjualan.typePayment }}</b>
+                    Grand Total :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.grandTotal) }}</b>
                   </td>
                 </tr>
                 <tr>
                   <td
                     colspan="2"
-                    style="text-align: right;"
                   >
-                    <b>Status :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>{{ dataPenjualan.paymentStatus }}</b>
+                    Tipe Pembayaran :
+                    <br>
+                    <b style="float: right">{{ dataPenjualan.typePayment }}</b>
                   </td>
                 </tr>
-                <!-- <tr>
+                <tr>
                   <td
                     colspan="2"
-                    style="text-align: right;"
                   >
-                    No. Pembayaran :
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    {{ dataPenjualan.noPemb }}
-                  </td>
-                </tr> -->
-                <tr v-if="dataPenjualan.typePayment === 'CASH'">
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Bayar :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
-                  </td>
-                </tr>
-                <tr v-else>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Bayar :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.grandTotal-dataPenjualan.kurangBayar) }}</b>
+                    Status :
+                    <br>
+                    <b style="float: right">{{ dataPenjualan.paymentStatus }}</b>
                   </td>
                 </tr>
                 <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="2"
-                    style="text-align: right;"
                   >
-                    <b>Kembalian :</b>
-                  </td>
-                  <td
-                    colspan="2"
-                    style="text-align: right;"
-                  >
-                    <b>Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
+                    Bayar :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.bayar) }}</b>
                   </td>
                 </tr>
                 <tr v-else>
                   <td
                     colspan="2"
-                    style="text-align: right;"
                   >
-                    <b>Kurang Bayar :</b>
+                    Bayar :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.grandTotal-dataPenjualan.kurangBayar) }}</b>
                   </td>
+                </tr>
+                <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
                     colspan="2"
-                    style="text-align: right;"
                   >
-                    <b>Rp. {{ formatPrice(dataPenjualan.kurangBayar) }}</b>
+                    Kembalian :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.kembalian) }}</b>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td
+                    colspan="2"
+                  >
+                    Kurang Bayar :
+                    <br>
+                    <b style="float: right">Rp. {{ formatPrice(dataPenjualan.kurangBayar) }}</b>
                   </td>
                 </tr>
               </tbody>
@@ -292,10 +226,9 @@
           <hr>
           <div>
             <table width="100%">
-              <tbody style="text-align: center;">
+              <tbody style="text-align: center;font-size:12px;">
                 <tr v-if="dataPenjualan.includetax === true">
                   <td
-                    colspan="2"
                     style="text-align: left;"
                   >
                     Catatan :
@@ -306,20 +239,22 @@
                   </td>
                 </tr>
                 <tr>
-                  <td width="50%">
+                  <td>
                     Telp : {{ dataPenjualan.telpToko }}
                   </td>
-                  <td width="50%">
+                </tr>
+                <tr>
+                  <td>
                     Cetak : {{ tglCetak }}
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">
+                  <td>
                     <h1>{{ dataPenjualan.namaToko }}</h1>
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">
+                  <td>
                     {{ dataPenjualan.alamatToko }}
                   </td>
                 </tr>
@@ -329,31 +264,17 @@
           </div>
           <!-- End Cart Section -->
         </b-card>
-        <!-- Action Button Section -->
-        <div>
-          <b-row>
-            <b-col
-              cols="12"
-              md="6"
-            >
-              <b-button
-                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                class="mb-1"
-                block
-                @click="print"
-              >
-                Cetak (Struk 58mm)
-              </b-button>
-            </b-col>
-          </b-row>
-        </div>
-        <!-- End Action Button Section -->
       </b-col>
       <b-col
-        cols="12"
-        lg="8"
+        lg="12"
+        md="12"
+        sm="12"
       >
-        <b-card id="printMe">
+        <b-card
+          id="printMe"
+          class="nonprintstruck"
+          :class="{'printAble': isPrintinvoice}"
+        >
           <!-- Customer Form Section -->
           <div>
             <table width="100%">
@@ -429,13 +350,16 @@
                 <th width="30%">
                   Barang
                 </th>
+                <th width="10%">
+                  Satuan
+                </th>
                 <th width="25%">
                   Harga
                 </th>
-                <th width="15%">
-                  Jum.
+                <th width="10%">
+                  Jumlah
                 </th>
-                <th width="30%">
+                <th width="25%">
                   Sub Total
                 </th>
               </thead>
@@ -447,7 +371,10 @@
                   ref="row"
                 >
                   <td style="text-align: left;">
-                    {{ item.name }} (<b>{{ item.uom }}</b>)
+                    {{ item.name }}
+                  </td>
+                  <td style="text-align: right;">
+                    {{ item.uom }}
                   </td>
                   <td style="text-align: right;">
                     Rp. {{ formatPrice(item.price) }}
@@ -461,7 +388,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="4"
+                    colspan="5"
                     style="text-align: right;"
                   >
                     <hr>
@@ -469,7 +396,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Sub Total :</b>
@@ -480,7 +407,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Diskon :</b>
@@ -491,7 +418,7 @@
                 </tr>
                 <!-- <tr v-if="dataPenjualan.includetax === false">
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Pajak (@ {{ dataPenjualan.percenttax }}%):</b>
@@ -502,7 +429,7 @@
                 </tr> -->
                 <tr>
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Ongkos Kirim :</b>
@@ -513,7 +440,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Grand Total :</b>
@@ -524,7 +451,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Tipe Pembayaran :</b>
@@ -535,7 +462,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Status :</b>
@@ -546,7 +473,7 @@
                 </tr>
                 <!-- <tr>
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     No. Pembayaran :
@@ -557,7 +484,7 @@
                 </tr> -->
                 <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Bayar :</b>
@@ -568,7 +495,7 @@
                 </tr>
                 <tr v-else>
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Bayar :</b>
@@ -579,7 +506,7 @@
                 </tr>
                 <tr v-if="dataPenjualan.typePayment === 'CASH'">
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Kembalian :</b>
@@ -590,7 +517,7 @@
                 </tr>
                 <tr v-else>
                   <td
-                    colspan="3"
+                    colspan="4"
                     style="text-align: right;"
                   >
                     <b>Kurang Bayar :</b>
@@ -646,36 +573,32 @@
           <b-row>
             <b-col
               cols="12"
-              md="3"
+              md="4"
             />
             <b-col
               cols="12"
-              md="3"
-            />
-            <b-col
-              cols="12"
-              md="3"
+              md="4"
             >
               <b-button
                 v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-                class="mb-1"
+                class="mb-1 bt-print"
                 block
-                @click="printLandscape"
+                @click="wprintstruk"
               >
-                Cetak Struk
+                Cetak Invoice
               </b-button>
             </b-col>
             <b-col
               cols="12"
-              md="3"
+              md="4"
             >
               <b-button
-                v-ripple.400="'rgba(40, 199, 111, 0.15)'"
-                class="mb-1"
+                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+                class="mb-1 bt-print"
                 block
-                :to="{name: 'user-sale'}"
+                @click="wprintinvoice"
               >
-                Kembali
+                Cetak Struck (58mm)
               </b-button>
             </b-col>
           </b-row>
@@ -725,6 +648,8 @@ export default {
   mixins: [heightTransition],
   data() {
     return {
+      isPrintStruck: false,
+      isPrintinvoice: true,
       isLoading: false,
       dataPenjualan: {
         id: null,
@@ -867,6 +792,18 @@ export default {
       const val = (value / 1).toFixed(0).replace('.', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
+    wprintstruk() {
+      this.isPrintStruck = true
+      this.isPrintinvoice = false
+      this.getWaktuCetak()
+      window.print()
+    },
+    wprintinvoice() {
+      this.isPrintStruck = false
+      this.isPrintinvoice = true
+      this.getWaktuCetak()
+      window.print()
+    },
     print() {
       this.getWaktuCetak()
       this.$htmlToPaper('printReceipt', null, () => {
@@ -889,9 +826,47 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.repeater-form {
-  overflow: hidden;
-  transition: .35s height;
+<style lang="scss">
+@media print {
+
+  // Global Styles
+  body {
+    background-color: transparent !important;
+    // width: 80mm;
+    // height: 100mm;
+  }
+  .btn-scroll-to-top, .content-header, .bt-print, .horizontal-menu-wrapper, .nonprintstruck, .nonPrintAble {
+    display: none !important;
+  }
+  nav.header-navbar {
+    display: none;
+  }
+  .header-navbar-shadow {
+    display: none !important;
+  }
+  .printAble {
+    display: block !important;
+  }
+  #printSmallReceipt {
+    max-width: 27%;
+    width: 27%;
+  }
+  .printstruck {
+    max-width: 27%;
+    width: 27%;
+  }
+  .printstruck, #printMe, #printSmallReceipt, .nonprintstruck {
+    margin-top: -50px;
+  }
+  footer.footer {
+    display: none;
+  }
+  .card {
+    background-color: transparent;
+    box-shadow: none;
+  }
+  .customizer-toggle {
+    display: none !important;
+  }
 }
 </style>

@@ -1,174 +1,533 @@
 <template>
   <b-card>
     <loading-grow v-if="isLoading" />
-    <b-row>
-      <b-col
-        lg="2"
-        md="3"
-        sm="12"
-      >
-        <label
-          class="mr-1"
-          style="font-size: 16px; font-weight: bold;"
-        >Pencarian :</label>
-      </b-col>
-      <b-col
-        lg="4"
-        md="6"
-        sm="12"
-      >
-        <b-form-input
-          v-model="searchTerm"
-          placeholder="Masukkan kata kunci pencarian disini"
-          type="text"
-          class="d-inline-block"
-          style="margin-bottom : 10px;"
-        />
-      </b-col>
-      <b-col
-        lg="1"
-        md="3"
-        sm="12"
-      >
-        <b-button
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="primary"
-          style="margin-bottom : 10px;"
-          @click="cetakDataCustomer"
+    <div id="NoprintTable">
+      <b-row>
+        <b-col
+          lg="2"
+          md="3"
+          sm="12"
         >
-          Print
-        </b-button>
-      </b-col>
-      <b-col
-        lg="5"
-        md="6"
-        sm="12"
-      >
-        <b-button
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="primary"
-          style="margin-right : 5px; margin-bottom : 10px;"
-          @click="confirmDelete"
+          <label
+            class="mr-1"
+            style="font-size: 16px; font-weight: bold;"
+          >Pencarian :</label>
+        </b-col>
+        <b-col
+          lg="4"
+          md="6"
+          sm="12"
         >
-          Hapus
-        </b-button>
-        <b-button
-          v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-          variant="primary"
-          style="margin-bottom : 10px;"
-          @click="addCustomer"
+          <b-form-input
+            v-model="searchTerm"
+            placeholder="Masukkan kata kunci pencarian disini"
+            type="text"
+            class="d-inline-block"
+            style="margin-bottom : 10px;"
+          />
+        </b-col>
+        <b-col
+          lg="1"
+          md="3"
+          sm="12"
         >
-          Tambahkan Customer
-        </b-button>
-      </b-col>
-    </b-row>
-    <br>
-    <!-- table -->
-    <vue-good-table
-      ref="dataCustomer"
-      :columns="columns"
-      :rows="rows"
-      :rtl="direction"
-      :select-options="{ enabled: true }"
-      :search-options="{
-        enabled: true,
-        externalQuery: searchTerm }"
-      :pagination-options="{
-        enabled: true,
-        perPage:pageLength
-      }"
-    >
-
-      <template
-        slot="table-row"
-        slot-scope="props"
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="primary"
+            style="margin-bottom : 10px;"
+            @click="cetakDataCustomer"
+          >
+            Cetak
+          </b-button>
+        </b-col>
+        <b-col
+          lg="5"
+          md="6"
+          sm="12"
+        >
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="primary"
+            style="margin-right : 5px; margin-bottom : 10px;"
+            @click="confirmDelete"
+          >
+            Hapus
+          </b-button>
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="primary"
+            style="margin-bottom : 10px;"
+            @click="addCustomer"
+          >
+            Tambahkan Customer
+          </b-button>
+        </b-col>
+      </b-row>
+      <br>
+      <!-- table -->
+      <vue-good-table
+        ref="dataCustomer"
+        :columns="columns"
+        :rows="rows"
+        :rtl="direction"
+        :select-options="{ enabled: true }"
+        :search-options="{
+          enabled: true,
+          externalQuery: searchTerm }"
+        :pagination-options="{
+          enabled: true,
+          perPage:pageLength
+        }"
       >
-        <!-- Column: Action -->
-        <span v-if="props.column.field === 'action'">
-          <span>
-            <b-button
-              v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-              size="sm"
-              variant="outline-secondary"
-              :to="{ name: 'customer-history-trans', params: { id: props.formattedRow.encodedID } }"
-            >
-              List Trans.
-            </b-button>
-            <b-button
-              v-if="props.row.sisaHutang > 0"
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              variant="outline-danger"
-              @click="pembayaran(props.row)"
-            >
-              Bayar
-            </b-button>
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              variant="outline-danger"
-              @click="editData(props.formattedRow)"
-            >
-              Edit
-            </b-button>
-          </span>
-        </span>
 
-        <!-- Column: Common -->
-        <span v-else>
-          {{ props.formattedRow[props.column.field] }}
-        </span>
-      </template>
-
-      <!-- pagination -->
-      <template
-        slot="pagination-bottom"
-        slot-scope="props"
-      >
-        <div class="d-flex justify-content-between flex-wrap">
-          <div class="d-flex align-items-center mb-0 mt-1">
-            <span class="text-nowrap">
-              Showing 1 to
+        <template
+          slot="table-row"
+          slot-scope="props"
+        >
+          <!-- Column: Action -->
+          <span v-if="props.column.field === 'action'">
+            <span>
+              <b-button
+                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+                size="sm"
+                variant="outline-secondary"
+                :to="{ name: 'customer-history-trans', params: { id: props.formattedRow.encodedID } }"
+              >
+                List Trans.
+              </b-button>
+              <b-button
+                v-if="props.row.sisaHutang > 0"
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+                size="sm"
+                variant="outline-danger"
+                @click="pembayaran(props.row)"
+              >
+                Bayar
+              </b-button>
+              <b-button
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+                size="sm"
+                variant="outline-danger"
+                @click="editData(props.formattedRow)"
+              >
+                Edit
+              </b-button>
             </span>
-            <b-form-select
-              v-model="pageLength"
-              :options="['3','5','10','25','50','100']"
-              class="mx-1"
-              @input="(value)=>props.perPageChanged({currentPerPage:value})"
-            />
-            <span class="text-nowrap "> of {{ props.total }} entries </span>
+          </span>
+
+          <!-- Column: Common -->
+          <span v-else>
+            {{ props.formattedRow[props.column.field] }}
+          </span>
+        </template>
+
+        <!-- pagination -->
+        <template
+          slot="pagination-bottom"
+          slot-scope="props"
+        >
+          <div class="d-flex justify-content-between flex-wrap">
+            <div class="d-flex align-items-center mb-0 mt-1">
+              <span class="text-nowrap">
+                Showing 1 to
+              </span>
+              <b-form-select
+                v-model="pageLength"
+                :options="['3','5','10','25','50','100']"
+                class="mx-1"
+                @input="(value)=>props.perPageChanged({currentPerPage:value})"
+              />
+              <span class="text-nowrap "> of {{ props.total }} entries </span>
+            </div>
+            <div>
+              <b-pagination
+                :value="1"
+                :total-rows="props.total"
+                :per-page="pageLength"
+                first-number
+                last-number
+                align="right"
+                prev-class="prev-item"
+                next-class="next-item"
+                class="mt-1 mb-0"
+                @input="(value)=>props.pageChanged({currentPage:value})"
+              >
+                <template #prev-text>
+                  <feather-icon
+                    icon="ChevronLeftIcon"
+                    size="18"
+                  />
+                </template>
+                <template #next-text>
+                  <feather-icon
+                    icon="ChevronRightIcon"
+                    size="18"
+                  />
+                </template>
+              </b-pagination>
+            </div>
           </div>
-          <div>
-            <b-pagination
-              :value="1"
-              :total-rows="props.total"
-              :per-page="pageLength"
-              first-number
-              last-number
-              align="right"
-              prev-class="prev-item"
-              next-class="next-item"
-              class="mt-1 mb-0"
-              @input="(value)=>props.pageChanged({currentPage:value})"
+        </template>
+      </vue-good-table>
+      <!-- table -->
+      <!-- Pay Debt -->
+      <b-modal
+        id="listBayar"
+        centered
+        size="lg"
+        ok-title="Simpan"
+        cancel-variant="outline-secondary"
+        @ok="handleSubmitPay"
+      >
+        <b-form>
+          <b-row>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
             >
-              <template #prev-text>
-                <feather-icon
-                  icon="ChevronLeftIcon"
-                  size="18"
+              <b-form-group
+                label="Kode Customer"
+                label-for="code-customer"
+              >
+                <b-form-input
+                  id="code-customer"
+                  v-model="customerCode"
+                  placeholder="Masukkan Code Customer"
+                  disabled
                 />
-              </template>
-              <template #next-text>
-                <feather-icon
-                  icon="ChevronRightIcon"
-                  size="18"
+              </b-form-group>
+            </b-col>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label="Nama Customer"
+                label-for="nama-customer"
+              >
+                <b-form-input
+                  id="nama-customer"
+                  v-model="customerName"
+                  placeholder="Masukkan Nama Customer"
+                  disabled
                 />
-              </template>
-            </b-pagination>
-          </div>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label="Sisa Hutang"
+                label-for="sisa-hutnag"
+              >
+                <b-form-input
+                  id="sisa-hutang"
+                  v-model="remainingDebt"
+                  placeholder="nominal"
+                  disabled
+                />
+              </b-form-group>
+            </b-col>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label="Tipe Pembayaran"
+                label-for="tipe-pembayaran"
+              >
+                <b-form-select
+                  id="tipe-pembayaran"
+                  v-model="selectedType"
+                  :options="typeItem"
+                />
+                <b-form-invalid-feedback>
+                  Pilih salah satu tipe pembayaran
+                </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            />
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label="No. Pembayaran"
+                label-for="no-pembayaran"
+                class="font-weight-bold"
+              >
+                <b-form-input
+                  id="no-pembayaran"
+                  v-model="paymentID"
+                  placeholder="nominal"
+                  disabled
+                />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            />
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label="Bayar"
+                label-for="bayar"
+                class="font-weight-bold"
+              >
+                <b-form-input
+                  id="bayar"
+                  v-model="paySum"
+                  type="text"
+                  inputmode="numeric"
+                  :state="paySum !== '' && parseInt(paySum) <= remainingDebt"
+                  placeholder="nominal"
+                  @keyup="formatBayar"
+                />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <!-- <b-row class="mt-2">
+            <b-col cols="2" />
+            <b-col cols="10">
+              <b-form-group
+                label="No. Pembayaran"
+                label-for="no-pembayaran"
+                label-cols-md="5"
+                label-align="right"
+                class="font-weight-bold"
+              >
+                <b-form-input
+                  id="no-pembayaran"
+                  v-model="paymentID"
+                  placeholder="nominal"
+                  disabled
+                />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="2" />
+            <b-col cols="10">
+              <b-form-group
+                label="Bayar"
+                label-for="bayar"
+                label-cols-md="5"
+                class="font-weight-bold text-right"
+              >
+                <b-form-input
+                  id="bayar"
+                  v-model="paySum"
+                  :state="paySum !== '' && parseInt(paySum) <= remainingDebt"
+                  placeholder="nominal"
+                  @keyup="formatBayar"
+                />
+              </b-form-group>
+              <b-form-invalid-feedback>
+                Jumlah yg dibayarkan tidak boleh 0
+              </b-form-invalid-feedback>
+            </b-col>
+          </b-row> -->
+        </b-form>
+      </b-modal>
+      <b-modal
+        id="askPay"
+        centered
+        size="sm"
+        hide-header
+        hide-header-close
+        ok-title="Ya, Lanjutkan ..."
+        cancel-title="Batalkan"
+        ok-variant="danger"
+        cancel-variant="secondary"
+        @ok="fetchPayDebt"
+        @cancel="handleCancelPay"
+      >
+        <div class="d-block text-center">
+          <h3>Apakah Anda Sudah Yakin ?</h3>
         </div>
-      </template>
-    </vue-good-table>
-    <!-- table -->
+      </b-modal>
+      <!-- <End of pay debt /> -->
+      <!-- Add Customer -->
+      <b-modal
+        id="customerAdd"
+        centered
+        size="lg"
+        :title="formTitle"
+        ok-title="Simpan"
+        cancel-title="Tutup"
+        ok-variant="danger"
+        @ok="handleOk"
+      >
+        <b-form>
+          <b-row>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label="Nama Customer :"
+                label-for="customerName"
+              >
+                <b-form-input
+                  id="customerName"
+                  v-model="customerName"
+                  :state="customerName.length > 2"
+                />
+                <b-form-invalid-feedback>
+                  Nama Customer Wajib Diisi Minimal 3 Karakter
+                </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label-for="reference"
+                label="No. Referensi (Tukang JagoBagun) :"
+              >
+                <b-form-input
+                  id="reference"
+                  v-model="jagobangunRef"
+                  type="text"
+                  inputmode="numeric"
+                  @keyup="numberOnly($event, 'jagobangunRef')"
+                />
+                <!-- <b-form-invalid-feedback>
+                  Nomor Referensi Wajib Diisi 16 Angka
+                </b-form-invalid-feedback> -->
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label="Nomor Handphone : "
+                label-for="phone"
+              >
+                <b-form-input
+                  id="phone"
+                  v-model="customerPhone"
+                  :formatter="formatContact"
+                  :state="customerPhone.length >= 10 && customerPhone.length <= 12 && customerPhone.charAt(0) === '0'"
+                  type="text"
+                  inputmode="numeric"
+                  @keyup="numberOnly($event, 'customerPhone')"
+                />
+                <b-form-invalid-feedback>
+                  Telepon Customer Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan Diawali Angka 0 (Contoh Format : 081234567890)
+                </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+            <b-col
+              lg="6"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label-for="ktp"
+                label="Nomor Identitas/KTP"
+              >
+                <b-form-input
+                  id="ktp"
+                  v-model="identityNumber"
+                  type="text"
+                  inputmode="numeric"
+                  :state="identityNumber.length === 0 || identityNumber.length === 16"
+                  :formatter="formatIdentitas"
+                  @keyup="numberOnly($event, 'identityNumber')"
+                />
+                <b-form-invalid-feedback>
+                  Nomor Identitas Customer Wajib Diisi 16 Angka
+                </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col
+              lg="12"
+              md="12"
+              sm="12"
+            >
+              <b-form-group
+                label="Alamat :"
+                label-for="address"
+              >
+                <b-form-textarea
+                  id="address"
+                  v-model="customerAddress"
+                  rows="4"
+                />
+                <!-- <b-form-invalid-feedback>
+                  Nama Customer Wajib Diisi Minimal 3 Karakter
+                </b-form-invalid-feedback> -->
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-form>
+      </b-modal>
+      <b-modal
+        id="askSubmit"
+        centered
+        size="lg"
+        hide-header
+        hide-header-close
+        ok-title="Ya, Lanjutkan ..."
+        cancel-title="Batalkan"
+        ok-variant="danger"
+        cancel-variant="secondary"
+        @ok="handleSubmit"
+        @cancel="handleCancel"
+      >
+        <div class="d-block text-center">
+          <h3>Apakah Anda Sudah Yakin ?</h3>
+        </div>
+      </b-modal>
+      <b-modal
+        id="confirmDelete"
+        centered
+        size="sm"
+        hide-header
+        hide-header-close
+        ok-title="Ya, Lanjutkan ..."
+        cancel-title="Batalkan"
+        ok-variant="danger"
+        cancel-variant="secondary"
+        @ok="handleDelete"
+        @cancel="cancelDelete"
+      >
+        <div class="d-block text-center">
+          <h3>Apakah Anda Yakin Menghapus data berikut ?</h3>
+        </div>
+      </b-modal>
+    </div>
     <div
       id="printData"
       class="container"
@@ -236,8 +595,11 @@
         </div>
       </div>
       <!-- table -->
-      <table width="100%">
-        <thead style="text-align: center;">
+      <table
+        width="100%"
+        border="1"
+      >
+        <thead style="text-align: center; background: #efefef !important;">
           <th>Kode Customer</th>
           <th>Customer</th>
           <th>No. Handphone</th>
@@ -247,7 +609,7 @@
           <th>Hutang Dibayar</th>
           <th>Sisa Hutang</th>
         </thead>
-        <tbody>
+        <tbody style="font-size:11px;">
           <tr
             v-for="(item) in dataCustomer"
             :id="item.transId"
@@ -282,365 +644,6 @@
         </tbody>
       </table>
     </div>
-
-    <!-- Pay Debt -->
-    <b-modal
-      id="listBayar"
-      centered
-      size="lg"
-      ok-title="Simpan"
-      cancel-variant="outline-secondary"
-      @ok="handleSubmitPay"
-    >
-      <b-form>
-        <b-row>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label="Kode Customer"
-              label-for="code-customer"
-            >
-              <b-form-input
-                id="code-customer"
-                v-model="customerCode"
-                placeholder="Masukkan Code Customer"
-                disabled
-              />
-            </b-form-group>
-          </b-col>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label="Nama Customer"
-              label-for="nama-customer"
-            >
-              <b-form-input
-                id="nama-customer"
-                v-model="customerName"
-                placeholder="Masukkan Nama Customer"
-                disabled
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label="Sisa Hutang"
-              label-for="sisa-hutnag"
-            >
-              <b-form-input
-                id="sisa-hutang"
-                v-model="remainingDebt"
-                placeholder="nominal"
-                disabled
-              />
-            </b-form-group>
-          </b-col>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label="Tipe Pembayaran"
-              label-for="tipe-pembayaran"
-            >
-              <b-form-select
-                id="tipe-pembayaran"
-                v-model="selectedType"
-                :options="typeItem"
-              />
-              <b-form-invalid-feedback>
-                Pilih salah satu tipe pembayaran
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          />
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label="No. Pembayaran"
-              label-for="no-pembayaran"
-              class="font-weight-bold"
-            >
-              <b-form-input
-                id="no-pembayaran"
-                v-model="paymentID"
-                placeholder="nominal"
-                disabled
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          />
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label="Bayar"
-              label-for="bayar"
-              class="font-weight-bold"
-            >
-              <b-form-input
-                id="bayar"
-                v-model="paySum"
-                type="text"
-                inputmode="numeric"
-                :state="paySum !== '' && parseInt(paySum) <= remainingDebt"
-                placeholder="nominal"
-                @keyup="formatBayar"
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <!-- <b-row class="mt-2">
-          <b-col cols="2" />
-          <b-col cols="10">
-            <b-form-group
-              label="No. Pembayaran"
-              label-for="no-pembayaran"
-              label-cols-md="5"
-              label-align="right"
-              class="font-weight-bold"
-            >
-              <b-form-input
-                id="no-pembayaran"
-                v-model="paymentID"
-                placeholder="nominal"
-                disabled
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col cols="2" />
-          <b-col cols="10">
-            <b-form-group
-              label="Bayar"
-              label-for="bayar"
-              label-cols-md="5"
-              class="font-weight-bold text-right"
-            >
-              <b-form-input
-                id="bayar"
-                v-model="paySum"
-                :state="paySum !== '' && parseInt(paySum) <= remainingDebt"
-                placeholder="nominal"
-                @keyup="formatBayar"
-              />
-            </b-form-group>
-            <b-form-invalid-feedback>
-              Jumlah yg dibayarkan tidak boleh 0
-            </b-form-invalid-feedback>
-          </b-col>
-        </b-row> -->
-      </b-form>
-    </b-modal>
-    <b-modal
-      id="askPay"
-      centered
-      size="sm"
-      hide-header
-      hide-header-close
-      ok-title="Ya, Lanjutkan ..."
-      cancel-title="Batalkan"
-      ok-variant="danger"
-      cancel-variant="secondary"
-      @ok="fetchPayDebt"
-      @cancel="handleCancelPay"
-    >
-      <div class="d-block text-center">
-        <h3>Apakah Anda Sudah Yakin ?</h3>
-      </div>
-    </b-modal>
-    <!-- <End of pay debt /> -->
-
-    <!-- Add Customer -->
-    <b-modal
-      id="customerAdd"
-      centered
-      size="lg"
-      :title="formTitle"
-      ok-title="Simpan"
-      cancel-title="Tutup"
-      ok-variant="danger"
-      @ok="handleOk"
-    >
-      <b-form>
-        <b-row>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label="Nama Customer :"
-              label-for="customerName"
-            >
-              <b-form-input
-                id="customerName"
-                v-model="customerName"
-                :state="customerName.length > 2"
-              />
-              <b-form-invalid-feedback>
-                Nama Customer Wajib Diisi Minimal 3 Karakter
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label-for="reference"
-              label="No. Referensi (Tukang JagoBagun) :"
-            >
-              <b-form-input
-                id="reference"
-                v-model="jagobangunRef"
-                type="text"
-                inputmode="numeric"
-                @keyup="numberOnly($event, 'jagobangunRef')"
-              />
-              <!-- <b-form-invalid-feedback>
-                Nomor Referensi Wajib Diisi 16 Angka
-              </b-form-invalid-feedback> -->
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label="Nomor Handphone : "
-              label-for="phone"
-            >
-              <b-form-input
-                id="phone"
-                v-model="customerPhone"
-                :formatter="formatContact"
-                :state="customerPhone.length >= 10 && customerPhone.length <= 12 && customerPhone.charAt(0) === '0'"
-                type="text"
-                inputmode="numeric"
-                @keyup="numberOnly($event, 'customerPhone')"
-              />
-              <b-form-invalid-feedback>
-                Telepon Customer Wajib Diisi Minimal 10 Karakter, Maksimal 12 Karakter dan Diawali Angka 0 (Contoh Format : 081234567890)
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-          <b-col
-            lg="6"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label-for="ktp"
-              label="Nomor Identitas/KTP"
-            >
-              <b-form-input
-                id="ktp"
-                v-model="identityNumber"
-                type="text"
-                inputmode="numeric"
-                :state="identityNumber.length === 0 || identityNumber.length === 16"
-                :formatter="formatIdentitas"
-                @keyup="numberOnly($event, 'identityNumber')"
-              />
-              <b-form-invalid-feedback>
-                Nomor Identitas Customer Wajib Diisi 16 Angka
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col
-            lg="12"
-            md="12"
-            sm="12"
-          >
-            <b-form-group
-              label="Alamat :"
-              label-for="address"
-            >
-              <b-form-textarea
-                id="address"
-                v-model="customerAddress"
-                rows="4"
-              />
-              <!-- <b-form-invalid-feedback>
-                Nama Customer Wajib Diisi Minimal 3 Karakter
-              </b-form-invalid-feedback> -->
-            </b-form-group>
-          </b-col>
-        </b-row>
-      </b-form>
-    </b-modal>
-    <b-modal
-      id="askSubmit"
-      centered
-      size="lg"
-      hide-header
-      hide-header-close
-      ok-title="Ya, Lanjutkan ..."
-      cancel-title="Batalkan"
-      ok-variant="danger"
-      cancel-variant="secondary"
-      @ok="handleSubmit"
-      @cancel="handleCancel"
-    >
-      <div class="d-block text-center">
-        <h3>Apakah Anda Sudah Yakin ?</h3>
-      </div>
-    </b-modal>
-    <b-modal
-      id="confirmDelete"
-      centered
-      size="sm"
-      hide-header
-      hide-header-close
-      ok-title="Ya, Lanjutkan ..."
-      cancel-title="Batalkan"
-      ok-variant="danger"
-      cancel-variant="secondary"
-      @ok="handleDelete"
-      @cancel="cancelDelete"
-    >
-      <div class="d-block text-center">
-        <h3>Apakah Anda Yakin Menghapus data berikut ?</h3>
-      </div>
-    </b-modal>
     <alert-token />
     <!-- End of Customer Add -->
   </b-card>
@@ -898,9 +901,10 @@ export default {
         this.dataCustomer = selectedRows
         // this.$router.push({ name: 'user-customer-print', params: { dataCustomer: selectedRows } })
       }
+      this.isLoading = false
       setTimeout(() => {
-        this.isLoading = false
-        this.printLandscape()
+        window.print()
+        // this.printLandscape()
       }, 2000)
     },
     printLandscape() {
@@ -919,7 +923,7 @@ export default {
       this.jagobangunRef = this.jagobangunRef.replace(/[^0-9-]/g, '')
     },
     formatPrice(value) {
-      const val = (value / 1).toFixed(2).replace('.', ',')
+      const val = (value / 1).toFixed(0).replace('.', ',')
       const formatedval = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
       return `Rp. ${formatedval}`
     },
@@ -1320,6 +1324,47 @@ export default {
       this.rows = []
       this.fetchCustomerList()
     },
+    wprint() {
+      window.print()
+    },
   },
 }
 </script>
+
+<style lang="scss">
+@media print {
+
+  // Global Styles
+  body {
+    background-color: transparent !important;
+    // width: 80mm;
+    // height: 100mm;
+  }
+  .btn-scroll-to-top, .content-header, .bt-print, .horizontal-menu-wrapper, #NoprintTable {
+    display: none !important;
+  }
+  #printData {
+    display: block !important;
+    margin-top: -100px;
+  }
+  nav.header-navbar {
+    display: none;
+  }
+  .header-navbar-shadow {
+    display: none !important;
+  }
+  .printstruck {
+    margin-top: -100px;
+  }
+  footer.footer {
+    display: none;
+  }
+  .card {
+    background-color: transparent;
+    box-shadow: none;
+  }
+  .customizer-toggle {
+    display: none !important;
+  }
+}
+</style>

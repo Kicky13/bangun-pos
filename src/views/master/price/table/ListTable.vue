@@ -1,170 +1,172 @@
 <template>
   <b-card>
     <loading-grow v-if="isLoading" />
-    <div>
-      <b-row>
-        <b-col
-          lg="6"
-          md="6"
-          sm="12"
-        >
-          <b-form-group>
-            <b-form-input
-              v-model="searchTerm"
-              placeholder="Masukkan Kata Pencarian..."
-              type="text"
-              class="d-inline-block"
-            />
-          </b-form-group>
-        </b-col>
-        <b-col
-          lg="3"
-          md="3"
-          sm="12"
-        >
-          <v-select
-            v-model="selectItemV"
-            dir="ltr"
-            :options="itemsOptions"
-            label="text"
-            :clearable="false"
-            class="mb-2 item-selector-title"
-            placeholder="Pilih Toko Bangunan"
-          />
-        </b-col>
-        <b-col
-          lg="1"
-          md="1"
-          sm="12"
-        >
-          <b-button
-            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-            variant="secondary"
-            style="margin-bottom : 5px;"
-            @click="print"
+    <div id="NoprintTable">
+      <div>
+        <b-row>
+          <b-col
+            lg="6"
+            md="6"
+            sm="12"
           >
-            Print
-          </b-button>
-        </b-col>
-      </b-row>
-    </div>
-    <div class="demo-inline-spacing" />
-    <!-- table -->
-    <vue-good-table
-      ref="dataCustomer"
-      :columns="columns"
-      :rows="rows"
-      :rtl="direction"
-      :search-options="{
-        enabled: true,
-        externalQuery: searchTerm }"
-      :pagination-options="{
-        enabled: true,
-        perPage:pageLength
-      }"
-    >
-
-      <template
-        slot="table-row"
-        slot-scope="props"
-      >
-        <span v-if="props.column.field === 'stCustomer'">
-          <span>
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              :variant="paymentVariant(props.row.statusCust)"
-            >
-              {{ props.row.statusCust }}
-            </b-button>
-          </span>
-        </span>
-
-        <!-- Column: Action -->
-        <span v-if="props.column.field === 'action'">
-          <span>
-            <b-button
-              v-ripple.400="'rgba(186, 191, 199, 0.15)'"
-              size="sm"
-              variant="outline-secondary"
-              :to="{ name: 'customer-history-trans', params: { id: props.formattedRow.encodedID } }"
-            >
-              List Trans.
-            </b-button>
-            <b-button
-              v-if="props.row.sisaHutang > 0"
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              variant="outline-danger"
-              @click="pembayaran(props.formattedRow)"
-            >
-              Bayar
-            </b-button>
-            <b-button
-              v-ripple.400="'rgba(234, 84, 85, 0.15)'"
-              size="sm"
-              variant="outline-danger"
-              @click="editData(props.formattedRow)"
-            >
-              Edit
-            </b-button>
-          </span>
-        </span>
-
-        <!-- Column: Common -->
-        <span v-else>
-          {{ props.formattedRow[props.column.field] }}
-        </span>
-      </template>
-
-      <!-- pagination -->
-      <template
-        slot="pagination-bottom"
-        slot-scope="props"
-      >
-        <div class="d-flex justify-content-between flex-wrap">
-          <div class="d-flex align-items-center mb-0 mt-1">
-            <span class="text-nowrap">
-              Showing 1 to
-            </span>
-            <b-form-select
-              v-model="pageLength"
-              :options="['3','5','10','25','50','100']"
-              class="mx-1"
-              @input="(value)=>props.perPageChanged({currentPerPage:value})"
+            <b-form-group>
+              <b-form-input
+                v-model="searchTerm"
+                placeholder="Masukkan Kata Pencarian..."
+                type="text"
+                class="d-inline-block"
+              />
+            </b-form-group>
+          </b-col>
+          <b-col
+            lg="3"
+            md="3"
+            sm="12"
+          >
+            <v-select
+              v-model="selectItemV"
+              dir="ltr"
+              :options="itemsOptions"
+              label="text"
+              :clearable="false"
+              class="mb-2 item-selector-title"
+              placeholder="Pilih Toko Bangunan"
             />
-            <span class="text-nowrap "> of {{ props.total }} entries </span>
-          </div>
-          <div>
-            <b-pagination
-              :value="1"
-              :total-rows="props.total"
-              :per-page="pageLength"
-              first-number
-              last-number
-              align="right"
-              prev-class="prev-item"
-              next-class="next-item"
-              class="mt-1 mb-0"
-              @input="(value)=>props.pageChanged({currentPage:value})"
+          </b-col>
+          <b-col
+            lg="1"
+            md="1"
+            sm="12"
+          >
+            <b-button
+              v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+              variant="secondary"
+              style="margin-bottom : 5px;"
+              @click="print"
             >
-              <template #prev-text>
-                <feather-icon
-                  icon="ChevronLeftIcon"
-                  size="18"
-                />
-              </template>
-              <template #next-text>
-                <feather-icon
-                  icon="ChevronRightIcon"
-                  size="18"
-                />
-              </template>
-            </b-pagination>
+              Print
+            </b-button>
+          </b-col>
+        </b-row>
+      </div>
+      <div class="demo-inline-spacing" />
+      <!-- table -->
+      <vue-good-table
+        ref="dataCustomer"
+        :columns="columns"
+        :rows="rows"
+        :rtl="direction"
+        :search-options="{
+          enabled: true,
+          externalQuery: searchTerm }"
+        :pagination-options="{
+          enabled: true,
+          perPage:pageLength
+        }"
+      >
+
+        <template
+          slot="table-row"
+          slot-scope="props"
+        >
+          <span v-if="props.column.field === 'stCustomer'">
+            <span>
+              <b-button
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+                size="sm"
+                :variant="paymentVariant(props.row.statusCust)"
+              >
+                {{ props.row.statusCust }}
+              </b-button>
+            </span>
+          </span>
+
+          <!-- Column: Action -->
+          <span v-if="props.column.field === 'action'">
+            <span>
+              <b-button
+                v-ripple.400="'rgba(186, 191, 199, 0.15)'"
+                size="sm"
+                variant="outline-secondary"
+                :to="{ name: 'customer-history-trans', params: { id: props.formattedRow.encodedID } }"
+              >
+                List Trans.
+              </b-button>
+              <b-button
+                v-if="props.row.sisaHutang > 0"
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+                size="sm"
+                variant="outline-danger"
+                @click="pembayaran(props.formattedRow)"
+              >
+                Bayar
+              </b-button>
+              <b-button
+                v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+                size="sm"
+                variant="outline-danger"
+                @click="editData(props.formattedRow)"
+              >
+                Edit
+              </b-button>
+            </span>
+          </span>
+
+          <!-- Column: Common -->
+          <span v-else>
+            {{ props.formattedRow[props.column.field] }}
+          </span>
+        </template>
+
+        <!-- pagination -->
+        <template
+          slot="pagination-bottom"
+          slot-scope="props"
+        >
+          <div class="d-flex justify-content-between flex-wrap">
+            <div class="d-flex align-items-center mb-0 mt-1">
+              <span class="text-nowrap">
+                Showing 1 to
+              </span>
+              <b-form-select
+                v-model="pageLength"
+                :options="['3','5','10','25','50','100']"
+                class="mx-1"
+                @input="(value)=>props.perPageChanged({currentPerPage:value})"
+              />
+              <span class="text-nowrap "> of {{ props.total }} entries </span>
+            </div>
+            <div>
+              <b-pagination
+                :value="1"
+                :total-rows="props.total"
+                :per-page="pageLength"
+                first-number
+                last-number
+                align="right"
+                prev-class="prev-item"
+                next-class="next-item"
+                class="mt-1 mb-0"
+                @input="(value)=>props.pageChanged({currentPage:value})"
+              >
+                <template #prev-text>
+                  <feather-icon
+                    icon="ChevronLeftIcon"
+                    size="18"
+                  />
+                </template>
+                <template #next-text>
+                  <feather-icon
+                    icon="ChevronRightIcon"
+                    size="18"
+                  />
+                </template>
+              </b-pagination>
+            </div>
           </div>
-        </div>
-      </template>
-    </vue-good-table>
+        </template>
+      </vue-good-table>
+    </div>
     <b-card
       id="printMe"
       style="display: none;"
@@ -194,9 +196,9 @@
       <div>
         <table
           width="100%"
-          style="font-size: 10px;"
+          border="1"
         >
-          <thead style="text-align: center;">
+          <thead style="text-align: center; background: #efefef !important;">
             <th width="10%">
               Kode
             </th>
@@ -225,7 +227,7 @@
               Harga Jual
             </th>
           </thead>
-          <tbody>
+          <tbody style="font-size: 11px;">
             <tr
               v-for="(item) in rows"
               :id="item.id"
@@ -239,13 +241,13 @@
                 {{ item.namaproduk }}
               </td>
               <td style="text-align: left;">
-                {{ item.nohp }}
-              </td>
-              <td style="text-align: left;">
                 {{ item.namacategory }}
               </td>
               <td style="text-align: left;">
                 {{ item.namasubcategory }}
+              </td>
+              <td style="text-align: left;">
+                {{ item.namabrand }}
               </td>
               <td style="text-align: left;">
                 {{ item.namatype }}
@@ -468,9 +470,10 @@ export default {
   },
   methods: {
     print() {
-      this.$htmlToPaper('printMe', null, () => {
-        console.warn('done')
-      })
+      window.print()
+      // this.$htmlToPaper('printMe', null, () => {
+      //   console.warn('done')
+      // })
     },
     formatPrice(value) {
       const val = (value / 1).toFixed(0).replace('.', ',')
@@ -568,6 +571,44 @@ export default {
     .dark-layout & {
       background-color: unset;
     }
+  }
+}
+</style>
+
+<style lang="scss">
+@media print {
+
+  // Global Styles
+  body {
+    background-color: transparent !important;
+    // width: 80mm;
+    // height: 100mm;
+  }
+  .btn-scroll-to-top, .content-header, .bt-print, .horizontal-menu-wrapper, #NoprintTable {
+    display: none !important;
+  }
+  #printMe {
+    display: block !important;
+    margin-top: -100px;
+  }
+  nav.header-navbar {
+    display: none;
+  }
+  .header-navbar-shadow {
+    display: none !important;
+  }
+  .printstruck {
+    margin-top: -100px;
+  }
+  footer.footer {
+    display: none;
+  }
+  .card {
+    background-color: transparent;
+    box-shadow: none;
+  }
+  .customizer-toggle {
+    display: none !important;
   }
 }
 </style>
