@@ -490,8 +490,19 @@ export default {
     this.$http.get('/app-data/salesPending')
       .then(res => { this.rows = res.data })
     parentComponent.$on('updateAntrian', data => {
-      console.log(data)
-      this.getAllAntrian()
+      const currentAntrian = this.listAntrian.find(antrian => antrian.kode_transaksi === data.kode_transaksi)
+      const currentUuid = currentAntrian ? currentAntrian.uuid : null
+      const currentIdCustomer = currentAntrian ? currentAntrian.id_customer : null
+      if (currentUuid !== null && currentIdCustomer === null) {
+        appService.deleteQueue(currentUuid).then(response => {
+          console.log(response)
+          const index = this.listAntrian.findIndex(antrian => antrian.uuid === currentUuid)
+          this.listAntrian.splice(index, 1)
+          this.getAllAntrian(currentUuid)
+        })
+      } else {
+        this.getAllAntrian()
+      }
     })
     parentComponent.$on('deleteAntrian', data => {
       const index = this.listAntrian.findIndex(antrian => antrian.id_transaction === data)
@@ -594,15 +605,17 @@ export default {
       }
       this.getAllProducts()
     },
-    async getAllAntrian() {
+    async getAllAntrian(uuid = '') {
       appService.getListAntrian().then(response => {
         const { data } = response.data
         let antrianLength = 0
         this.listAntrian = []
         if (data) {
           data.forEach(antrian => {
-            this.loadAntrian(antrian)
-            antrianLength += 1
+            if (antrian.uuid !== uuid) {
+              this.loadAntrian(antrian)
+              antrianLength += 1
+            }
           })
           this.totalAntrian = antrianLength
         }

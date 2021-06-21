@@ -233,7 +233,12 @@
                         Harga Produk wajib diisi dengan benar
                       </b-form-invalid-feedback> -->
                     </b-input-group>
-                    <small v-if="productPrice < 1" class="text-danger">Harga Produk wajib diisi dengan benar Maksimal 9.999.999.999</small>
+                    <small
+                      v-if="productPrice < 1"
+                      class="text-danger"
+                    >
+                      Harga Produk wajib diisi dengan benar Maksimal 9.999.999.999
+                    </small>
                   </b-form-group>
                 </b-col>
                 <b-col

@@ -184,6 +184,7 @@ export default {
               // payment: `${item.price} / ${item.nama_uom}`,
               payment: `${quantity} x ${item.nama_uom}`,
               deduction: false,
+              flag: item.flag,
               // id: item.kode_produk,
               // name: item.nama_produk,
               // qty: item.nama_uom,
