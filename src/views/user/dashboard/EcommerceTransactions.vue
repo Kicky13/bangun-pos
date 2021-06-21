@@ -45,7 +45,14 @@
           <b-media no-body>
             <b-media-aside>
               <b-img
+                v-if="transaction.flag === 1"
                 :src="require('@/assets/images/icons/Semen.png')"
+                height="40"
+                alt="Logo Produk"
+              />
+              <b-img
+                v-if="transaction.flag === 0"
+                :src="require('@/assets/images/icons/Lain -Lain.png')"
                 height="40"
                 alt="Logo Produk"
               />
