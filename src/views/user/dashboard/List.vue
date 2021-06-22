@@ -173,8 +173,9 @@ export default {
           this.tanggalStart = data.tgl_start
           this.tanggalEnd = data.tgl_end
           const itemlist = data.data
+          console.log(this.itemlist)
           itemlist.forEach(item => {
-            const fomatPrice = this.formatPrice(item.price)
+            const fomatPrice = this.formatPrice(item[1])
             const quantity = parseInt(item.qty, 10)
             this.transactionData.push({
               mode: item.nama_product,
