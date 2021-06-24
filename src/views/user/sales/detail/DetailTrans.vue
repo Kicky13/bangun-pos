@@ -704,7 +704,7 @@ export default {
     this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
   },
   methods: {
-    getWaktuCetak() {
+    async getWaktuCetak() {
       const currentdate = new Date()
       const tanggal = parseInt(currentdate.getDate(), 10) < 10 ? `0${currentdate.getDate()}` : currentdate.getDate()
       const bulan = parseInt(currentdate.getMonth() + 1, 10) < 10 ? `0${currentdate.getMonth() + 1}` : currentdate.getMonth() + 1
@@ -792,16 +792,16 @@ export default {
       const val = (value / 1).toFixed(0).replace('.', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
-    wprintstruk() {
+    async wprintstruk() {
       this.isPrintStruck = true
       this.isPrintinvoice = false
-      this.getWaktuCetak()
+      await this.getWaktuCetak()
       window.print()
     },
-    wprintinvoice() {
+    async wprintinvoice() {
       this.isPrintStruck = false
       this.isPrintinvoice = true
-      this.getWaktuCetak()
+      await this.getWaktuCetak()
       window.print()
     },
     print() {
