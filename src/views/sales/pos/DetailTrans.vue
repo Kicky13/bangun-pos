@@ -733,7 +733,7 @@ export default {
       // const menit = parseInt(currentdate.getMinutes(), 10) < 10 ? `0${currentdate.getMinutes()}` : currentdate.getMinutes()
       // const detik = parseInt(currentdate.getSeconds(), 10) < 10 ? `0${currentdate.getSeconds()}` : currentdate.getSeconds()
       // console.log(`${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`)
-      // this.tglCetak = `${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`      
+      // this.tglCetak = `${tahun}-${bulan}-${tanggal} ${jam}:${menit}:${detik}`
       this.tglCetak = `${tahun}-${bulan}-${tanggal}`
     },
     logoUrl() {
