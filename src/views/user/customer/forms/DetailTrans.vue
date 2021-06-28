@@ -880,7 +880,7 @@ export default {
     display: block !important;
   }
   .tabelstruk {
-    margin-left : 10px;
+    margin-left : 5px;
     margin-right : 5px;
   }
   #printSmallReceipt {
