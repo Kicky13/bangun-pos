@@ -14,7 +14,10 @@
         >
           <!-- Customer Form Section -->
           <div>
-            <table width="100%">
+            <table
+              width="95%"
+              class="tabelstruk"
+            >
               <tbody style="font-size:12px;">
                 <tr>
                   <td>
@@ -95,7 +98,10 @@
 
           <!-- Cart Section -->
           <div>
-            <table width="100%">
+            <table
+              width="95%"
+              class="tabelstruk"
+            >
               <thead style="text-align: center;">
                 <th width="50%">
                   Barang
@@ -225,7 +231,10 @@
           </div>
           <hr>
           <div>
-            <table width="100%">
+            <table
+              width="95%"
+              class="tabelstruk"
+            >
               <tbody style="text-align: center;font-size:12px;">
                 <tr v-if="dataPenjualan.includetax === true">
                   <td
@@ -869,6 +878,10 @@ export default {
   }
   .printAble {
     display: block !important;
+  }
+  .tabelstruk {
+    margin-left : 10px;
+    margin-right : 5px;
   }
   #printSmallReceipt {
     max-width: 27%;
