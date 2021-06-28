@@ -793,16 +793,32 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     async wprintstruk() {
-      this.isPrintStruck = true
-      this.isPrintinvoice = false
-      await this.getWaktuCetak()
-      window.print()
-    },
-    async wprintinvoice() {
+      this.isLoading = true
       this.isPrintStruck = false
       this.isPrintinvoice = true
+      if (this.isPrintinvoice) {
+        // alert('Cetak Invoice')
+        // console.log('Cetak Invoice')
+      }
       await this.getWaktuCetak()
-      window.print()
+      this.isLoading = false
+      setTimeout(() => {
+        window.print()
+      }, 1000)
+    },
+    async wprintinvoice() {
+      this.isLoading = true
+      this.isPrintStruck = true
+      this.isPrintinvoice = false
+      if (this.isPrintStruck) {
+        // alert('Cetak Struk')
+        // console.log('Cetak Struk')
+      }
+      await this.getWaktuCetak()
+      this.isLoading = false
+      setTimeout(() => {
+        window.print()
+      }, 1000)
     },
     print() {
       this.getWaktuCetak()
